@@ -1,0 +1,285 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1464725F16D27801000C8FB4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1464725E16D27801000C8FB4 /* UIKit.framework */; };
+		1464726116D27801000C8FB4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1464726016D27801000C8FB4 /* Foundation.framework */; };
+		1464726316D27801000C8FB4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1464726216D27801000C8FB4 /* CoreGraphics.framework */; };
+		1464726916D27801000C8FB4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1464726716D27801000C8FB4 /* InfoPlist.strings */; };
+		1464726B16D27801000C8FB4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1464726A16D27801000C8FB4 /* main.m */; };
+		1464726F16D27801000C8FB4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1464726E16D27801000C8FB4 /* AppDelegate.m */; };
+		1464727116D27801000C8FB4 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 1464727016D27801000C8FB4 /* Default.png */; };
+		1464727316D27801000C8FB4 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1464727216D27801000C8FB4 /* Default@2x.png */; };
+		1464727516D27801000C8FB4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1464727416D27801000C8FB4 /* Default-568h@2x.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1464725B16D27801000C8FB4 /* Dabble.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dabble.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1464725E16D27801000C8FB4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		1464726016D27801000C8FB4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1464726216D27801000C8FB4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		1464726616D27801000C8FB4 /* Dabble-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Dabble-Info.plist"; sourceTree = "<group>"; };
+		1464726816D27801000C8FB4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1464726A16D27801000C8FB4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1464726C16D27801000C8FB4 /* Dabble-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Dabble-Prefix.pch"; sourceTree = "<group>"; };
+		1464726D16D27801000C8FB4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		1464726E16D27801000C8FB4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		1464727016D27801000C8FB4 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		1464727216D27801000C8FB4 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		1464727416D27801000C8FB4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1464725816D27801000C8FB4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1464725F16D27801000C8FB4 /* UIKit.framework in Frameworks */,
+				1464726116D27801000C8FB4 /* Foundation.framework in Frameworks */,
+				1464726316D27801000C8FB4 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1464725216D27801000C8FB4 = {
+			isa = PBXGroup;
+			children = (
+				1464726416D27801000C8FB4 /* Dabble */,
+				1464725D16D27801000C8FB4 /* Frameworks */,
+				1464725C16D27801000C8FB4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1464725C16D27801000C8FB4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1464725B16D27801000C8FB4 /* Dabble.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1464725D16D27801000C8FB4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1464725E16D27801000C8FB4 /* UIKit.framework */,
+				1464726016D27801000C8FB4 /* Foundation.framework */,
+				1464726216D27801000C8FB4 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1464726416D27801000C8FB4 /* Dabble */ = {
+			isa = PBXGroup;
+			children = (
+				1464726D16D27801000C8FB4 /* AppDelegate.h */,
+				1464726E16D27801000C8FB4 /* AppDelegate.m */,
+				1464726516D27801000C8FB4 /* Supporting Files */,
+			);
+			path = Dabble;
+			sourceTree = "<group>";
+		};
+		1464726516D27801000C8FB4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1464726616D27801000C8FB4 /* Dabble-Info.plist */,
+				1464726716D27801000C8FB4 /* InfoPlist.strings */,
+				1464726A16D27801000C8FB4 /* main.m */,
+				1464726C16D27801000C8FB4 /* Dabble-Prefix.pch */,
+				1464727016D27801000C8FB4 /* Default.png */,
+				1464727216D27801000C8FB4 /* Default@2x.png */,
+				1464727416D27801000C8FB4 /* Default-568h@2x.png */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1464725A16D27801000C8FB4 /* Dabble */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1464727816D27801000C8FB4 /* Build configuration list for PBXNativeTarget "Dabble" */;
+			buildPhases = (
+				1464725716D27801000C8FB4 /* Sources */,
+				1464725816D27801000C8FB4 /* Frameworks */,
+				1464725916D27801000C8FB4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Dabble;
+			productName = Dabble;
+			productReference = 1464725B16D27801000C8FB4 /* Dabble.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1464725316D27801000C8FB4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = Rakesh;
+			};
+			buildConfigurationList = 1464725616D27801000C8FB4 /* Build configuration list for PBXProject "Dabble" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 1464725216D27801000C8FB4;
+			productRefGroup = 1464725C16D27801000C8FB4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1464725A16D27801000C8FB4 /* Dabble */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1464725916D27801000C8FB4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1464726916D27801000C8FB4 /* InfoPlist.strings in Resources */,
+				1464727116D27801000C8FB4 /* Default.png in Resources */,
+				1464727316D27801000C8FB4 /* Default@2x.png in Resources */,
+				1464727516D27801000C8FB4 /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1464725716D27801000C8FB4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1464726B16D27801000C8FB4 /* main.m in Sources */,
+				1464726F16D27801000C8FB4 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		1464726716D27801000C8FB4 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1464726816D27801000C8FB4 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1464727616D27801000C8FB4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		1464727716D27801000C8FB4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1464727916D27801000C8FB4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Dabble/Dabble-Prefix.pch";
+				INFOPLIST_FILE = "Dabble/Dabble-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		1464727A16D27801000C8FB4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Dabble/Dabble-Prefix.pch";
+				INFOPLIST_FILE = "Dabble/Dabble-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1464725616D27801000C8FB4 /* Build configuration list for PBXProject "Dabble" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1464727616D27801000C8FB4 /* Debug */,
+				1464727716D27801000C8FB4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1464727816D27801000C8FB4 /* Build configuration list for PBXNativeTarget "Dabble" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1464727916D27801000C8FB4 /* Debug */,
+				1464727A16D27801000C8FB4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1464725316D27801000C8FB4 /* Project object */;
+}
