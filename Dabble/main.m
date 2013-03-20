@@ -1,8 +1,8 @@
 //
 //  main.m
-//  Dabble
+//  OpenGLES2.0
 //
-//  Created by Rakesh on 18/02/13.
+//  Created by Rakesh on 20/02/13.
 //  Copyright (c) 2013 Rakesh. All rights reserved.
 //
 

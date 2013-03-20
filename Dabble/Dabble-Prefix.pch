@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'Dabble' target in the 'Dabble' project
+// Prefix header for all source files of the 'OpenGLES2.0' target in the 'OpenGLES2.0' project
 //
 
 #import <Availability.h>
