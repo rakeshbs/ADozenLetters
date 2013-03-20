@@ -39,7 +39,6 @@ NSMutableArray *madeWords;
 
         [self performSelectorInBackground:@selector(loadData) withObject:nil];
         
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(squareFinishedMoving:) name:@"SquareFinishedMoving" object:nil];
       
     }
     return  self;
@@ -90,7 +89,7 @@ NSMutableArray *madeWords;
     for (int i = 0;i<3;i++)
     {
         square = [[Square alloc]initWithCharacter:charArray1[i]];
-        square.centerPoint = CGPointMake(100+60*i, 210);
+        square.centerPoint = CGPointMake(140, 300);
         square.anchorPoint = CGPointMake(100+60*i, 210);
         [self addElement:square];
         [squaresArray addObject:square];
@@ -101,7 +100,7 @@ NSMutableArray *madeWords;
     for (int i = 0;i<4;i++)
     {
         square = [[Square alloc]initWithCharacter:charArray2[i]];
-        square.centerPoint = CGPointMake(70+60*i, 130);
+        square.centerPoint = CGPointMake(140, 300);
         square.anchorPoint = CGPointMake(70+60*i, 130);
         [self addElement:square];
         [squaresArray addObject:square];
@@ -112,13 +111,30 @@ NSMutableArray *madeWords;
     for (int i = 0;i<5;i++)
     {
         square = [[Square alloc]initWithCharacter:charArray3[i]];
-        square.centerPoint = CGPointMake(40+60*i, 50);
+        square.centerPoint = CGPointMake(140, 300);
         square.anchorPoint = CGPointMake(40+60*i, 50);
         [self addElement:square];
         [squaresArray addObject:square];
         square.squaresArray  = squaresArray;
         [square release];
     }
+    
+    CGFloat delay = 0.0;
+    
+    for (Square *sq in squaresArray)
+    {
+        [sq moveToPoint:sq.anchorPoint inDuration:0.3 afterDelay:delay];
+        delay += 0.1;
+    }
+    
+    [self performSelector:@selector(enableNotification) withObject:nil afterDelay:5];
+    
+}
+
+-(void)enableNotification
+{
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(squareFinishedMoving:) name:@"SquareFinishedMoving" object:nil];
+
 }
 
 -(void)draw{
@@ -201,18 +217,14 @@ NSMutableArray *squaresArray;
     
 }
 
--(BOOL)touchesBeganInScene:(NSSet *)touches withEvent:(UIEvent *)event
+-(BOOL)touchBeganInScene:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
 {
+    NSLog(@"%d",touch.tapCount);
+    if (touch.tapCount == 2)
+    {
+           [self performSelectorInBackground:@selector(loadData) withObject:nil];
+    }
     return YES;
-}
--(BOOL)touchesMovedInScene:(NSSet *)touches withEvent:(UIEvent *)event
-{
-        
-	return YES;
-}
--(BOOL)touchesEndedInScene:(NSSet *)touches withEvent:(UIEvent *)event
-{
-	return YES;
 }
 
 -(void)dealloc

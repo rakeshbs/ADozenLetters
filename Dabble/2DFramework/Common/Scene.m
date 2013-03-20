@@ -95,6 +95,7 @@
         }
         if (handled)
         {
+            
             [touchedElement retain];
             [elements removeObject:touchedElement];
             [elements addObject:touchedElement];

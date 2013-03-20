@@ -57,4 +57,5 @@
 
 -(void)wiggleFor:(CGFloat)duration;
 -(void)resetToAnchorPoint;
+-(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay;
 @end

@@ -413,6 +413,15 @@ SoundManager *soundManager;
     [animator addAnimationFor:self ofType:ANIMATION_MOVE ofDuration:duration afterDelayInSeconds:0];
 }
 
+-(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay
+{
+    
+    startPoint = self.centerPoint;
+    endPoint = newPoint;
+    [animator addAnimationFor:self ofType:ANIMATION_MOVE ofDuration:duration afterDelayInSeconds:delay];
+}
+
+
 -(void)dealloc
 {
     [super dealloc];
