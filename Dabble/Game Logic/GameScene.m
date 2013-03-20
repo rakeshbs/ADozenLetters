@@ -15,9 +15,9 @@
 
 @implementation GameScene
 
-NSString *charArray1[3] = {@"E",@"T",@"H"};
-NSString *charArray2[4] = {@"O",@"W",@"R",@"D"};
-NSString *charArray3[5] = {@"G",@"M",@"A",@"E",@"R"};
+NSString *charArray1[3];
+NSString *charArray2[4];
+NSString *charArray3[5];
 NSMutableString *resString[3];
 Dictionary *dictionary;
 NSMutableArray *madeWords;
@@ -30,13 +30,14 @@ NSMutableArray *madeWords;
         [mvpMatrixManager setOrthoProjection:-self.view.frame.size.width
                                             :0 :-self.view.frame.size.height :0 :-1 :1000];
         
-        [self createSquares];
+        
         
         resString[0] = [[NSMutableString alloc]initWithString:@"#####"];
         resString[1] = [[NSMutableString alloc]initWithString:@"####"];
         resString[2] = [[NSMutableString alloc]initWithString:@"###"];
         madeWords = [[NSMutableArray alloc]init];
-        dictionary = [[Dictionary alloc]init];
+
+        [self performSelectorInBackground:@selector(loadData) withObject:nil];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(squareFinishedMoving:) name:@"SquareFinishedMoving" object:nil];
       
@@ -44,8 +45,39 @@ NSMutableArray *madeWords;
     return  self;
 }
 
--(void)createSquares
+-(void)loadData
 {
+    dictionary = [Dictionary getSharedDictionary];
+    NSURL *url = [NSURL URLWithString:@"http://qucentis.com/dabble.php"];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    NSString *stringData = [dataDict[@"chars"] uppercaseString];
+    
+    
+    [self performSelectorOnMainThread:@selector(createSquares:) withObject:stringData waitUntilDone:YES];
+
+}
+
+-(void)createSquares:(NSString *)dataStr
+{    
+    int ind = 0;
+    NSLog(@"%@",dataStr);
+    for (int i = 0; i < 3; i++)
+    {
+        charArray1[i] = [dataStr substringWithRange:NSMakeRange(ind, 1)];
+        ind++;
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        charArray2[i] = [dataStr substringWithRange:NSMakeRange(ind, 1)];
+        ind++;
+    }
+    for (int i = 0; i < 5; i++)
+    {
+        charArray3[i] = [dataStr substringWithRange:NSMakeRange(ind, 1)];
+        ind++;
+    }
+    
     Square *square;
     if (squaresArray != nil)
     {
