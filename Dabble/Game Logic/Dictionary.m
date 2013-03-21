@@ -131,5 +131,10 @@
     return false;
 }
 
+-(void)reset
+{
+    memset(used, 0, sizeof(BOOL)*wordList.count);
+}
+
 
 @end

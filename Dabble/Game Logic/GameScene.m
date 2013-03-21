@@ -60,7 +60,9 @@ NSMutableArray *madeWords;
 -(void)createSquares:(NSString *)dataStr
 {    
     int ind = 0;
-    NSLog(@"%@",dataStr);
+    
+    [dictionary reset];
+    
     for (int i = 0; i < 3; i++)
     {
         charArray1[i] = [dataStr substringWithRange:NSMakeRange(ind, 1)];

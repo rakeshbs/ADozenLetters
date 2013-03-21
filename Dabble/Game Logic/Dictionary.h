@@ -22,5 +22,5 @@
 -(BOOL)checkIfPrefixExists:(NSString *)prefix;
 -(BOOL)checkIfWordExists:(NSString *)word;
 +(Dictionary * )getSharedDictionary;
-
+-(void)reset;
 @end

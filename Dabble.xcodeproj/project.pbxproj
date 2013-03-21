@@ -49,6 +49,7 @@
 		1445DCBA16F97C1300EBBCCF /* StringTextureShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC5816F97AD600EBBCCF /* StringTextureShader.vsh */; };
 		1445DCBB16F97C1600EBBCCF /* ColorShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC4816F97AD600EBBCCF /* ColorShader.fsh */; };
 		1445DCBC16F97C1700EBBCCF /* ColorShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC4B16F97AD600EBBCCF /* ColorShader.vsh */; };
+		145ABAC616FB144D00DA2488 /* GameCenterHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 145ABAC516FB144D00DA2488 /* GameCenterHelper.m */; };
 		1464725F16D27801000C8FB4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1464725E16D27801000C8FB4 /* UIKit.framework */; };
 		1464726116D27801000C8FB4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1464726016D27801000C8FB4 /* Foundation.framework */; };
 		1464726316D27801000C8FB4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1464726216D27801000C8FB4 /* CoreGraphics.framework */; };
@@ -135,6 +136,8 @@
 		1445DCB016F97B3700EBBCCF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		1445DCB116F97B3700EBBCCF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1445DCB316F97B6900EBBCCF /* Dabble-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Dabble-Prefix.pch"; sourceTree = "<group>"; };
+		145ABAC416FB144D00DA2488 /* GameCenterHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameCenterHelper.h; sourceTree = "<group>"; };
+		145ABAC516FB144D00DA2488 /* GameCenterHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameCenterHelper.m; sourceTree = "<group>"; };
 		1464725B16D27801000C8FB4 /* Dabble.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dabble.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1464725E16D27801000C8FB4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1464726016D27801000C8FB4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -182,6 +185,7 @@
 		1445DC2816F97AD600EBBCCF /* 2DFramework */ = {
 			isa = PBXGroup;
 			children = (
+				145ABAC316FB144D00DA2488 /* GameCenter */,
 				1445DC2916F97AD600EBBCCF /* Animation */,
 				1445DC3016F97AD600EBBCCF /* Common */,
 				1445DC3716F97AD600EBBCCF /* GLElements */,
@@ -369,6 +373,15 @@
 			path = Dabble;
 			sourceTree = "<group>";
 		};
+		145ABAC316FB144D00DA2488 /* GameCenter */ = {
+			isa = PBXGroup;
+			children = (
+				145ABAC416FB144D00DA2488 /* GameCenterHelper.h */,
+				145ABAC516FB144D00DA2488 /* GameCenterHelper.m */,
+			);
+			path = GameCenter;
+			sourceTree = "<group>";
+		};
 		1464725216D27801000C8FB4 = {
 			isa = PBXGroup;
 			children = (
@@ -507,6 +520,7 @@
 				1445DC9F16F97AD700EBBCCF /* Dictionary.m in Sources */,
 				1445DCA016F97AD700EBBCCF /* GameScene.m in Sources */,
 				1445DCA116F97AD700EBBCCF /* Square.m in Sources */,
+				145ABAC616FB144D00DA2488 /* GameCenterHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
