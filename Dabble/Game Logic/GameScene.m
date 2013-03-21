@@ -41,7 +41,8 @@ NSMutableArray *madeWords;
         gcHelper = [GCHelper sharedInstance];
         gcHelper.delegate = self;
         [gcHelper authenticateLocalUser];
-    
+//        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"gamecenter:"]];
+
       
     }
     return  self;
