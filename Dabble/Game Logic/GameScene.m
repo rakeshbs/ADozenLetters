@@ -121,7 +121,7 @@ NSMutableArray *madeWords;
     
     CGFloat delay = 0.0;
     
-    for (Square *sq in squaresArray)
+    for (Square *sq in [squaresArray reverseObjectEnumerator])
     {
         [sq moveToPoint:sq.anchorPoint inDuration:0.3 afterDelay:delay];
         delay += 0.1;
@@ -222,6 +222,8 @@ NSMutableArray *squaresArray;
     NSLog(@"%d",touch.tapCount);
     if (touch.tapCount == 2)
     {
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:@"SquareFinishedMoving" object:nil];
+
            [self performSelectorInBackground:@selector(loadData) withObject:nil];
     }
     return YES;
