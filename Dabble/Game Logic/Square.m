@@ -140,8 +140,8 @@ SoundManager *soundManager;
     CGFloat animationRatio = [animation getAnimatedRatio];
     if (animation.type == ANIMATION_MOVE)
     {
-        CGFloat newX = getEaseOut(startPoint.x, endPoint.x, animationRatio);
-        CGFloat newY = getEaseOut(startPoint.y, endPoint.y, animationRatio);
+        CGFloat newX = getEaseInOutBack(startPoint.x, endPoint.x, animationRatio);
+        CGFloat newY = getEaseInOutBack(startPoint.y, endPoint.y, animationRatio);
         _centerPoint = CGPointMake(newX, newY);
     }
     else if (animation.type == ANIMATION_SHOW_SHADOW)
@@ -294,11 +294,11 @@ SoundManager *soundManager;
   
         if (touch.tapCount >= 1)
         {
-            [self moveToPoint:CGPointMake(self.anchorPoint.x ,  self.anchorPoint.y) inDuration:0.2];
+            [self moveToPoint:CGPointMake(self.anchorPoint.x ,  self.anchorPoint.y) inDuration:0.5];
         }
         else
         {
-            [self moveToPoint:CGPointMake(self.anchorPoint.x ,  self.anchorPoint.y) inDuration:0.2];
+            [self moveToPoint:CGPointMake(self.anchorPoint.x ,  self.anchorPoint.y) inDuration:0.5];
         }
         [self updateShadow];
     }
@@ -328,7 +328,7 @@ SoundManager *soundManager;
             {
                 [sq moveToFront];
                 [self moveToFront];
-                [sq moveToPoint:sq.anchorPoint inDuration:0.2];
+                [sq moveToPoint:sq.anchorPoint inDuration:0.5];
                 
                 
             }

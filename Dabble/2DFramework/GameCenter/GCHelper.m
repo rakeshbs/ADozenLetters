@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Rakesh. All rights reserved.
 //
 
-#import "GameCenterHelper.h"
+#import "GCHelper.h"
 
-@implementation GameCenterHelper
+@implementation GCHelper
 @synthesize gameCenterAvailable;
 @synthesize presentingViewController;
 @synthesize match;
@@ -19,10 +19,10 @@
 
 #pragma mark Initialization
 
-static GameCenterHelper *sharedHelper = nil;
-+ (GameCenterHelper *) sharedInstance {
+static GCHelper *sharedHelper = nil;
++ (GCHelper *) sharedInstance {
     if (!sharedHelper) {
-        sharedHelper = [[GameCenterHelper alloc] init];
+        sharedHelper = [[GCHelper alloc] init];
     }
     return sharedHelper;
 }
@@ -59,10 +59,11 @@ static GameCenterHelper *sharedHelper = nil;
 
 - (void)authenticationChanged {    
     
-    if ([GKLocalPlayer localPlayer].isAuthenticated && !userAuthenticated) {
+    if ([GKLocalPlayer localPlayer].isAuthenticated && !userAuthenticated)
+    {
        NSLog(@"Authentication changed: player authenticated.");
        userAuthenticated = TRUE;  
-        
+        [self.delegate localUserAuthenticated];
         [GKMatchmaker sharedMatchmaker].inviteHandler = ^(GKInvite *acceptedInvite, NSArray *playersToInvite) {
             
             NSLog(@"Received invite");

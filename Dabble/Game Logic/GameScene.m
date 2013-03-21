@@ -38,7 +38,10 @@ NSMutableArray *madeWords;
         madeWords = [[NSMutableArray alloc]init];
 
         [self performSelectorInBackground:@selector(loadData) withObject:nil];
-        
+        gcHelper = [GCHelper sharedInstance];
+        gcHelper.delegate = self;
+        [gcHelper authenticateLocalUser];
+    
       
     }
     return  self;
@@ -125,12 +128,12 @@ NSMutableArray *madeWords;
     
     for (Square *sq in [squaresArray reverseObjectEnumerator])
     {
-        [sq moveToPoint:sq.anchorPoint inDuration:0.3 afterDelay:delay];
+        [sq moveToPoint:sq.anchorPoint inDuration:0.7 afterDelay:delay];
         delay += 0.1;
     }
     
     [self performSelector:@selector(enableNotification) withObject:nil afterDelay:5];
-    
+
 }
 
 -(void)enableNotification
@@ -230,6 +233,30 @@ NSMutableArray *squaresArray;
     }
     return YES;
 }
+
+//GameCenter Functions
+- (void)matchStarted
+{
+    
+}
+- (void)matchEnded
+{
+    
+}
+- (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID
+{
+    
+}
+- (void)inviteReceived
+{
+    
+}
+- (void)localUserAuthenticated
+{
+    NSLog(@"authenticated");
+  //  [gcHelper findMatchWithMinPlayers:2 maxPlayers:2 viewController:director.openGLViewController delegate:self];
+}
+
 
 -(void)dealloc
 {

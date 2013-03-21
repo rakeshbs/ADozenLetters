@@ -8,9 +8,10 @@
 
 #import "Scene.h"
 #import "Square.h"
+#import "GCHelper.h"
 
-@interface GameScene : Scene 
+@interface GameScene : Scene <GCHelperDelegate>
 {
-    
+    GCHelper *gcHelper;
 }
 @end

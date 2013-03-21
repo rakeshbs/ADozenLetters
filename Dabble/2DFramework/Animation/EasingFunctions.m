@@ -36,7 +36,59 @@ CGFloat getSineEaseOut(CGFloat start,CGFloat ratio,CGFloat maxAmplitude)
    return  start + maxAmplitude * s;
 }
 
-CGFloat getEaseInOutBack(CGFloat start,CGFloat end,CGFloat ratio)
+CGFloat getEaseOutBack(CGFloat start,CGFloat end,CGFloat ratio)
 {
+    BoundsCheck(ratio, start, end)
+    CGFloat s = 1.70158;
+    CGFloat diff = end - start;
+    CGFloat invRatio = ratio -1;
+    
+    return (powf(invRatio, 2) * ((s + 1.0)*invRatio + s) + 1.0)*diff + start;
+
+}
+
+CGFloat getEaseInBack(CGFloat start,CGFloat end,CGFloat ratio)
+{
+    BoundsCheck(ratio, start, end)
+    CGFloat s = 1.70158;
+    CGFloat diff = end - start;
+    NSLog(@"%f",ratio);
+    return (powf(ratio, 2.0) * ((s + 1.0) * ratio - s))*diff + start;
     
 }
+
+
+CGFloat getEaseOutBackInternal(CGFloat ratio)
+{
+    if (ratio >= 1.0)
+        return 1;
+    CGFloat s = 1.70158;
+    CGFloat invRatio = ratio -1;
+    return (powf(invRatio, 2) * ((s + 1.0)*invRatio + s) + 1.0);
+    
+}
+
+CGFloat getEaseInBackInternal(CGFloat ratio)
+{
+    
+    if (ratio >= 1.0)
+        return 1;
+    CGFloat s = 1.70158;
+    return (powf(ratio, 2.0) * ((s + 1.0) * ratio - s));
+    
+}
+
+
+CGFloat getEaseInOutBack(CGFloat start,CGFloat end,CGFloat ratio)
+{
+    CGFloat val = 0;
+    CGFloat diff = end - start;
+    
+    if (ratio < 0.5)
+        val = 0.5 * getEaseInBackInternal(ratio*2.0);
+    else
+        val = 0.5 * getEaseOutBackInternal((ratio-0.5)*2.0) + 0.5;
+    
+    return val * diff + start;
+}
+

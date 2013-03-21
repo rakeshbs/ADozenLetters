@@ -15,3 +15,6 @@
 CGFloat getEaseIn(CGFloat start,CGFloat end,CGFloat ratio);
 CGFloat getEaseOut(CGFloat start,CGFloat end,CGFloat ratio);
 CGFloat getSineEaseOut(CGFloat start,CGFloat ratio,CGFloat maxAmplitude);
+CGFloat getEaseOutBack(CGFloat start,CGFloat end,CGFloat ratio);
+CGFloat getEaseInOutBack(CGFloat start,CGFloat end,CGFloat ratio);
+CGFloat getEaseInBack(CGFloat start,CGFloat end,CGFloat ratio);
