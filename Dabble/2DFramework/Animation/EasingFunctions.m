@@ -35,3 +35,8 @@ CGFloat getSineEaseOut(CGFloat start,CGFloat ratio,CGFloat maxAmplitude)
     CGFloat s = powf(2,-4*ratio) * sinf(2*PI*3*ratio);
    return  start + maxAmplitude * s;
 }
+
+CGFloat getEaseInOutBack(CGFloat start,CGFloat end,CGFloat ratio)
+{
+    
+}
