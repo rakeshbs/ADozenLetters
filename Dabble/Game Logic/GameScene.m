@@ -9,6 +9,8 @@
 #import "GameScene.h"
 #import "Dictionary.h"
 
+#define yOffset 75
+
 @interface GameScene (Private)
 -(void)createSquares;
 @end
@@ -21,6 +23,7 @@ NSString *charArray3[5];
 NSMutableString *resString[3];
 Dictionary *dictionary;
 NSMutableArray *madeWords;
+
 
 -(id)init
 {
@@ -38,9 +41,9 @@ NSMutableArray *madeWords;
         madeWords = [[NSMutableArray alloc]init];
 
         [self performSelectorInBackground:@selector(loadData) withObject:nil];
-        gcHelper = [GCHelper sharedInstance];
-        gcHelper.delegate = self;
-        [gcHelper authenticateLocalUser];
+ //       gcHelper = [GCHelper sharedInstance];
+    //    gcHelper.delegate = self;
+      //  [gcHelper authenticateLocalUser];
 //        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"gamecenter:"]];
 
       
@@ -92,11 +95,12 @@ NSMutableArray *madeWords;
     
     squaresArray = [[NSMutableArray alloc]init];
     
+    
     for (int i = 0;i<3;i++)
     {
         square = [[Square alloc]initWithCharacter:charArray1[i]];
-        square.centerPoint = CGPointMake(160, 160);
-        square.anchorPoint = CGPointMake(100+60*i, 210);
+        square.centerPoint = CGPointMake(160, 160+yOffset);
+        square.anchorPoint = CGPointMake(100+60*i, 210+yOffset);
         [self addElement:square];
         [squaresArray addObject:square];
         square.squaresArray  = squaresArray;
@@ -106,8 +110,8 @@ NSMutableArray *madeWords;
     for (int i = 0;i<4;i++)
     {
         square = [[Square alloc]initWithCharacter:charArray2[i]];
-        square.centerPoint = CGPointMake(160, 160);
-        square.anchorPoint = CGPointMake(70+60*i, 130);
+        square.centerPoint = CGPointMake(160, 160+yOffset);
+        square.anchorPoint = CGPointMake(70+60*i, 130+yOffset);
         [self addElement:square];
         [squaresArray addObject:square];
         square.squaresArray  = squaresArray;
@@ -117,8 +121,8 @@ NSMutableArray *madeWords;
     for (int i = 0;i<5;i++)
     {
         square = [[Square alloc]initWithCharacter:charArray3[i]];
-        square.centerPoint = CGPointMake(160, 160);
-        square.anchorPoint = CGPointMake(40+60*i, 50);
+        square.centerPoint = CGPointMake(160, 160+yOffset);
+        square.anchorPoint = CGPointMake(40+60*i, 50+yOffset);
         [self addElement:square];
         [squaresArray addObject:square];
         square.squaresArray  = squaresArray;
@@ -145,9 +149,9 @@ NSMutableArray *madeWords;
 
 -(void)draw{
 	Color4f color;
-	color.red = 1;
-	color.blue = 1;
-	color.green = 1;
+	color.red = 241.0/255.0;
+	color.blue = 196.0/255.0;
+	color.green = 15/255.0;
 	color.alpha = 1;
     [director clearScene:color];
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -186,18 +190,11 @@ NSMutableArray *madeWords;
         {
             NSLog(@"%@",resString[i]);
             [madeWords addObject:resString[i]];
-            CGFloat anchorY = i*80 + 50;
+            CGFloat anchorY = i*80 + 50 + yOffset;
             for (Square *sq in squaresArray)
             {
                 if (sq.anchorPoint.y == anchorY)
                 {
-                    CGFloat delay = 0;
-                    if (i == 0)
-                        delay = (sq.anchorPoint.x-40)/squareSize;
-                    if (i == 1)
-                        delay = (sq.anchorPoint.x-70)/squareSize;
-                    if (i == 2)
-                        delay = (sq.anchorPoint.x-100)/squareSize;
                     [sq wiggleFor:1.0];
                     
                 }

@@ -46,7 +46,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 */
 
 #import <OpenGLES/ES1/glext.h>
-
+#import "GLCommon.h"
 #import "Texture2D.h"
 
 
@@ -308,90 +308,23 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 @implementation Texture2D (Drawing)
 
--(void)configureForDrawing
+-(Vector3D *)getTextureRect
 {
-	GLfloat		coordinates[] = { 0,	_maxT,
-		_maxS,	_maxT,
-		0,		0,
-	_maxS,	0 };
-	glBindTexture(GL_TEXTURE_2D, _name);
-	glTexCoordPointer(2, GL_FLOAT, 0, coordinates);
-}
-
-- (void) drawAtPoint:(CGPoint)point 
-{
-	GLfloat		coordinates[] = { 0,	_maxT,
-								_maxS,	_maxT,
-								0,		0,
-								_maxS,	0 };
-	GLfloat		width = (GLfloat)_width * _maxS,
-				height = (GLfloat)_height * _maxT;
-	GLfloat		vertices[] = {	-width / 2 + point.x,	-height / 2 + point.y,	0.0,
-								width / 2 + point.x,	-height / 2 + point.y,	0.0,
-								-width / 2 + point.x,	height / 2 + point.y,	0.0,
-								width / 2 + point.x,	height / 2 + point.y,	0.0 };
-	
-	glBindTexture(GL_TEXTURE_2D, _name);
-	glVertexPointer(3, GL_FLOAT, 0, vertices);
-	glTexCoordPointer(2, GL_FLOAT, 0, coordinates);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    GLfloat	width = (GLfloat)_width * _maxS,
+    height = (GLfloat)_height * _maxT;
+    
+    Vector3D *textureVertices = malloc(sizeof(Vector3D)*4);
+    textureVertices[0] = (Vector3D) {.x = -width / 2 , .y = -height / 2, .z = 0.0};
+    textureVertices[1] = (Vector3D) {.x = width / 2 , .y = -height / 2,  .z = 0.0};
+    textureVertices[2] = (Vector3D) {.x = width / 2 , .y = height / 2,	.z = 0.0};
+    textureVertices[3] = (Vector3D) {.x = -width / 2 , .y = height / 2,	.z = 0.0};
+    
+    return textureVertices;
 }
 
 -(void)bindTexture
 {
 	glBindTexture(GL_TEXTURE_2D, _name);
-}
-
-- (void) drawBindedTextureAtPoint:(CGPoint)point 
-{
-	GLfloat		coordinates[] = { 0,	_maxT,
-		_maxS,	_maxT,
-		0,		0,
-	_maxS,	0 };
-	GLfloat		width = (GLfloat)_width * _maxS,
-	height = (GLfloat)_height * _maxT;
-	GLfloat		vertices[] = {	-width / 2 + point.x,	-height / 2 + point.y,	0.0,
-		width / 2 + point.x,	-height / 2 + point.y,	0.0,
-		-width / 2 + point.x,	height / 2 + point.y,	0.0,
-	width / 2 + point.x,	height / 2 + point.y,	0.0 };
-	
-	glVertexPointer(3, GL_FLOAT, 0, vertices);
-	glTexCoordPointer(2, GL_FLOAT, 0, coordinates);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-}
-
-- (void) drawInRect:(CGRect)rect
-{
-	GLfloat	 coordinates[] = {  0,		_maxT,
-		_maxS,	_maxT,
-		0,		0,
-	_maxS,	0  };
-	GLfloat	vertices[] = {	rect.origin.x,							rect.origin.y,							0.0,
-		rect.origin.x + rect.size.width,		rect.origin.y,							0.0,
-		rect.origin.x,							rect.origin.y + rect.size.height,		0.0,
-	rect.origin.x + rect.size.width,		rect.origin.y + rect.size.height,		0.0 };
-	
-	glBindTexture(GL_TEXTURE_2D, _name);
-	glVertexPointer(3, GL_FLOAT, 0, vertices);
-	glTexCoordPointer(2, GL_FLOAT, 0, coordinates);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-}
-
-
-- (void) drawBindedTextureInRect:(CGRect)rect
-{
-	GLfloat	 coordinates[] = {  0,		_maxT,
-								_maxS,	_maxT,
-								0,		0,
-								_maxS,	0  };
-	GLfloat	vertices[] = {	rect.origin.x,							rect.origin.y,							0.0,
-							rect.origin.x + rect.size.width,		rect.origin.y,							0.0,
-							rect.origin.x,							rect.origin.y + rect.size.height,		0.0,
-							rect.origin.x + rect.size.width,		rect.origin.y + rect.size.height,		0.0 };
-	
-	glVertexPointer(3, GL_FLOAT, 0, vertices);
-	glTexCoordPointer(2, GL_FLOAT, 0, coordinates);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
 @end

@@ -47,7 +47,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 #import <UIKit/UIKit.h>
 #import <OpenGLES/ES1/gl.h>
-
+#import "GLCommon.h"
 //CONSTANTS:
 
 typedef enum {
@@ -94,12 +94,8 @@ Drawing extensions to make it easy to draw basic quads using a Texture2D object.
 These functions require GL_TEXTURE_2D and both GL_VERTEX_ARRAY and GL_TEXTURE_COORD_ARRAY client states to be enabled.
 */
 @interface Texture2D (Drawing)
-- (void) drawAtPoint:(CGPoint)point;
-- (void) drawInRect:(CGRect)rect;
-- (void) drawBindedTextureAtPoint:(CGPoint)point;
-- (void) drawBindedTextureInRect:(CGRect)rect;
+-(Vector3D *)getTextureRect;
 -(void)bindTexture;
--(void)configureForDrawing;
 @end
 
 /*
@@ -116,4 +112,6 @@ Note that the generated textures are of type A8 - use the blending mode (GL_SRC_
 */
 @interface Texture2D (Text)
 - (id) initWithString:(NSString*)string dimensions:(CGSize)dimensions alignment:(UITextAlignment)alignment fontName:(NSString*)name fontSize:(CGFloat)size;
+
+
 @end

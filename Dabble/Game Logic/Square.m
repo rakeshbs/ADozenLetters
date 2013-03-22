@@ -36,6 +36,7 @@
 Vector3D rectVertices[4];
 Vector3D shadowVertices[4];
 Color4f rectColors[4];
+Color4f rectBorderColors[4];
 TextureCoord characterTextureCoordinates[4];
 TextureCoord shadowTextureCoordinates[4];
 SoundManager *soundManager;
@@ -55,10 +56,10 @@ SoundManager *soundManager;
         shadowAnimationCount = 0;
         shadowVisible = NO;
         TextureManager *texManager = [TextureManager getSharedTextureManager]; 
-        characterTexture =[texManager getStringTexture:_character                                                                     dimensions:CGSizeMake(squareSize,squareSize)
+        characterTexture =[texManager getStringTexture:_character                                                                     dimensions:CGSizeMake(40,40)
                                              alignment:UITextAlignmentCenter
                                               fontName:@"ArialRoundedMTBold"
-                                              fontSize:45];
+                                              fontSize:35];
         shadowTexture = [textureManager getTexture:@"shadow.png"];
         
         rectVertices[0] =  (Vector3D) {.x = -squareSize/(2), .y = -squareSize/(2), .z = 10.0f};
@@ -72,12 +73,18 @@ SoundManager *soundManager;
         shadowVertices[3] = (Vector3D)  {.x = -shadowSize/(2), .y = shadowSize/(2), .z = 10.0f};
         
         
-        GLfloat grayColor = 0.93f;
+        GLfloat grayColor = 1.0f;
         
-        rectColors[0] = (Color4f) { .red = grayColor, .blue = 0 , .green = grayColor, .alpha = 1.0f};
-        rectColors[1] = (Color4f) { .red = grayColor, .blue = 0 , .green = grayColor, .alpha = 1.0f};
-        rectColors[2] = (Color4f) { .red = grayColor, .blue = 0 , .green = grayColor, .alpha = 1.0f};
-        rectColors[3] = (Color4f) { .red = grayColor, .blue = 0 , .green = grayColor, .alpha = 1.0f};
+        rectColors[0] = (Color4f) { .red = grayColor, .blue = 1.0 , .green = grayColor, .alpha = 1.0f};
+        rectColors[1] = (Color4f) { .red = grayColor, .blue = 1.0 , .green = grayColor, .alpha = 1.0f};
+        rectColors[2] = (Color4f) { .red = grayColor, .blue = 1.0 , .green = grayColor, .alpha = 1.0f};
+        rectColors[3] = (Color4f) { .red = grayColor, .blue = 1.0 , .green = grayColor, .alpha = 1.0f};
+        
+        rectBorderColors[0] = (Color4f) { .red = 0.94, .blue = 0.05 , .green = 0.76, .alpha = 1.0f};
+        rectBorderColors[1] = (Color4f) { .red = 0.94, .blue = 0.05 , .green = 0.76, .alpha = 1.0f};
+        rectBorderColors[2] = (Color4f) { .red = 0.94, .blue = 0.05 , .green = 0.76, .alpha = 1.0f};
+        rectBorderColors[3] = (Color4f) { .red = 0.94, .blue = 0.05 , .green = 0.76, .alpha = 1.0f};
+        
 
         characterTextureCoordinates[0] = (TextureCoord) { .s = 0, .t = characterTexture.maxS};
         characterTextureCoordinates[1] = (TextureCoord) { .s = characterTexture.maxS, .t = characterTexture.maxT};
@@ -104,12 +111,18 @@ SoundManager *soundManager;
         squareColorShader.colors = rectColors;
         squareColorShader.count = 4;
         
+        squareBorderShader = [[ColorShader alloc]init];
+        squareBorderShader.drawMode = GL_LINE_LOOP;
+        squareBorderShader.vertices = rectVertices;
+        squareBorderShader.colors = rectBorderColors;
+        squareBorderShader.count = 4;
+        
         characterTextureShader = [[StringTextureShader alloc]init];
         characterTextureShader.count = 4;
-        characterTextureShader.vertices = rectVertices;
+        characterTextureShader.vertices = [characterTexture getTextureRect];
         characterTextureShader.texture = characterTexture;
         characterTextureShader.textureCoordinates = characterTextureCoordinates;
-        characterTextureShader.textureColor = (Color4f) {.red = 0.4, .green = 0.8, .blue = 0.9, .alpha = 1.0};
+        characterTextureShader.textureColor = (Color4f) {.red = 0, .green = 0.0, .blue = 0.0, .alpha = 1.0};
      
         shadowTextureShader = [[TextureShader alloc]init];
         shadowTextureShader.drawMode = GL_TRIANGLE_FAN;
@@ -126,10 +139,13 @@ SoundManager *soundManager;
 -(void)draw
 {
     [mvpMatrixManager pushModelViewMatrix];
+    if (wiggleAngle != 0)
+        NSLog(@"%f",wiggleAngle);
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:0];
     [shadowTextureShader draw];
     [squareColorShader draw];
+    [squareBorderShader draw];
     [characterTextureShader draw];
     [mvpMatrixManager popModelViewMatrix];
     

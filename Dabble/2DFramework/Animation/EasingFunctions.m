@@ -52,7 +52,6 @@ CGFloat getEaseInBack(CGFloat start,CGFloat end,CGFloat ratio)
     BoundsCheck(ratio, start, end)
     CGFloat s = 1.70158;
     CGFloat diff = end - start;
-    NSLog(@"%f",ratio);
     return (powf(ratio, 2.0) * ((s + 1.0) * ratio - s))*diff + start;
     
 }
@@ -81,6 +80,7 @@ CGFloat getEaseInBackInternal(CGFloat ratio)
 
 CGFloat getEaseInOutBack(CGFloat start,CGFloat end,CGFloat ratio)
 {
+    BoundsCheck(ratio, start, end)
     CGFloat val = 0;
     CGFloat diff = end - start;
     

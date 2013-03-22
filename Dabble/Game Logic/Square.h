@@ -43,6 +43,7 @@
     CGFloat redColor;
     
     ColorShader *squareColorShader;
+    ColorShader *squareBorderShader;
     StringTextureShader *characterTextureShader;
     TextureShader *shadowTextureShader;
 }
