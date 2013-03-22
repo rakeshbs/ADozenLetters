@@ -199,7 +199,6 @@ static GCHelper *sharedHelper = nil;
 - (void)match:(GKMatch *)theMatch player:(NSString *)playerID didChangeState:(GKPlayerConnectionState)state {
     
     if (match != theMatch) return;
-    
     switch (state) {
         case GKPlayerStateConnected: 
             // handle a new player connection.
@@ -225,6 +224,7 @@ static GCHelper *sharedHelper = nil;
 - (void)match:(GKMatch *)theMatch connectionWithPlayerFailed:(NSString *)playerID withError:(NSError *)error {
     
     if (match != theMatch) return;
+
     
     NSLog(@"Failed to connect to player with error: %@", error.localizedDescription);
     matchStarted = NO;

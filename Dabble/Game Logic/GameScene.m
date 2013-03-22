@@ -95,7 +95,7 @@ NSMutableArray *madeWords;
     for (int i = 0;i<3;i++)
     {
         square = [[Square alloc]initWithCharacter:charArray1[i]];
-        square.centerPoint = CGPointMake(140, 300);
+        square.centerPoint = CGPointMake(160, 160);
         square.anchorPoint = CGPointMake(100+60*i, 210);
         [self addElement:square];
         [squaresArray addObject:square];
@@ -106,7 +106,7 @@ NSMutableArray *madeWords;
     for (int i = 0;i<4;i++)
     {
         square = [[Square alloc]initWithCharacter:charArray2[i]];
-        square.centerPoint = CGPointMake(140, 300);
+        square.centerPoint = CGPointMake(160, 160);
         square.anchorPoint = CGPointMake(70+60*i, 130);
         [self addElement:square];
         [squaresArray addObject:square];
@@ -117,7 +117,7 @@ NSMutableArray *madeWords;
     for (int i = 0;i<5;i++)
     {
         square = [[Square alloc]initWithCharacter:charArray3[i]];
-        square.centerPoint = CGPointMake(140, 300);
+        square.centerPoint = CGPointMake(160, 160);
         square.anchorPoint = CGPointMake(40+60*i, 50);
         [self addElement:square];
         [squaresArray addObject:square];
@@ -238,11 +238,12 @@ NSMutableArray *squaresArray;
 //GameCenter Functions
 - (void)matchStarted
 {
+    NSLog(@"match Started");
     
 }
 - (void)matchEnded
 {
-    
+        NSLog(@"match Ended");
 }
 - (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID
 {
@@ -250,12 +251,12 @@ NSMutableArray *squaresArray;
 }
 - (void)inviteReceived
 {
-    
+            NSLog(@"match invite received");
 }
 - (void)localUserAuthenticated
 {
     NSLog(@"authenticated");
-  //  [gcHelper findMatchWithMinPlayers:2 maxPlayers:2 viewController:director.openGLViewController delegate:self];
+    [gcHelper findMatchWithMinPlayers:2 maxPlayers:2 viewController:director.openGLViewController delegate:self];
 }
 
 
