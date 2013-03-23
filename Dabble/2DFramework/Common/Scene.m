@@ -22,6 +22,9 @@
         touchesInScene = [[NSMutableArray alloc]init];
         animator = [Animator getSharedAnimator];
         mvpMatrixManager = [MVPMatrixManager sharedMVPMatrixManager];
+        if (elements == nil)
+            elements = [[NSMutableArray alloc]init];
+
 	}
 	return self;
 }
@@ -56,8 +59,6 @@
 
 -(void)addElement:(GLElement *)_element
 {
-	if (elements == nil)
-		elements = [[NSMutableArray alloc]init];
     [_element setScene:self];
 	[elements addObject:_element];
 }

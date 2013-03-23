@@ -17,10 +17,10 @@
 +(TextureManager *)getSharedTextureManager;
 -(Texture2D *)getTexture:(NSString *)texture_name;
 -(void)delete_Texture:(NSString *)texture_name;
-/*
+
 -(Texture2D *)getStringTexture:(NSString *)texture_name;
 -(Texture2D *)getStringTexture:(NSString *)string dimensions:(CGSize)cgSize
 					 alignment:(UITextAlignment)alignment 
 					  fontName:(NSString *)font
-					  fontSize:(int)size;*/
+					  fontSize:(int)size;
 @end

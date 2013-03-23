@@ -333,6 +333,7 @@
 				1445DC6F16F97AD600EBBCCF /* GameScene.m */,
 				1445DC7016F97AD600EBBCCF /* Square.h */,
 				1445DC7116F97AD600EBBCCF /* Square.m */,
+				1445DCB616F97B9400EBBCCF /* Other Files */,
 			);
 			path = "Game Logic";
 			sourceTree = "<group>";
@@ -370,7 +371,7 @@
 				1445DCB316F97B6900EBBCCF /* Dabble-Prefix.pch */,
 			);
 			name = "Other Files";
-			path = Dabble;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		145ABAC316FB144D00DA2488 /* GameCenter */ = {
@@ -386,7 +387,6 @@
 			isa = PBXGroup;
 			children = (
 				1445DC2716F97AD600EBBCCF /* Dabble */,
-				1445DCB616F97B9400EBBCCF /* Other Files */,
 				1464725D16D27801000C8FB4 /* Frameworks */,
 				1464725C16D27801000C8FB4 /* Products */,
 			);

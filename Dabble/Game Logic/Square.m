@@ -19,6 +19,7 @@
 #define ANIMATION_QUEUE_MOVE 5
 #define ANIMATION_SHOW_COLOR 6
 #define ANIMATION_HIDE_COLOR 7
+#define ANIMATION_THROW 8
 
 
 #define SHADOW_ALPHA_MAX 1.0f
@@ -51,7 +52,7 @@ SoundManager *soundManager;
 {
     if (self = [super init])
     {
-        redColor = REDCOLOR_MIN;
+       
         self.character = _character;
         shadowAnimationCount = 0;
         shadowVisible = NO;
@@ -61,7 +62,7 @@ SoundManager *soundManager;
                                               fontName:@"ArialRoundedMTBold"
                                               fontSize:35];
         shadowTexture = [textureManager getTexture:@"shadow.png"];
-        
+      
         rectVertices[0] =  (Vector3D) {.x = -squareSize/(2), .y = -squareSize/(2), .z = 10.0f};
         rectVertices[1] = (Vector3D)  {.x = squareSize/(2), .y = - squareSize/(2), .z = 10.0f};
         rectVertices[2] = (Vector3D)  {.x = squareSize/(2), .y =  squareSize/(2), .z = 10.0f};
@@ -101,9 +102,9 @@ SoundManager *soundManager;
         wiggleAngle = 0;
         shadowAlpha = 0;
         
-     //   soundManager = [SoundManager sharedSoundManager]; 
-     //   [soundManager loadSoundWithKey:@"pick" soundFile:@"bip1.aiff"];
-     //   [soundManager loadSoundWithKey:@"place" soundFile:@"bip2.aiff"];
+        //soundManager = [SoundManager sharedSoundManager];
+        //[soundManager loadSoundWithKey:@"pick" soundFile:@"bip1.aiff"];
+        //[soundManager loadSoundWithKey:@"place" soundFile:@"bip2.aiff"];
         
         squareColorShader = [[ColorShader alloc]init];
         squareColorShader.drawMode = GL_TRIANGLE_FAN;
@@ -156,6 +157,12 @@ SoundManager *soundManager;
     CGFloat animationRatio = [animation getAnimatedRatio];
     if (animation.type == ANIMATION_MOVE)
     {
+        CGFloat newX = getEaseOut(startPoint.x, endPoint.x, animationRatio);
+        CGFloat newY = getEaseOut(startPoint.y, endPoint.y, animationRatio);
+        _centerPoint = CGPointMake(newX, newY);
+    }
+    else if (animation.type == ANIMATION_THROW)
+    {
         CGFloat newX = getEaseInOutBack(startPoint.x, endPoint.x, animationRatio);
         CGFloat newY = getEaseInOutBack(startPoint.y, endPoint.y, animationRatio);
         _centerPoint = CGPointMake(newX, newY);
@@ -178,14 +185,7 @@ SoundManager *soundManager;
     {
         wiggleAngle = getSineEaseOut(0, animationRatio, WIGGLE_ANGLE);
     }
-    else if (animation.type == ANIMATION_SHOW_COLOR)
-    {
-        redColor = getEaseOut(REDCOLOR_MIN, REDCOLOR_MAX, animationRatio);
-    }
-    else if (animation.type == ANIMATION_HIDE_COLOR)
-    {
-        redColor = getEaseOut(REDCOLOR_MAX, REDCOLOR_MIN, animationRatio);
-    }
+
     if (animationRatio >= 1.0)
         return YES;
     return NO;
@@ -310,11 +310,11 @@ SoundManager *soundManager;
   
         if (touch.tapCount >= 1)
         {
-            [self moveToPoint:CGPointMake(self.anchorPoint.x ,  self.anchorPoint.y) inDuration:0.5];
+            [self moveToPoint:CGPointMake(self.anchorPoint.x ,  self.anchorPoint.y) inDuration:0.2];
         }
         else
         {
-            [self moveToPoint:CGPointMake(self.anchorPoint.x ,  self.anchorPoint.y) inDuration:0.5];
+            [self moveToPoint:CGPointMake(self.anchorPoint.x ,  self.anchorPoint.y) inDuration:0.2];
         }
         [self updateShadow];
     }
@@ -344,7 +344,7 @@ SoundManager *soundManager;
             {
                 [sq moveToFront];
                 [self moveToFront];
-                [sq moveToPoint:sq.anchorPoint inDuration:0.5];
+                [sq moveToPoint:sq.anchorPoint inDuration:0.2];
                 
                 
             }
@@ -401,19 +401,6 @@ SoundManager *soundManager;
         shadowAnimationCount--;
         [self updateShadow];
     }
-    else if (animation.type == ANIMATION_SHOW_COLOR)
-    {
-        [animator addAnimationFor:self ofType:ANIMATION_HIDE_COLOR
-                       ofDuration:0.5
-              afterDelayInSeconds:0];
-    }
-}
-
--(void)animateColorWithDelay:(CGFloat)delay
-{
-    [animator addAnimationFor:self ofType:ANIMATION_SHOW_COLOR
-                   ofDuration:0.5
-          afterDelayInSeconds:delay];
 }
 
 -(void)wiggleFor:(CGFloat)duration
@@ -435,6 +422,22 @@ SoundManager *soundManager;
     startPoint = self.centerPoint;
     endPoint = newPoint;
     [animator addAnimationFor:self ofType:ANIMATION_MOVE ofDuration:duration afterDelayInSeconds:delay];
+}
+
+-(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration
+{
+    
+    startPoint = self.centerPoint;
+    endPoint = newPoint;
+    [animator addAnimationFor:self ofType:ANIMATION_THROW ofDuration:duration afterDelayInSeconds:0];
+}
+
+-(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay
+{
+    
+    startPoint = self.centerPoint;
+    endPoint = newPoint;
+    [animator addAnimationFor:self ofType:ANIMATION_THROW ofDuration:duration afterDelayInSeconds:delay];
 }
 
 

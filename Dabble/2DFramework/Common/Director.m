@@ -8,6 +8,9 @@
 
 #import "Director.h"
 #import "Scene.h"
+#import "ColorShader.h"
+#import "TextureShader.h"
+#import "StringTextureShader.h"
 
 @interface Director (Private)
 
@@ -26,9 +29,19 @@
 		if (dir == nil)
 		{
 			dir = [[Director alloc]init];
-		}
+        }
 	}
 	return dir;
+}
+
+-(id)init
+{
+    if (self = [super init])
+    {
+        defaultShadersLoaded = NO;
+
+    }
+    return self;
 }
 
 -(void)presentScene:(NSObject *)scene
@@ -78,6 +91,23 @@
 	if (current_scene != nil)
 		[self presentScene:current_scene];
 	NSLog(@"Screen width %f",openGLview.frame.size.width);
+    
+    if (!defaultShadersLoaded)
+    {
+        defaultShadersLoaded = YES;
+        [self loadShaders];
+    }
+}
+
+-(void)loadShaders
+{
+    ColorShader *shader1 = [[ColorShader alloc]init];
+    [shader1 release];
+    TextureShader *shader2 = [[TextureShader alloc]init];
+    [shader2 release];
+    StringTextureShader *shader3 = [[StringTextureShader alloc]init];
+    [shader3 release];
+    
 }
 
 -(void)dealloc

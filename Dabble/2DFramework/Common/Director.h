@@ -30,6 +30,8 @@
 	GLfloat interfaceTranslation_x;
 	GLfloat interfaceTranslation_y;
 	NSTimer *animationTimer;
+    
+    BOOL defaultShadersLoaded;
 }
 
 @property (nonatomic,retain) UIWindow *window;

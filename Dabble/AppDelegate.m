@@ -30,7 +30,7 @@
     
     GameScene *gameScene = [[GameScene alloc]init];
     [[Director getSharedDirector]presentScene:gameScene];
-    [gameScene release];
+   [gameScene release];
     return YES;
 }
 

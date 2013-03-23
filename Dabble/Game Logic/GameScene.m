@@ -29,7 +29,8 @@ NSMutableArray *madeWords;
 {
     if (self = [super init])
     {
-        
+        currentRandomNumber =  arc4random()+1;
+
         [mvpMatrixManager setOrthoProjection:-self.view.frame.size.width
                                             :0 :-self.view.frame.size.height :0 :-1 :1000];
         
@@ -39,29 +40,35 @@ NSMutableArray *madeWords;
         resString[1] = [[NSMutableString alloc]initWithString:@"####"];
         resString[2] = [[NSMutableString alloc]initWithString:@"###"];
         madeWords = [[NSMutableArray alloc]init];
-
-        [self performSelectorInBackground:@selector(loadData) withObject:nil];
- //       gcHelper = [GCHelper sharedInstance];
-    //    gcHelper.delegate = self;
-      //  [gcHelper authenticateLocalUser];
-//        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"gamecenter:"]];
+        
+        [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
+        
+        gcHelper = [GCHelper sharedInstance];
+        gcHelper.delegate = self;
+        [gcHelper authenticateLocalUser];
+      //  [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"gamecenter:"]];
 
       
     }
     return  self;
 }
 
--(void)loadData
+-(void)loadDictionary
 {
     dictionary = [Dictionary getSharedDictionary];
+}
+
+-(void)loadData
+{
+    
     NSURL *url = [NSURL URLWithString:@"http://qucentis.com/dabble.php"];
     NSData *data = [NSData dataWithContentsOfURL:url];
     NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     NSString *stringData = [dataDict[@"chars"] uppercaseString];
-    
+    [self performSelectorOnMainThread:@selector(sendCharData:) withObject:stringData waitUntilDone:YES];
     
     [self performSelectorOnMainThread:@selector(createSquares:) withObject:stringData waitUntilDone:YES];
-
+    
 }
 
 -(void)createSquares:(NSString *)dataStr
@@ -89,7 +96,7 @@ NSMutableArray *madeWords;
     Square *square;
     if (squaresArray != nil)
     {
-        [elements removeAllObjects];
+        [elements removeObjectsInArray:squaresArray];
         [squaresArray release];
     }
     
@@ -99,7 +106,7 @@ NSMutableArray *madeWords;
     for (int i = 0;i<3;i++)
     {
         square = [[Square alloc]initWithCharacter:charArray1[i]];
-        square.centerPoint = CGPointMake(160, 160+yOffset);
+            square.centerPoint = CGPointMake(160, 160+yOffset);
         square.anchorPoint = CGPointMake(100+60*i, 210+yOffset);
         [self addElement:square];
         [squaresArray addObject:square];
@@ -133,7 +140,7 @@ NSMutableArray *madeWords;
     
     for (Square *sq in [squaresArray reverseObjectEnumerator])
     {
-        [sq moveToPoint:sq.anchorPoint inDuration:0.7 afterDelay:delay];
+        [sq throwToPoint:sq.anchorPoint inDuration:0.7 afterDelay:delay];
         delay += 0.1;
     }
     
@@ -155,11 +162,6 @@ NSMutableArray *madeWords;
 	color.alpha = 1;
     [director clearScene:color];
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-}
-
--(void)update
-{
-    
 }
 
 -(void)squareFinishedMoving:(NSNotification *)notification
@@ -235,7 +237,7 @@ NSMutableArray *squaresArray;
 //GameCenter Functions
 - (void)matchStarted
 {
-    NSLog(@"match Started");
+    [self sendRandomNumber];
     
 }
 - (void)matchEnded
@@ -244,16 +246,81 @@ NSMutableArray *squaresArray;
 }
 - (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID
 {
+    Message *message = (Message *) [data bytes];
     
+    int messageType = message->messageType;
+    
+    NSLog(@"message recieved");
+    
+    if (messageType== kMessageTypeRandomNumber)
+    {
+        if (currentRandomNumber == 0)
+            return;
+        
+        MessageRandomNumber * messRandom = (MessageRandomNumber *) [data bytes];
+        if (currentRandomNumber > messRandom->randomNumber)
+        {
+            isServer = YES;
+            [self performSelectorInBackground:@selector(loadData) withObject:nil];
+            NSLog(@"is server");
+        }
+        else if (currentRandomNumber == messRandom->randomNumber)
+        {
+            currentRandomNumber =  arc4random()+1;
+            [self sendRandomNumber];
+        }
+        else
+        {
+            isServer = NO;
+            NSLog(@"is not server");
+        }
+    }
+    else if (messageType == kMessageTypeCharData)
+    {
+        MessageCharData * messData = (MessageCharData *) [data bytes];
+
+        NSString *stringData = [NSString stringWithCString:messData->charData encoding:NSUTF8StringEncoding];
+      //          int k = 0;
+       [self performSelectorOnMainThread:@selector(createSquares:) withObject:stringData waitUntilDone:YES];
+    }
 }
 - (void)inviteReceived
 {
-            NSLog(@"match invite received");
+        
 }
 - (void)localUserAuthenticated
 {
-    NSLog(@"authenticated");
+
     [gcHelper findMatchWithMinPlayers:2 maxPlayers:2 viewController:director.openGLViewController delegate:self];
+}
+
+-(void)sendRandomNumber
+{
+    MessageRandomNumber message;
+    message.message.messageType = kMessageTypeRandomNumber;
+    message.randomNumber = currentRandomNumber;
+    NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageRandomNumber)];
+    [self sendDataToOthers:data];
+}
+
+-(void)sendCharData:(NSString *)stringData
+{
+    MessageCharData message;
+    message.message.messageType = kMessageTypeCharData;
+    const char *charArray = [stringData cStringUsingEncoding:NSUTF8StringEncoding];
+
+    for (size_t idx = 0; idx < 12; ++idx) {
+        message.charData[idx] = charArray[idx];
+    }
+    message.charData[12]='\0';
+    
+    NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageCharData)];
+    [self sendDataToOthers:data];
+}
+
+-(void)sendDataToOthers:(NSData *)data
+{
+    [gcHelper.match sendDataToAllPlayers:data withDataMode:GKMatchSendDataReliable error:nil];
 }
 
 

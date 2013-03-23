@@ -20,9 +20,7 @@
 
 typedef enum {
     kMessageTypeRandomNumber = 0,
-    kMessageTypeGameBegin,
-    kMessageTypeMove,
-    kMessageTypeGameOver
+    kMessageTypeCharData = 1,
 } MessageType;
 
 typedef struct {
@@ -36,22 +34,12 @@ typedef struct {
 
 typedef struct {
     Message message;
+    char charData[60];
+} MessageCharData;
+
+typedef struct {
+    Message message;
 } MessageGameBegin;
-
-typedef struct {
-    Message message;
-} MessageMove;
-
-typedef struct {
-    Message message;
-    BOOL player1Won;
-} MessageGameOver;
-
-typedef enum {
-    kEndReasonWin,
-    kEndReasonLose,
-    kEndReasonDisconnect
-} EndReason;
 
 typedef enum {
     kGameStateWaitingForMatch = 0,

@@ -13,5 +13,7 @@
 @interface GameScene : Scene <GCHelperDelegate>
 {
     GCHelper *gcHelper;
+    BOOL isServer;
+    int currentRandomNumber;
 }
 @end

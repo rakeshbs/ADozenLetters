@@ -54,9 +54,9 @@
 @property (nonatomic,assign) NSMutableArray *squaresArray;
 -(id)initWithCharacter:(NSString *)_character;
 
--(void)animateColorWithDelay:(CGFloat)delay;
-
 -(void)wiggleFor:(CGFloat)duration;
 -(void)resetToAnchorPoint;
 -(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay;
+-(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration;
+-(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay;
 @end

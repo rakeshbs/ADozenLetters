@@ -132,7 +132,7 @@
 {
 	if (view_delegate != nil)
 		[view_delegate sceneMadeInActive];
-	view_delegate = scene;
+	self.view_delegate = scene;
 	scene.view = self;
 	//[scene sceneMadeActive];
 	refreshTimeInterval = CFAbsoluteTimeGetCurrent();
