@@ -52,96 +52,109 @@ SoundManager *soundManager;
 {
     if (self = [super init])
     {
-       
-        self.character = _character;
-        shadowAnimationCount = 0;
-        shadowVisible = NO;
-        TextureManager *texManager = [TextureManager getSharedTextureManager]; 
-        characterTexture =[texManager getStringTexture:_character                                                                     dimensions:CGSizeMake(40,40)
-                                             alignment:UITextAlignmentCenter
-                                              fontName:@"ArialRoundedMTBold"
-                                              fontSize:35];
-        shadowTexture = [textureManager getTexture:@"shadow.png"];
-      
-        rectVertices[0] =  (Vector3D) {.x = -squareSize/(2), .y = -squareSize/(2), .z = 10.0f};
-        rectVertices[1] = (Vector3D)  {.x = squareSize/(2), .y = - squareSize/(2), .z = 10.0f};
-        rectVertices[2] = (Vector3D)  {.x = squareSize/(2), .y =  squareSize/(2), .z = 10.0f};
-        rectVertices[3] = (Vector3D)  {.x = -squareSize/(2), .y = squareSize/(2), .z = 10.0f};
-        
-        shadowVertices[0] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 10.0f};
-        shadowVertices[1] = (Vector3D)  {.x = shadowSize/(2), .y = - shadowSize/(2), .z = 10.0f};
-        shadowVertices[2] = (Vector3D)  {.x = shadowSize/(2), .y =  shadowSize/(2), .z = 10.0f};
-        shadowVertices[3] = (Vector3D)  {.x = -shadowSize/(2), .y = shadowSize/(2), .z = 10.0f};
-        
-        
-        GLfloat grayColor = 1.0f;
-        
-        rectColors[0] = (Color4f) { .red = grayColor, .blue = 1.0 , .green = grayColor, .alpha = 1.0f};
-        rectColors[1] = (Color4f) { .red = grayColor, .blue = 1.0 , .green = grayColor, .alpha = 1.0f};
-        rectColors[2] = (Color4f) { .red = grayColor, .blue = 1.0 , .green = grayColor, .alpha = 1.0f};
-        rectColors[3] = (Color4f) { .red = grayColor, .blue = 1.0 , .green = grayColor, .alpha = 1.0f};
-        
-        rectBorderColors[0] = (Color4f) { .red = 0.94, .blue = 0.05 , .green = 0.76, .alpha = 1.0f};
-        rectBorderColors[1] = (Color4f) { .red = 0.94, .blue = 0.05 , .green = 0.76, .alpha = 1.0f};
-        rectBorderColors[2] = (Color4f) { .red = 0.94, .blue = 0.05 , .green = 0.76, .alpha = 1.0f};
-        rectBorderColors[3] = (Color4f) { .red = 0.94, .blue = 0.05 , .green = 0.76, .alpha = 1.0f};
-        
-
-        characterTextureCoordinates[0] = (TextureCoord) { .s = 0, .t = characterTexture.maxS};
-        characterTextureCoordinates[1] = (TextureCoord) { .s = characterTexture.maxS, .t = characterTexture.maxT};
-        characterTextureCoordinates[2] = (TextureCoord) { .s = characterTexture.maxS, .t = 0};
-        characterTextureCoordinates[3] = (TextureCoord) { .s = 0, .t = 0};
-        
-        shadowTextureCoordinates[0] = (TextureCoord) { .s = 0, .t = shadowTexture.maxS};
-        shadowTextureCoordinates[1] = (TextureCoord) { .s = shadowTexture.maxS, .t = shadowTexture.maxT};
-        shadowTextureCoordinates[2] = (TextureCoord) { .s = shadowTexture.maxS, .t = 0};
-        shadowTextureCoordinates[3] = (TextureCoord) { .s = 0, .t = 0};
-        
         
         startAngle = 0;
         wiggleAngle = 0;
         shadowAlpha = 0;
-        
-        //soundManager = [SoundManager sharedSoundManager];
-        //[soundManager loadSoundWithKey:@"pick" soundFile:@"bip1.aiff"];
-        //[soundManager loadSoundWithKey:@"place" soundFile:@"bip2.aiff"];
-        
-        squareColorShader = [[ColorShader alloc]init];
-        squareColorShader.drawMode = GL_TRIANGLE_FAN;
-        squareColorShader.vertices = rectVertices;
-        squareColorShader.colors = rectColors;
-        squareColorShader.count = 4;
-        
-        squareBorderShader = [[ColorShader alloc]init];
-        squareBorderShader.drawMode = GL_LINE_LOOP;
-        squareBorderShader.vertices = rectVertices;
-        squareBorderShader.colors = rectBorderColors;
-        squareBorderShader.count = 4;
-        
-        characterTextureShader = [[StringTextureShader alloc]init];
-        characterTextureShader.count = 4;
-        characterTextureShader.vertices = [characterTexture getTextureRect];
-        characterTextureShader.texture = characterTexture;
-        characterTextureShader.textureCoordinates = characterTextureCoordinates;
-        characterTextureShader.textureColor = (Color4f) {.red = 0, .green = 0.0, .blue = 0.0, .alpha = 1.0};
-     
-        shadowTextureShader = [[TextureShader alloc]init];
-        shadowTextureShader.drawMode = GL_TRIANGLE_FAN;
-        shadowTextureShader.count = 4;
-        shadowTextureShader.vertices = shadowVertices;
-        shadowTextureShader.texture = shadowTexture;
-        shadowTextureShader.textureCoordinates = shadowTextureCoordinates;
-        shadowTextureShader.textureColor = (Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 0.0};
+        self.character = _character;
+        shadowAnimationCount = 0;
+        shadowVisible = NO;
+        [self setupGraphics];
+       // [self setupSounds];
+    
     }
     
     return self;
 }
 
+
+-(void)setupSounds
+{
+    soundManager = [SoundManager sharedSoundManager];
+    [soundManager loadSoundWithKey:@"pick" soundFile:@"bip1.aiff"];
+    [soundManager loadSoundWithKey:@"place" soundFile:@"bip2.aiff"];
+    
+}
+
+-(void)setupGraphics
+{
+    TextureManager *texManager = [TextureManager getSharedTextureManager];
+    characterTexture =[texManager getStringTexture:self.character                                                                     dimensions:CGSizeMake(squareSize,squareSize)
+                                         alignment:UITextAlignmentCenter
+                                          fontName:@"Helvetica-Bold"
+                                          fontSize:40];
+    shadowTexture = [textureManager getTexture:@"shadow.png"];
+    
+    rectVertices[0] =  (Vector3D) {.x = -squareSize/(2), .y = -squareSize/(2), .z = 10.0f};
+    rectVertices[1] = (Vector3D)  {.x = squareSize/(2), .y = - squareSize/(2), .z = 10.0f};
+    rectVertices[2] = (Vector3D)  {.x = squareSize/(2), .y =  squareSize/(2), .z = 10.0f};
+    rectVertices[3] = (Vector3D)  {.x = -squareSize/(2), .y = squareSize/(2), .z = 10.0f};
+    
+    shadowVertices[0] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 10.0f};
+    shadowVertices[1] = (Vector3D)  {.x = shadowSize/(2), .y = - shadowSize/(2), .z = 10.0f};
+    shadowVertices[2] = (Vector3D)  {.x = shadowSize/(2), .y =  shadowSize/(2), .z = 10.0f};
+    shadowVertices[3] = (Vector3D)  {.x = -shadowSize/(2), .y = shadowSize/(2), .z = 10.0f};
+    
+    
+    GLfloat grayColor = 1.0f;
+    
+    rectColors[0] = (Color4f) { .red = grayColor, .blue = 1.0 , .green = grayColor, .alpha = 1.0f};
+    rectColors[1] = (Color4f) { .red = grayColor, .blue = 1.0 , .green = grayColor, .alpha = 1.0f};
+    rectColors[2] = (Color4f) { .red = grayColor, .blue = 1.0 , .green = grayColor, .alpha = 1.0f};
+    rectColors[3] = (Color4f) { .red = grayColor, .blue = 1.0 , .green = grayColor, .alpha = 1.0f};
+    
+//    rgb 243 156 18
+    
+    rectBorderColors[0] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
+    rectBorderColors[1] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
+    rectBorderColors[2] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
+    rectBorderColors[3] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
+    
+    
+    characterTextureCoordinates[0] = (TextureCoord) { .s = 0, .t = characterTexture.maxS};
+    characterTextureCoordinates[1] = (TextureCoord) { .s = characterTexture.maxS, .t = characterTexture.maxT};
+    characterTextureCoordinates[2] = (TextureCoord) { .s = characterTexture.maxS, .t = 0};
+    characterTextureCoordinates[3] = (TextureCoord) { .s = 0, .t = 0};
+    
+    shadowTextureCoordinates[0] = (TextureCoord) { .s = 0, .t = shadowTexture.maxS};
+    shadowTextureCoordinates[1] = (TextureCoord) { .s = shadowTexture.maxS, .t = shadowTexture.maxT};
+    shadowTextureCoordinates[2] = (TextureCoord) { .s = shadowTexture.maxS, .t = 0};
+    shadowTextureCoordinates[3] = (TextureCoord) { .s = 0, .t = 0};
+    
+    
+    
+    squareColorShader = [[ColorShader alloc]init];
+    squareColorShader.drawMode = GL_TRIANGLE_FAN;
+    squareColorShader.vertices = rectVertices;
+    squareColorShader.colors = rectColors;
+    squareColorShader.count = 4;
+    
+    squareBorderShader = [[ColorShader alloc]init];
+    squareBorderShader.drawMode = GL_LINE_LOOP;
+    squareBorderShader.vertices = rectVertices;
+    squareBorderShader.colors = rectBorderColors;
+    squareBorderShader.count = 4;
+    
+    characterTextureShader = [[StringTextureShader alloc]init];
+    characterTextureShader.count = 4;
+    characterTextureShader.vertices = [characterTexture getTextureRect];
+    characterTextureShader.texture = characterTexture;
+    characterTextureShader.textureCoordinates = characterTextureCoordinates;
+    characterTextureShader.textureColor = rectBorderColors[0];
+    
+    shadowTextureShader = [[TextureShader alloc]init];
+    shadowTextureShader.drawMode = GL_TRIANGLE_FAN;
+    shadowTextureShader.count = 4;
+    shadowTextureShader.vertices = shadowVertices;
+    shadowTextureShader.texture = shadowTexture;
+    shadowTextureShader.textureCoordinates = shadowTextureCoordinates;
+    shadowTextureShader.textureColor = (Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 0.0};
+
+}
+
 -(void)draw
 {
     [mvpMatrixManager pushModelViewMatrix];
-    if (wiggleAngle != 0)
-        NSLog(@"%f",wiggleAngle);
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:0];
     [shadowTextureShader draw];
@@ -198,8 +211,9 @@ SoundManager *soundManager;
         shadowVisible = YES;
         int countMove = [animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_MOVE];
         int countWiggle = [animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_WIGGLE];
+        int countThrow = [animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_THROW];
         
-        int totatCount = countMove+countWiggle;
+        int totatCount = countMove+countWiggle+countThrow;
         
         if (totatCount > 0 || touchesInElement.count > 0)
         {
@@ -210,8 +224,9 @@ SoundManager *soundManager;
     {
         int countMove = [animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_MOVE];
         int countWiggle = [animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_WIGGLE];
+        int countThrow = [animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_THROW];
         
-        int totatCount = countMove+countWiggle;
+        int totatCount = countMove+countWiggle+countThrow;
         
         if (totatCount == 0 && touchesInElement.count == 0)
         {
@@ -363,7 +378,7 @@ SoundManager *soundManager;
 
 -(void)animationStarted:(Animation *)animation
 {
-    if (animation.type == ANIMATION_MOVE || animation.type == ANIMATION_WIGGLE)
+    if (animation.type == ANIMATION_MOVE || animation.type == ANIMATION_WIGGLE || animation.type == ANIMATION_THROW)
     {
         shadowAnimationCount++;
         [self updateShadow];
@@ -374,15 +389,17 @@ SoundManager *soundManager;
     }
     else if (animation.type == ANIMATION_HIDE_SHADOW)
     {
-        [soundManager playSoundWithKey:@"place" gain:10.0f
+  /*     [soundManager playSoundWithKey:@"place" gain:10.0f
                                  pitch:1.0f
                               location:CGPointZero
-                            shouldLoop:NO];
+                            shouldLoop:NO];*/
     }
     else if (animation.type == ANIMATION_SHOW_SHADOW)
     {
+        CGFloat p = (rand()%10 - 5)/20.0;
+       // NSLog(@"%f",p);
         [soundManager playSoundWithKey:@"pick" gain:10.0f
-                                 pitch:1.0f
+                                 pitch:1.0f+p
                               location:CGPointZero
                             shouldLoop:NO];
     }
@@ -390,7 +407,7 @@ SoundManager *soundManager;
 
 -(void)animationEnded:(Animation *)animation
 {
-    if (animation.type == ANIMATION_MOVE || animation.type == ANIMATION_WIGGLE)
+    if (animation.type == ANIMATION_MOVE || animation.type == ANIMATION_WIGGLE || animation.type == ANIMATION_THROW)
     {
         if (animation.type == ANIMATION_MOVE)
         {

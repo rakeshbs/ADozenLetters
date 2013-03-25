@@ -293,7 +293,12 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     CGContextTranslateCTM(context, 0.0, height);
 	CGContextScaleCTM(context, 1.0, -1.0); //NOTE: NSString draws in UIKit referential i.e. renders upside-down compared to CGBitmapContext referential
 	UIGraphicsPushContext(context);
-		[string drawInRect:CGRectMake(0, 0, dimensions.width, dimensions.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:alignment];
+    
+    
+    CGSize fsize = [string sizeWithFont:font];
+    CGFloat offsetY = (dimensions.height-fsize.height)/2;
+    
+		[string drawInRect:CGRectMake(0, offsetY, dimensions.width, fsize.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:alignment];
 	UIGraphicsPopContext();
 	
 	self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_A8 pixelsWide:width pixelsHigh:height contentSize:dimensions];
@@ -312,6 +317,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 {
     GLfloat	width = (GLfloat)_width * _maxS,
     height = (GLfloat)_height * _maxT;
+    
     
     Vector3D *textureVertices = malloc(sizeof(Vector3D)*4);
     textureVertices[0] = (Vector3D) {.x = -width / 2 , .y = -height / 2, .z = 0.0};
