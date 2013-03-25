@@ -297,8 +297,8 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	
 	CGContextSetGrayFillColor(context, 1.0, 1.0);
     CGContextTranslateCTM(context, 0.0, height);
- //  CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
-   // CGContextSetShouldAntialias(context, YES);
+   CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
+    CGContextSetShouldAntialias(context, YES);
    // CGContextScaleCTM(context, scaleFactor, scaleFactor);
 	CGContextScaleCTM(context, 1.0, -1.0); //NOTE: NSString draws in UIKit referential i.e. renders upside-down compared to CGBitmapContext referential
 	UIGraphicsPushContext(context);

@@ -81,7 +81,7 @@ SoundManager *soundManager;
     TextureManager *texManager = [TextureManager getSharedTextureManager];
     characterTexture =[texManager getStringTexture:self.character                                                                     dimensions:CGSizeMake(squareSize,squareSize)
                                          horizontalAlignment:UITextAlignmentCenter verticalAlignment:UITextAlignmentMiddle
-                                          fontName:@"Helvetica-Bold"
+                                          fontName:@"Avenir-Heavy"
                                           fontSize:40];
     shadowTexture = [textureManager getTexture:@"shadow.png"];
     

@@ -1,5 +1,5 @@
 uniform sampler2D texture;
-varying highp vec2 fragmentTextureCoordinates;
+varying lowp vec2 fragmentTextureCoordinates;
 uniform lowp vec4 textureColor;
 
 void main()
