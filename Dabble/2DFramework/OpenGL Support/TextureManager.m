@@ -54,7 +54,7 @@
 }
 
 -(Texture2D *)getStringTexture:(NSString *)string dimensions:(CGSize)cgSize
-					 alignment:(UITextAlignment)alignment 
+           horizontalAlignment:(UITextAlignment)alignment verticalAlignment:(UITextVerticalAlignment)vAlignment
 					  fontName:(NSString *)font
 					  fontSize:(int)size
 {
@@ -68,7 +68,7 @@
 	{
 		Texture2D *tex = [[Texture2D alloc]initWithString:string
 											   dimensions:cgSize 
-												alignment:alignment 
+												horizontalAlignment:alignment verticalAlignment:vAlignment
 												 fontName:font
 												 fontSize:size];
 		
@@ -92,7 +92,7 @@
 	{
 		Texture2D *tex = [[Texture2D alloc]initWithString:texture_name
 											   dimensions:CGSizeMake(200,30) 
-												alignment:UITextAlignmentLeft 
+												horizontalAlignment:UITextAlignmentCenter verticalAlignment:UITextAlignmentMiddle
 												 fontName:@"Arial-BoldMT"
 												 fontSize:16];
 	

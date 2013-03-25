@@ -57,6 +57,13 @@ typedef enum {
 	kTexture2DPixelFormat_A8,
 } Texture2DPixelFormat;
 
+typedef enum
+{
+    UITextAlignmentTop = 0,
+    UITextAlignmentMiddle,
+    UITextAlignmentBottom
+}UITextVerticalAlignment;
+
 //CLASS INTERFACES:
 
 /*
@@ -111,7 +118,7 @@ Extensions to make it easy to create a Texture2D object from a string of text.
 Note that the generated textures are of type A8 - use the blending mode (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA).
 */
 @interface Texture2D (Text)
-- (id) initWithString:(NSString*)string dimensions:(CGSize)dimensions alignment:(UITextAlignment)alignment fontName:(NSString*)name fontSize:(CGFloat)size;
+- (id) initWithString:(NSString*)string dimensions:(CGSize)dimensions horizontalAlignment:(UITextAlignment)alignment verticalAlignment:(UITextVerticalAlignment)vertAlignment fontName:(NSString*)name fontSize:(CGFloat)size;
 
 
 @end

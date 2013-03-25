@@ -20,7 +20,8 @@
 
 -(Texture2D *)getStringTexture:(NSString *)texture_name;
 -(Texture2D *)getStringTexture:(NSString *)string dimensions:(CGSize)cgSize
-					 alignment:(UITextAlignment)alignment 
+           horizontalAlignment:(UITextAlignment)alignment verticalAlignment:(UITextVerticalAlignment)vAlignment
 					  fontName:(NSString *)font
 					  fontSize:(int)size;
+
 @end

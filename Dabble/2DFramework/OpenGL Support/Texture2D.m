@@ -256,7 +256,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 @implementation Texture2D (Text)
 
-- (id) initWithString:(NSString*)string dimensions:(CGSize)dimensions alignment:(UITextAlignment)alignment fontName:(NSString*)name fontSize:(CGFloat)size
+- (id) initWithString:(NSString*)string dimensions:(CGSize)dimensions horizontalAlignment:(UITextAlignment)alignment verticalAlignment:(UITextVerticalAlignment)vertAlignment fontName:(NSString*)name fontSize:(CGFloat)size
 {
 	NSUInteger				width,
 							height,
@@ -296,7 +296,12 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     
     
     CGSize fsize = [string sizeWithFont:font];
-    CGFloat offsetY = (dimensions.height-fsize.height)/2;
+    CGFloat offsetY = 0;
+    if (vertAlignment == UITextAlignmentCenter)
+        offsetY = (dimensions.height-fsize.height)/2;
+    else if (vertAlignment == UITextAlignmentBottom)
+        offsetY = (dimensions.height-fsize.height);
+    
     
 		[string drawInRect:CGRectMake(0, offsetY, dimensions.width, fsize.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:alignment];
 	UIGraphicsPopContext();
