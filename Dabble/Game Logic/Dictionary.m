@@ -49,7 +49,7 @@
                              [NSCharacterSet whitespaceAndNewlineCharacterSet]];
             [wordList addObject:str];
         }
-        NSLog(@"%d",[wordList count]);
+       // NSLog(@"%d",[wordList count]);
         used = malloc(sizeof(BOOL)*wordList.count);
         memset(used, 0, sizeof(BOOL)*wordList.count);
     

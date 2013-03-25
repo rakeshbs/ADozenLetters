@@ -35,7 +35,6 @@ NSMutableArray *madeWords;
                                             :0 :-self.view.frame.size.height :0 :-1 :1000];
         
         
-        
         resString[0] = [[NSMutableString alloc]initWithString:@"#####"];
         resString[1] = [[NSMutableString alloc]initWithString:@"####"];
         resString[2] = [[NSMutableString alloc]initWithString:@"###"];
@@ -101,8 +100,7 @@ NSMutableArray *madeWords;
     }
     
     squaresArray = [[NSMutableArray alloc]init];
-    
-    
+
     for (int i = 0;i<3;i++)
     {
         square = [[Square alloc]initWithCharacter:charArray1[i]];
@@ -162,6 +160,8 @@ NSMutableArray *madeWords;
 	color.alpha = 1;
     [director clearScene:color];
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    
+    
 }
 
 -(void)squareFinishedMoving:(NSNotification *)notification

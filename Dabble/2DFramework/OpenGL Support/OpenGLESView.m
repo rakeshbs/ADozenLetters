@@ -49,6 +49,8 @@
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, backingWidth, backingHeight);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
     
+    
+    /*
     //Multisampling
     
     glGenFramebuffers(1, &sampleFramebuffer);
@@ -67,7 +69,7 @@
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         NSLog(@"Failed to make complete framebuffer object %x", glCheckFramebufferStatus(GL_FRAMEBUFFER));
     
-    
+    */
 	
 	return YES;
 }
@@ -75,6 +77,13 @@
 {
 	if((self = [super initWithFrame:frame])) {
 		// Get the layer
+        
+        if ([self respondsToSelector:@selector(contentScaleFactor)])
+        {
+            self.contentScaleFactor = [[UIScreen mainScreen] scale];
+//                        self.contentScaleFactor = 1;
+        }
+        
 		CAEAGLLayer *eaglLayer = (CAEAGLLayer*) self.layer;
 		eaglLayer.opaque = YES;
 		eaglLayer.drawableProperties = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -87,6 +96,7 @@
 		}
 		
 		glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
+        
 		glViewport(0, 0, backingWidth, backingHeight);
 		
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -105,7 +115,7 @@
     if (!isLoopRunning || self.animationTimer == nil)
         return;
     
-    glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, viewFramebuffer);
     glViewport(0, 0, backingWidth, backingHeight);
     glClearColor(1, 1, 1, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -118,9 +128,9 @@
     
     [view_delegate drawScene];
     
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, viewFramebuffer);
-    glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
-    glResolveMultisampleFramebufferAPPLE();
+ //   glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, viewFramebuffer);
+ //   glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
+  //  glResolveMultisampleFramebufferAPPLE();
     
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
     [context presentRenderbuffer:GL_RENDERBUFFER_OES];

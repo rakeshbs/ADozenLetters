@@ -282,15 +282,24 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 		i *= 2;
 		height = i;
 	}
-	
+    
+    CGFloat scaleFactor = 2.0;
+    
+    height = height * scaleFactor;
+    width = width * scaleFactor;
+    
+    
 	colorSpace = CGColorSpaceCreateDeviceGray();
-	data = calloc(height, width);
-	context = CGBitmapContextCreate(data, width, height, 8, width, colorSpace, kCGImageAlphaNone);
+	data = calloc(height, width );
+	context = CGBitmapContextCreateWithData(data, width, height, 8, width , colorSpace, kCGImageAlphaNone,nil,nil);
 	CGColorSpaceRelease(colorSpace);
 	
 	
 	CGContextSetGrayFillColor(context, 1.0, 1.0);
     CGContextTranslateCTM(context, 0.0, height);
+ //  CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
+   // CGContextSetShouldAntialias(context, YES);
+   // CGContextScaleCTM(context, scaleFactor, scaleFactor);
 	CGContextScaleCTM(context, 1.0, -1.0); //NOTE: NSString draws in UIKit referential i.e. renders upside-down compared to CGBitmapContext referential
 	UIGraphicsPushContext(context);
     

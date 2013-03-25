@@ -24,7 +24,7 @@
 
 #define SHADOW_ALPHA_MAX 1.0f
 #define SHADOW_ALPHA_MIN 0.0f
-#define WIGGLE_ANGLE 20.0f
+#define WIGGLE_ANGLE 10.0f
 #define REDCOLOR_MIN 0.01f
 #define REDCOLOR_MAX 1.0f
 
@@ -155,8 +155,8 @@ SoundManager *soundManager;
 -(void)draw
 {
     [mvpMatrixManager pushModelViewMatrix];
-    [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
-    [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:0];
+    //[mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
+    [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y+wiggleAngle Z:0];
     [shadowTextureShader draw];
     [squareColorShader draw];
     [squareBorderShader draw];
