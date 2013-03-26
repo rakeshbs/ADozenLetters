@@ -15,7 +15,7 @@
 }
 
 +(TextureManager *)getSharedTextureManager;
--(Texture2D *)getTexture:(NSString *)texture_name;
+-(Texture2D *)getTexture:(NSString *)texture_name OfType:(NSString *)type;
 -(void)delete_Texture:(NSString *)texture_name;
 
 -(Texture2D *)getStringTexture:(NSString *)texture_name;

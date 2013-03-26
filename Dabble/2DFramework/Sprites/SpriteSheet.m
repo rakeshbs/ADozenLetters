@@ -26,7 +26,7 @@
 	if (self = [super init])
 	{
 		TextureManager *manager = [TextureManager getSharedTextureManager];
-		sprite_sheet = [manager getTexture:str];
+		sprite_sheet = [manager getTexture:str OfType:@"png"];
 		framewidth = _framewidth;
 		frameheight = _frameheight;
 		number_of_frames = _number_of_frames ;

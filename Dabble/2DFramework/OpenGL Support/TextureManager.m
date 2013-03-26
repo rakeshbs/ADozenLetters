@@ -9,7 +9,7 @@
 #import "TextureManager.h"
 
 @interface TextureManager (Private)
--(Texture2D *)loadTexture:(NSString *)texture_name fromPath:(NSString *)path;
+-(Texture2D *)loadTexture:(NSString *)texture_name;
 @end
 
 
@@ -34,21 +34,21 @@
 	if (self = [super init])
 	{
 		texture_dictionary = [[NSMutableDictionary alloc]init];
-		paths = [[NSArray alloc]initWithObjects:@"",nil];
 	}
 	return self;
 }
 
--(Texture2D *)loadTexture:(NSString *)texture_name fromPath:(NSString *)path
+-(Texture2D *)loadTexture:(NSString *)texture_name
 {
 	NSString *imgPath = [[NSBundle mainBundle]resourcePath];
-	imgPath = [imgPath stringByAppendingFormat:@"/%@/%@",path,texture_name];
+	imgPath = [imgPath stringByAppendingFormat:@"/%@",texture_name];
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	BOOL exists = [fileManager isReadableFileAtPath:imgPath];
+    
 	if (exists)
 	{
-		return [[Texture2D alloc]initWithImage:[UIImage imageWithContentsOfFile:imgPath]];
-		
+        UIImage *img = [UIImage imageNamed:texture_name];
+		return [[Texture2D alloc]initWithImage:img];
 	}
 	return nil;
 }
@@ -67,8 +67,8 @@
 	else
 	{
 		Texture2D *tex = [[Texture2D alloc]initWithString:string
-											   dimensions:cgSize 
-												horizontalAlignment:alignment verticalAlignment:vAlignment
+											   dimensions:cgSize
+                                      horizontalAlignment:alignment verticalAlignment:vAlignment
 												 fontName:font
 												 fontSize:size];
 		
@@ -91,11 +91,11 @@
 	else
 	{
 		Texture2D *tex = [[Texture2D alloc]initWithString:texture_name
-											   dimensions:CGSizeMake(200,30) 
-												horizontalAlignment:UITextAlignmentCenter verticalAlignment:UITextAlignmentMiddle
+											   dimensions:CGSizeMake(200,30)
+                                      horizontalAlignment:UITextAlignmentCenter verticalAlignment:UITextAlignmentMiddle
 												 fontName:@"Arial-BoldMT"
 												 fontSize:16];
-	
+        
 		if (tex != nil)
 		{
 			[texture_dictionary setObject:tex forKey:texture_name];
@@ -106,7 +106,7 @@
 	return nil;
 }
 
--(Texture2D *)getTexture:(NSString *)texture_name
+-(Texture2D *)getTexture:(NSString *)texture_name OfType:(NSString *)type
 {
 	if ([texture_dictionary objectForKey:texture_name] != nil)
 	{
@@ -114,14 +114,18 @@
 	}
 	else
 	{
-		for(NSString *p in paths)
-		{
-			Texture2D *tex = [self loadTexture:texture_name fromPath:p];
-			if (tex != nil)
-			{
-				[texture_dictionary setObject:tex forKey:texture_name];
-				return tex;
-			}
+		NSString *filename = [NSString stringWithFormat:@"%@",texture_name];
+        if ([UIScreen mainScreen].scale > 1.0)
+        {
+            filename = [NSString stringWithFormat:@"%@%@",filename,@"@2X"];
+        }
+        
+        Texture2D *tex = [self loadTexture:[NSString stringWithFormat:@"%@.%@",filename,type]];
+        if (tex != nil)
+        {
+            [texture_dictionary setObject:tex forKey:texture_name];
+            return tex;
+			
 		}
 	}
 	return nil;

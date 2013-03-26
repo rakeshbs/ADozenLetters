@@ -35,11 +35,8 @@
 @synthesize character;
 
 Vector3D rectVertices[4];
-Vector3D shadowVertices[4];
 Color4f rectColors[4];
 Color4f rectBorderColors[4];
-TextureCoord characterTextureCoordinates[4];
-TextureCoord shadowTextureCoordinates[4];
 SoundManager *soundManager;
 
 -(CGRect)frame
@@ -83,18 +80,12 @@ SoundManager *soundManager;
                                          horizontalAlignment:UITextAlignmentCenter verticalAlignment:UITextAlignmentMiddle
                                           fontName:@"Avenir-Heavy"
                                           fontSize:40];
-    shadowTexture = [textureManager getTexture:@"shadow.png"];
+    shadowTexture = [textureManager getTexture:@"shadow" OfType:@"png"];
     
     rectVertices[0] =  (Vector3D) {.x = -squareSize/(2), .y = -squareSize/(2), .z = 10.0f};
     rectVertices[1] = (Vector3D)  {.x = squareSize/(2), .y = - squareSize/(2), .z = 10.0f};
     rectVertices[2] = (Vector3D)  {.x = squareSize/(2), .y =  squareSize/(2), .z = 10.0f};
     rectVertices[3] = (Vector3D)  {.x = -squareSize/(2), .y = squareSize/(2), .z = 10.0f};
-    
-    shadowVertices[0] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 10.0f};
-    shadowVertices[1] = (Vector3D)  {.x = shadowSize/(2), .y = - shadowSize/(2), .z = 10.0f};
-    shadowVertices[2] = (Vector3D)  {.x = shadowSize/(2), .y =  shadowSize/(2), .z = 10.0f};
-    shadowVertices[3] = (Vector3D)  {.x = -shadowSize/(2), .y = shadowSize/(2), .z = 10.0f};
-    
     
     GLfloat grayColor = 1.0f;
     
@@ -110,19 +101,6 @@ SoundManager *soundManager;
     rectBorderColors[2] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
     rectBorderColors[3] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
     
-    
-    characterTextureCoordinates[0] = (TextureCoord) { .s = 0, .t = characterTexture.maxS};
-    characterTextureCoordinates[1] = (TextureCoord) { .s = characterTexture.maxS, .t = characterTexture.maxT};
-    characterTextureCoordinates[2] = (TextureCoord) { .s = characterTexture.maxS, .t = 0};
-    characterTextureCoordinates[3] = (TextureCoord) { .s = 0, .t = 0};
-    
-    shadowTextureCoordinates[0] = (TextureCoord) { .s = 0, .t = shadowTexture.maxS};
-    shadowTextureCoordinates[1] = (TextureCoord) { .s = shadowTexture.maxS, .t = shadowTexture.maxT};
-    shadowTextureCoordinates[2] = (TextureCoord) { .s = shadowTexture.maxS, .t = 0};
-    shadowTextureCoordinates[3] = (TextureCoord) { .s = 0, .t = 0};
-    
-    
-    
     squareColorShader = [[ColorShader alloc]init];
     squareColorShader.drawMode = GL_TRIANGLE_FAN;
     squareColorShader.vertices = rectVertices;
@@ -137,17 +115,17 @@ SoundManager *soundManager;
     
     characterTextureShader = [[StringTextureShader alloc]init];
     characterTextureShader.count = 4;
-    characterTextureShader.vertices = [characterTexture getTextureRect];
+    characterTextureShader.vertices = [characterTexture getTextureVertices];
     characterTextureShader.texture = characterTexture;
-    characterTextureShader.textureCoordinates = characterTextureCoordinates;
+    characterTextureShader.textureCoordinates = [characterTexture getTextureCoordinates];
     characterTextureShader.textureColor = rectBorderColors[0];
     
     shadowTextureShader = [[TextureShader alloc]init];
     shadowTextureShader.drawMode = GL_TRIANGLE_FAN;
     shadowTextureShader.count = 4;
-    shadowTextureShader.vertices = shadowVertices;
     shadowTextureShader.texture = shadowTexture;
-    shadowTextureShader.textureCoordinates = shadowTextureCoordinates;
+    shadowTextureShader.vertices = [shadowTexture getTextureVertices];
+    shadowTextureShader.textureCoordinates = [shadowTexture getTextureCoordinates];
     shadowTextureShader.textureColor = (Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 0.0};
 
 }
@@ -155,8 +133,8 @@ SoundManager *soundManager;
 -(void)draw
 {
     [mvpMatrixManager pushModelViewMatrix];
-    //[mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
-    [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y+wiggleAngle Z:0];
+    [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
+    [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:0];
     [shadowTextureShader draw];
     [squareColorShader draw];
     [squareBorderShader draw];
@@ -242,6 +220,7 @@ SoundManager *soundManager;
     if (index == 0)
     {
         CGPoint touchPoint = [touch locationInView:self.scene.view];
+       // NSLog(@"%@",NSStringFromCGPoint(touchPoint));
         wiggleAngle = 0;
         
         [animator removeQueuedAnimationsForObject:self];

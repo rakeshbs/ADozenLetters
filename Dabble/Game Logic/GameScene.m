@@ -31,9 +31,12 @@ NSMutableArray *madeWords;
     {
         currentRandomNumber =  arc4random()+1;
 
-        [mvpMatrixManager setOrthoProjection:-self.view.frame.size.width
-                                            :0 :-self.view.frame.size.height :0 :-1 :1000];
+        [mvpMatrixManager setOrthoProjection:-self.view.frame.size.width * [[UIScreen mainScreen]scale]
+                                            :0 :-self.view.frame.size.height * [[UIScreen mainScreen]scale]
+                                            :0 :-1 :1000];
         
+        
+        NSLog(@"scale %f",[[UIScreen mainScreen]scale]);
         
         resString[0] = [[NSMutableString alloc]initWithString:@"#####"];
         resString[1] = [[NSMutableString alloc]initWithString:@"####"];
@@ -42,10 +45,13 @@ NSMutableArray *madeWords;
         
         [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
         
-        gcHelper = [GCHelper sharedInstance];
-        gcHelper.delegate = self;
-        [gcHelper authenticateLocalUser];
-      //  [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"gamecenter:"]];
+     //  gcHelper = [GCHelper sharedInstance];
+       //gcHelper.delegate = self;
+        //[gcHelper authenticateLocalUser];
+       //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"gamecenter:"]];
+        
+        [self performSelectorInBackground:@selector(loadData) withObject:nil];
+        
 
       
     }
@@ -60,13 +66,13 @@ NSMutableArray *madeWords;
 -(void)loadData
 {
     
-    NSURL *url = [NSURL URLWithString:@"http://qucentis.com/dabble.php"];
-    NSData *data = [NSData dataWithContentsOfURL:url];
-    NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    NSString *stringData = [dataDict[@"chars"] uppercaseString];
-    [self performSelectorOnMainThread:@selector(sendCharData:) withObject:stringData waitUntilDone:YES];
+    //NSURL *url = [NSURL URLWithString:@"http://qucentis.com/dabble.php"];
+    //NSData *data = [NSData dataWithContentsOfURL:url];
+    //NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+   // NSString *stringData = [dataDict[@"chars"] uppercaseString];
+    //[self performSelectorOnMainThread:@selector(sendCharData:) withObject:stringData waitUntilDone:YES];
     
-    [self performSelectorOnMainThread:@selector(createSquares:) withObject:stringData waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(createSquares:) withObject:@"THEWORDGAMER" waitUntilDone:YES];
     
 }
 
@@ -104,9 +110,9 @@ NSMutableArray *madeWords;
     for (int i = 0;i<3;i++)
     {
         square = [[Square alloc]initWithCharacter:charArray1[i]];
-            square.centerPoint = CGPointMake(160, 160+yOffset);
+        square.centerPoint = CGPointMake(160, 160+yOffset);
         square.anchorPoint = CGPointMake(100+60*i, 210+yOffset);
-        [self addElement:square];
+       [self addElement:square];
         [squaresArray addObject:square];
         square.squaresArray  = squaresArray;
         [square release];
@@ -117,7 +123,7 @@ NSMutableArray *madeWords;
         square = [[Square alloc]initWithCharacter:charArray2[i]];
         square.centerPoint = CGPointMake(160, 160+yOffset);
         square.anchorPoint = CGPointMake(70+60*i, 130+yOffset);
-        [self addElement:square];
+       [self addElement:square];
         [squaresArray addObject:square];
         square.squaresArray  = squaresArray;
         [square release];
@@ -161,11 +167,17 @@ NSMutableArray *madeWords;
     [director clearScene:color];
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     
+    /*
+    [mvpMatrixManager pushModelViewMatrix];
+    //[mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
+    [mvpMatrixManager translateInX:150 Y:150 Z:0];
+    [testTextureShader draw];
+    [mvpMatrixManager popModelViewMatrix];*/
     
 }
 
 -(void)squareFinishedMoving:(NSNotification *)notification
-{
+{/*
     for (Square *sq in squaresArray)
     {
         int arrIndex = (sq.anchorPoint.y-50)/80;
@@ -202,7 +214,7 @@ NSMutableArray *madeWords;
                 }
             }
         }
-    }
+    }*/
 }
 
 
@@ -213,6 +225,16 @@ NSMutableArray *squaresArray;
 {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    Texture2D *tex = [textureManager getTexture:@"shadow" OfType:@"png"];
+    
+    testTextureShader  = [[TextureShader alloc]init];
+    testTextureShader.drawMode = GL_TRIANGLE_FAN;
+    testTextureShader.count = 4;
+    testTextureShader.texture = tex;
+    testTextureShader.vertices = [tex getTextureVertices];
+    testTextureShader.textureCoordinates = [tex getTextureCoordinates];
+    testTextureShader.textureColor = (Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 1.0};
 
 };
 

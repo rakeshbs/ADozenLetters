@@ -17,8 +17,8 @@
 	if (self = [super init])
 	{
 		TextureManager *manager = [TextureManager getSharedTextureManager];
-		texture_btn = [manager getTexture:img1];
-		texture_high = [manager getTexture:img2];
+		texture_btn = [manager getTexture:img1 OfType:@"png"];
+		texture_high = [manager getTexture:img2  OfType:@"png"];
 		type = buttonType_doubleClick;
 	}
 	return self;
@@ -36,10 +36,7 @@
 
 -(void)draw
 {
-	if (highlighted)
-		[texture_high drawInRect:frame];
-	else
-		[texture_btn drawInRect:frame];
+
 }
 
 -(void)performSingleClick

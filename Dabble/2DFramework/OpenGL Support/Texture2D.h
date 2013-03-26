@@ -101,7 +101,8 @@ Drawing extensions to make it easy to draw basic quads using a Texture2D object.
 These functions require GL_TEXTURE_2D and both GL_VERTEX_ARRAY and GL_TEXTURE_COORD_ARRAY client states to be enabled.
 */
 @interface Texture2D (Drawing)
--(Vector3D *)getTextureRect;
+-(Vector3D *)getTextureVertices;
+-(TextureCoord *)getTextureCoordinates;
 -(void)bindTexture;
 @end
 

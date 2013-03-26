@@ -283,24 +283,16 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 		height = i;
 	}
     
-    CGFloat scaleFactor = 2.0;
-    
-    height = height * scaleFactor;
-    width = width * scaleFactor;
-    
-    
 	colorSpace = CGColorSpaceCreateDeviceGray();
 	data = calloc(height, width );
-	context = CGBitmapContextCreateWithData(data, width, height, 8, width , colorSpace, kCGImageAlphaNone,nil,nil);
+	context = CGBitmapContextCreateWithData(data, width, height, 8, width ,
+                                            colorSpace, kCGImageAlphaNone,nil,nil);
 	CGColorSpaceRelease(colorSpace);
 	
 	
 	CGContextSetGrayFillColor(context, 1.0, 1.0);
     CGContextTranslateCTM(context, 0.0, height);
-   CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
-    CGContextSetShouldAntialias(context, YES);
-   // CGContextScaleCTM(context, scaleFactor, scaleFactor);
-	CGContextScaleCTM(context, 1.0, -1.0); //NOTE: NSString draws in UIKit referential i.e. renders upside-down compared to CGBitmapContext referential
+    CGContextScaleCTM(context, 1.0, -1.0); //NOTE: NSString draws in UIKit referential i.e. renders upside-down compared to CGBitmapContext referential
 	UIGraphicsPushContext(context);
     
     
@@ -327,7 +319,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 @implementation Texture2D (Drawing)
 
--(Vector3D *)getTextureRect
+-(Vector3D *)getTextureVertices
 {
     GLfloat	width = (GLfloat)_width * _maxS,
     height = (GLfloat)_height * _maxT;
@@ -340,6 +332,21 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     textureVertices[3] = (Vector3D) {.x = -width / 2 , .y = height / 2,	.z = 0.0};
     
     return textureVertices;
+}
+
+-(TextureCoord *)getTextureCoordinates
+{
+    
+    TextureCoord *textureCoordinates = malloc(sizeof(TextureCoord)*4);
+    
+    textureCoordinates[0] = (TextureCoord) { .s = 0, .t = _maxT};
+    textureCoordinates[1] = (TextureCoord) { .s = _maxS, .t =_maxT};
+    textureCoordinates[2] = (TextureCoord) { .s = _maxS, .t = 0};
+    textureCoordinates[3] = (TextureCoord) { .s = 0, .t = 0};
+    
+    return textureCoordinates;
+    
+    
 }
 
 -(void)bindTexture
