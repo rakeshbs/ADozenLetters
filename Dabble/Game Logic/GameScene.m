@@ -31,12 +31,10 @@ NSMutableArray *madeWords;
     {
         currentRandomNumber =  arc4random()+1;
 
-        [mvpMatrixManager setOrthoProjection:-self.view.frame.size.width * [[UIScreen mainScreen]scale]
-                                            :0 :-self.view.frame.size.height * [[UIScreen mainScreen]scale]
+        [mvpMatrixManager setOrthoProjection:-self.view.frame.size.width
+                                            :0 :-self.view.frame.size.height
                                             :0 :-1 :1000];
         
-        
-        NSLog(@"scale %f",[[UIScreen mainScreen]scale]);
         
         resString[0] = [[NSMutableString alloc]initWithString:@"#####"];
         resString[1] = [[NSMutableString alloc]initWithString:@"####"];

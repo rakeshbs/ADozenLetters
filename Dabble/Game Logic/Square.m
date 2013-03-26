@@ -36,7 +36,7 @@
 
 Vector3D rectVertices[4];
 Color4f rectColors[4];
-Color4f rectBorderColors[4];
+Color4f fontColor;
 SoundManager *soundManager;
 
 -(CGRect)frame
@@ -96,29 +96,20 @@ SoundManager *soundManager;
     
 //    rgb 243 156 18
     
-    rectBorderColors[0] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
-    rectBorderColors[1] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
-    rectBorderColors[2] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
-    rectBorderColors[3] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
+    fontColor = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
     
     squareColorShader = [[ColorShader alloc]init];
     squareColorShader.drawMode = GL_TRIANGLE_FAN;
     squareColorShader.vertices = rectVertices;
     squareColorShader.colors = rectColors;
     squareColorShader.count = 4;
-    
-    squareBorderShader = [[ColorShader alloc]init];
-    squareBorderShader.drawMode = GL_LINE_LOOP;
-    squareBorderShader.vertices = rectVertices;
-    squareBorderShader.colors = rectBorderColors;
-    squareBorderShader.count = 4;
-    
+
     characterTextureShader = [[StringTextureShader alloc]init];
     characterTextureShader.count = 4;
     characterTextureShader.vertices = [characterTexture getTextureVertices];
     characterTextureShader.texture = characterTexture;
     characterTextureShader.textureCoordinates = [characterTexture getTextureCoordinates];
-    characterTextureShader.textureColor = rectBorderColors[0];
+    characterTextureShader.textureColor = fontColor;
     
     shadowTextureShader = [[TextureShader alloc]init];
     shadowTextureShader.drawMode = GL_TRIANGLE_FAN;

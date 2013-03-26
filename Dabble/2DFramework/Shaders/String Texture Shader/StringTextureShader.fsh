@@ -6,5 +6,5 @@ void main()
 {
     mediump vec4 texel =  texture2D(texture, fragmentTextureCoordinates);
     lowp vec4 finalColor = vec4(textureColor.r,textureColor.g,textureColor.b,texel.a);
-    gl_FragColor = texel;
+    gl_FragColor = finalColor;
 }

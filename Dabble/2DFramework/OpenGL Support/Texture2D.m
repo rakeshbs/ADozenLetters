@@ -266,6 +266,12 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	CGColorSpaceRef			colorSpace;
 	UIFont *				font;
 	
+    if ([[UIScreen mainScreen]scale] > 1.0)
+    {
+        size *=2;
+        dimensions = CGSizeMake(dimensions.width*2, dimensions.height*2);
+    }
+    
 	font = [UIFont fontWithName:name size:size];
 	
 	width = dimensions.width;
@@ -324,12 +330,13 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     GLfloat	width = (GLfloat)_width * _maxS,
     height = (GLfloat)_height * _maxT;
     
+    CGFloat scale = [[UIScreen mainScreen]scale];
     
     Vector3D *textureVertices = malloc(sizeof(Vector3D)*4);
-    textureVertices[0] = (Vector3D) {.x = -width / 2 , .y = -height / 2, .z = 0.0};
-    textureVertices[1] = (Vector3D) {.x = width / 2 , .y = -height / 2,  .z = 0.0};
-    textureVertices[2] = (Vector3D) {.x = width / 2 , .y = height / 2,	.z = 0.0};
-    textureVertices[3] = (Vector3D) {.x = -width / 2 , .y = height / 2,	.z = 0.0};
+    textureVertices[0] = (Vector3D) {.x = -width / (2*scale) , .y = -height / (2*scale), .z = 0.0};
+    textureVertices[1] = (Vector3D) {.x = width / (2*scale) , .y = -height / (2*scale),  .z = 0.0};
+    textureVertices[2] = (Vector3D) {.x = width / (2*scale) , .y = height / (2*scale),	.z = 0.0};
+    textureVertices[3] = (Vector3D) {.x = -width / (2*scale) , .y = height / (2*scale),	.z = 0.0};
     
     return textureVertices;
 }
