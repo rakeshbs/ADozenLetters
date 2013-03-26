@@ -15,6 +15,5 @@
     GCHelper *gcHelper;
     BOOL isServer;
     int currentRandomNumber;
-    TextureShader *testTextureShader;
 }
 @end

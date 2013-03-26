@@ -306,25 +306,6 @@ static inline void Matrix3DSetPerspectiveProjectionWithFieldOfView
 
 }
 
-static inline CGPoint CGPointScale(CGPoint pt)
-{
-    if ([[UIScreen mainScreen]scale] > 1.0)
-    {
-        return CGPointMake(2*pt.x, 2*pt.y);
-    }
-    return pt;
-}
-
-static inline CGRect CGRectScale(CGRect rect)
-{
-    if ([[UIScreen mainScreen]scale] > 1.0)
-    {
-        return CGRectMake(2*rect.origin.x, 2*rect.origin.y,2*rect.size.width,2*rect.size.height);
-    }
-    return rect;
-}
-
-
 typedef struct
 {
     GLfloat	s;

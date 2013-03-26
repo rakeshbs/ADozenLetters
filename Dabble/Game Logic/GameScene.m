@@ -110,7 +110,8 @@ NSMutableArray *madeWords;
         square = [[Square alloc]initWithCharacter:charArray1[i]];
         square.centerPoint = CGPointMake(160, 160+yOffset);
         square.anchorPoint = CGPointMake(100+60*i, 210+yOffset);
-       [self addElement:square];
+        square.colorIndex = i%2;
+        [self addElement:square];
         [squaresArray addObject:square];
         square.squaresArray  = squaresArray;
         [square release];
@@ -121,7 +122,8 @@ NSMutableArray *madeWords;
         square = [[Square alloc]initWithCharacter:charArray2[i]];
         square.centerPoint = CGPointMake(160, 160+yOffset);
         square.anchorPoint = CGPointMake(70+60*i, 130+yOffset);
-       [self addElement:square];
+        square.colorIndex = i%2;
+        [self addElement:square];
         [squaresArray addObject:square];
         square.squaresArray  = squaresArray;
         [square release];
@@ -132,6 +134,7 @@ NSMutableArray *madeWords;
         square = [[Square alloc]initWithCharacter:charArray3[i]];
         square.centerPoint = CGPointMake(160, 160+yOffset);
         square.anchorPoint = CGPointMake(40+60*i, 50+yOffset);
+        square.colorIndex = i%2;
         [self addElement:square];
         [squaresArray addObject:square];
         square.squaresArray  = squaresArray;
@@ -164,13 +167,6 @@ NSMutableArray *madeWords;
 	color.alpha = 1;
     [director clearScene:color];
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-    
-    /*
-    [mvpMatrixManager pushModelViewMatrix];
-    //[mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
-    [mvpMatrixManager translateInX:150 Y:150 Z:0];
-    [testTextureShader draw];
-    [mvpMatrixManager popModelViewMatrix];*/
     
 }
 
@@ -223,16 +219,6 @@ NSMutableArray *squaresArray;
 {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-    Texture2D *tex = [textureManager getTexture:@"shadow" OfType:@"png"];
-    
-    testTextureShader  = [[TextureShader alloc]init];
-    testTextureShader.drawMode = GL_TRIANGLE_FAN;
-    testTextureShader.count = 4;
-    testTextureShader.texture = tex;
-    testTextureShader.vertices = [tex getTextureVertices];
-    testTextureShader.textureCoordinates = [tex getTextureCoordinates];
-    testTextureShader.textureColor = (Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 1.0};
 
 };
 
@@ -244,12 +230,10 @@ NSMutableArray *squaresArray;
 
 -(BOOL)touchBeganInScene:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
 {
-    NSLog(@"%d",touch.tapCount);
     if (touch.tapCount == 2)
     {
         [[NSNotificationCenter defaultCenter]removeObserver:self name:@"SquareFinishedMoving" object:nil];
-
-           [self performSelectorInBackground:@selector(loadData) withObject:nil];
+          [self performSelectorInBackground:@selector(loadData) withObject:nil];
     }
     return YES;
 }

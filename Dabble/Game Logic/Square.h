@@ -27,6 +27,8 @@
     CGFloat wiggleAngle;
     CGFloat startAngle;
     
+    int colorIndex;
+    
     CGPoint touchOffSet;
     BOOL touchStarted;
     
@@ -43,13 +45,15 @@
     CGFloat redColor;
     
     ColorShader *squareColorShader;
-    ColorShader *squareBorderShader;
     StringTextureShader *characterTextureShader;
     TextureShader *shadowTextureShader;
+    
+    CGPoint anchorPoint;
 }
 @property (nonatomic,retain) NSString *character;
 -(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration;
 @property (nonatomic) CGPoint anchorPoint;
+@property (nonatomic) int colorIndex;
 @property (nonatomic) CGPoint centerPoint;
 @property (nonatomic,assign) NSMutableArray *squaresArray;
 -(id)initWithCharacter:(NSString *)_character;
