@@ -342,6 +342,11 @@ SoundManager *soundManager;
             CGPoint a1 = sq.anchorPoint;
             sq.anchorPoint = self.anchorPoint;
             self.anchorPoint = a1;
+            
+            int ci = sq.colorIndex;
+            sq.colorIndex = self.colorIndex;
+            self.colorIndex = ci;
+            
             if (sq.touchesInElement.count == 0)
             {
                 [sq moveToFront];

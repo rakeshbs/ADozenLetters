@@ -15,5 +15,13 @@
     GCHelper *gcHelper;
     BOOL isServer;
     int currentRandomNumber;
+    
+    int numberOfWordsMade;
+    int numberOfTripletsMade;
+    int numberOfDoublesMade;
+    
+    Texture2D *analyticsTexture;
+    StringTextureShader *analyticsShader;
+    
 }
 @end

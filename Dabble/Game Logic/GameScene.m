@@ -31,9 +31,22 @@ NSMutableArray *madeWords;
     {
         currentRandomNumber =  arc4random()+1;
 
-        [mvpMatrixManager setOrthoProjection:-self.view.frame.size.width
-                                            :0 :-self.view.frame.size.height
-                                            :0 :-1 :1000];
+        numberOfTripletsMade = 0;
+        numberOfDoublesMade = 0;
+        numberOfWordsMade = 0;
+        
+        analyticsTexture = [[Texture2D alloc]
+                            initWithString:@"W : 0 D : 0 T : 0"                                                 dimensions:CGSizeMake(250, 30)
+                            horizontalAlignment:UITextAlignmentLeft
+                            verticalAlignment:UITextAlignmentMiddle
+                            fontName:@"Helvetica" fontSize:20];
+        analyticsShader = [[StringTextureShader alloc]init];
+        analyticsShader.texture = analyticsTexture;
+        analyticsShader.count = 4;
+        analyticsShader.vertices = [analyticsTexture getTextureVertices];
+        analyticsShader.textureCoordinates = [analyticsTexture getTextureCoordinates];
+        analyticsShader.textureColor = (Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 1.0};
+
         
         
         resString[0] = [[NSMutableString alloc]initWithString:@"#####"];
@@ -64,13 +77,13 @@ NSMutableArray *madeWords;
 -(void)loadData
 {
     
-    //NSURL *url = [NSURL URLWithString:@"http://qucentis.com/dabble.php"];
-    //NSData *data = [NSData dataWithContentsOfURL:url];
-    //NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-   // NSString *stringData = [dataDict[@"chars"] uppercaseString];
+    NSURL *url = [NSURL URLWithString:@"http://qucentis.com/dabble.php"];
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    NSString *stringData = [dataDict[@"chars"] uppercaseString];
     //[self performSelectorOnMainThread:@selector(sendCharData:) withObject:stringData waitUntilDone:YES];
     
-    [self performSelectorOnMainThread:@selector(createSquares:) withObject:@"THEWORDGAMER" waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(createSquares:) withObject:stringData waitUntilDone:YES];
     
 }
 
@@ -149,7 +162,7 @@ NSMutableArray *madeWords;
         delay += 0.1;
     }
     
-    [self performSelector:@selector(enableNotification) withObject:nil afterDelay:5];
+    [self performSelector:@selector(enableNotification) withObject:nil afterDelay:0];
 
 }
 
@@ -168,10 +181,15 @@ NSMutableArray *madeWords;
     [director clearScene:color];
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     
+    [mvpMatrixManager pushModelViewMatrix];
+    [mvpMatrixManager translateInX:200 Y:380 Z:0];
+    [analyticsShader draw];
+    [mvpMatrixManager popModelViewMatrix];
+    
 }
 
 -(void)squareFinishedMoving:(NSNotification *)notification
-{/*
+{
     for (Square *sq in squaresArray)
     {
         int arrIndex = (sq.anchorPoint.y-50)/80;
@@ -192,11 +210,14 @@ NSMutableArray *madeWords;
         
     }
     
+    int onboardWordCount = 0;
+    int numNewWords = 0;
+    BOOL shouldUpdateTexture = NO;
     for (int i = 0;i<3;i++)
     {
-        if ([dictionary checkIfWordExists:resString[i]])
+        int result = [dictionary checkIfWordExists:resString[i]];
+        if (result >= 0)
         {
-            NSLog(@"%@",resString[i]);
             [madeWords addObject:resString[i]];
             CGFloat anchorY = i*80 + 50 + yOffset;
             for (Square *sq in squaresArray)
@@ -207,11 +228,60 @@ NSMutableArray *madeWords;
                     
                 }
             }
+            numberOfWordsMade++;
+            shouldUpdateTexture = YES;
+            numNewWords++;
+            onboardWordCount++;
         }
-    }*/
+        else if (result == -2)
+        {
+            onboardWordCount++;
+        }
+            
+    }
+    if (onboardWordCount == 2 && numNewWords >= 1)
+    {
+        shouldUpdateTexture = YES;
+        numberOfDoublesMade++;
+    }
+    else if (onboardWordCount == 3 && numNewWords >=1)
+    {
+        numberOfTripletsMade++;
+        shouldUpdateTexture = YES;
+    }
+    
+    
+    NSLog(@"number of words : %d",numberOfWordsMade);
+    NSLog(@"number of doubles : %d",numberOfDoublesMade);
+    NSLog(@"number of triples : %d",numberOfTripletsMade);
+    
+
+    
+    if (shouldUpdateTexture)
+    {
+        
+        NSLog(@"number of words : %d",numberOfWordsMade);
+        NSLog(@"number of doubles : %d",numberOfDoublesMade);
+        NSLog(@"number of triples : %d",numberOfTripletsMade);
+    
+        [self updateAnalytics];
+    }
+    
 }
 
-
+-(void)updateAnalytics
+{
+    
+    [analyticsTexture release];
+    analyticsTexture = [[Texture2D alloc]
+                        initWithString:[NSString stringWithFormat:@"W : %d D : %d T : %d",numberOfWordsMade,numberOfDoublesMade,numberOfTripletsMade]                                                 dimensions:CGSizeMake(250, 30)
+                        horizontalAlignment:UITextAlignmentLeft
+                        verticalAlignment:UITextAlignmentMiddle
+                        fontName:@"Helvetica" fontSize:20];
+    analyticsShader.texture = analyticsTexture;
+    analyticsShader.vertices = [analyticsTexture getTextureVertices];
+    analyticsShader.textureCoordinates = [analyticsTexture getTextureCoordinates];
+}
 
 NSMutableArray *squaresArray;
 
@@ -234,6 +304,11 @@ NSMutableArray *squaresArray;
     {
         [[NSNotificationCenter defaultCenter]removeObserver:self name:@"SquareFinishedMoving" object:nil];
           [self performSelectorInBackground:@selector(loadData) withObject:nil];
+        numberOfDoublesMade = 0;
+        numberOfTripletsMade = 0;
+        numberOfWordsMade = 0;
+        [dictionary reset];
+        [self updateAnalytics];
     }
     return YES;
 }

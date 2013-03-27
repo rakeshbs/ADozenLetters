@@ -59,7 +59,7 @@
 
 
 
--(BOOL)checkIfWordExists:(NSString *)word
+-(int)checkIfWordExists:(NSString *)word
 {
     int low = 0;
     int high = [wordList count];
@@ -83,16 +83,16 @@
             if (!used[mid])
             {
                 used[mid] = YES;
-                return true;
+                return mid;
             }
-            return  false;
+            return -2;
         }
         mid = (high + low)/2;
     }
     while ((high - low)>1);
     
     
-    return false;
+    return -1;
 }
 
 -(BOOL)checkIfPrefixExists:(NSString *)prefix

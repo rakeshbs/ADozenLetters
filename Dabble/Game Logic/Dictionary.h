@@ -20,7 +20,7 @@
 @property (nonatomic) char *grid;
 
 -(BOOL)checkIfPrefixExists:(NSString *)prefix;
--(BOOL)checkIfWordExists:(NSString *)word;
+-(int)checkIfWordExists:(NSString *)word;
 +(Dictionary * )getSharedDictionary;
 -(void)reset;
 @end

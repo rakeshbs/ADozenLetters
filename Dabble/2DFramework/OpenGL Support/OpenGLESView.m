@@ -9,6 +9,7 @@
 #import "OpenGLESView.h"
 #import "Scene.h"
 #import "Scene+Private.h"
+#import "MVPMatrixManager.h"
 
 @interface OpenGLESView (Private)
 
@@ -100,6 +101,12 @@
 		glViewport(0, 0, backingWidth, backingHeight);
 		
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        
+        
+        
+        [[MVPMatrixManager sharedMVPMatrixManager] setOrthoProjection:-self.frame.size.width
+                                            :0 :-self.frame.size.height
+                                            :0 :-1 :1000];
 		
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
