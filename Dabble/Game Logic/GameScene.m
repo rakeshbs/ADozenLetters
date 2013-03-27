@@ -8,6 +8,7 @@
 
 #import "GameScene.h"
 #import "Dictionary.h"
+#import "NSArray+Additions.h"
 
 #define yOffset 75
 
@@ -17,20 +18,14 @@
 
 @implementation GameScene
 
-NSString *charArray1[3];
-NSString *charArray2[4];
-NSString *charArray3[5];
-NSMutableString *resString[3];
+
 Dictionary *dictionary;
-NSMutableArray *madeWords;
-
-
 -(id)init
 {
     if (self = [super init])
     {
         currentRandomNumber =  arc4random()+1;
-
+        
         numberOfTripletsMade = 0;
         numberOfDoublesMade = 0;
         numberOfWordsMade = 0;
@@ -48,16 +43,17 @@ NSMutableArray *madeWords;
         analyticsShader.vertices = [analyticsTexture getTextureVertices];
         analyticsShader.textureCoordinates = [analyticsTexture getTextureCoordinates];
         analyticsShader.textureColor = (Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 1.0};
-
+        
         
         
         resString[0] = [[NSMutableString alloc]initWithString:@"#####"];
         resString[1] = [[NSMutableString alloc]initWithString:@"####"];
         resString[2] = [[NSMutableString alloc]initWithString:@"###"];
         madeWords = [[NSMutableArray alloc]init];
+        onBoardWords = [[NSMutableArray alloc]init];
         
         [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
- 
+        
         [self loadData];
         
     }
@@ -83,7 +79,7 @@ NSMutableArray *madeWords;
 }
 
 -(void)createSquares:(NSString *)dataStr
-{    
+{
     int ind = 0;
     
     [dictionary reset];
@@ -112,7 +108,7 @@ NSMutableArray *madeWords;
     }
     
     squaresArray = [[NSMutableArray alloc]init];
-
+    
     for (int i = 0;i<3;i++)
     {
         square = [[Square alloc]initWithCharacter:charArray1[i]];
@@ -158,13 +154,13 @@ NSMutableArray *madeWords;
     }
     
     [self performSelector:@selector(enableNotification) withObject:nil afterDelay:0];
-
+    
 }
 
 -(void)enableNotification
 {
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(squareFinishedMoving:) name:@"SquareFinishedMoving" object:nil];
-
+    
 }
 
 -(void)draw{
@@ -187,7 +183,7 @@ NSMutableArray *madeWords;
 {
     for (Square *sq in squaresArray)
     {
-        int arrIndex = (sq.anchorPoint.y-50)/80;
+        int arrIndex = (sq.anchorPoint.y-yOffset-50)/80;
         int charIndex = -1;
         
         if (arrIndex == 0)
@@ -205,10 +201,10 @@ NSMutableArray *madeWords;
         
     }
     
-    int onboardWordCount = 0;
-    int numNewWords = 0;
     BOOL shouldUpdateTexture = NO;
-    
+    BOOL shouldHighlight[3];
+    memset(shouldHighlight, 0, sizeof(shouldHighlight));
+    [onBoardWords removeAllObjects];
     
     for (int i = 0;i<3;i++)
     {
@@ -216,44 +212,59 @@ NSMutableArray *madeWords;
         if (result >= 0)
         {
             [madeWords addObject:resString[i]];
+            shouldHighlight[i] = YES;
+            numberOfWordsMade++;
+            numberOfWordsPerLetter[resString[i].length-3]++;
+            shouldUpdateTexture = YES;
+            [onBoardWords addObject:resString[i]];
+        }
+        else if (result == -2)
+        {
+            [onBoardWords addObject:resString[i]];
+        }
+    }
+    if (onBoardWords.count == 3)
+    {
+        NSString *concat = [NSString stringWithFormat:@"%@%@%@",onBoardWords[0],onBoardWords[1],onBoardWords[2]];
+        if ([madeTriples indexOfString:concat] < 0)
+        {
+            [madeTriples addObject:concat];
+            numberOfTripletsMade++;
+            shouldHighlight[0] = YES;
+            shouldHighlight[1] = YES;
+            shouldHighlight[2] = YES;
+            shouldUpdateTexture = YES;
+        }
+    }
+    else if (onBoardWords.count == 2)
+    {
+        NSString *concat = [NSString stringWithFormat:@"%@%@",onBoardWords[0],onBoardWords[1]];
+        NSLog(@"%@ %d %d",concat,[madeDoubles indexOfString:concat],madeDoubles.count);
+        if ([madeDoubles indexOfString:concat] < 0)
+        {
+            NSLog(@"here");
+            [madeDoubles addObject:concat];
+            numberOfDoublesMade++;
+            shouldHighlight[[onBoardWords[0] length]-3] = YES;
+            shouldHighlight[[onBoardWords[1] length]-3] = YES;
+            shouldUpdateTexture = YES;
+        }
+    }
+    
+    for (int i = 0;i<3;i++)
+    {
+        if (shouldHighlight[i])
+        {
             CGFloat anchorY = i*80 + 50 + yOffset;
             for (Square *sq in squaresArray)
             {
                 if (sq.anchorPoint.y == anchorY)
                 {
                     [sq wiggleFor:1.0];
-                    
                 }
             }
-            numberOfWordsMade++;
-            numberOfWordsPerLetter[resString[i].length-3]++;
-            shouldUpdateTexture = YES;
-            numNewWords++;
-            onboardWordCount++;
         }
-        else if (result == -2)
-        {
-            onboardWordCount++;
-        }
-            
     }
-    if (onboardWordCount == 2 && numNewWords >= 1)
-    {
-        shouldUpdateTexture = YES;
-        numberOfDoublesMade++;
-    }
-    else if (onboardWordCount == 3 && numNewWords >=1)
-    {
-        numberOfTripletsMade++;
-        shouldUpdateTexture = YES;
-    }
-    
-    
-    NSLog(@"number of words : %d",numberOfWordsMade);
-    NSLog(@"number of doubles : %d",numberOfDoublesMade);
-    NSLog(@"number of triples : %d",numberOfTripletsMade);
-    
-
     
     if (shouldUpdateTexture)
     {
@@ -261,7 +272,7 @@ NSMutableArray *madeWords;
         NSLog(@"number of words : %d",numberOfWordsMade);
         NSLog(@"number of doubles : %d",numberOfDoublesMade);
         NSLog(@"number of triples : %d",numberOfTripletsMade);
-    
+        
         [self updateAnalytics];
     }
     
@@ -287,7 +298,7 @@ NSMutableArray *squaresArray;
 {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+    
 };
 
 -(void)sceneMadeInActive
@@ -301,7 +312,7 @@ NSMutableArray *squaresArray;
     if (touch.tapCount == 2)
     {
         [[NSNotificationCenter defaultCenter]removeObserver:self name:@"SquareFinishedMoving" object:nil];
-          [self performSelectorInBackground:@selector(loadData) withObject:nil];
+        [self performSelectorInBackground:@selector(loadData) withObject:nil];
         numberOfDoublesMade = 0;
         numberOfTripletsMade = 0;
         numberOfWordsMade = 0;
@@ -321,7 +332,7 @@ NSMutableArray *squaresArray;
 }
 - (void)matchEnded
 {
-        NSLog(@"match Ended");
+    NSLog(@"match Ended");
 }
 - (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID
 {
@@ -357,19 +368,19 @@ NSMutableArray *squaresArray;
     else if (messageType == kMessageTypeCharData)
     {
         MessageCharData * messData = (MessageCharData *) [data bytes];
-
+        
         NSString *stringData = [NSString stringWithCString:messData->charData encoding:NSUTF8StringEncoding];
-      //          int k = 0;
-       [self performSelectorOnMainThread:@selector(createSquares:) withObject:stringData waitUntilDone:YES];
+        //          int k = 0;
+        [self performSelectorOnMainThread:@selector(createSquares:) withObject:stringData waitUntilDone:YES];
     }
 }
 - (void)inviteReceived
 {
-        
+    
 }
 - (void)localUserAuthenticated
 {
-
+    
     [gcHelper findMatchWithMinPlayers:2 maxPlayers:2 viewController:director.openGLViewController delegate:self];
 }
 
@@ -387,7 +398,7 @@ NSMutableArray *squaresArray;
     MessageCharData message;
     message.message.messageType = kMessageTypeCharData;
     const char *charArray = [stringData cStringUsingEncoding:NSUTF8StringEncoding];
-
+    
     for (size_t idx = 0; idx < 12; ++idx) {
         message.charData[idx] = charArray[idx];
     }

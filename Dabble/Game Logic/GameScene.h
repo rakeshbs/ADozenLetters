@@ -9,6 +9,7 @@
 #import "Scene.h"
 #import "Square.h"
 #import "GCHelper.h"
+#import "NSArray+Additions.h"
 
 @interface GameScene : Scene <GCHelperDelegate>
 {
@@ -21,9 +22,19 @@
     int numberOfDoublesMade;
     int numberOfWordsPerLetter[3];
     
+    NSString *charArray1[3];
+    NSString *charArray2[4];
+    NSString *charArray3[5];
+    NSMutableString *resString[3];
+    
+    NSMutableArray *madeWords;
+    NSMutableArray *madeDoubles;
+    NSMutableArray *madeTriples;
+
     
     Texture2D *analyticsTexture;
     StringTextureShader *analyticsShader;
+    NSMutableArray *onBoardWords;
     
 }
 @end

@@ -103,10 +103,10 @@ SoundManager *soundManager;
 
     //255 250 231
     
-    squareBackgroundColors[1][0] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.95f};
-    squareBackgroundColors[1][1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.95f};
-    squareBackgroundColors[1][2] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.95f};
-    squareBackgroundColors[1][3] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.95f};
+    squareBackgroundColors[1][0] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.93f};
+    squareBackgroundColors[1][1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.93f};
+    squareBackgroundColors[1][2] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.93f};
+    squareBackgroundColors[1][3] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.93f};
     
     
 //    rgb 243 156 18
