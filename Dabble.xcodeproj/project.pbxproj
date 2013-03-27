@@ -39,7 +39,6 @@
 		1445DCA916F97AD700EBBCCF /* shadow@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC7D16F97AD600EBBCCF /* shadow@2X.png */; };
 		1445DCAA16F97AD700EBBCCF /* bip1.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC7F16F97AD600EBBCCF /* bip1.aiff */; };
 		1445DCAB16F97AD700EBBCCF /* bip2.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC8016F97AD600EBBCCF /* bip2.aiff */; };
-		1445DCAC16F97AD700EBBCCF /* wordList.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC8116F97AD600EBBCCF /* wordList.txt */; };
 		1445DCAE16F97B0700EBBCCF /* Dabble-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1445DCAD16F97B0700EBBCCF /* Dabble-Info.plist */; };
 		1445DCB416F97B8300EBBCCF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DCB116F97B3700EBBCCF /* main.m */; };
 		1445DCB516F97B8900EBBCCF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DCB016F97B3700EBBCCF /* AppDelegate.m */; };
@@ -61,6 +60,12 @@
 		146472D116D278B5000C8FB4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472CB16D278B5000C8FB4 /* QuartzCore.framework */; };
 		146472D616D278F0000C8FB4 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472D516D278F0000C8FB4 /* GameKit.framework */; };
 		14D4248E1700255C0010657A /* sprite.png in Resources */ = {isa = PBXBuildFile; fileRef = 14D4248D1700255C0010657A /* sprite.png */; };
+		14F1197A170297E400721BEE /* w3 in Resources */ = {isa = PBXBuildFile; fileRef = 14F11977170297E400721BEE /* w3 */; };
+		14F1197B170297E400721BEE /* w4 in Resources */ = {isa = PBXBuildFile; fileRef = 14F11978170297E400721BEE /* w4 */; };
+		14F1197C170297E400721BEE /* w5 in Resources */ = {isa = PBXBuildFile; fileRef = 14F11979170297E400721BEE /* w5 */; };
+		14F119841702A0A400721BEE /* DirectoryReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F1197F1702A0A400721BEE /* DirectoryReader.m */; };
+		14F119851702A0A400721BEE /* FileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F119811702A0A400721BEE /* FileReader.m */; };
+		14F119861702A0A400721BEE /* NSDataExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F119831702A0A400721BEE /* NSDataExtensions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -131,7 +136,6 @@
 		1445DC7D16F97AD600EBBCCF /* shadow@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "shadow@2X.png"; sourceTree = "<group>"; };
 		1445DC7F16F97AD600EBBCCF /* bip1.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = bip1.aiff; sourceTree = "<group>"; };
 		1445DC8016F97AD600EBBCCF /* bip2.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = bip2.aiff; sourceTree = "<group>"; };
-		1445DC8116F97AD600EBBCCF /* wordList.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = wordList.txt; sourceTree = "<group>"; };
 		1445DCAD16F97B0700EBBCCF /* Dabble-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Dabble-Info.plist"; path = "../Dabble-Info.plist"; sourceTree = "<group>"; };
 		1445DCAF16F97B3700EBBCCF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1445DCB016F97B3700EBBCCF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -151,6 +155,15 @@
 		146472CB16D278B5000C8FB4 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		146472D516D278F0000C8FB4 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		14D4248D1700255C0010657A /* sprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sprite.png; sourceTree = "<group>"; };
+		14F11977170297E400721BEE /* w3 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = w3; sourceTree = "<group>"; };
+		14F11978170297E400721BEE /* w4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = w4; sourceTree = "<group>"; };
+		14F11979170297E400721BEE /* w5 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = w5; sourceTree = "<group>"; };
+		14F1197E1702A0A400721BEE /* DirectoryReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DirectoryReader.h; sourceTree = "<group>"; };
+		14F1197F1702A0A400721BEE /* DirectoryReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DirectoryReader.m; sourceTree = "<group>"; };
+		14F119801702A0A400721BEE /* FileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileReader.h; sourceTree = "<group>"; };
+		14F119811702A0A400721BEE /* FileReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileReader.m; sourceTree = "<group>"; };
+		14F119821702A0A400721BEE /* NSDataExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDataExtensions.h; sourceTree = "<group>"; };
+		14F119831702A0A400721BEE /* NSDataExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDataExtensions.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -177,6 +190,8 @@
 		1445DC2716F97AD600EBBCCF /* Dabble */ = {
 			isa = PBXGroup;
 			children = (
+				14F119871702B09E00721BEE /* Custom Categories */,
+				14F1197D1702A0A400721BEE /* FileReader */,
 				1445DC2816F97AD600EBBCCF /* 2DFramework */,
 				1445DC6B16F97AD600EBBCCF /* Game Logic */,
 				1445DC7716F97AD600EBBCCF /* Resources */,
@@ -343,6 +358,7 @@
 		1445DC7716F97AD600EBBCCF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				14F11976170297E400721BEE /* Wordslist */,
 				14D4248D1700255C0010657A /* sprite.png */,
 				1445DCAD16F97B0700EBBCCF /* Dabble-Info.plist */,
 				1445DC7916F97AD600EBBCCF /* Default-568h@2x.png */,
@@ -351,7 +367,6 @@
 				1445DC7C16F97AD600EBBCCF /* shadow.png */,
 				1445DC7D16F97AD600EBBCCF /* shadow@2X.png */,
 				1445DC7E16F97AD600EBBCCF /* Sounds */,
-				1445DC8116F97AD600EBBCCF /* wordList.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -420,6 +435,36 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		14F11976170297E400721BEE /* Wordslist */ = {
+			isa = PBXGroup;
+			children = (
+				14F11977170297E400721BEE /* w3 */,
+				14F11978170297E400721BEE /* w4 */,
+				14F11979170297E400721BEE /* w5 */,
+			);
+			path = Wordslist;
+			sourceTree = "<group>";
+		};
+		14F1197D1702A0A400721BEE /* FileReader */ = {
+			isa = PBXGroup;
+			children = (
+				14F1197E1702A0A400721BEE /* DirectoryReader.h */,
+				14F1197F1702A0A400721BEE /* DirectoryReader.m */,
+				14F119801702A0A400721BEE /* FileReader.h */,
+				14F119811702A0A400721BEE /* FileReader.m */,
+				14F119821702A0A400721BEE /* NSDataExtensions.h */,
+				14F119831702A0A400721BEE /* NSDataExtensions.m */,
+			);
+			path = FileReader;
+			sourceTree = "<group>";
+		};
+		14F119871702B09E00721BEE /* Custom Categories */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Custom Categories";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -484,9 +529,11 @@
 				1445DCB716F97C0E00EBBCCF /* TextureShader.fsh in Resources */,
 				1445DCAA16F97AD700EBBCCF /* bip1.aiff in Resources */,
 				1445DCAB16F97AD700EBBCCF /* bip2.aiff in Resources */,
-				1445DCAC16F97AD700EBBCCF /* wordList.txt in Resources */,
 				1445DCAE16F97B0700EBBCCF /* Dabble-Info.plist in Resources */,
 				14D4248E1700255C0010657A /* sprite.png in Resources */,
+				14F1197A170297E400721BEE /* w3 in Resources */,
+				14F1197B170297E400721BEE /* w4 in Resources */,
+				14F1197C170297E400721BEE /* w5 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -525,6 +572,9 @@
 				1445DCA016F97AD700EBBCCF /* GameScene.m in Sources */,
 				1445DCA116F97AD700EBBCCF /* Square.m in Sources */,
 				145ABAC616FB144D00DA2488 /* GCHelper.m in Sources */,
+				14F119841702A0A400721BEE /* DirectoryReader.m in Sources */,
+				14F119851702A0A400721BEE /* FileReader.m in Sources */,
+				14F119861702A0A400721BEE /* NSDataExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

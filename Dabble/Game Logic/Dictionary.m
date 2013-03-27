@@ -7,7 +7,7 @@
 //
 
 #import "Dictionary.h"
-
+#import "FileReader.h"
 
 @implementation Dictionary
 
@@ -32,27 +32,24 @@
 {
     if (self = [super init])
     {
-        wordList = [[NSMutableArray alloc]init];
-        
-        NSString *tmp;
-        NSArray *lines;
-        lines = [[NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"wordList" ofType:@"txt"]
-                                           encoding:NSUTF8StringEncoding
-                                              error:nil]
-                 componentsSeparatedByString:@"\n"];
-        
-        NSEnumerator *nse = [lines objectEnumerator];
-        
-        while(tmp = [nse nextObject])
+        for (int i = 0; i < 3;i++)
         {
-            NSString *str = [tmp stringByTrimmingCharactersInSet:
-                             [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            [wordList addObject:str];
+            NSString *filePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"w%d",i+3] ofType:@""];
+            FileReader *fileReader = [[FileReader alloc]initWithFilePath:filePath];
+            
+            words[i] = [[NSMutableArray alloc]init];
+            
+            NSString *line;
+            while ((line = [fileReader readLine]))
+            {
+                [words[i] addObject:[line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+            }
+            [fileReader release];
+            
+            used[i] = malloc(sizeof(BOOL)*words[i].count);
+            memset(used[i], 0, sizeof(BOOL)*words[i].count);
+            
         }
-       // NSLog(@"%d",[wordList count]);
-        used = malloc(sizeof(BOOL)*wordList.count);
-        memset(used, 0, sizeof(BOOL)*wordList.count);
-    
     }
     return  self;
 }
@@ -61,12 +58,14 @@
 
 -(int)checkIfWordExists:(NSString *)word
 {
+    int index = word.length - 3;
+    
     int low = 0;
-    int high = [wordList count];
+    int high = [words[index] count];
     int mid = (high + low)/2;
     
     do {
-        NSString *str = wordList[mid];
+        NSString *str = words[index][mid];
         
         if ([str caseInsensitiveCompare:word]  == NSOrderedAscending)
         {
@@ -80,9 +79,9 @@
         }
         else
         {
-            if (!used[mid])
+            if (!used[index][mid])
             {
-                used[mid] = YES;
+                used[index][mid] = YES;
                 return mid;
             }
             return -2;
@@ -95,45 +94,12 @@
     return -1;
 }
 
--(BOOL)checkIfPrefixExists:(NSString *)prefix
-{
-    
-    int low = 0;
-    int high = [wordList count];
-    int mid = (high + low)/2;
-    
-    do
-    {
-        NSString *str = wordList[mid];
-        if ([str hasPrefix:prefix])
-        {
-            return true;
-        }
-        else if ([str caseInsensitiveCompare:prefix] == NSOrderedAscending)
-        {
-            low = mid;
-            
-        }
-        else if ([str caseInsensitiveCompare:prefix] == NSOrderedDescending)
-        {
-            
-            high = mid;
-        }
-        else
-        {
-            return true;
-        }
-        mid = (high + low)/2;
-    }
-    while ((high - low)>1);
-    
-    
-    return false;
-}
-
 -(void)reset
 {
-    memset(used, 0, sizeof(BOOL)*wordList.count);
+    for (int i = 0;i<3;i++)
+    {
+        memset(used[i], 0, sizeof(BOOL)*words[i].count);
+    }
 }
 
 

@@ -12,14 +12,12 @@
 
 @interface Dictionary : NSObject
 {
-    int word_count;
-    NSMutableArray *wordList;
-    BOOL *used;
+    NSMutableArray *words[3];
+    BOOL *used[3];
 }
 
 @property (nonatomic) char *grid;
 
--(BOOL)checkIfPrefixExists:(NSString *)prefix;
 -(int)checkIfWordExists:(NSString *)word;
 +(Dictionary * )getSharedDictionary;
 -(void)reset;

@@ -19,6 +19,8 @@
     int numberOfWordsMade;
     int numberOfTripletsMade;
     int numberOfDoublesMade;
+    int numberOfWordsPerLetter[3];
+    
     
     Texture2D *analyticsTexture;
     StringTextureShader *analyticsShader;

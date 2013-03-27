@@ -34,15 +34,15 @@
 
 @synthesize character,anchorPoint,colorIndex;
 
-Vector3D rectVertices[4];
-Color4f rectColors[2][4];
+Vector3D rectVertices[4];   
+Color4f squareBackgroundColors[2][4];
 Color4f fontColor;
 SoundManager *soundManager;
 
 -(void)setColorIndex:(int)_colorIndex
 {
     colorIndex = _colorIndex;
-    squareColorShader.colors = rectColors[colorIndex];
+    squareColorShader.colors = squareBackgroundColors[colorIndex];
 }
 
 -(CGRect)frame
@@ -84,7 +84,7 @@ SoundManager *soundManager;
     TextureManager *texManager = [TextureManager getSharedTextureManager];
     characterTexture =[texManager getStringTexture:self.character                                                                     dimensions:CGSizeMake(squareSize,squareSize)
                                          horizontalAlignment:UITextAlignmentCenter verticalAlignment:UITextAlignmentMiddle
-                                          fontName:@"Avenir-Heavy"
+                                          fontName:@"Arial-BoldMT"
                                           fontSize:40];
     shadowTexture = [textureManager getTexture:@"shadow" OfType:@"png"];
     
@@ -96,17 +96,17 @@ SoundManager *soundManager;
     colorIndex = 0;
 
     
-    rectColors[0][0] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
-    rectColors[0][1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
-    rectColors[0][2] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
-    rectColors[0][3] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
+    squareBackgroundColors[0][0] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
+    squareBackgroundColors[0][1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
+    squareBackgroundColors[0][2] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
+    squareBackgroundColors[0][3] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
 
     //255 250 231
     
-    rectColors[1][0] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.8f};
-    rectColors[1][1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.8f};
-    rectColors[1][2] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.8f};
-    rectColors[1][3] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.8f};
+    squareBackgroundColors[1][0] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.95f};
+    squareBackgroundColors[1][1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.95f};
+    squareBackgroundColors[1][2] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.95f};
+    squareBackgroundColors[1][3] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.95f};
     
     
 //    rgb 243 156 18
@@ -116,7 +116,7 @@ SoundManager *soundManager;
     squareColorShader = [[ColorShader alloc]init];
     squareColorShader.drawMode = GL_TRIANGLE_FAN;
     squareColorShader.vertices = rectVertices;
-    squareColorShader.colors = rectColors[colorIndex];
+    squareColorShader.colors = squareBackgroundColors[colorIndex];
     squareColorShader.count = 4;
 
     characterTextureShader = [[StringTextureShader alloc]init];
@@ -228,9 +228,7 @@ SoundManager *soundManager;
     {
         
         CGPoint touchPoint = [touch locationInView:self.scene.view];
-       // NSLog(@"%@",NSStringFromCGPoint(touchPoint));
-        wiggleAngle = 0
-        ;
+        wiggleAngle = 0;
         
         [animator removeQueuedAnimationsForObject:self];
         [animator removeRunningAnimationsForObject:self];

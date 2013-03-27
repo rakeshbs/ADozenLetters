@@ -34,9 +34,11 @@ NSMutableArray *madeWords;
         numberOfTripletsMade = 0;
         numberOfDoublesMade = 0;
         numberOfWordsMade = 0;
+        for (int i = 0;i<3;i++)
+            numberOfWordsPerLetter[i] = 0;
         
         analyticsTexture = [[Texture2D alloc]
-                            initWithString:@"W : 0 D : 0 T : 0"                                                 dimensions:CGSizeMake(250, 30)
+                            initWithString:@"W : 0 (0,0,0) D : 0 T : 0"                                                 dimensions:CGSizeMake(320, 50)
                             horizontalAlignment:UITextAlignmentLeft
                             verticalAlignment:UITextAlignmentMiddle
                             fontName:@"Helvetica" fontSize:20];
@@ -55,16 +57,9 @@ NSMutableArray *madeWords;
         madeWords = [[NSMutableArray alloc]init];
         
         [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
+ 
+        [self loadData];
         
-     //  gcHelper = [GCHelper sharedInstance];
-       //gcHelper.delegate = self;
-        //[gcHelper authenticateLocalUser];
-       //[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"gamecenter:"]];
-        
-        [self performSelectorInBackground:@selector(loadData) withObject:nil];
-        
-
-      
     }
     return  self;
 }
@@ -213,6 +208,8 @@ NSMutableArray *madeWords;
     int onboardWordCount = 0;
     int numNewWords = 0;
     BOOL shouldUpdateTexture = NO;
+    
+    
     for (int i = 0;i<3;i++)
     {
         int result = [dictionary checkIfWordExists:resString[i]];
@@ -229,6 +226,7 @@ NSMutableArray *madeWords;
                 }
             }
             numberOfWordsMade++;
+            numberOfWordsPerLetter[resString[i].length-3]++;
             shouldUpdateTexture = YES;
             numNewWords++;
             onboardWordCount++;
@@ -274,7 +272,7 @@ NSMutableArray *madeWords;
     
     [analyticsTexture release];
     analyticsTexture = [[Texture2D alloc]
-                        initWithString:[NSString stringWithFormat:@"W : %d D : %d T : %d",numberOfWordsMade,numberOfDoublesMade,numberOfTripletsMade]                                                 dimensions:CGSizeMake(250, 30)
+                        initWithString:[NSString stringWithFormat:@"W : %d (%d, %d, %d) D : %d T : %d",numberOfWordsMade,numberOfWordsPerLetter[0],numberOfWordsPerLetter[1],numberOfWordsPerLetter[2],numberOfDoublesMade,numberOfTripletsMade]                                                 dimensions:CGSizeMake(320, 50)
                         horizontalAlignment:UITextAlignmentLeft
                         verticalAlignment:UITextAlignmentMiddle
                         fontName:@"Helvetica" fontSize:20];
@@ -307,6 +305,8 @@ NSMutableArray *squaresArray;
         numberOfDoublesMade = 0;
         numberOfTripletsMade = 0;
         numberOfWordsMade = 0;
+        for (int i = 0;i<3;i++)
+            numberOfWordsPerLetter[i] = 0;
         [dictionary reset];
         [self updateAnalytics];
     }
