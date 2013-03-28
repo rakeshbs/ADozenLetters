@@ -28,6 +28,7 @@
 #define REDCOLOR_MIN 0.01f
 #define REDCOLOR_MAX 1.0f
 
+#define NUMBEROFSCORES 7
 
 
 @implementation Square
@@ -35,14 +36,23 @@
 @synthesize character,anchorPoint,colorIndex;
 
 Vector3D rectVertices[4];   
-Color4f squareBackgroundColors[2][4];
-Color4f fontColor;
+static Color4f tileColors[2][2][4];
+static Color4f characterColors[2];
+static Color4f transparentColor = (Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 0.0};
+
+Color4f *currentTileColor;
+Color4f currentCharacterColor;
+
+
 SoundManager *soundManager;
+
+int letterScores[NUMBEROFSCORES] = {1,2,3,4,5,8,10};
+NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY",@"K",@"JX",@"QZ"};
 
 -(void)setColorIndex:(int)_colorIndex
 {
     colorIndex = _colorIndex;
-    squareColorShader.colors = squareBackgroundColors[colorIndex];
+    squareColorShader.colors = (currentTileColor+colorIndex*4);
 }
 
 -(CGRect)frame
@@ -61,7 +71,19 @@ SoundManager *soundManager;
         shadowAlpha = 0;
         self.character = _character;
         shadowAnimationCount = 0;
+        tileColorIndex = 0;
         shadowVisible = NO;
+        
+        for (int i = 0;i<NUMBEROFSCORES;i++)
+        {
+            if ([lettersPerScore[i] rangeOfString:_character].location != NSNotFound)
+            {
+                score = letterScores[i];
+                break;
+            }
+        }
+        
+        
         [self setupGraphics];
        // [self setupSounds];
     
@@ -84,8 +106,14 @@ SoundManager *soundManager;
     TextureManager *texManager = [TextureManager getSharedTextureManager];
     characterTexture =[texManager getStringTexture:self.character                                                                     dimensions:CGSizeMake(squareSize,squareSize)
                                          horizontalAlignment:UITextAlignmentCenter verticalAlignment:UITextAlignmentMiddle
-                                          fontName:@"Arial-BoldMT"
+                                          fontName:@"Lato"
                                           fontSize:40];
+    
+    scoreTexture =[texManager getStringTexture:[NSString stringWithFormat:@"%d",score]                                                                     dimensions:CGSizeMake(squareSize-10,squareSize-5)
+                               horizontalAlignment:UITextAlignmentRight verticalAlignment:UITextAlignmentBottom
+                                          fontName:@"Lato"
+                                          fontSize:15];
+    
     shadowTexture = [textureManager getTexture:@"shadow" OfType:@"png"];
     
     rectVertices[0] =  (Vector3D) {.x = -squareSize/(2), .y = -squareSize/(2), .z = 10.0f};
@@ -94,29 +122,12 @@ SoundManager *soundManager;
     rectVertices[3] = (Vector3D)  {.x = -squareSize/(2), .y = squareSize/(2), .z = 10.0f};
     
     colorIndex = 0;
-
-    
-    squareBackgroundColors[0][0] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
-    squareBackgroundColors[0][1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
-    squareBackgroundColors[0][2] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
-    squareBackgroundColors[0][3] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
-
-    //255 250 231
-    
-    squareBackgroundColors[1][0] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.93f};
-    squareBackgroundColors[1][1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.93f};
-    squareBackgroundColors[1][2] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.93f};
-    squareBackgroundColors[1][3] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 0.93f};
-    
-    
-//    rgb 243 156 18
-    
-    fontColor = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
+    [self setupColors];
     
     squareColorShader = [[ColorShader alloc]init];
     squareColorShader.drawMode = GL_TRIANGLE_FAN;
     squareColorShader.vertices = rectVertices;
-    squareColorShader.colors = squareBackgroundColors[colorIndex];
+    squareColorShader.colors = (currentTileColor + 2 * colorIndex);
     squareColorShader.count = 4;
 
     characterTextureShader = [[StringTextureShader alloc]init];
@@ -124,7 +135,14 @@ SoundManager *soundManager;
     characterTextureShader.vertices = [characterTexture getTextureVertices];
     characterTextureShader.texture = characterTexture;
     characterTextureShader.textureCoordinates = [characterTexture getTextureCoordinates];
-    characterTextureShader.textureColor = fontColor;
+    characterTextureShader.textureColor = &currentCharacterColor;
+    
+    scoreTextureShader = [[StringTextureShader alloc]init];
+    scoreTextureShader.count = 4;
+    scoreTextureShader.vertices = [scoreTexture getTextureVertices];
+    scoreTextureShader.texture = scoreTexture;
+    scoreTextureShader.textureCoordinates = [scoreTexture getTextureCoordinates];
+    scoreTextureShader.textureColor = &currentCharacterColor;
     
     shadowTextureShader = [[TextureShader alloc]init];
     shadowTextureShader.drawMode = GL_TRIANGLE_FAN;
@@ -132,10 +150,53 @@ SoundManager *soundManager;
     shadowTextureShader.texture = shadowTexture;
     shadowTextureShader.vertices = [shadowTexture getTextureVertices];
     shadowTextureShader.textureCoordinates = [shadowTexture getTextureCoordinates];
-    shadowTextureShader.textureColor = (Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 0.0};
+    shadowTextureShader.textureColor = &transparentColor;
     
+}
 
-
+-(void)setupColors
+{
+    CGFloat alpha = 0.93f;
+    
+    tileColors[0][0][0] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
+    tileColors[0][0][1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
+    tileColors[0][0][2] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
+    tileColors[0][0][3] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
+    
+    //255 250 231
+    
+    tileColors[0][1][0] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = alpha};
+    tileColors[0][1][1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = alpha};
+    tileColors[0][1][2] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = alpha};
+    tileColors[0][1][3] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = alpha};
+    
+    
+    CGFloat alpha2 = 0.5;
+    //    rgb 243 156 18
+    
+    tileColors[1][0][0] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
+    tileColors[1][0][1] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
+    tileColors[1][0][2] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
+    tileColors[1][0][3] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
+    
+    
+    //    rgb 243 156 18
+    
+    tileColors[1][1][0] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = alpha2};
+    tileColors[1][1][1] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = alpha2};
+    tileColors[1][1][2] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = alpha2};
+    tileColors[1][1][3] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = alpha2};
+    
+    currentTileColor = malloc(sizeof(Color4f)*8);
+    
+    for (int i = 0;i<2;i++)
+        for (int j = 0;j<4;j++)
+            Color4fCopy(&tileColors[tileColorIndex][i][j], (currentTileColor+4*i+j));
+    
+    characterColors[0] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
+    characterColors[1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
+    
+    Color4fCopy(&characterColors[tileColorIndex], &currentCharacterColor);
 }
 
 -(void)draw
@@ -146,6 +207,7 @@ SoundManager *soundManager;
     [shadowTextureShader draw];
     [squareColorShader draw];
     [characterTextureShader draw];
+    [scoreTextureShader draw];
     [mvpMatrixManager popModelViewMatrix];
     
 }
@@ -167,23 +229,80 @@ SoundManager *soundManager;
     }
     else if (animation.type == ANIMATION_SHOW_SHADOW)
     {
-       if (shadowTextureShader.textureColor.alpha >= SHADOW_ALPHA_MAX)
+       if (shadowTextureShader.textureColor->alpha >= SHADOW_ALPHA_MAX)
            return YES;
         CGFloat calpha = getEaseOut(SHADOW_ALPHA_MIN, SHADOW_ALPHA_MAX, animationRatio);
         shadowTextureShader.textureColor = (Color4f) {.red = shadowTextureShader.textureColor.red, .blue = shadowTextureShader.textureColor.blue, .green =shadowTextureShader.textureColor.green, .alpha = calpha};
     }
     else if (animation.type == ANIMATION_HIDE_SHADOW)
     {
-        if (shadowTextureShader.textureColor.alpha <= SHADOW_ALPHA_MIN)
+        if (shadowTextureShader.textureColor->alpha <= SHADOW_ALPHA_MIN)
             return YES;
         CGFloat calpha = getEaseOut(SHADOW_ALPHA_MAX,SHADOW_ALPHA_MIN, animationRatio);
-        shadowTextureShader.textureColor = (Color4f) {.red = shadowTextureShader.textureColor.red, .blue = shadowTextureShader.textureColor.blue, .green =shadowTextureShader.textureColor.green, .alpha = calpha};
+        shadowTextureShader.textureColor = (Color4f) {.red = shadowTextureShader.textureColor.red, .blue = shadowTextureShader.textureColor.blue, .green =shadowTextureShader.textureColor->green, .alpha = calpha};
     }
     else if (animation.type == ANIMATION_WIGGLE)
     {
         wiggleAngle = getSineEaseOut(0, animationRatio, WIGGLE_ANGLE);
     }
+    else if (animation.type == ANIMATION_SHOW_COLOR)
+    {
+        for (int c = 0;c<2;c++)
+        {
+            CGFloat red = getEaseIn(tileColors[0][c][0].red, tileColors[1][c][0].red, animationRatio);
+            CGFloat blue = getEaseIn(tileColors[0][c][0].blue, tileColors[1][c][0].blue, animationRatio);
+            CGFloat green = getEaseIn(tileColors[0][c][0].green, tileColors[1][c][0].green, animationRatio);
+            CGFloat alpha = getEaseIn(tileColors[0][c][0].alpha, tileColors[1][c][0].alpha, animationRatio);
+            
+            
+            for (int i = 0;i<4;i++)
+            {
+                (currentTileColor+c*4+i)->red = red;
+                (currentTileColor+c*4+i)->blue = blue;
+                (currentTileColor+c*4+i)->green = green;
+                (currentTileColor+c*4+i)->alpha = alpha;
+            }
+        }
+        
+        CGFloat red = getEaseIn(characterColors[0].red, characterColors[1].red, animationRatio);
+        CGFloat blue = getEaseIn(characterColors[0].blue, characterColors[1].blue, animationRatio);
+        CGFloat green = getEaseIn(characterColors[0].green, characterColors[1].green, animationRatio);
+        CGFloat alpha = getEaseIn(characterColors[0].alpha, characterColors[1].alpha, animationRatio);
+        
+        currentCharacterColor.red = red;
+        currentCharacterColor.blue = blue;
+        currentCharacterColor.green = green;
+        currentCharacterColor.alpha = alpha;
+        
 
+    }
+    else if (animation.type == ANIMATION_HIDE_COLOR)
+    {
+        for (int c = 0;c<2;c++)
+        {
+            CGFloat red = getEaseIn(tileColors[1][c][0].red, tileColors[0][c][0].red, animationRatio);
+            CGFloat blue = getEaseIn(tileColors[1][c][0].blue, tileColors[0][c][0].blue, animationRatio);
+            CGFloat green = getEaseIn(tileColors[1][c][0].green, tileColors[0][c][0].green, animationRatio);
+            CGFloat alpha = getEaseIn(tileColors[1][c][0].alpha, tileColors[0][c][0].alpha, animationRatio);
+            for (int i = 0;i<4;i++)
+            {
+                (currentTileColor+c*4+i)->red = red;
+                (currentTileColor+c*4+i)->blue = blue;
+                (currentTileColor+c*4+i)->green = green;
+                (currentTileColor+c*4+i)->alpha = alpha;
+            }
+        }
+        
+        CGFloat red = getEaseIn(characterColors[1].red, characterColors[0].red, animationRatio);
+        CGFloat blue = getEaseIn(characterColors[1].blue, characterColors[0].blue, animationRatio);
+        CGFloat green = getEaseIn(characterColors[1].green, characterColors[0].green, animationRatio);
+        CGFloat alpha = getEaseIn(characterColors[1].alpha, characterColors[0].alpha, animationRatio);
+        
+        currentCharacterColor.red = red;
+        currentCharacterColor.blue = blue;
+        currentCharacterColor.green = green;
+        currentCharacterColor.alpha = alpha;
+    }
     if (animationRatio >= 1.0)
         return YES;
     return NO;
@@ -447,6 +566,20 @@ SoundManager *soundManager;
     [animator addAnimationFor:self ofType:ANIMATION_THROW ofDuration:duration afterDelayInSeconds:delay];
 }
 
+-(void)animateColorInDuration:(CGFloat)duration afterDelay:(CGFloat)delay
+{
+    if (tileColorIndex == 0)
+    {
+        NSLog(@"animate");
+        [animator addAnimationFor:self ofType:ANIMATION_SHOW_COLOR ofDuration:duration afterDelayInSeconds:delay];
+        tileColorIndex = 1;
+    }
+    else
+    {
+        [animator addAnimationFor:self ofType:ANIMATION_HIDE_SHADOW ofDuration:duration afterDelayInSeconds:delay];
+        tileColorIndex = 0;
+    }
+}
 
 -(void)dealloc
 {

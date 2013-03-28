@@ -8,10 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSArray (Additions)
+
+
+@interface NSMutableArray (Additions)
 -(int)indexOfString:(NSString *)searchString;
 @end
 
-@interface NSMutableArray (Additions)
+@interface NSArray (Additions)
 -(int)indexOfString:(NSString *)searchString;
 @end

@@ -51,7 +51,7 @@
     [matrixManager getMVPMatrix:mvpMatrix];
     glUniformMatrix4fv(mvpMatrixUniform, 1, FALSE, mvpMatrix);
     
-    glUniform4f(textureColorUniform, textureColor.red, textureColor.green, textureColor.blue, textureColor.alpha);
+    glUniform4f(textureColorUniform, textureColor->red, textureColor->green, textureColor->blue, textureColor->alpha);
     
     glActiveTexture (GL_TEXTURE0);
     [texture bindTexture];

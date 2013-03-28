@@ -19,6 +19,7 @@
     NSString *character;
     Texture2D *characterTexture;
     Texture2D *shadowTexture;
+    Texture2D *scoreTexture;
     
     CGPoint startPoint;
     CGPoint endPoint;
@@ -44,9 +45,14 @@
     
     CGFloat redColor;
     
+    int score;
+    
     ColorShader *squareColorShader;
     StringTextureShader *characterTextureShader;
+    StringTextureShader *scoreTextureShader;
     TextureShader *shadowTextureShader;
+    
+    int tileColorIndex;
     
     CGPoint anchorPoint;
 }
@@ -63,4 +69,5 @@
 -(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay;
 -(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration;
 -(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay;
+-(void)animateColorInDuration:(CGFloat)duration afterDelay:(CGFloat)delay;
 @end

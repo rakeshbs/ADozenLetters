@@ -87,6 +87,15 @@ typedef struct {
     GLfloat	blue;
     GLfloat alpha;
 } Color4f;
+
+static inline void Color4fCopy(Color4f *source,Color4f *destination)
+{
+    destination->blue = source->blue;
+    destination->green = source->green;
+    destination->red = source->red;
+    destination->alpha = source->alpha;
+}
+
 typedef GLfloat Matrix3D[16];
 static inline void Matrix3DSetIdentity(Matrix3D matrix)
 {

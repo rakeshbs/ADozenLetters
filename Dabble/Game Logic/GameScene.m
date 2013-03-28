@@ -51,6 +51,9 @@ Dictionary *dictionary;
         resString[2] = [[NSMutableString alloc]initWithString:@"###"];
         madeWords = [[NSMutableArray alloc]init];
         onBoardWords = [[NSMutableArray alloc]init];
+        madeTriples = [[NSMutableArray alloc]init];
+        madeDoubles = [[NSMutableArray alloc]init];
+        
         
         [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
         
@@ -245,8 +248,8 @@ Dictionary *dictionary;
             NSLog(@"here");
             [madeDoubles addObject:concat];
             numberOfDoublesMade++;
-            shouldHighlight[[onBoardWords[0] length]-3] = YES;
-            shouldHighlight[[onBoardWords[1] length]-3] = YES;
+            shouldHighlight[5-[onBoardWords[0] length]] = YES;
+            shouldHighlight[5-[onBoardWords[1] length]] = YES;
             shouldUpdateTexture = YES;
         }
     }
@@ -260,7 +263,7 @@ Dictionary *dictionary;
             {
                 if (sq.anchorPoint.y == anchorY)
                 {
-                    [sq wiggleFor:1.0];
+                    [sq animateColorInDuration:1.0 afterDelay:0];
                 }
             }
         }
