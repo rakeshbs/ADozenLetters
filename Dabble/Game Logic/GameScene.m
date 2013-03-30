@@ -39,10 +39,11 @@ Dictionary *dictionary;
                             fontName:@"Helvetica" fontSize:20];
         analyticsShader = [[StringTextureShader alloc]init];
         analyticsShader.texture = analyticsTexture;
-        analyticsShader.count = 4;
+        analyticsShader.count = 6;
         analyticsShader.vertices = [analyticsTexture getTextureVertices];
         analyticsShader.textureCoordinates = [analyticsTexture getTextureCoordinates];
-        analyticsShader.textureColor = ((Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 1.0});
+        
+        //analyticsShader.textureColor = ((Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 1.0});
         
         
         
@@ -179,10 +180,10 @@ Dictionary *dictionary;
     [director clearScene:color];
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     
-   // [mvpMatrixManager pushModelViewMatrix];
-    //[mvpMatrixManager translateInX:200 Y:380 Z:0];
-    //[analyticsShader draw];
-   // [mvpMatrixManager popModelViewMatrix];
+   [mvpMatrixManager pushModelViewMatrix];
+    [mvpMatrixManager translateInX:200 Y:380 Z:0];
+    [analyticsShader draw];
+   [mvpMatrixManager popModelViewMatrix];
     
 }
 
@@ -269,7 +270,6 @@ Dictionary *dictionary;
     else if (onBoardWords.count == 2)
     {
         NSString *concat = [NSString stringWithFormat:@"%@%@",onBoardWords[0],onBoardWords[1]];
-   //     NSLog(@"%@ %d %d",concat,[madeDoubles indexOfString:concat],madeDoubles.count);
         if ([madeDoubles indexOfString:concat] < 0)
         {
             [madeDoubles addObject:concat];
@@ -308,11 +308,6 @@ Dictionary *dictionary;
     
     if (shouldUpdateTexture)
     {
-        
-        NSLog(@"number of words : %d",numberOfWordsMade);
-        NSLog(@"number of doubles : %d",numberOfDoublesMade);
-        NSLog(@"number of triples : %d",numberOfTripletsMade);
-        
         [self updateAnalytics];
     }
     

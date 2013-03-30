@@ -88,12 +88,35 @@ typedef struct {
     GLfloat alpha;
 } Color4f;
 
+static inline void Vector3DCopy(Vector3D *source,Vector3D *destination)
+{
+    destination->x = source->x;
+    destination->y = source->y;
+    destination->z = source->z;
+}
+
 static inline void Color4fCopy(Color4f *source,Color4f *destination)
 {
     destination->blue = source->blue;
     destination->green = source->green;
     destination->red = source->red;
     destination->alpha = source->alpha;
+}
+
+static inline void Vector3DCopyS(Vector3D source,Vector3D *destination)
+{
+    destination->x = source.x;
+    destination->y = source.y;
+    destination->z = source.z;
+}
+
+
+static inline void Color4fCopyS(Color4f source,Color4f *destination)
+{
+    destination->blue = source.blue;
+    destination->green = source.green;
+    destination->red = source.red;
+    destination->alpha = source.alpha;
 }
 
 typedef GLfloat Matrix3D[16];
@@ -320,3 +343,17 @@ typedef struct
     GLfloat	s;
     GLfloat t;
 } TextureCoord;
+
+static inline void TextureCoordCopy(TextureCoord *source,TextureCoord *destination)
+{
+    destination->s = source->s;
+    destination->t = source->t;
+
+}
+
+
+static inline void TextureCoordCopyS(TextureCoord source,TextureCoord *destination)
+{
+    destination->s = source.s;
+    destination->t = source.t;
+}

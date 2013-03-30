@@ -25,6 +25,7 @@
     CGPoint endPoint;
     
     CGFloat shadowAlpha;
+    Color4f *shadowColor;
     CGFloat wiggleAngle;
     CGFloat startAngle;
     

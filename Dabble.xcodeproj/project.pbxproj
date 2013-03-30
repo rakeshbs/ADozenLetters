@@ -60,6 +60,7 @@
 		146472D016D278B5000C8FB4 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472CA16D278B5000C8FB4 /* OpenGLES.framework */; };
 		146472D116D278B5000C8FB4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472CB16D278B5000C8FB4 /* QuartzCore.framework */; };
 		146472D616D278F0000C8FB4 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472D516D278F0000C8FB4 /* GameKit.framework */; };
+		14A635291707255300C433A2 /* TextureString.m in Sources */ = {isa = PBXBuildFile; fileRef = 14A635281707255300C433A2 /* TextureString.m */; };
 		14C0F4051703311100F6D422 /* NSArray+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C0F4041703311100F6D422 /* NSArray+Additions.m */; };
 		14D4248E1700255C0010657A /* sprite.png in Resources */ = {isa = PBXBuildFile; fileRef = 14D4248D1700255C0010657A /* sprite.png */; };
 		14F1197A170297E400721BEE /* w3 in Resources */ = {isa = PBXBuildFile; fileRef = 14F11977170297E400721BEE /* w3 */; };
@@ -157,6 +158,8 @@
 		146472CA16D278B5000C8FB4 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		146472CB16D278B5000C8FB4 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		146472D516D278F0000C8FB4 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		14A635271707255300C433A2 /* TextureString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureString.h; sourceTree = "<group>"; };
+		14A635281707255300C433A2 /* TextureString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextureString.m; sourceTree = "<group>"; };
 		14C0F4031703311100F6D422 /* NSArray+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Additions.h"; sourceTree = "<group>"; };
 		14C0F4041703311100F6D422 /* NSArray+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Additions.m"; sourceTree = "<group>"; };
 		14D4248D1700255C0010657A /* sprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sprite.png; sourceTree = "<group>"; };
@@ -268,6 +271,8 @@
 				1445DC4316F97AD600EBBCCF /* Texture2D.m */,
 				1445DC4416F97AD600EBBCCF /* TextureManager.h */,
 				1445DC4516F97AD600EBBCCF /* TextureManager.m */,
+				14A635271707255300C433A2 /* TextureString.h */,
+				14A635281707255300C433A2 /* TextureString.m */,
 			);
 			path = "OpenGL Support";
 			sourceTree = "<group>";
@@ -585,6 +590,7 @@
 				14F119851702A0A400721BEE /* FileReader.m in Sources */,
 				14F119861702A0A400721BEE /* NSDataExtensions.m in Sources */,
 				14C0F4051703311100F6D422 /* NSArray+Additions.m in Sources */,
+				14A635291707255300C433A2 /* TextureString.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

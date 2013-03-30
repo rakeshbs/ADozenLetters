@@ -10,7 +10,25 @@
 
 @implementation StringTextureShader
 
-@synthesize textureCoordinates,vertices,count,texture,textureColor;
+@synthesize textureCoordinates,vertices,count,texture,textureColors,drawMode;
+
+
+-(void)setCount:(int)_count
+{
+    count = _count;
+    if (vertices != NULL)
+    {
+        free(vertices);
+        free(textureColors);
+        free(textureCoordinates);
+    }
+    
+    vertices = malloc(sizeof(Vector3D)*count);
+    textureColors = malloc(sizeof(Color4f)*count);
+    textureCoordinates = malloc(sizeof(TextureCoord)*count);
+}
+
+
 
 -(id)init
 {
@@ -21,18 +39,18 @@
         
         [shader addAttribute:@"vertices"];
         [shader addAttribute:@"textureCoordinates"];
+        [shader addAttribute:@"textureColors"];
         
         if (![shader link])
             NSLog(@"Link failed");
         
-        drawMode = GL_TRIANGLE_FAN;
-        
         verticesAttribute = [shader attributeIndex:@"vertices"];
-
         textureCoordinatesAttribute = [shader attributeIndex:@"textureCoordinates"];
+        textureColorsAttribute = [shader attributeIndex:@"textureColors"];
+        
         mvpMatrixUniform = [shader uniformIndex:@"mvpmatrix"];
         textureUniform = [shader uniformIndex:@"texture"];
-        textureColorUniform = [shader uniformIndex:@"textureColor"];
+       
     }
     return self;
 }
@@ -46,6 +64,10 @@
     glVertexAttribPointer(verticesAttribute, 3, GL_FLOAT, 0, 0, vertices);
     glEnableVertexAttribArray(verticesAttribute);
     
+    glVertexAttribPointer(textureColorsAttribute, 4, GL_FLOAT, 0, 0, textureColors);
+    glEnableVertexAttribArray(textureColorsAttribute);
+    
+    
     glVertexAttribPointer(textureCoordinatesAttribute, 2, GL_FLOAT, 0, 0, textureCoordinates);
     glEnableVertexAttribArray(textureCoordinatesAttribute);
     
@@ -53,7 +75,6 @@
     [matrixManager getMVPMatrix:mvpMatrix];
     glUniformMatrix4fv(mvpMatrixUniform, 1, FALSE, mvpMatrix);
     
-    glUniform4f(textureColorUniform, textureColor.red, textureColor.green, textureColor.blue, textureColor.alpha);
     
     glActiveTexture (GL_TEXTURE0);
     [texture bindTexture];

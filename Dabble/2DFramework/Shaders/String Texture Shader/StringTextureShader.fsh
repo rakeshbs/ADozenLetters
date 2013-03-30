@@ -1,10 +1,10 @@
 uniform sampler2D texture;
 varying lowp vec2 fragmentTextureCoordinates;
-uniform lowp vec4 textureColor;
+varying lowp vec4 textureFragColor;
 
 void main()
 {
     mediump vec4 texel =  texture2D(texture, fragmentTextureCoordinates);
-    lowp vec4 finalColor = vec4(textureColor.r,textureColor.g,textureColor.b,texel.a*textureColor.a);
+    lowp vec4 finalColor = vec4(textureFragColor.r,textureFragColor.g,textureFragColor.b,texel.a*textureFragColor.a);
     gl_FragColor = finalColor;
 }

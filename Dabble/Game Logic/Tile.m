@@ -11,6 +11,7 @@
 #import "EasingFunctions.h"
 #import "Scene.h"
 #import "SoundManager.h"
+#import "TextureString.h"
 
 #define ANIMATION_MOVE 1
 #define ANIMATION_WIGGLE 2
@@ -35,7 +36,7 @@
 
 @synthesize character,anchorPoint,colorIndex,isBonded;
 
-Vector3D rectVertices[4];   
+Vector3D rectVertices[6];
 static Color4f tileColors[2][2];
 static Color4f characterColors;
 static Color4f transparentColor = (Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 0.0};
@@ -98,49 +99,101 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     
 }
 
+-(void)setupStrings
+{
+    TextureString *texString1 = [[TextureString alloc]init];
+    texString1.string = self.character;
+    texString1.dimensions = CGSizeMake(tileSquareSize, tileSquareSize);
+    texString1.horizontalTextAlignment = UITextAlignmentCenter;
+    texString1.verticalTextAlignment = UITextAlignmentMiddle;
+    texString1.fontName= @"Lato";
+    texString1.fontSize = 40;
+    
+    TextureString *texString2 = [[TextureString alloc]init];
+    texString2.string = [NSString stringWithFormat:@"%d",score];
+    texString2.dimensions = CGSizeMake(tileSquareSize-5, tileSquareSize-5);
+    texString2.horizontalTextAlignment = UITextAlignmentRight;
+    texString2.verticalTextAlignment = UITextAlignmentBottom;
+    texString2.fontName= @"Lato";
+    texString2.fontSize = 15;
+    
+    NSMutableArray *array = [[NSMutableArray alloc]init];
+    [array addObject:texString1];
+    [array addObject:texString2];
+    
+    characterTexture = [textureManager getCombinedStringTexture:array key:self.character];
+    
+    [array release];
+    [texString1 release];
+    [texString2 release];
+}
+
 -(void)setupGraphics
 {
-    TextureManager *texManager = [TextureManager getSharedTextureManager];
-    characterTexture =[texManager getStringTexture:self.character                                                                     dimensions:CGSizeMake(tileSquareSize,tileSquareSize)
-                                         horizontalAlignment:UITextAlignmentCenter verticalAlignment:UITextAlignmentMiddle
-                                          fontName:@"Lato"
-                                          fontSize:40];
-    
-    scoreTexture =[texManager getStringTexture:[NSString stringWithFormat:@"%d",score]                                                                     dimensions:CGSizeMake(tileSquareSize-5,tileSquareSize-5)
-                               horizontalAlignment:UITextAlignmentRight verticalAlignment:UITextAlignmentBottom
-                                          fontName:@"Lato"
-                                          fontSize:15];
-    
+    [self setupStrings];
     shadowTexture = [textureManager getTexture:@"shadow" OfType:@"png"];
     
     rectVertices[0] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 10.0f};
     rectVertices[1] = (Vector3D)  {.x = tileSquareSize/(2), .y = - tileSquareSize/(2), .z = 10.0f};
     rectVertices[2] = (Vector3D)  {.x = tileSquareSize/(2), .y =  tileSquareSize/(2), .z = 10.0f};
-    rectVertices[3] = (Vector3D)  {.x = -tileSquareSize/(2), .y = tileSquareSize/(2), .z = 10.0f};
+    
+    rectVertices[3] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 10.0f};
+    rectVertices[4] = (Vector3D)  {.x = -tileSquareSize/(2), .y = tileSquareSize/(2), .z = 10.0f};
+    rectVertices[5] =  (Vector3D) {.x = tileSquareSize/(2), .y = tileSquareSize/(2), .z = 10.0f};
     
     colorIndex = 0;
     [self setupColors];
     
     tileColorShader = [[FlatColorShader alloc]init];
-    tileColorShader.drawMode = GL_TRIANGLE_FAN;
-    tileColorShader.vertices = rectVertices;
-    tileColorShader.color = tileColors[isBonded][colorIndex];
-    tileColorShader.count = 4;
+    tileColorShader.drawMode = GL_TRIANGLES;
+    tileColorShader.count = 12;
+    for (int i = 0;i<6;i++)
+    {
+        Vector3DCopy(&rectVertices[i],(tileColorShader.vertices+i));
+        Color4fCopy(&tileColors[0][colorIndex], (tileColorShader.colors+i));
+    }
+    for (int i = 0;i<6;i++)
+    {
+        Vector3DCopy(&rectVertices[i],(tileColorShader.vertices+i+6));
+    }
 
-    characterTextureShader = [[StringTextureShader alloc]init];
-    characterTextureShader.count = 4;
-    characterTextureShader.vertices = [characterTexture getTextureVertices];
-    characterTextureShader.texture = characterTexture;
-    characterTextureShader.textureCoordinates = [characterTexture getTextureCoordinates];
-    characterTextureShader.textureColor = characterColors;
     
     shadowTextureShader = [[TextureShader alloc]init];
-    shadowTextureShader.drawMode = GL_TRIANGLE_FAN;
-    shadowTextureShader.count = 4;
+    shadowTextureShader.drawMode = GL_TRIANGLES;
+    shadowTextureShader.count = 6;
     shadowTextureShader.texture = shadowTexture;
+    
+    Vector3D *texVertices1 = [shadowTexture getTextureVertices];
+    TextureCoord *texCoords1 = [shadowTexture getTextureCoordinates];
+    for (int i = 0;i<6;i++)
+    {
+        Vector3DCopy((texVertices1+i), (shadowTextureShader.vertices+i));
+        TextureCoordCopy((texCoords1+i), (shadowTextureShader.textureCoordinates+i));
+    }
+    
     shadowTextureShader.vertices = [shadowTexture getTextureVertices];
     shadowTextureShader.textureCoordinates = [shadowTexture getTextureCoordinates];
-    shadowTextureShader.textureColor = transparentColor;
+    
+    characterTextureShader = [[StringTextureShader alloc]init];
+    characterTextureShader.drawMode = GL_TRIANGLES;
+    characterTextureShader.count = 12;
+    characterTextureShader.texture = characterTexture;
+    Vector3D *texVertices2 = [characterTexture getTextureVertices];
+    TextureCoord *texCoords2 = [characterTexture getTextureCoordinates];
+    
+    for (int i = 0;i<6;i++)
+    {
+        Vector3DCopy((texVertices2+i), (characterTextureShader.vertices+i));
+        TextureCoordCopy((texCoords2+i), (characterTextureShader.textureCoordinates+i));
+        Color4fCopyS(tileColors[0][0], (characterTextureShader.textureColors+i));
+
+    }
+    for (int i = 0;i<6;i++)
+    {
+        Vector3DCopy((texVertices2+i), (characterTextureShader.vertices+i+6));
+        TextureCoordCopy((texCoords2+i), (characterTextureShader.textureCoordinates+i+6));
+
+    }
     
 }
 
@@ -161,6 +214,9 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     
     characterColors = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
     
+    shadowColor = malloc(sizeof(Color4f));
+    Color4fCopyS(transparentColor, shadowColor);
+    
     currentTileColor = malloc(sizeof(Color4f)*2);
     currentCharacterColor = malloc(sizeof(Color4f));
     startAlphas = malloc(sizeof(CGFloat)*2);
@@ -172,35 +228,26 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     }
     
     Color4fCopy(&characterColors , currentCharacterColor);
-    currentCharacterColor->alpha = 1.0;
-
     
 }
 
 
 -(void)draw
 {
+    for (int i = 0;i<6;i++)
+    {
+        Color4fCopyS(currentTileColor[colorIndex], (tileColorShader.colors+i+6));
+        Color4fCopy(shadowColor, (shadowTextureShader.textureColors+i));
+        Color4fCopy(currentCharacterColor, (characterTextureShader.textureColors+i+6));
+    }
+    
     [mvpMatrixManager pushModelViewMatrix];
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:0];
-    
     [shadowTextureShader draw];
-    tileColorShader.color = tileColors[0][colorIndex];
+    
     [tileColorShader draw];
     
-    tileColorShader.color = currentTileColor[colorIndex];
-    [tileColorShader draw];
-    
-    characterTextureShader.textureColor =  tileColors[0][0];
-    characterTextureShader.texture  =characterTexture;
-    [characterTextureShader draw];
-    characterTextureShader.texture  =scoreTexture;
-    [characterTextureShader draw];
-    
-    characterTextureShader.textureColor = *(currentCharacterColor);
-    characterTextureShader.texture  =characterTexture;
-    [characterTextureShader draw];
-    characterTextureShader.texture  =scoreTexture;
     [characterTextureShader draw];
     [mvpMatrixManager popModelViewMatrix];
     
@@ -223,21 +270,18 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     }
     else if (animation.type == ANIMATION_SHOW_SHADOW)
     {
-       if (shadowTextureShader.textureColor.alpha >= SHADOW_ALPHA_MAX)
+       if (shadowAlpha>= SHADOW_ALPHA_MAX)
            return YES;
-        CGFloat calpha = getEaseOut(SHADOW_ALPHA_MIN, SHADOW_ALPHA_MAX, animationRatio);
-        shadowTextureShader.textureColor = (Color4f) {.red = shadowTextureShader.textureColor.red,
-            .green = shadowTextureShader.textureColor.green,.blue = shadowTextureShader.textureColor.blue,
-            .alpha = calpha};
+        shadowAlpha = getEaseOut(SHADOW_ALPHA_MIN, SHADOW_ALPHA_MAX, animationRatio);
+        shadowColor->alpha = shadowAlpha;
     }
     else if (animation.type == ANIMATION_HIDE_SHADOW)
     {
-        if (shadowTextureShader.textureColor.alpha <= SHADOW_ALPHA_MIN)
+        if (shadowAlpha <= SHADOW_ALPHA_MIN)
             return YES;
-        CGFloat calpha = getEaseOut(SHADOW_ALPHA_MAX,SHADOW_ALPHA_MIN, animationRatio);
-        shadowTextureShader.textureColor = (Color4f) {.red = shadowTextureShader.textureColor.red,
-            .green = shadowTextureShader.textureColor.green,.blue = shadowTextureShader.textureColor.blue,
-            .alpha = calpha};
+        shadowAlpha = getEaseOut(SHADOW_ALPHA_MAX,SHADOW_ALPHA_MIN, animationRatio);
+        shadowColor->alpha = shadowAlpha;
+        
     }
     else if (animation.type == ANIMATION_WIGGLE)
     {

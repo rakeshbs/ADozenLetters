@@ -23,5 +23,5 @@
            horizontalAlignment:(UITextAlignment)alignment verticalAlignment:(UITextVerticalAlignment)vAlignment
 					  fontName:(NSString *)font
 					  fontSize:(int)size;
-
+-(Texture2D *)getCombinedStringTexture:(NSMutableArray *)strings key:(NSString *)_key;
 @end

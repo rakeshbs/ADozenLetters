@@ -15,21 +15,20 @@
 
 @interface FlatColorShader : GLShader
 {
-    Color4f color;
+    Color4f *colors;
     Vector3D *vertices;
     GLShaderProgram *shader;
     
-    GLuint colorUniform;
+    GLuint colorAttribute;
     GLuint verticesAttribute;
     GLuint mvpMatrixUniform;
     GLenum drawMode;
     int count;
-    CGFloat pointSize;
     
 }
 @property (nonatomic)    CGFloat pointSize;
 @property (nonatomic)     GLenum drawMode;
-@property (nonatomic) Color4f color;
+@property (nonatomic) Color4f *colors;
 @property (nonatomic) Vector3D *vertices;
 @property (nonatomic) int count;
 

@@ -64,6 +64,8 @@ typedef enum
     UITextAlignmentBottom
 }UITextVerticalAlignment;
 
+
+
 //CLASS INTERFACES:
 
 /*
@@ -72,6 +74,9 @@ The created Texture2D object will always have power-of-two dimensions.
 Depending on how you create the Texture2D object, the actual image area of the texture might be smaller than the texture dimensions i.e. "contentSize" != (pixelsWide, pixelsHigh) and (maxS, maxT) != (1.0, 1.0).
 Be aware that the content of the generated textures will be upside-down!
 */
+
+@class TextureString;
+
 @interface Texture2D : NSObject
 {
 @private
@@ -120,6 +125,6 @@ Note that the generated textures are of type A8 - use the blending mode (GL_SRC_
 */
 @interface Texture2D (Text)
 - (id) initWithString:(NSString*)string dimensions:(CGSize)dimensions horizontalAlignment:(UITextAlignment)alignment verticalAlignment:(UITextVerticalAlignment)vertAlignment fontName:(NSString*)name fontSize:(CGFloat)size;
-
+- (id) initWithTextureStrings:(NSMutableArray *)_textureStrings;
 
 @end

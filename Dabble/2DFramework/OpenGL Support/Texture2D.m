@@ -48,7 +48,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 #import <OpenGLES/ES1/glext.h>
 #import "GLCommon.h"
 #import "Texture2D.h"
-
+#import "TextureString.h"
 
 //CONSTANTS:
 
@@ -272,6 +272,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         dimensions = CGSizeMake(dimensions.width*2, dimensions.height*2);
     }
     
+    
 	font = [UIFont fontWithName:name size:size];
 	
 	width = dimensions.width;
@@ -321,6 +322,92 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	return self;
 }
 
+
+
+- (id) initWithTextureStrings:(NSMutableArray *)_textureStrings
+{
+	NSUInteger				width,
+    height,
+    i;
+	CGContextRef			context;
+	void*					data;
+	CGColorSpaceRef			colorSpace;
+	UIFont *				font;
+    
+    CGFloat maxWidth = 0;
+    CGFloat maxHeight = 0;
+    
+    for (TextureString *ts in _textureStrings)
+    {
+        if ([[UIScreen mainScreen]scale] > 1.0)
+        {
+            ts.fontSize *=2;
+            ts.dimensions = CGSizeMake(ts.dimensions.width*2, ts.dimensions.height*2);
+        }
+        
+        if (maxHeight < ts.dimensions.height)
+            maxHeight = ts.dimensions.height;
+        if (maxWidth < ts.dimensions.width)
+            maxWidth = ts.dimensions.width;
+        
+    }
+    
+    CGSize dimensions = CGSizeMake(maxWidth, maxHeight);
+    
+
+	
+	width = dimensions.width;
+	if((width != 1) && (width & (width - 1))) {
+		i = 1;
+		while(i < width)
+            i *= 2;
+		width = i;
+	}
+	height = dimensions.height;
+	if((height != 1) && (height & (height - 1))) {
+		i = 1;
+		while(i < height)
+            i *= 2;
+		height = i;
+	}
+    
+	colorSpace = CGColorSpaceCreateDeviceGray();
+	data = calloc(height, width );
+	context = CGBitmapContextCreateWithData(data, width, height, 8, width ,
+                                            colorSpace, kCGImageAlphaNone,nil,nil);
+	CGColorSpaceRelease(colorSpace);
+	
+	
+	CGContextSetGrayFillColor(context, 1.0, 1.0);
+    CGContextTranslateCTM(context, 0.0, height);
+    CGContextScaleCTM(context, 1.0, -1.0); //NOTE: NSString draws in UIKit referential i.e. renders upside-down compared to CGBitmapContext referential
+	UIGraphicsPushContext(context);
+    
+    for (TextureString *ts in _textureStrings)
+    {
+    
+        font = [UIFont fontWithName:ts.fontName size:ts.fontSize];
+        CGSize fsize = [ts.string sizeWithFont:font];
+        CGFloat offsetY = 0;
+        
+        if (ts.verticalTextAlignment == UITextAlignmentCenter)
+            offsetY = (ts.dimensions.height-fsize.height)/2;
+        else if (ts.verticalTextAlignment == UITextAlignmentBottom)
+            offsetY = (ts.dimensions.height-fsize.height);
+            
+        
+        [ts.string drawInRect:CGRectMake(0, offsetY, ts.dimensions.width, fsize.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:ts.horizontalTextAlignment];
+	}
+    UIGraphicsPopContext();
+	
+	self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_A8 pixelsWide:width pixelsHigh:height contentSize:dimensions];
+	
+	CGContextRelease(context);
+	free(data);
+	
+	return self;
+}
+
 @end
 
 @implementation Texture2D (Drawing)
@@ -332,11 +419,15 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     
     CGFloat scale = [[UIScreen mainScreen]scale];
     
-    Vector3D *textureVertices = malloc(sizeof(Vector3D)*4);
+    Vector3D *textureVertices = malloc(sizeof(Vector3D)*6);
+    
     textureVertices[0] = (Vector3D) {.x = -width / (2*scale) , .y = -height / (2*scale), .z = 0.0};
     textureVertices[1] = (Vector3D) {.x = width / (2*scale) , .y = -height / (2*scale),  .z = 0.0};
     textureVertices[2] = (Vector3D) {.x = width / (2*scale) , .y = height / (2*scale),	.z = 0.0};
-    textureVertices[3] = (Vector3D) {.x = -width / (2*scale) , .y = height / (2*scale),	.z = 0.0};
+
+    textureVertices[3] = (Vector3D) {.x = -width / (2*scale) , .y = -height / (2*scale), .z = 0.0};
+    textureVertices[4] = (Vector3D) {.x = -width / (2*scale) , .y = height / (2*scale),	.z = 0.0};
+    textureVertices[5] = (Vector3D) {.x = width / (2*scale) , .y = height / (2*scale),	.z = 0.0};
     
     return textureVertices;
 }
@@ -344,12 +435,15 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 -(TextureCoord *)getTextureCoordinates
 {
     
-    TextureCoord *textureCoordinates = malloc(sizeof(TextureCoord)*4);
+    TextureCoord *textureCoordinates = malloc(sizeof(TextureCoord)*6);
     
     textureCoordinates[0] = (TextureCoord) { .s = 0, .t = _maxT};
     textureCoordinates[1] = (TextureCoord) { .s = _maxS, .t =_maxT};
     textureCoordinates[2] = (TextureCoord) { .s = _maxS, .t = 0};
-    textureCoordinates[3] = (TextureCoord) { .s = 0, .t = 0};
+    
+    textureCoordinates[3] = (TextureCoord) { .s = 0, .t = _maxT};
+    textureCoordinates[4] = (TextureCoord) { .s = 0, .t = 0};
+    textureCoordinates[5] = (TextureCoord) { .s = _maxS, .t = 0};
     
     return textureCoordinates;
     
