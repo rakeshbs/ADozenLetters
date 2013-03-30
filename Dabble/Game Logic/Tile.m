@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Rakesh. All rights reserved.
 //
 
-#import "Square.h"
+#import "Tile.h"
 #import "GLCommon.h"
 #import "EasingFunctions.h"
 #import "Scene.h"
@@ -31,17 +31,14 @@
 #define NUMBEROFSCORES 7
 
 
-@implementation Square
+@implementation Tile
 
-@synthesize character,anchorPoint,colorIndex;
+@synthesize character,anchorPoint,colorIndex,isBonded;
 
 Vector3D rectVertices[4];   
-static Color4f tileColors[2][2][4];
-static Color4f characterColors[2];
+static Color4f tileColors[2][2];
+static Color4f characterColors;
 static Color4f transparentColor = (Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 0.0};
-
-Color4f *currentTileColor;
-Color4f currentCharacterColor;
 
 
 SoundManager *soundManager;
@@ -52,12 +49,12 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 -(void)setColorIndex:(int)_colorIndex
 {
     colorIndex = _colorIndex;
-    squareColorShader.colors = (currentTileColor+colorIndex*4);
+    //tileColorShader.color = tileColors[tileColorIndex][colorIndex];
 }
 
 -(CGRect)frame
 {
-    return CGRectMake(self.centerPoint.x-squareSize/2, 460 - (self.centerPoint.y + squareSize/2), squareSize, squareSize);
+    return CGRectMake(self.centerPoint.x-tileSquareSize/2, 480 - (self.centerPoint.y + tileSquareSize/2), tileSquareSize, tileSquareSize);
     
 }
 
@@ -71,7 +68,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         shadowAlpha = 0;
         self.character = _character;
         shadowAnimationCount = 0;
-        tileColorIndex = 0;
+        isBonded = 0;
         shadowVisible = NO;
         
         for (int i = 0;i<NUMBEROFSCORES;i++)
@@ -104,45 +101,38 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 -(void)setupGraphics
 {
     TextureManager *texManager = [TextureManager getSharedTextureManager];
-    characterTexture =[texManager getStringTexture:self.character                                                                     dimensions:CGSizeMake(squareSize,squareSize)
+    characterTexture =[texManager getStringTexture:self.character                                                                     dimensions:CGSizeMake(tileSquareSize,tileSquareSize)
                                          horizontalAlignment:UITextAlignmentCenter verticalAlignment:UITextAlignmentMiddle
                                           fontName:@"Lato"
                                           fontSize:40];
     
-    scoreTexture =[texManager getStringTexture:[NSString stringWithFormat:@"%d",score]                                                                     dimensions:CGSizeMake(squareSize-10,squareSize-5)
+    scoreTexture =[texManager getStringTexture:[NSString stringWithFormat:@"%d",score]                                                                     dimensions:CGSizeMake(tileSquareSize-5,tileSquareSize-5)
                                horizontalAlignment:UITextAlignmentRight verticalAlignment:UITextAlignmentBottom
                                           fontName:@"Lato"
                                           fontSize:15];
     
     shadowTexture = [textureManager getTexture:@"shadow" OfType:@"png"];
     
-    rectVertices[0] =  (Vector3D) {.x = -squareSize/(2), .y = -squareSize/(2), .z = 10.0f};
-    rectVertices[1] = (Vector3D)  {.x = squareSize/(2), .y = - squareSize/(2), .z = 10.0f};
-    rectVertices[2] = (Vector3D)  {.x = squareSize/(2), .y =  squareSize/(2), .z = 10.0f};
-    rectVertices[3] = (Vector3D)  {.x = -squareSize/(2), .y = squareSize/(2), .z = 10.0f};
+    rectVertices[0] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 10.0f};
+    rectVertices[1] = (Vector3D)  {.x = tileSquareSize/(2), .y = - tileSquareSize/(2), .z = 10.0f};
+    rectVertices[2] = (Vector3D)  {.x = tileSquareSize/(2), .y =  tileSquareSize/(2), .z = 10.0f};
+    rectVertices[3] = (Vector3D)  {.x = -tileSquareSize/(2), .y = tileSquareSize/(2), .z = 10.0f};
     
     colorIndex = 0;
     [self setupColors];
     
-    squareColorShader = [[ColorShader alloc]init];
-    squareColorShader.drawMode = GL_TRIANGLE_FAN;
-    squareColorShader.vertices = rectVertices;
-    squareColorShader.colors = (currentTileColor + 2 * colorIndex);
-    squareColorShader.count = 4;
+    tileColorShader = [[FlatColorShader alloc]init];
+    tileColorShader.drawMode = GL_TRIANGLE_FAN;
+    tileColorShader.vertices = rectVertices;
+    tileColorShader.color = tileColors[isBonded][colorIndex];
+    tileColorShader.count = 4;
 
     characterTextureShader = [[StringTextureShader alloc]init];
     characterTextureShader.count = 4;
     characterTextureShader.vertices = [characterTexture getTextureVertices];
     characterTextureShader.texture = characterTexture;
     characterTextureShader.textureCoordinates = [characterTexture getTextureCoordinates];
-    characterTextureShader.textureColor = &currentCharacterColor;
-    
-    scoreTextureShader = [[StringTextureShader alloc]init];
-    scoreTextureShader.count = 4;
-    scoreTextureShader.vertices = [scoreTexture getTextureVertices];
-    scoreTextureShader.texture = scoreTexture;
-    scoreTextureShader.textureCoordinates = [scoreTexture getTextureCoordinates];
-    scoreTextureShader.textureColor = &currentCharacterColor;
+    characterTextureShader.textureColor = characterColors;
     
     shadowTextureShader = [[TextureShader alloc]init];
     shadowTextureShader.drawMode = GL_TRIANGLE_FAN;
@@ -150,7 +140,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     shadowTextureShader.texture = shadowTexture;
     shadowTextureShader.vertices = [shadowTexture getTextureVertices];
     shadowTextureShader.textureCoordinates = [shadowTexture getTextureCoordinates];
-    shadowTextureShader.textureColor = &transparentColor;
+    shadowTextureShader.textureColor = transparentColor;
     
 }
 
@@ -158,61 +148,65 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 {
     CGFloat alpha = 0.93f;
     
-    tileColors[0][0][0] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
-    tileColors[0][0][1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
-    tileColors[0][0][2] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
-    tileColors[0][0][3] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
+    tileColors[0][0] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
     
     //255 250 231
-    
-    tileColors[0][1][0] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = alpha};
-    tileColors[0][1][1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = alpha};
-    tileColors[0][1][2] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = alpha};
-    tileColors[0][1][3] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = alpha};
-    
-    
-    CGFloat alpha2 = 0.5;
-    //    rgb 243 156 18
-    
-    tileColors[1][0][0] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
-    tileColors[1][0][1] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
-    tileColors[1][0][2] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
-    tileColors[1][0][3] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
-    
+    tileColors[0][1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = alpha};
     
     //    rgb 243 156 18
+    tileColors[1][0] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
+    //    rgb 243 156 18
+    tileColors[1][1] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = alpha};
     
-    tileColors[1][1][0] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = alpha2};
-    tileColors[1][1][1] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = alpha2};
-    tileColors[1][1][2] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = alpha2};
-    tileColors[1][1][3] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = alpha2};
     
-    currentTileColor = malloc(sizeof(Color4f)*8);
+    characterColors = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
     
-    for (int i = 0;i<2;i++)
-        for (int j = 0;j<4;j++)
-            Color4fCopy(&tileColors[tileColorIndex][i][j], (currentTileColor+4*i+j));
+    currentTileColor = malloc(sizeof(Color4f)*2);
+    currentCharacterColor = malloc(sizeof(Color4f));
+    startAlphas = malloc(sizeof(CGFloat)*2);
     
-    characterColors[0] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
-    characterColors[1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
+    for (int c = 0;c<2;c++)
+    {
+        Color4fCopy(&(tileColors[1][c]), (currentTileColor+c));
+        (currentTileColor+c)->alpha = 0.0;
+    }
     
-    Color4fCopy(&characterColors[tileColorIndex], &currentCharacterColor);
+    Color4fCopy(&characterColors , currentCharacterColor);
+    currentCharacterColor->alpha = 1.0;
+
+    
 }
+
 
 -(void)draw
 {
     [mvpMatrixManager pushModelViewMatrix];
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:0];
+    
     [shadowTextureShader draw];
-    [squareColorShader draw];
+    tileColorShader.color = tileColors[0][colorIndex];
+    [tileColorShader draw];
+    
+    tileColorShader.color = currentTileColor[colorIndex];
+    [tileColorShader draw];
+    
+    characterTextureShader.textureColor =  tileColors[0][0];
+    characterTextureShader.texture  =characterTexture;
     [characterTextureShader draw];
-    [scoreTextureShader draw];
+    characterTextureShader.texture  =scoreTexture;
+    [characterTextureShader draw];
+    
+    characterTextureShader.textureColor = *(currentCharacterColor);
+    characterTextureShader.texture  =characterTexture;
+    [characterTextureShader draw];
+    characterTextureShader.texture  =scoreTexture;
+    [characterTextureShader draw];
     [mvpMatrixManager popModelViewMatrix];
     
 }
 
--(BOOL)update:(Animation *)animation;
+-(BOOL)animationUpdate:(Animation *)animation;
 {
     CGFloat animationRatio = [animation getAnimatedRatio];
     if (animation.type == ANIMATION_MOVE)
@@ -229,17 +223,21 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     }
     else if (animation.type == ANIMATION_SHOW_SHADOW)
     {
-       if (shadowTextureShader.textureColor->alpha >= SHADOW_ALPHA_MAX)
+       if (shadowTextureShader.textureColor.alpha >= SHADOW_ALPHA_MAX)
            return YES;
         CGFloat calpha = getEaseOut(SHADOW_ALPHA_MIN, SHADOW_ALPHA_MAX, animationRatio);
-        shadowTextureShader.textureColor = (Color4f) {.red = shadowTextureShader.textureColor.red, .blue = shadowTextureShader.textureColor.blue, .green =shadowTextureShader.textureColor.green, .alpha = calpha};
+        shadowTextureShader.textureColor = (Color4f) {.red = shadowTextureShader.textureColor.red,
+            .green = shadowTextureShader.textureColor.green,.blue = shadowTextureShader.textureColor.blue,
+            .alpha = calpha};
     }
     else if (animation.type == ANIMATION_HIDE_SHADOW)
     {
-        if (shadowTextureShader.textureColor->alpha <= SHADOW_ALPHA_MIN)
+        if (shadowTextureShader.textureColor.alpha <= SHADOW_ALPHA_MIN)
             return YES;
         CGFloat calpha = getEaseOut(SHADOW_ALPHA_MAX,SHADOW_ALPHA_MIN, animationRatio);
-        shadowTextureShader.textureColor = (Color4f) {.red = shadowTextureShader.textureColor.red, .blue = shadowTextureShader.textureColor.blue, .green =shadowTextureShader.textureColor->green, .alpha = calpha};
+        shadowTextureShader.textureColor = (Color4f) {.red = shadowTextureShader.textureColor.red,
+            .green = shadowTextureShader.textureColor.green,.blue = shadowTextureShader.textureColor.blue,
+            .alpha = calpha};
     }
     else if (animation.type == ANIMATION_WIGGLE)
     {
@@ -249,59 +247,27 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     {
         for (int c = 0;c<2;c++)
         {
-            CGFloat red = getEaseIn(tileColors[0][c][0].red, tileColors[1][c][0].red, animationRatio);
-            CGFloat blue = getEaseIn(tileColors[0][c][0].blue, tileColors[1][c][0].blue, animationRatio);
-            CGFloat green = getEaseIn(tileColors[0][c][0].green, tileColors[1][c][0].green, animationRatio);
-            CGFloat alpha = getEaseIn(tileColors[0][c][0].alpha, tileColors[1][c][0].alpha, animationRatio);
-            
-            
-            for (int i = 0;i<4;i++)
-            {
-                (currentTileColor+c*4+i)->red = red;
-                (currentTileColor+c*4+i)->blue = blue;
-                (currentTileColor+c*4+i)->green = green;
-                (currentTileColor+c*4+i)->alpha = alpha;
-            }
+            CGFloat alpha = getEaseIn(*(startAlphas+c), tileColors[1][c].alpha, animationRatio);
+            (currentTileColor + c)->alpha = alpha;
         }
         
-        CGFloat red = getEaseIn(characterColors[0].red, characterColors[1].red, animationRatio);
-        CGFloat blue = getEaseIn(characterColors[0].blue, characterColors[1].blue, animationRatio);
-        CGFloat green = getEaseIn(characterColors[0].green, characterColors[1].green, animationRatio);
-        CGFloat alpha = getEaseIn(characterColors[0].alpha, characterColors[1].alpha, animationRatio);
-        
-        currentCharacterColor.red = red;
-        currentCharacterColor.blue = blue;
-        currentCharacterColor.green = green;
-        currentCharacterColor.alpha = alpha;
-        
+        CGFloat alpha = getEaseOut(characterStartAlpha, 0, animationRatio);
+        currentCharacterColor->alpha = alpha;
 
     }
     else if (animation.type == ANIMATION_HIDE_COLOR)
     {
+        
         for (int c = 0;c<2;c++)
         {
-            CGFloat red = getEaseIn(tileColors[1][c][0].red, tileColors[0][c][0].red, animationRatio);
-            CGFloat blue = getEaseIn(tileColors[1][c][0].blue, tileColors[0][c][0].blue, animationRatio);
-            CGFloat green = getEaseIn(tileColors[1][c][0].green, tileColors[0][c][0].green, animationRatio);
-            CGFloat alpha = getEaseIn(tileColors[1][c][0].alpha, tileColors[0][c][0].alpha, animationRatio);
-            for (int i = 0;i<4;i++)
-            {
-                (currentTileColor+c*4+i)->red = red;
-                (currentTileColor+c*4+i)->blue = blue;
-                (currentTileColor+c*4+i)->green = green;
-                (currentTileColor+c*4+i)->alpha = alpha;
-            }
+            CGFloat alpha = getEaseIn(*(startAlphas+c), 0, animationRatio);
+            (currentTileColor + c)->alpha = alpha;
         }
         
-        CGFloat red = getEaseIn(characterColors[1].red, characterColors[0].red, animationRatio);
-        CGFloat blue = getEaseIn(characterColors[1].blue, characterColors[0].blue, animationRatio);
-        CGFloat green = getEaseIn(characterColors[1].green, characterColors[0].green, animationRatio);
-        CGFloat alpha = getEaseIn(characterColors[1].alpha, characterColors[0].alpha, animationRatio);
+        CGFloat alpha = getEaseOut(characterStartAlpha, 1.0, animationRatio);
+        currentCharacterColor->alpha = alpha;
+
         
-        currentCharacterColor.red = red;
-        currentCharacterColor.blue = blue;
-        currentCharacterColor.green = green;
-        currentCharacterColor.alpha = alpha;
     }
     if (animationRatio >= 1.0)
         return YES;
@@ -351,6 +317,11 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         
         [animator removeQueuedAnimationsForObject:self];
         [animator removeRunningAnimationsForObject:self];
+        
+        if (isBonded == 1)
+        {
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"TileBreakBond" object:self];
+        }
         
         [self updateShadow];
         
@@ -404,7 +375,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
             prevTouchPoint = touchPoint;
         }
         
-        if (fabs(self.anchorPoint.y - self.centerPoint.y) > squareSize/2)
+        if (fabs(self.anchorPoint.y - self.centerPoint.y) > tileSquareSize/2)
         {
             
             [animator removeQueuedAnimationsForObject:self ofType:ANIMATION_QUEUE_MOVE];
@@ -424,6 +395,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 {
 	if (index == 0)
     {
+        
         [animator removeQueuedAnimationsForObject:self ofType:ANIMATION_QUEUE_MOVE];
         [self checkCollissionAndMove];
   
@@ -442,20 +414,25 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 -(void)checkCollissionAndMove
 {
     
-    for (Square *sq in _squaresArray)
+    for (Tile *sq in _tilesArray)
     {
         if (sq == self)
             continue;
         
-        CGRect sqAnchorRect = CGRectMake(sq.anchorPoint.x-squareSize/2, sq.anchorPoint.y-squareSize/2, squareSize, squareSize);
+        CGRect sqAnchorRect = CGRectMake(sq.anchorPoint.x-tileSquareSize/2, sq.anchorPoint.y-tileSquareSize/2, tileSquareSize, tileSquareSize);
         
-        CGRect selfAnchorRect = CGRectMake(self.centerPoint.x-squareSize/2, self.centerPoint.y-squareSize/2, squareSize, squareSize);
+        CGRect selfAnchorRect = CGRectMake(self.centerPoint.x-tileSquareSize/2, self.centerPoint.y-tileSquareSize/2, tileSquareSize, tileSquareSize);
         
         CGRect intersection =  CGRectIntersection(sqAnchorRect, selfAnchorRect);
         CGFloat intersectionArea = intersection.size.height * intersection.size.width;
         
-        if (intersectionArea >= squareSize*squareSize/2.0)
+        if (intersectionArea >= tileSquareSize*tileSquareSize/2.0)
         {
+            if (sq.isBonded == 1)
+            {
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"TileBreakBond" object:sq];
+            }
+            
             CGPoint a1 = sq.anchorPoint;
             sq.anchorPoint = self.anchorPoint;
             self.anchorPoint = a1;
@@ -469,7 +446,6 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
                 [sq moveToFront];
                 [self moveToFront];
                 [sq moveToPoint:sq.anchorPoint inDuration:0.2];
-                
                 
             }
         }
@@ -512,6 +488,15 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
                               location:CGPointZero
                             shouldLoop:NO];
     }
+    else if (animation.type == ANIMATION_SHOW_COLOR||animation.type == ANIMATION_HIDE_COLOR)
+    {
+        for (int c = 0;c<2;c++)
+        {
+            *(startAlphas+c) = (currentTileColor + c)->alpha;
+        }
+        characterStartAlpha = currentCharacterColor->alpha;
+
+    }
 }
 
 -(void)animationEnded:(Animation *)animation
@@ -520,8 +505,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     {
         if (animation.type == ANIMATION_MOVE)
         {
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"SquareFinishedMoving" object:nil];
-            
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"TileFinishedMoving" object:nil];
             
         }
         shadowAnimationCount--;
@@ -536,6 +520,10 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration
 {
+    if (isBonded == 1)
+    {
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"TileBreakBond" object:self];
+    }
     
     startPoint = self.centerPoint;
     endPoint = newPoint;
@@ -544,7 +532,12 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay
 {
-    
+
+    if (isBonded == 1)
+    {
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"TileBreakBond" object:self];
+    }
+
     startPoint = self.centerPoint;
     endPoint = newPoint;
     [animator addAnimationFor:self ofType:ANIMATION_MOVE ofDuration:duration afterDelayInSeconds:delay];
@@ -552,7 +545,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration
 {
-    
+
     startPoint = self.centerPoint;
     endPoint = newPoint;
     [animator addAnimationFor:self ofType:ANIMATION_THROW ofDuration:duration afterDelayInSeconds:0];
@@ -560,31 +553,54 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay
 {
-    
     startPoint = self.centerPoint;
     endPoint = newPoint;
     [animator addAnimationFor:self ofType:ANIMATION_THROW ofDuration:duration afterDelayInSeconds:delay];
 }
 
--(void)animateColorInDuration:(CGFloat)duration afterDelay:(CGFloat)delay
+-(void)animateShowColorInDuration:(CGFloat)duration
 {
-    if (tileColorIndex == 0)
+    if (isBonded == 0)
     {
-        NSLog(@"animate");
-        [animator addAnimationFor:self ofType:ANIMATION_SHOW_COLOR ofDuration:duration afterDelayInSeconds:delay];
-        tileColorIndex = 1;
+        NSMutableArray *hideAnimations = [animator getRunningAnimationsForObject:self ofType:ANIMATION_HIDE_COLOR];
+        
+        if (hideAnimations.count>0)
+        {
+            Animation *animation = hideAnimations[0];
+            duration = [animation getAnimatedRatio]*duration;
+            [animator removeRunningAnimationsForObject:self ofType:ANIMATION_HIDE_COLOR];
+        }
+        [animator removeQueuedAnimationsForObject:self ofType:ANIMATION_HIDE_COLOR];
+        
+        [animator addAnimationFor:self ofType:ANIMATION_SHOW_COLOR ofDuration:duration afterDelayInSeconds:0];
+        [hideAnimations release];
+        isBonded = 1;
     }
-    else
+}
+
+-(void)animateHideColorInDuration:(CGFloat)duration
+{
+    NSMutableArray *showAnimations = [animator getRunningAnimationsForObject:self
+                                                                      ofType:ANIMATION_SHOW_COLOR];
+    
+    if (showAnimations.count>0)
     {
-        [animator addAnimationFor:self ofType:ANIMATION_HIDE_SHADOW ofDuration:duration afterDelayInSeconds:delay];
-        tileColorIndex = 0;
+        Animation *animation = showAnimations[0];
+        duration = [animation getAnimatedRatio]*duration;
+        [animator removeRunningAnimationsForObject:self ofType:ANIMATION_SHOW_COLOR];
     }
+    [animator removeQueuedAnimationsForObject:self ofType:ANIMATION_SHOW_COLOR];
+    
+    [animator addAnimationFor:self ofType:ANIMATION_HIDE_COLOR ofDuration:duration afterDelayInSeconds:0];
+    isBonded = 0;
+    [showAnimations release];
+
 }
 
 -(void)dealloc
 {
     [super dealloc];
-    self.squaresArray = nil;
+    self.tilesArray = nil;
 }
 
 @end

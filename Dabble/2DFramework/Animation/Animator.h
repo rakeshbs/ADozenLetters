@@ -26,5 +26,5 @@
 -(int)removeQueuedAnimationsForObject:(NSObject<AnimationDelegate> *)obj  ofType:(int)type;
 -(int)getCountOfQueuedAnimationsForObject:(NSObject<AnimationDelegate> *) obj ofType:(int)type;
 -(int)getCountOfRunningAnimationsForObject:(NSObject<AnimationDelegate> *) obj ofType:(int)type;
-
+-(NSMutableArray *)getRunningAnimationsForObject:(NSObject<AnimationDelegate> *) obj ofType:(int)type;
 @end

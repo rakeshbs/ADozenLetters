@@ -11,7 +11,7 @@
 @class Animation;
 
 @protocol AnimationDelegate
--(BOOL)update:(Animation *)animation;
+-(BOOL)animationUpdate:(Animation *)animation;
 @optional
 -(void)animationStarted:(Animation *)animation;
 -(void)animationEnded:(Animation *)animation;

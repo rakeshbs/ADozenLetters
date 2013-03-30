@@ -6,26 +6,25 @@
 //  Copyright (c) 2013 Rakesh. All rights reserved.
 //
 
-#import "ColorShader.h"
+#import "FlatColorShader.h"
 
-@implementation ColorShader
-@synthesize colors,vertices,drawMode,count;
+@implementation FlatColorShader
+@synthesize color,vertices,drawMode,count,pointSize;
 
 -(id)init
 {
     if (self = [super init])
     {
-        shader = [shaderManager getShaderByVertexShaderFileName:@"ColorShader"
-                                      andFragmentShaderFileName:@"ColorShader"];
+        shader = [shaderManager getShaderByVertexShaderFileName:@"FlatColorShader"
+                                      andFragmentShaderFileName:@"FlatColorShader"];
         
         [shader addAttribute:@"vertices"];
-        [shader addAttribute:@"color"];
         
         if (![shader link])
             NSLog(@"Link failed");
         
         verticesAttribute = [shader attributeIndex:@"vertices"];
-        colorAttribute = [shader attributeIndex:@"color"];
+        colorUniform = [shader uniformIndex:@"color"];
         mvpMatrixUniform = [shader uniformIndex:@"mvpmatrix"];
         
 }
@@ -39,8 +38,7 @@
     glVertexAttribPointer(verticesAttribute, 3, GL_FLOAT, 0, 0, vertices);
     glEnableVertexAttribArray(verticesAttribute);
     
-    glVertexAttribPointer(colorAttribute, 4, GL_FLOAT, 0, 0, colors);
-    glEnableVertexAttribArray(colorAttribute);
+    glUniform4f(colorUniform, color.red, color.green, color.blue, color.alpha);
     
     Matrix3D mvpMatrix;
     [matrixManager getMVPMatrix:mvpMatrix];

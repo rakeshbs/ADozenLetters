@@ -13,7 +13,7 @@
 #define yOffset 75
 
 @interface GameScene (Private)
--(void)createSquares;
+-(void)createTiless;
 @end
 
 @implementation GameScene
@@ -42,7 +42,7 @@ Dictionary *dictionary;
         analyticsShader.count = 4;
         analyticsShader.vertices = [analyticsTexture getTextureVertices];
         analyticsShader.textureCoordinates = [analyticsTexture getTextureCoordinates];
-        analyticsShader.textureColor = (Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 1.0};
+        analyticsShader.textureColor = ((Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 1.0});
         
         
         
@@ -55,7 +55,7 @@ Dictionary *dictionary;
         madeDoubles = [[NSMutableArray alloc]init];
         
         
-        [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
+        [self loadDictionary];
         
         [self loadData];
         
@@ -72,16 +72,16 @@ Dictionary *dictionary;
 {
     
     NSURL *url = [NSURL URLWithString:@"http://qucentis.com/dabble.php"];
-    NSData *data = [NSData dataWithContentsOfURL:url];
-    NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    NSString *stringData = [dataDict[@"chars"] uppercaseString];
+   // NSData *data = [NSData dataWithContentsOfURL:url];
+   // NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    //NSString *stringData = [dataDict[@"chars"] uppercaseString];
     //[self performSelectorOnMainThread:@selector(sendCharData:) withObject:stringData waitUntilDone:YES];
     
-    [self performSelectorOnMainThread:@selector(createSquares:) withObject:stringData waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(createTiles:) withObject:@"TEHWRODAGMER" waitUntilDone:YES];
     
 }
 
--(void)createSquares:(NSString *)dataStr
+-(void)createTiles:(NSString *)dataStr
 {
     int ind = 0;
     
@@ -103,54 +103,55 @@ Dictionary *dictionary;
         ind++;
     }
     
-    Square *square;
-    if (squaresArray != nil)
+    Tile *tile;
+    if (tilesArray != nil)
     {
-        [elements removeObjectsInArray:squaresArray];
-        [squaresArray release];
+        [elements removeObjectsInArray:tilesArray];
+        [tilesArray release];
     }
     
-    squaresArray = [[NSMutableArray alloc]init];
+    tilesArray = [[NSMutableArray alloc]init];
     
     for (int i = 0;i<3;i++)
     {
-        square = [[Square alloc]initWithCharacter:charArray1[i]];
-        square.centerPoint = CGPointMake(160, 160+yOffset);
-        square.anchorPoint = CGPointMake(100+60*i, 210+yOffset);
-        square.colorIndex = i%2;
-        [self addElement:square];
-        [squaresArray addObject:square];
-        square.squaresArray  = squaresArray;
-        [square release];
+        tile = [[Tile alloc]initWithCharacter:charArray1[i]];
+        tile.centerPoint = CGPointMake(160, 160+yOffset);
+        tile.anchorPoint = CGPointMake(100+60*i, 210+yOffset);
+        tile.colorIndex = i%2;
+        [self addElement:tile];
+        [tilesArray addObject:tile];
+        tile.tilesArray  = tilesArray;
+        [tile release];
     }
+    
     
     for (int i = 0;i<4;i++)
     {
-        square = [[Square alloc]initWithCharacter:charArray2[i]];
-        square.centerPoint = CGPointMake(160, 160+yOffset);
-        square.anchorPoint = CGPointMake(70+60*i, 130+yOffset);
-        square.colorIndex = i%2;
-        [self addElement:square];
-        [squaresArray addObject:square];
-        square.squaresArray  = squaresArray;
-        [square release];
+        tile = [[Tile alloc]initWithCharacter:charArray2[i]];
+        tile.centerPoint = CGPointMake(160, 160+yOffset);
+        tile.anchorPoint = CGPointMake(70+60*i, 130+yOffset);
+        tile.colorIndex = i%2;
+        [self addElement:tile];
+        [tilesArray addObject:tile];
+        tile.tilesArray  = tilesArray;
+        [tile release];
     }
     
     for (int i = 0;i<5;i++)
     {
-        square = [[Square alloc]initWithCharacter:charArray3[i]];
-        square.centerPoint = CGPointMake(160, 160+yOffset);
-        square.anchorPoint = CGPointMake(40+60*i, 50+yOffset);
-        square.colorIndex = i%2;
-        [self addElement:square];
-        [squaresArray addObject:square];
-        square.squaresArray  = squaresArray;
-        [square release];
+        tile = [[Tile alloc]initWithCharacter:charArray3[i]];
+        tile.centerPoint = CGPointMake(160, 160+yOffset);
+        tile.anchorPoint = CGPointMake(40+60*i, 50+yOffset);
+        tile.colorIndex = i%2;
+        [self addElement:tile];
+        [tilesArray addObject:tile];
+        tile.tilesArray  = tilesArray;
+        [tile release];
     }
     
     CGFloat delay = 0.0;
     
-    for (Square *sq in [squaresArray reverseObjectEnumerator])
+    for (Tile *sq in [tilesArray reverseObjectEnumerator])
     {
         [sq throwToPoint:sq.anchorPoint inDuration:0.7 afterDelay:delay];
         delay += 0.1;
@@ -162,50 +163,78 @@ Dictionary *dictionary;
 
 -(void)enableNotification
 {
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(squareFinishedMoving:) name:@"SquareFinishedMoving" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tileFinishedMoving:) name:@"TileFinishedMoving" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tileBreakBond:)
+                                                name:@"TileBreakBond" object:nil];
+    
     
 }
 
 -(void)draw{
 	Color4f color;
-	color.red = 241.0/255.0;
+	color.red =241.0/255.0;
 	color.blue = 196.0/255.0;
-	color.green = 15/255.0;
+	color.green = 15.0/255.0;
 	color.alpha = 1;
     [director clearScene:color];
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     
-    [mvpMatrixManager pushModelViewMatrix];
-    [mvpMatrixManager translateInX:200 Y:380 Z:0];
-    [analyticsShader draw];
-    [mvpMatrixManager popModelViewMatrix];
+   // [mvpMatrixManager pushModelViewMatrix];
+    //[mvpMatrixManager translateInX:200 Y:380 Z:0];
+    //[analyticsShader draw];
+   // [mvpMatrixManager popModelViewMatrix];
     
 }
 
--(void)squareFinishedMoving:(NSNotification *)notification
+-(void)tileBreakBond:(NSNotification *)notification
 {
-    for (Square *sq in squaresArray)
+    Tile *tile = notification.object;
+    CGFloat anchorY = tile.anchorPoint.y;
+    for (Tile *t in tilesArray)
+    {
+        if (t.anchorPoint.y == anchorY)
+        {
+            [t animateHideColorInDuration:0.2];
+        }
+    }
+}
+
+-(void)tileFinishedMoving:(NSNotification *)notification
+{
+    for (Tile *sq in tilesArray)
     {
         int arrIndex = (sq.anchorPoint.y-yOffset-50)/80;
         int charIndex = -1;
         
         if (arrIndex == 0)
-            charIndex = (sq.anchorPoint.x-40)/squareSize;
+            charIndex = (sq.anchorPoint.x-40)/tileSquareSize;
         if (arrIndex == 1)
-            charIndex = (sq.anchorPoint.x-70)/squareSize;
+            charIndex = (sq.anchorPoint.x-70)/tileSquareSize;
         if (arrIndex == 2)
-            charIndex = (sq.anchorPoint.x-100)/squareSize;
-        
-        if (sq.touchesInElement.count != 0)
-            return;
+            charIndex = (sq.anchorPoint.x-100)/tileSquareSize;
         
         NSRange range  = NSMakeRange(charIndex, 1);
         [resString[arrIndex] replaceCharactersInRange:range withString:sq.character];
         
     }
     
+    for (Tile *sq in tilesArray)
+    {
+        if (sq.touchesInElement.count != 0)
+        {
+            int arrIndex = (sq.anchorPoint.y-yOffset-50)/80;
+            if (arrIndex == 0)
+                resString[arrIndex] = [[NSMutableString alloc]initWithString:@"#####"];
+            if (arrIndex == 1)
+                resString[arrIndex] = [[NSMutableString alloc]initWithString:@"####"];
+            if (arrIndex == 2)
+                resString[arrIndex] = [[NSMutableString alloc]initWithString:@"###"];
+            
+        }
+    }
+    
     BOOL shouldUpdateTexture = NO;
-    BOOL shouldHighlight[3];
+   
     memset(shouldHighlight, 0, sizeof(shouldHighlight));
     [onBoardWords removeAllObjects];
     
@@ -215,14 +244,15 @@ Dictionary *dictionary;
         if (result >= 0)
         {
             [madeWords addObject:resString[i]];
-            shouldHighlight[i] = YES;
+            shouldHighlight[i] = 1;
             numberOfWordsMade++;
             numberOfWordsPerLetter[resString[i].length-3]++;
-            shouldUpdateTexture = YES;
+            shouldUpdateTexture = 1;
             [onBoardWords addObject:resString[i]];
         }
         else if (result == -2)
         {
+            shouldHighlight[i] = 2;
             [onBoardWords addObject:resString[i]];
         }
     }
@@ -233,39 +263,46 @@ Dictionary *dictionary;
         {
             [madeTriples addObject:concat];
             numberOfTripletsMade++;
-            shouldHighlight[0] = YES;
-            shouldHighlight[1] = YES;
-            shouldHighlight[2] = YES;
             shouldUpdateTexture = YES;
         }
     }
     else if (onBoardWords.count == 2)
     {
         NSString *concat = [NSString stringWithFormat:@"%@%@",onBoardWords[0],onBoardWords[1]];
-        NSLog(@"%@ %d %d",concat,[madeDoubles indexOfString:concat],madeDoubles.count);
+   //     NSLog(@"%@ %d %d",concat,[madeDoubles indexOfString:concat],madeDoubles.count);
         if ([madeDoubles indexOfString:concat] < 0)
         {
-            NSLog(@"here");
             [madeDoubles addObject:concat];
             numberOfDoublesMade++;
-            shouldHighlight[5-[onBoardWords[0] length]] = YES;
-            shouldHighlight[5-[onBoardWords[1] length]] = YES;
             shouldUpdateTexture = YES;
         }
     }
     
     for (int i = 0;i<3;i++)
     {
-        if (shouldHighlight[i])
+        if (shouldHighlight[i]==1)
         {
             CGFloat anchorY = i*80 + 50 + yOffset;
-            for (Square *sq in squaresArray)
+            for (Tile *sq in tilesArray)
             {
                 if (sq.anchorPoint.y == anchorY)
                 {
-                    [sq animateColorInDuration:1.0 afterDelay:0];
+                    [sq wiggleFor:1.0];
+                    [sq animateShowColorInDuration:0.2];
                 }
             }
+        }
+        else if (shouldHighlight[i] == 2)
+        {
+            CGFloat anchorY = i*80 + 50 + yOffset;
+            for (Tile *sq in tilesArray)
+            {
+                if (sq.anchorPoint.y == anchorY)
+                {
+                    [sq animateShowColorInDuration:0.2];
+                }
+            }
+
         }
     }
     
@@ -295,7 +332,7 @@ Dictionary *dictionary;
     analyticsShader.textureCoordinates = [analyticsTexture getTextureCoordinates];
 }
 
-NSMutableArray *squaresArray;
+NSMutableArray *tilesArray;
 
 -(void)sceneMadeActive
 {
@@ -314,7 +351,7 @@ NSMutableArray *squaresArray;
 {
     if (touch.tapCount == 2)
     {
-        [[NSNotificationCenter defaultCenter]removeObserver:self name:@"SquareFinishedMoving" object:nil];
+        [[NSNotificationCenter defaultCenter]removeObserver:self name:@"TileFinishedMoving" object:nil];
         [self performSelectorInBackground:@selector(loadData) withObject:nil];
         numberOfDoublesMade = 0;
         numberOfTripletsMade = 0;
@@ -374,7 +411,7 @@ NSMutableArray *squaresArray;
         
         NSString *stringData = [NSString stringWithCString:messData->charData encoding:NSUTF8StringEncoding];
         //          int k = 0;
-        [self performSelectorOnMainThread:@selector(createSquares:) withObject:stringData waitUntilDone:YES];
+        [self performSelectorOnMainThread:@selector(createTiless:) withObject:stringData waitUntilDone:YES];
     }
 }
 - (void)inviteReceived
@@ -420,7 +457,7 @@ NSMutableArray *squaresArray;
 -(void)dealloc
 {
     [super dealloc];
-    [squaresArray release];
+    [tilesArray release];
 }
 
 

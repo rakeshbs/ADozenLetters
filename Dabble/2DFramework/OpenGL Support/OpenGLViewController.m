@@ -9,7 +9,7 @@
 #import "OpenGLViewController.h"
 
 #define screen_width 320
-#define screen_height 460
+#define screen_height 480
 
 
 @implementation OpenGLViewController

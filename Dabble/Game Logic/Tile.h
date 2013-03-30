@@ -8,13 +8,13 @@
 
 #import "GLElement.h"
 #import "TextureManager.h"
-#import "ColorShader.h"
+#import "FlatColorShader.h"
 #import "TextureShader.h"
 #import "StringTextureShader.h"
-#define squareSize 60.0f
+#define tileSquareSize 60.0f
 #define shadowSize 90.0f
 
-@interface Square : GLElement <AnimationDelegate>
+@interface Tile : GLElement <AnimationDelegate>
 {
     NSString *character;
     Texture2D *characterTexture;
@@ -47,21 +47,27 @@
     
     int score;
     
-    ColorShader *squareColorShader;
+    FlatColorShader *tileColorShader;
     StringTextureShader *characterTextureShader;
-    StringTextureShader *scoreTextureShader;
     TextureShader *shadowTextureShader;
     
-    int tileColorIndex;
+    int isBonded;
     
     CGPoint anchorPoint;
+    
+    Color4f *currentTileColor;
+    Color4f *currentCharacterColor;
+    CGFloat *startAlphas;
+    CGFloat characterStartAlpha;
+
 }
 @property (nonatomic,retain) NSString *character;
 -(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration;
 @property (nonatomic) CGPoint anchorPoint;
 @property (nonatomic) int colorIndex;
 @property (nonatomic) CGPoint centerPoint;
-@property (nonatomic,assign) NSMutableArray *squaresArray;
+@property (nonatomic,assign) NSMutableArray *tilesArray;
+@property (nonatomic)    int isBonded;
 -(id)initWithCharacter:(NSString *)_character;
 
 -(void)wiggleFor:(CGFloat)duration;
@@ -69,5 +75,6 @@
 -(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay;
 -(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration;
 -(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay;
--(void)animateColorInDuration:(CGFloat)duration afterDelay:(CGFloat)delay;
+-(void)animateShowColorInDuration:(CGFloat)duration;
+-(void)animateHideColorInDuration:(CGFloat)duration;
 @end

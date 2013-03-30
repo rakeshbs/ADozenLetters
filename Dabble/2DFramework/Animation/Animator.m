@@ -47,7 +47,7 @@
     for (int i =0;i<currentAnimations.count;i++)
     {
         Animation *animation = currentAnimations[i];
-        if ([animation.animatedObject update:animation])
+        if ([animation.animatedObject animationUpdate:animation])
         {
             [animation retain];
             [currentAnimations removeObject:animation];
@@ -153,6 +153,21 @@
         }
     }
     return count;
+}
+
+-(NSMutableArray *)getRunningAnimationsForObject:(NSObject<AnimationDelegate> *) obj ofType:(int)type
+{
+    int count = 0;
+    NSMutableArray *arr = [[NSMutableArray alloc]init];
+    for (int i =0;i<queuedAnimations.count;i++)
+    {
+        Animation *animation = queuedAnimations[i];
+        if (animation.animatedObject == obj && animation.type == type)
+        {
+            [arr addObject:animation];
+        }
+    }
+    return arr;
 }
 
 -(void)addAnimationFor:(NSObject<AnimationDelegate> *)obj ofType:(int)type ofDuration:(CGFloat)duration afterDelayInSeconds:(CGFloat)delay

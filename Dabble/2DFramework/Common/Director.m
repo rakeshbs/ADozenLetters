@@ -8,7 +8,7 @@
 
 #import "Director.h"
 #import "Scene.h"
-#import "ColorShader.h"
+#import "FlatColorShader.h"
 #import "TextureShader.h"
 #import "StringTextureShader.h"
 
@@ -101,7 +101,7 @@
 
 -(void)loadShaders
 {
-    ColorShader *shader1 = [[ColorShader alloc]init];
+    FlatColorShader *shader1 = [[FlatColorShader alloc]init];
     [shader1 release];
     TextureShader *shader2 = [[TextureShader alloc]init];
     [shader2 release];

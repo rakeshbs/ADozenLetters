@@ -7,7 +7,7 @@
 //
 
 #import "Scene.h"
-#import "Square.h"
+#import "Tile.h"
 #import "GCHelper.h"
 #import "NSArray+Additions.h"
 
@@ -35,6 +35,7 @@
     Texture2D *analyticsTexture;
     StringTextureShader *analyticsShader;
     NSMutableArray *onBoardWords;
+     int shouldHighlight[3];
     
 }
 @end

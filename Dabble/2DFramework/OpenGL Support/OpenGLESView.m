@@ -103,6 +103,7 @@
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         
         
+        NSLog(@"%d %d %f %f",backingWidth,backingHeight,self.frame.size.width,self.frame.size.height);
         
         [[MVPMatrixManager sharedMVPMatrixManager] setOrthoProjection:-self.frame.size.width
                                             :0 :-self.frame.size.height
