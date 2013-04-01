@@ -23,7 +23,7 @@
     }
     
     vertices = malloc(sizeof(Vector3D)*count);
-    textureColors = malloc(sizeof(Color4f)*count);
+    textureColors = malloc(sizeof(Color4B)*count);
     textureCoordinates = malloc(sizeof(TextureCoord)*count);
 }
 
@@ -62,7 +62,7 @@
     glVertexAttribPointer(verticesAttribute, 3, GL_FLOAT, 0, 0, vertices);
     glEnableVertexAttribArray(verticesAttribute);
     
-    glVertexAttribPointer(textureColorsAttribute, 4, GL_FLOAT, 0, 0, textureColors);
+    glVertexAttribPointer(textureColorsAttribute, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, textureColors);
     glEnableVertexAttribArray(textureColorsAttribute);
     
     

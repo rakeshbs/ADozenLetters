@@ -172,11 +172,11 @@ Dictionary *dictionary;
 }
 
 -(void)draw{
-	Color4f color;
-	color.red =241.0/255.0;
-	color.blue = 196.0/255.0;
-	color.green = 15.0/255.0;
-	color.alpha = 1;
+	Color4B color;
+	color.red =241;
+	color.blue = 196;
+	color.green = 15;
+	color.alpha = 255;
     [director clearScene:color];
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     

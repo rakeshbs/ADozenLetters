@@ -13,9 +13,9 @@
 #import "GLShaderManager.h"
 #import "GLShader.h"
 
-@interface FlatColorShader : GLShader
+@interface ColorShader : GLShader
 {
-    Color4f *colors;
+    Color4B *colors;
     Vector3D *vertices;
     GLShaderProgram *shader;
     
@@ -28,7 +28,7 @@
 }
 @property (nonatomic)    CGFloat pointSize;
 @property (nonatomic)     GLenum drawMode;
-@property (nonatomic) Color4f *colors;
+@property (nonatomic) Color4B *colors;
 @property (nonatomic) Vector3D *vertices;
 @property (nonatomic) int count;
 

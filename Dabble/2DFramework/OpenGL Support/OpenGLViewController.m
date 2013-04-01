@@ -8,9 +8,6 @@
 
 #import "OpenGLViewController.h"
 
-#define screen_width 320
-#define screen_height 480
-
 
 @implementation OpenGLViewController
 
@@ -20,6 +17,8 @@
 {
 	if (self = [super init])
 	{
+        CGFloat screen_width = [UIScreen mainScreen].bounds.size.width;
+        CGFloat screen_height = [UIScreen mainScreen].bounds.size.height;
 		interfaceOrientation = _interfaceOrientation;
 		switch (interfaceOrientation){
 			case UIInterfaceOrientationLandscapeLeft:

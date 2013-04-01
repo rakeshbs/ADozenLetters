@@ -48,7 +48,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 #import <OpenGLES/ES1/glext.h>
 #import "GLCommon.h"
 #import "Texture2D.h"
-#import "TextureString.h"
+#import "TextureStringLayer.h"
 
 //CONSTANTS:
 
@@ -337,7 +337,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     CGFloat maxWidth = 0;
     CGFloat maxHeight = 0;
     
-    for (TextureString *ts in _textureStrings)
+    for (TextureStringLayer *ts in _textureStrings)
     {
         if ([[UIScreen mainScreen]scale] > 1.0)
         {
@@ -353,7 +353,6 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     }
     
     CGSize dimensions = CGSizeMake(maxWidth, maxHeight);
-    
 
 	
 	width = dimensions.width;
@@ -383,7 +382,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     CGContextScaleCTM(context, 1.0, -1.0); //NOTE: NSString draws in UIKit referential i.e. renders upside-down compared to CGBitmapContext referential
 	UIGraphicsPushContext(context);
     
-    for (TextureString *ts in _textureStrings)
+    for (TextureStringLayer *ts in _textureStrings)
     {
     
         font = [UIFont fontWithName:ts.fontName size:ts.fontSize];
@@ -408,7 +407,92 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	return self;
 }
 
+
+- (id) generateFontSpriteSheet:(NSMutableArray *)_textureStrings
+{
+	NSUInteger				width,
+    height,
+    i;
+	CGContextRef			context;
+	void*					data;
+	CGColorSpaceRef			colorSpace;
+	UIFont *				font;
+    
+    CGFloat maxWidth = 0;
+    CGFloat maxHeight = 0;
+    
+    for (TextureStringLayer *ts in _textureStrings)
+    {
+        if ([[UIScreen mainScreen]scale] > 1.0)
+        {
+            ts.fontSize *=2;
+            ts.dimensions = CGSizeMake(ts.dimensions.width*2, ts.dimensions.height*2);
+        }
+        
+        if (maxHeight < ts.dimensions.height)
+            maxHeight = ts.dimensions.height;
+        if (maxWidth < ts.dimensions.width)
+            maxWidth = ts.dimensions.width;
+        
+    }
+    
+    CGSize dimensions = CGSizeMake(maxWidth, maxHeight);
+    
+	
+	width = dimensions.width;
+	if((width != 1) && (width & (width - 1))) {
+		i = 1;
+		while(i < width)
+            i *= 2;
+		width = i;
+	}
+	height = dimensions.height;
+	if((height != 1) && (height & (height - 1))) {
+		i = 1;
+		while(i < height)
+            i *= 2;
+		height = i;
+	}
+    
+	colorSpace = CGColorSpaceCreateDeviceGray();
+	data = calloc(height, width );
+	context = CGBitmapContextCreateWithData(data, width, height, 8, width ,
+                                            colorSpace, kCGImageAlphaNone,nil,nil);
+	CGColorSpaceRelease(colorSpace);
+	
+	
+	CGContextSetGrayFillColor(context, 0.0, 1.0);
+    CGContextTranslateCTM(context, 0.0, height);
+    CGContextScaleCTM(context, 1.0, -1.0); //NOTE: NSString draws in UIKit referential i.e. renders upside-down compared to CGBitmapContext referential
+	UIGraphicsPushContext(context);
+    
+    for (TextureStringLayer *ts in _textureStrings)
+    {
+        
+        font = [UIFont fontWithName:ts.fontName size:ts.fontSize];
+        CGSize fsize = [ts.string sizeWithFont:font];
+        CGFloat offsetY = 0;
+        
+        if (ts.verticalTextAlignment == UITextAlignmentCenter)
+            offsetY = (ts.dimensions.height-fsize.height)/2;
+        else if (ts.verticalTextAlignment == UITextAlignmentBottom)
+            offsetY = (ts.dimensions.height-fsize.height);
+        
+        
+        [ts.string drawInRect:CGRectMake(0, offsetY, ts.dimensions.width, fsize.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:ts.horizontalTextAlignment];
+	}
+    UIGraphicsPopContext();
+	
+	self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_A8 pixelsWide:width pixelsHigh:height contentSize:dimensions];
+	
+	CGContextRelease(context);
+	free(data);
+	
+	return self;
+}
+
 @end
+
 
 @implementation Texture2D (Drawing)
 

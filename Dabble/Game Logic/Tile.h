@@ -8,7 +8,7 @@
 
 #import "GLElement.h"
 #import "TextureManager.h"
-#import "FlatColorShader.h"
+#import "ColorShader.h"
 #import "TextureShader.h"
 #import "StringTextureShader.h"
 #define tileSquareSize 60.0f
@@ -25,7 +25,7 @@
     CGPoint endPoint;
     
     CGFloat shadowAlpha;
-    Color4f *shadowColor;
+    Color4B *shadowColor;
     CGFloat wiggleAngle;
     CGFloat startAngle;
     
@@ -48,7 +48,7 @@
     
     int score;
     
-    FlatColorShader *tileColorShader;
+    ColorShader *tileColorShader;
     StringTextureShader *characterTextureShader;
     TextureShader *shadowTextureShader;
     
@@ -56,8 +56,8 @@
     
     CGPoint anchorPoint;
     
-    Color4f *currentTileColor;
-    Color4f *currentCharacterColor;
+    Color4B *currentTileColor;
+    Color4B *currentCharacterColor;
     CGFloat *startAlphas;
     CGFloat characterStartAlpha;
 

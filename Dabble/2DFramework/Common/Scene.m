@@ -40,7 +40,7 @@
 
 -(void)draw{
     
-	Color4f color;
+	Color4B color;
 	color.red = 1;
 	color.blue = 1;
 	color.green = 1;

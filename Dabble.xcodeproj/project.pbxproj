@@ -18,7 +18,7 @@
 		1445DC8A16F97AD600EBBCCF /* OpenGLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC4116F97AD600EBBCCF /* OpenGLViewController.m */; };
 		1445DC8B16F97AD600EBBCCF /* Texture2D.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC4316F97AD600EBBCCF /* Texture2D.m */; };
 		1445DC8C16F97AD600EBBCCF /* TextureManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC4516F97AD600EBBCCF /* TextureManager.m */; };
-		1445DC8E16F97AD600EBBCCF /* FlatColorShader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC4A16F97AD600EBBCCF /* FlatColorShader.m */; };
+		1445DC8E16F97AD600EBBCCF /* ColorShader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC4A16F97AD600EBBCCF /* ColorShader.m */; };
 		1445DC9016F97AD600EBBCCF /* GLShader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC4D16F97AD600EBBCCF /* GLShader.m */; };
 		1445DC9116F97AD600EBBCCF /* GLShaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC4F16F97AD600EBBCCF /* GLShaderManager.m */; };
 		1445DC9216F97AD600EBBCCF /* GLShaderProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC5116F97AD600EBBCCF /* GLShaderProgram.m */; };
@@ -27,8 +27,7 @@
 		1445DC9816F97AD600EBBCCF /* TextureShader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC5C16F97AD600EBBCCF /* TextureShader.m */; };
 		1445DC9A16F97AD600EBBCCF /* MyOpenALSupport.c in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC5F16F97AD600EBBCCF /* MyOpenALSupport.c */; };
 		1445DC9B16F97AD600EBBCCF /* SoundManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC6216F97AD600EBBCCF /* SoundManager.m */; };
-		1445DC9C16F97AD600EBBCCF /* AnimatedSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC6616F97AD600EBBCCF /* AnimatedSprite.m */; };
-		1445DC9D16F97AD600EBBCCF /* SpriteSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC6816F97AD600EBBCCF /* SpriteSheet.m */; };
+		1445DC9D16F97AD600EBBCCF /* FontSpriteSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC6816F97AD600EBBCCF /* FontSpriteSheet.m */; };
 		1445DC9F16F97AD700EBBCCF /* Dictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC6D16F97AD600EBBCCF /* Dictionary.m */; };
 		1445DCA016F97AD700EBBCCF /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC6F16F97AD600EBBCCF /* GameScene.m */; };
 		1445DCA116F97AD700EBBCCF /* Tile.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC7116F97AD600EBBCCF /* Tile.m */; };
@@ -46,8 +45,8 @@
 		1445DCB816F97C1000EBBCCF /* TextureShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC5D16F97AD600EBBCCF /* TextureShader.vsh */; };
 		1445DCB916F97C1200EBBCCF /* StringTextureShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC5516F97AD600EBBCCF /* StringTextureShader.fsh */; };
 		1445DCBA16F97C1300EBBCCF /* StringTextureShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC5816F97AD600EBBCCF /* StringTextureShader.vsh */; };
-		1445DCBB16F97C1600EBBCCF /* FlatColorShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC4816F97AD600EBBCCF /* FlatColorShader.fsh */; };
-		1445DCBC16F97C1700EBBCCF /* FlatColorShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC4B16F97AD600EBBCCF /* FlatColorShader.vsh */; };
+		1445DCBB16F97C1600EBBCCF /* ColorShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC4816F97AD600EBBCCF /* ColorShader.fsh */; };
+		1445DCBC16F97C1700EBBCCF /* ColorShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC4B16F97AD600EBBCCF /* ColorShader.vsh */; };
 		144D9CE817042B3500F6EE15 /* Lato-Bol.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 144D9CE717042AF400F6EE15 /* Lato-Bol.ttf */; };
 		145ABAC616FB144D00DA2488 /* GCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 145ABAC516FB144D00DA2488 /* GCHelper.m */; };
 		1464725F16D27801000C8FB4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1464725E16D27801000C8FB4 /* UIKit.framework */; };
@@ -60,7 +59,7 @@
 		146472D016D278B5000C8FB4 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472CA16D278B5000C8FB4 /* OpenGLES.framework */; };
 		146472D116D278B5000C8FB4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472CB16D278B5000C8FB4 /* QuartzCore.framework */; };
 		146472D616D278F0000C8FB4 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472D516D278F0000C8FB4 /* GameKit.framework */; };
-		14A635291707255300C433A2 /* TextureString.m in Sources */ = {isa = PBXBuildFile; fileRef = 14A635281707255300C433A2 /* TextureString.m */; };
+		14A635291707255300C433A2 /* TextureStringLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 14A635281707255300C433A2 /* TextureStringLayer.m */; };
 		14C0F4051703311100F6D422 /* NSArray+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C0F4041703311100F6D422 /* NSArray+Additions.m */; };
 		14D4248E1700255C0010657A /* sprite.png in Resources */ = {isa = PBXBuildFile; fileRef = 14D4248D1700255C0010657A /* sprite.png */; };
 		14F1197A170297E400721BEE /* w3 in Resources */ = {isa = PBXBuildFile; fileRef = 14F11977170297E400721BEE /* w3 */; };
@@ -97,10 +96,10 @@
 		1445DC4316F97AD600EBBCCF /* Texture2D.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Texture2D.m; sourceTree = "<group>"; };
 		1445DC4416F97AD600EBBCCF /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureManager.h; sourceTree = "<group>"; };
 		1445DC4516F97AD600EBBCCF /* TextureManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextureManager.m; sourceTree = "<group>"; };
-		1445DC4816F97AD600EBBCCF /* FlatColorShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = FlatColorShader.fsh; sourceTree = "<group>"; };
-		1445DC4916F97AD600EBBCCF /* FlatColorShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlatColorShader.h; sourceTree = "<group>"; };
-		1445DC4A16F97AD600EBBCCF /* FlatColorShader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlatColorShader.m; sourceTree = "<group>"; };
-		1445DC4B16F97AD600EBBCCF /* FlatColorShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = FlatColorShader.vsh; sourceTree = "<group>"; };
+		1445DC4816F97AD600EBBCCF /* ColorShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ColorShader.fsh; sourceTree = "<group>"; };
+		1445DC4916F97AD600EBBCCF /* ColorShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorShader.h; sourceTree = "<group>"; };
+		1445DC4A16F97AD600EBBCCF /* ColorShader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ColorShader.m; sourceTree = "<group>"; };
+		1445DC4B16F97AD600EBBCCF /* ColorShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ColorShader.vsh; sourceTree = "<group>"; };
 		1445DC4C16F97AD600EBBCCF /* GLShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLShader.h; sourceTree = "<group>"; };
 		1445DC4D16F97AD600EBBCCF /* GLShader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLShader.m; sourceTree = "<group>"; };
 		1445DC4E16F97AD600EBBCCF /* GLShaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLShaderManager.h; sourceTree = "<group>"; };
@@ -122,10 +121,8 @@
 		1445DC6116F97AD600EBBCCF /* SoundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundManager.h; sourceTree = "<group>"; };
 		1445DC6216F97AD600EBBCCF /* SoundManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundManager.m; sourceTree = "<group>"; };
 		1445DC6316F97AD600EBBCCF /* SynthesizeSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SynthesizeSingleton.h; sourceTree = "<group>"; };
-		1445DC6516F97AD600EBBCCF /* AnimatedSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimatedSprite.h; sourceTree = "<group>"; };
-		1445DC6616F97AD600EBBCCF /* AnimatedSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimatedSprite.m; sourceTree = "<group>"; };
-		1445DC6716F97AD600EBBCCF /* SpriteSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpriteSheet.h; sourceTree = "<group>"; };
-		1445DC6816F97AD600EBBCCF /* SpriteSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpriteSheet.m; sourceTree = "<group>"; };
+		1445DC6716F97AD600EBBCCF /* FontSpriteSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontSpriteSheet.h; sourceTree = "<group>"; };
+		1445DC6816F97AD600EBBCCF /* FontSpriteSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontSpriteSheet.m; sourceTree = "<group>"; };
 		1445DC6C16F97AD600EBBCCF /* Dictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dictionary.h; sourceTree = "<group>"; };
 		1445DC6D16F97AD600EBBCCF /* Dictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Dictionary.m; sourceTree = "<group>"; };
 		1445DC6E16F97AD600EBBCCF /* GameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameScene.h; sourceTree = "<group>"; };
@@ -158,8 +155,8 @@
 		146472CA16D278B5000C8FB4 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		146472CB16D278B5000C8FB4 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		146472D516D278F0000C8FB4 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
-		14A635271707255300C433A2 /* TextureString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureString.h; sourceTree = "<group>"; };
-		14A635281707255300C433A2 /* TextureString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextureString.m; sourceTree = "<group>"; };
+		14A635271707255300C433A2 /* TextureStringLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureStringLayer.h; sourceTree = "<group>"; };
+		14A635281707255300C433A2 /* TextureStringLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextureStringLayer.m; sourceTree = "<group>"; };
 		14C0F4031703311100F6D422 /* NSArray+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Additions.h"; sourceTree = "<group>"; };
 		14C0F4041703311100F6D422 /* NSArray+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Additions.m"; sourceTree = "<group>"; };
 		14D4248D1700255C0010657A /* sprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sprite.png; sourceTree = "<group>"; };
@@ -271,8 +268,8 @@
 				1445DC4316F97AD600EBBCCF /* Texture2D.m */,
 				1445DC4416F97AD600EBBCCF /* TextureManager.h */,
 				1445DC4516F97AD600EBBCCF /* TextureManager.m */,
-				14A635271707255300C433A2 /* TextureString.h */,
-				14A635281707255300C433A2 /* TextureString.m */,
+				14A635271707255300C433A2 /* TextureStringLayer.h */,
+				14A635281707255300C433A2 /* TextureStringLayer.m */,
 			);
 			path = "OpenGL Support";
 			sourceTree = "<group>";
@@ -298,10 +295,10 @@
 		1445DC4716F97AD600EBBCCF /* ColorShader */ = {
 			isa = PBXGroup;
 			children = (
-				1445DC4816F97AD600EBBCCF /* FlatColorShader.fsh */,
-				1445DC4916F97AD600EBBCCF /* FlatColorShader.h */,
-				1445DC4A16F97AD600EBBCCF /* FlatColorShader.m */,
-				1445DC4B16F97AD600EBBCCF /* FlatColorShader.vsh */,
+				1445DC4816F97AD600EBBCCF /* ColorShader.fsh */,
+				1445DC4916F97AD600EBBCCF /* ColorShader.h */,
+				1445DC4A16F97AD600EBBCCF /* ColorShader.m */,
+				1445DC4B16F97AD600EBBCCF /* ColorShader.vsh */,
 			);
 			path = ColorShader;
 			sourceTree = "<group>";
@@ -343,10 +340,8 @@
 		1445DC6416F97AD600EBBCCF /* Sprites */ = {
 			isa = PBXGroup;
 			children = (
-				1445DC6516F97AD600EBBCCF /* AnimatedSprite.h */,
-				1445DC6616F97AD600EBBCCF /* AnimatedSprite.m */,
-				1445DC6716F97AD600EBBCCF /* SpriteSheet.h */,
-				1445DC6816F97AD600EBBCCF /* SpriteSheet.m */,
+				1445DC6716F97AD600EBBCCF /* FontSpriteSheet.h */,
+				1445DC6816F97AD600EBBCCF /* FontSpriteSheet.m */,
 			);
 			path = Sprites;
 			sourceTree = "<group>";
@@ -533,9 +528,9 @@
 				1445DCA616F97AD700EBBCCF /* Default.png in Resources */,
 				1445DCB816F97C1000EBBCCF /* TextureShader.vsh in Resources */,
 				1445DCA716F97AD700EBBCCF /* Default@2x.png in Resources */,
-				1445DCBC16F97C1700EBBCCF /* FlatColorShader.vsh in Resources */,
+				1445DCBC16F97C1700EBBCCF /* ColorShader.vsh in Resources */,
 				1445DCBA16F97C1300EBBCCF /* StringTextureShader.vsh in Resources */,
-				1445DCBB16F97C1600EBBCCF /* FlatColorShader.fsh in Resources */,
+				1445DCBB16F97C1600EBBCCF /* ColorShader.fsh in Resources */,
 				1445DCB916F97C1200EBBCCF /* StringTextureShader.fsh in Resources */,
 				1445DCA816F97AD700EBBCCF /* shadow.png in Resources */,
 				1445DCA916F97AD700EBBCCF /* shadow@2X.png in Resources */,
@@ -571,7 +566,7 @@
 				1445DC8A16F97AD600EBBCCF /* OpenGLViewController.m in Sources */,
 				1445DC8B16F97AD600EBBCCF /* Texture2D.m in Sources */,
 				1445DC8C16F97AD600EBBCCF /* TextureManager.m in Sources */,
-				1445DC8E16F97AD600EBBCCF /* FlatColorShader.m in Sources */,
+				1445DC8E16F97AD600EBBCCF /* ColorShader.m in Sources */,
 				1445DC9016F97AD600EBBCCF /* GLShader.m in Sources */,
 				1445DC9116F97AD600EBBCCF /* GLShaderManager.m in Sources */,
 				1445DC9216F97AD600EBBCCF /* GLShaderProgram.m in Sources */,
@@ -580,8 +575,7 @@
 				1445DC9816F97AD600EBBCCF /* TextureShader.m in Sources */,
 				1445DC9A16F97AD600EBBCCF /* MyOpenALSupport.c in Sources */,
 				1445DC9B16F97AD600EBBCCF /* SoundManager.m in Sources */,
-				1445DC9C16F97AD600EBBCCF /* AnimatedSprite.m in Sources */,
-				1445DC9D16F97AD600EBBCCF /* SpriteSheet.m in Sources */,
+				1445DC9D16F97AD600EBBCCF /* FontSpriteSheet.m in Sources */,
 				1445DC9F16F97AD700EBBCCF /* Dictionary.m in Sources */,
 				1445DCA016F97AD700EBBCCF /* GameScene.m in Sources */,
 				1445DCA116F97AD700EBBCCF /* Tile.m in Sources */,
@@ -590,7 +584,7 @@
 				14F119851702A0A400721BEE /* FileReader.m in Sources */,
 				14F119861702A0A400721BEE /* NSDataExtensions.m in Sources */,
 				14C0F4051703311100F6D422 /* NSArray+Additions.m in Sources */,
-				14A635291707255300C433A2 /* TextureString.m in Sources */,
+				14A635291707255300C433A2 /* TextureStringLayer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

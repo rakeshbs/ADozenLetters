@@ -20,7 +20,7 @@
     Vector3D *vertices;
     TextureCoord *textureCoordinates;
     Texture2D *texture;
-    Color4f *textureColors;
+    Color4B *textureColors;
     
     GLShaderProgram *shader;
     
@@ -38,7 +38,7 @@
 }
 
 @property (nonatomic) TextureCoord *textureCoordinates;
-@property (nonatomic) Color4f *textureColors;
+@property (nonatomic) Color4B *textureColors;
 @property (nonatomic) Vector3D *vertices;
 @property (nonatomic) int count;
 @property (nonatomic)   GLenum drawMode;

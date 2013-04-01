@@ -11,7 +11,7 @@
 #import "EasingFunctions.h"
 #import "Scene.h"
 #import "SoundManager.h"
-#import "TextureString.h"
+#import "TextureStringLayer.h"
 
 #define ANIMATION_MOVE 1
 #define ANIMATION_WIGGLE 2
@@ -23,8 +23,8 @@
 #define ANIMATION_THROW 8
 
 
-#define SHADOW_ALPHA_MAX 1.0f
-#define SHADOW_ALPHA_MIN 0.0f
+#define SHADOW_ALPHA_MAX 255
+#define SHADOW_ALPHA_MIN 0
 #define WIGGLE_ANGLE 10.0f
 #define REDCOLOR_MIN 0.01f
 #define REDCOLOR_MAX 1.0f
@@ -37,9 +37,9 @@
 @synthesize character,anchorPoint,colorIndex,isBonded;
 
 Vector3D rectVertices[6];
-static Color4f tileColors[2][2];
-static Color4f characterColors;
-static Color4f transparentColor = (Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 0.0};
+static Color4B tileColors[2][2];
+static Color4B characterColors;
+static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 255, .alpha = 0};
 
 
 SoundManager *soundManager;
@@ -50,7 +50,10 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 -(void)setColorIndex:(int)_colorIndex
 {
     colorIndex = _colorIndex;
-    //tileColorShader.color = tileColors[tileColorIndex][colorIndex];
+    for (int i = 0;i<6;i++)
+    {
+        Color4fCopy(&tileColors[0][colorIndex], (tileColorShader.colors+i));
+    }
 }
 
 -(CGRect)frame
@@ -101,7 +104,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)setupStrings
 {
-    TextureString *texString1 = [[TextureString alloc]init];
+    TextureStringLayer *texString1 = [[TextureStringLayer alloc]init];
     texString1.string = self.character;
     texString1.dimensions = CGSizeMake(tileSquareSize, tileSquareSize);
     texString1.horizontalTextAlignment = UITextAlignmentCenter;
@@ -109,7 +112,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     texString1.fontName= @"Lato";
     texString1.fontSize = 40;
     
-    TextureString *texString2 = [[TextureString alloc]init];
+    TextureStringLayer *texString2 = [[TextureStringLayer alloc]init];
     texString2.string = [NSString stringWithFormat:@"%d",score];
     texString2.dimensions = CGSizeMake(tileSquareSize-5, tileSquareSize-5);
     texString2.horizontalTextAlignment = UITextAlignmentRight;
@@ -121,7 +124,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     [array addObject:texString1];
     [array addObject:texString2];
     
-    characterTexture = [textureManager getCombinedStringTexture:array key:self.character];
+    characterTexture = [textureManager getLayeredStringTexture:array :self.character];
     
     [array release];
     [texString1 release];
@@ -141,10 +144,9 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     rectVertices[4] = (Vector3D)  {.x = -tileSquareSize/(2), .y = tileSquareSize/(2), .z = 10.0f};
     rectVertices[5] =  (Vector3D) {.x = tileSquareSize/(2), .y = tileSquareSize/(2), .z = 10.0f};
     
-    colorIndex = 0;
     [self setupColors];
     
-    tileColorShader = [[FlatColorShader alloc]init];
+    tileColorShader = [[ColorShader alloc]init];
     tileColorShader.drawMode = GL_TRIANGLES;
     tileColorShader.count = 12;
     for (int i = 0;i<6;i++)
@@ -201,24 +203,24 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 {
     CGFloat alpha = 0.93f;
     
-    tileColors[0][0] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = 1.0f};
+    tileColors[0][0] = (Color4B) { .red = 255, .blue = 255 , .green = 255, .alpha = 255};
     
     //255 250 231
-    tileColors[0][1] = (Color4f) { .red = 1.0f, .blue = 1.0 , .green = 1.0f, .alpha = alpha};
+    tileColors[0][1] = (Color4B) { .red = 255, .blue = 250 , .green = 250, .alpha = 238};
     
     //    rgb 243 156 18
-    tileColors[1][0] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
+    tileColors[1][0] = (Color4B) { .red = 243, .green = 156 , .blue = 18, .alpha = 255};
     //    rgb 243 156 18
-    tileColors[1][1] = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = alpha};
+    tileColors[1][1] = (Color4B) { .red = 243, .green = 156 , .blue = 18, .alpha = 238};
     
     
-    characterColors = (Color4f) { .red = 0.952, .green = 0.611 , .blue = 0.066, .alpha = 1.0f};
+    characterColors = (Color4B) { .red = 243, .green = 156 , .blue = 18, .alpha = 255};
     
-    shadowColor = malloc(sizeof(Color4f));
+    shadowColor = malloc(sizeof(Color4B));
     Color4fCopyS(transparentColor, shadowColor);
     
-    currentTileColor = malloc(sizeof(Color4f)*2);
-    currentCharacterColor = malloc(sizeof(Color4f));
+    currentTileColor = malloc(sizeof(Color4B)*2);
+    currentCharacterColor = malloc(sizeof(Color4B));
     startAlphas = malloc(sizeof(CGFloat)*2);
     
     for (int c = 0;c<2;c++)
@@ -244,11 +246,12 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     [mvpMatrixManager pushModelViewMatrix];
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:0];
-    [shadowTextureShader draw];
     
     [tileColorShader draw];
     
     [characterTextureShader draw];
+    [shadowTextureShader draw];
+
     [mvpMatrixManager popModelViewMatrix];
     
 }
@@ -308,7 +311,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
             (currentTileColor + c)->alpha = alpha;
         }
         
-        CGFloat alpha = getEaseOut(characterStartAlpha, 1.0, animationRatio);
+        CGFloat alpha = getEaseOut(characterStartAlpha, 255, animationRatio);
         currentCharacterColor->alpha = alpha;
 
         

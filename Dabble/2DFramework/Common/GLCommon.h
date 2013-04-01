@@ -82,11 +82,11 @@ static inline void Vector3DFlip (Vector3D *vector)
     vector->z = -vector->z;
 }
 typedef struct {
-    GLfloat	red;
-    GLfloat	green;
-    GLfloat	blue;
-    GLfloat alpha;
-} Color4f;
+    GLubyte	red;
+    GLubyte green;
+    GLubyte blue;
+    GLubyte alpha;
+} Color4B;
 
 static inline void Vector3DCopy(Vector3D *source,Vector3D *destination)
 {
@@ -95,7 +95,7 @@ static inline void Vector3DCopy(Vector3D *source,Vector3D *destination)
     destination->z = source->z;
 }
 
-static inline void Color4fCopy(Color4f *source,Color4f *destination)
+static inline void Color4fCopy(Color4B *source,Color4B *destination)
 {
     destination->blue = source->blue;
     destination->green = source->green;
@@ -111,7 +111,7 @@ static inline void Vector3DCopyS(Vector3D source,Vector3D *destination)
 }
 
 
-static inline void Color4fCopyS(Color4f source,Color4f *destination)
+static inline void Color4fCopyS(Color4B source,Color4B *destination)
 {
     destination->blue = source.blue;
     destination->green = source.green;
@@ -350,7 +350,6 @@ static inline void TextureCoordCopy(TextureCoord *source,TextureCoord *destinati
     destination->t = source->t;
 
 }
-
 
 static inline void TextureCoordCopyS(TextureCoord source,TextureCoord *destination)
 {

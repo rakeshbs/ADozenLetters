@@ -2,6 +2,5 @@
 #import "GLButton.h"
 #import "TextureManager.h"
 #import "Scene.h"
-#import "SpriteSheet.h"
-#import "AnimatedSprite.h"
+#import "FontSpriteSheet.h"
 #import "GLCommon.h"

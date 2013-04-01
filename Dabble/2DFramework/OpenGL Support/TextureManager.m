@@ -82,7 +82,7 @@
 	return nil;
 }
 
--(Texture2D *)getCombinedStringTexture:(NSMutableArray *)strings key:(NSString *)_key
+-(Texture2D *)getLayeredStringTexture:(NSMutableArray *)strings :(NSString *)_key
 {
     NSString *key = [NSString stringWithFormat:@"combined%@f",_key];
     

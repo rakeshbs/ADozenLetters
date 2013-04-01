@@ -40,5 +40,5 @@
 +(id)getSharedDirector;
 -(void)presentScene:(NSObject *)scene;
 -(void)setInterfaceOrientation:(UIInterfaceOrientation)orientation;
--(void)clearScene:(Color4f)_clear_color;
+-(void)clearScene:(Color4B)_clear_color;
 @end

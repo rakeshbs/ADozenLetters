@@ -10,7 +10,7 @@
 #import "Texture2D.h"
 
 
-@interface TextureString : NSObject
+@interface TextureStringLayer : NSObject
 
 @property (nonatomic,retain) NSString *string;
 @property (nonatomic) UITextAlignment horizontalTextAlignment;

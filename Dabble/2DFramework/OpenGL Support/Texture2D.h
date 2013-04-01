@@ -75,7 +75,7 @@ Depending on how you create the Texture2D object, the actual image area of the t
 Be aware that the content of the generated textures will be upside-down!
 */
 
-@class TextureString;
+@class TextureStringLayer;
 
 @interface Texture2D : NSObject
 {

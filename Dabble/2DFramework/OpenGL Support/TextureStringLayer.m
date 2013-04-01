@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Rakesh. All rights reserved.
 //
 
-#import "TextureString.h"
+#import "TextureStringLayer.h"
 
-@implementation TextureString
+@implementation TextureStringLayer
 
 @end
