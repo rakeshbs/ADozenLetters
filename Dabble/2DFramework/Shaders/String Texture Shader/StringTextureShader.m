@@ -57,7 +57,9 @@
 
 -(void)draw
 {
+    
     glEnable(GL_TEXTURE_2D);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     
     [shader use];
     
@@ -83,6 +85,7 @@
     glDrawArrays(drawMode, 0, count);
     
     glDisable(GL_TEXTURE_2D);
+    
 }
 
 

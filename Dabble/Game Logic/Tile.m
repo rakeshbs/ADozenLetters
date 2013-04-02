@@ -58,7 +58,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(CGRect)frame
 {
-    return CGRectMake(self.centerPoint.x-tileSquareSize/2, 480 - (self.centerPoint.y + tileSquareSize/2), tileSquareSize, tileSquareSize);
+    return CGRectMake(self.centerPoint.x-tileSquareSize/2, [UIScreen mainScreen].bounds.size.height - (self.centerPoint.y + tileSquareSize/2), tileSquareSize, tileSquareSize);
     
 }
 

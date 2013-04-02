@@ -11,24 +11,22 @@
 #import "GLCommon.h"
 
 @interface FontSprite : NSObject
-
-
 @property (nonatomic,retain) NSString *key;
-@property (nonatomic,retain) NSMutableArray *textureStringLayers;
 @property (nonatomic) CGFloat offSetX;
 @property (nonatomic) CGFloat offSetY;
 @property (nonatomic) CGFloat widthX;
 @property (nonatomic) CGFloat widthY;
-
 @end
 
 @interface FontSpriteSheet : NSObject {
 	Texture2D *fontSpriteSheet;
     NSDictionary *fontSpriteDictionary;
     
-    FontSprite *currentGenFontSprite;
-    
-    
+
 }
 
+@property (nonatomic,retain) NSString *fontName;
+@property (nonatomic) CGFloat fontSize;
+
+-(void)addFontSprite:(FontSprite *)fontSprite;
 @end

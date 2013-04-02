@@ -9,7 +9,7 @@
 #import "FontSpriteSheet.h"
 #import "TextureManager.h"
 
-
+NSString *fontCharacters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxvz1234567890:.";
 
 @implementation FontSpriteSheet
 
@@ -17,16 +17,18 @@
 {
     if (self = [super init])
     {
-
+        fontSpriteDictionary = [[NSMutableDictionary alloc]init];
     }
     return self;
 
 }
 
--(void)addLayer
+-(void)addFontSprite:(FontSprite *)fontSprite
 {
-    
+    [fontSpriteDictionary setValue:fontSprite forKey:fontSprite.key];
 }
+
+
 
 -(void)createTexture
 {
