@@ -14,8 +14,8 @@
 @property (nonatomic,retain) NSString *key;
 @property (nonatomic) CGFloat offSetX;
 @property (nonatomic) CGFloat offSetY;
-@property (nonatomic) CGFloat widthX;
-@property (nonatomic) CGFloat widthY;
+@property (nonatomic) CGFloat width;
+@property (nonatomic) CGFloat height;
 @end
 
 @interface FontSpriteSheet : NSObject {
@@ -27,6 +27,7 @@
 
 @property (nonatomic,retain) NSString *fontName;
 @property (nonatomic) CGFloat fontSize;
+@property (nonatomic,retain) UIColor* fontColor;
 
 -(void)addFontSprite:(FontSprite *)fontSprite;
 @end

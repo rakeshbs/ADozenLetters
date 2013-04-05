@@ -647,6 +647,10 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 -(void)dealloc
 {
     [super dealloc];
+    free(shadowColor);
+    free(currentCharacterColor);
+    free(currentTileColor);
+    free(startAlphas);
     self.tilesArray = nil;
 }
 

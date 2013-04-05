@@ -9,7 +9,9 @@
 #import "FontSpriteSheet.h"
 #import "TextureManager.h"
 
-NSString *fontCharacters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxvz1234567890:.";
+NSString *fontCharactersUpper = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+NSString *fontCharactersLower = @"abcdefghijklmnopqrstuvwxvz";
+NSString *fontCharactersNumbers = @"1234567890:.";
 
 @implementation FontSpriteSheet
 

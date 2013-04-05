@@ -427,11 +427,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     int row = 0;
     CGFloat lineHeight = 0,lineWidth = 0,totalHeight = 0,totalWidth = 0;
     
-    CGFloat width[nsquare][nsquare];
-    CGFloat height[nsquare];
     
-    
-    NSMutableArray *fontSprites = [[NSMutableArray alloc]init];
 	for (int i = 0;i<fontString.length;i++)
     {
         NSRange subStrRange = NSMakeRange(i, 1);
@@ -447,9 +443,93 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
             totalWidth = (totalWidth < lineWidth) ? lineWidth:totalWidth;
             totalHeight += lineHeight;
             col = 0;
+            lineWidth = 0;
             row++;
         }
     }
+    
+    NSUInteger				width,
+    height,
+    i;
+	CGContextRef			context;
+	void*					data;
+	CGColorSpaceRef			colorSpace;
+    
+    width = totalWidth;
+	if((width != 1) && (width & (width - 1))) {
+		i = 1;
+		while(i < width)
+            i *= 2;
+		width = i;
+	}
+	height = totalHeight;
+	if((height != 1) && (height & (height - 1))) {
+		i = 1;
+		while(i < height)
+            i *= 2;
+		height = i;
+	}
+
+    colorSpace = CGColorSpaceCreateDeviceRGB();
+	data = calloc(height, width*4 );
+	context = CGBitmapContextCreateWithData(data, width, height, 8, width * 4 ,
+                                            colorSpace, kCGImageAlphaPremultipliedLast,nil,nil);
+    CGContextClearRect(context, CGRectMake(0, 0, width, height));
+	CGColorSpaceRelease(colorSpace);
+    
+    CGContextSetFillColorWithColor(context, [[UIColor whiteColor]CGColor]);
+    CGContextSetAlpha(context, 1.0);
+    
+    CGContextTranslateCTM(context, 0.0, height);
+    
+    CGContextScaleCTM(context, 1.0, -1.0); //NOTE: NSString draws in UIKit referential i.e. renders upside-down compared to CGBitmapContext referential
+
+    lineHeight = 0,lineWidth = 0,totalHeight = 0,totalWidth = 0;
+    
+    NSMutableArray *fontSprites = [[NSMutableArray alloc]init];
+    FontSprite *fontSprite = nil;
+    for (int i = 0;i<fontString.length;i++)
+    {
+        UIGraphicsPushContext(context);
+        
+        NSRange subStrRange = NSMakeRange(i, 1);
+        NSString *subStr = [fontString substringWithRange:subStrRange];
+        CGSize dimensions = [subStr sizeWithFont:font];
+        
+        lineWidth += dimensions.width;
+        lineHeight = (lineHeight < dimensions.height) ? dimensions.height:lineHeight;
+        
+        CGContextTranslateCTM(context, lineWidth, -totalHeight);
+        [subStr drawInRect:CGRectMake(0, 0, dimensions.width, dimensions.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:NSTextAlignmentCenter];
+        
+        fontSprite = [[FontSprite alloc]init];
+        fontSprite.offSetX = lineWidth/height;
+        fontSprite.offSetY = lineHeight/width;
+        fontSprite.offSetX = lineWidth/height;
+        fontSprite.offSetY = lineHeight/width;
+        
+        
+        
+        col++;
+        if (col >nsquare)
+        {
+            totalWidth = (totalWidth < lineWidth) ? lineWidth:totalWidth;
+            totalHeight += lineHeight;
+            col = 0;
+            lineWidth = 0;
+            row++;
+        }
+        
+        UIGraphicsPopContext();
+      
+    }
+    
+    self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:width pixelsHigh:height contentSize:CGSizeMake(totalWidth, totalHeight)];
+	
+	CGContextRelease(context);
+	free(data);
+	
+	return self;
 }
 
 @end
