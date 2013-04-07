@@ -48,6 +48,8 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 #import <UIKit/UIKit.h>
 #import <OpenGLES/ES1/gl.h>
 #import "GLCommon.h"
+#import "FontSpriteSheet.h"
+
 //CONSTANTS:
 
 typedef enum {
@@ -126,5 +128,5 @@ Note that the generated textures are of type A8 - use the blending mode (GL_SRC_
 @interface Texture2D (Text)
 - (id) initWithString:(NSString*)string dimensions:(CGSize)dimensions horizontalAlignment:(UITextAlignment)alignment verticalAlignment:(UITextVerticalAlignment)vertAlignment fontName:(NSString*)name fontSize:(CGFloat)size;
 - (id) initWithTextureStrings:(NSMutableArray *)_textureStrings;
-
+- (id) initFontSpriteSheetWith:(NSString *)fontString andFontSprite:(FontSpriteSheet *)fontSpriteSheet;
 @end

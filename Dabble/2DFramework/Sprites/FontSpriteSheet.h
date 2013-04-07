@@ -7,8 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Texture2D.h"
 #import "GLCommon.h"
+
+typedef enum 
+{
+    FontSpriteTypeAlphabetsUppercase = 0,
+    FontSpriteTypeAlphabetsLowerCase,
+    FontSpriteTypeNumbers
+}FontSpriteType;
+
+@class Texture2D;
+
+@class FontSpriteSheet;
 
 @interface FontSprite : NSObject
 @property (nonatomic,retain) NSString *key;
@@ -16,6 +26,10 @@
 @property (nonatomic) CGFloat offSetY;
 @property (nonatomic) CGFloat width;
 @property (nonatomic) CGFloat height;
+@property (nonatomic,retain) FontSpriteSheet *fontSpriteSheet;
+@property (nonatomic) TextureCoord *textureCoordinates;
+@property (nonatomic) Vector3D *texureRect;
+
 @end
 
 @interface FontSpriteSheet : NSObject {
@@ -27,7 +41,13 @@
 
 @property (nonatomic,retain) NSString *fontName;
 @property (nonatomic) CGFloat fontSize;
+@property (nonatomic) FontSpriteType fontSpriteType;
 @property (nonatomic,retain) UIColor* fontColor;
+@property (nonatomic) CGFloat textureWidth;
+@property (nonatomic) CGFloat textureHeight;
+@property (nonatomic) CGFloat width;
+@property (nonatomic) CGFloat height;
+
 
 -(void)addFontSprite:(FontSprite *)fontSprite;
 @end

@@ -49,7 +49,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 #import "GLCommon.h"
 #import "Texture2D.h"
 #import "TextureStringLayer.h"
-#import "FontSpriteSheet.h"
+
 
 //CONSTANTS:
 
@@ -413,7 +413,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 }
 
 
-- (id) generateFontSpriteSheet:(NSString *)fontString andFontSprite:(FontSpriteSheet *)fontSpriteSheet
+- (id) initFontSpriteSheetWith:(NSString *)fontString andFontSprite:(FontSpriteSheet *)fontSpriteSheet
 {
     int nsquare = 1;
     while (nsquare * nsquare < fontString.length)
@@ -486,7 +486,6 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
     lineHeight = 0,lineWidth = 0,totalHeight = 0,totalWidth = 0;
     
-    NSMutableArray *fontSprites = [[NSMutableArray alloc]init];
     FontSprite *fontSprite = nil;
     for (int i = 0;i<fontString.length;i++)
     {
@@ -503,12 +502,13 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         [subStr drawInRect:CGRectMake(0, 0, dimensions.width, dimensions.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:NSTextAlignmentCenter];
         
         fontSprite = [[FontSprite alloc]init];
-        fontSprite.offSetX = lineWidth/height;
-        fontSprite.offSetY = lineHeight/width;
-        fontSprite.offSetX = lineWidth/height;
-        fontSprite.offSetY = lineHeight/width;
+        fontSprite.offSetX = lineWidth/width;
+        fontSprite.offSetY = totalHeight/height;
+        fontSprite.width = dimensions.width/width;
+        fontSprite.height = dimensions.height/height;
         
-        
+        [fontSpriteSheet addFontSprite:fontSprite];
+        [fontSprite release];
         
         col++;
         if (col >nsquare)
@@ -529,6 +529,12 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	CGContextRelease(context);
 	free(data);
 	
+    fontSpriteSheet.textureHeight = height;
+    fontSpriteSheet.textureWidth = width;
+    fontSprite.width = totalWidth;
+    fontSprite.height = totalHeight;
+    
+    
 	return self;
 }
 
