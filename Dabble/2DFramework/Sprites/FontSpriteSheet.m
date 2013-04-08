@@ -20,8 +20,21 @@ NSString *fontCharactersNumbers = @"1234567890:.";
     _textureCoordinates = malloc(sizeof(TextureCoord)*4);
     _texureRect = malloc(sizeof(Vector3D)*4);
     
- //   *(_textureCoordinates) =
+    CGFloat totalWidth = self.fontSpriteSheet.textureWidth;
+    CGFloat totalHeight = self.fontSpriteSheet.textureHeight;
     
+    _textureCoordinates[0] = (TextureCoord) { .s = (_offSetX/totalWidth), .t = ((_offSetY+_height)/totalHeight)};
+    _textureCoordinates[1] = (TextureCoord) { .s = ( (_offSetX+_width)/totalWidth),
+        .t = ((_offSetY+_height)/totalHeight)};
+    
+    _textureCoordinates[2] = (TextureCoord) {  .s = ( (_offSetX+_width)/totalWidth), 
+        .t = (_offSetY/totalHeight)};
+    _textureCoordinates[3] = (TextureCoord) { .s = (_offSetX/totalWidth), .t = (_offSetY/totalHeight)};
+    
+    _texureRect[0] = (Vector3D) { .x = 0, .y = 0, .z = 0};
+    _texureRect[1] = (Vector3D) { .x = 0, .y = 0, .z = 0};
+    _texureRect[2] = (Vector3D) { .x = 0, .y = 0, .z = 0};
+    _texureRect[3] = (Vector3D) { .x = 0, .y = 0, .z = 0};
 }
 
 -(void)dealloc
