@@ -22,6 +22,7 @@
         touchesInScene = [[NSMutableArray alloc]init];
         animator = [Animator getSharedAnimator];
         mvpMatrixManager = [MVPMatrixManager sharedMVPMatrixManager];
+        triangleShader = [[GLShaderManager sharedGLShaderManager]
         if (elements == nil)
             elements = [[NSMutableArray alloc]init];
 

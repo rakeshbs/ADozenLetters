@@ -16,6 +16,7 @@
 #import "TextureManager.h"
 #import "Animator.h"
 #import "MVPMatrixManager.h"
+#import "ColorShader.h"
 
 @interface Scene : NSObject {
 	UIView *view;
@@ -25,6 +26,7 @@
 	NSMutableArray *elements;
     Animator *animator;
     NSMutableArray *touchesInScene;
+    ColorShader *triangleShader;
 }
 @property (nonatomic,retain) UIView *view;
 @property (nonatomic,retain) Director *director;

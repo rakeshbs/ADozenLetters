@@ -17,6 +17,8 @@
 {
     Color4B *colors;
     Vector3D *vertices;
+    GLfloat *matrixIndices;
+    GLfloat mvpMatrixCount;
     GLShaderProgram *shader;
     
     Matrix3D *mvpMatrices;
@@ -24,13 +26,18 @@
     GLuint colorAttribute;
     GLuint verticesAttribute;
     GLuint mvpMatrixUniform;
+    GLuint mvpmatrixIndexAttribute;
     GLenum drawMode;
     int count;
+    
 }
 @property (nonatomic)    CGFloat pointSize;
 @property (nonatomic)     GLenum drawMode;
 @property (nonatomic) Color4B *colors;
 @property (nonatomic) Vector3D *vertices;
 @property (nonatomic) int count;
+
+-(void)begin;
+-(void)end;
 
 @end
