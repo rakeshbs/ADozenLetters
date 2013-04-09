@@ -10,6 +10,8 @@
 #import "FontSpriteSheet.h"
 
 @interface FontSpriteSheetManager : NSObject
-
+{
+    NSMutableDictionary *dictionary;
+}
 +(FontSpriteSheetManager *)getSharedFontSpriteSheetManager;
 @end

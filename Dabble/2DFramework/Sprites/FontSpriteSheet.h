@@ -53,5 +53,7 @@ typedef enum
 @property (nonatomic) CGFloat height;
 
 -(void)calculateCoordinates;
+-(id)initWithType:(FontSpriteType)type andFontName:(NSString *)fontName andFontSize:(CGFloat)fontSize;
+-(FontSprite *)getFontSprite:(NSString *)str;
 -(void)addFontSprite:(FontSprite *)fontSprite;
 @end

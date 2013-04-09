@@ -19,12 +19,13 @@
     Vector3D *vertices;
     GLShaderProgram *shader;
     
+    Matrix3D *mvpMatrices;
+    
     GLuint colorAttribute;
     GLuint verticesAttribute;
     GLuint mvpMatrixUniform;
     GLenum drawMode;
     int count;
-    
 }
 @property (nonatomic)    CGFloat pointSize;
 @property (nonatomic)     GLenum drawMode;

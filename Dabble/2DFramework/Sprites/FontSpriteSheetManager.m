@@ -11,7 +11,7 @@
 
 static NSString *fontCharactersUpper = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 static NSString *fontCharactersLower = @"abcdefghijklmnopqrstuvwxvz";
-static NSString *fontCharactersNumbers = @"1234567890:.";
+static NSString *fontCharactersNumbers = @"1234567890";
 
 
 @implementation FontSpriteSheetManager
@@ -25,25 +25,51 @@ static NSString *fontCharactersNumbers = @"1234567890:.";
 		if (!sharedInstance)
 		{
 			sharedInstance = [[FontSpriteSheetManager alloc]init];
+            
 		}
 	}
 	return sharedInstance;
 }
 
--(void)getFontForCharacter:(NSString *)character withFont:(NSString *)fontName andSize:(CGFloat)size
+-(id)init
 {
+    if (self = [super init])
+    {
+        dictionary = [[NSMutableDictionary alloc]init];
+    }
+    return self;
+}
+
+-(FontSprite *)getFontForCharacter:(NSString *)character withFont:(NSString *)fontName andSize:(CGFloat)size
+{
+    FontSpriteType type = -1;
     if ([fontCharactersUpper rangeOfString:character].location != NSNotFound)
     {
-        
+        type = FontSpriteTypeAlphabetsUppercase;
     }
     else if ([fontCharactersLower rangeOfString:character].location != NSNotFound)
     {
-        
+        type = FontSpriteTypeAlphabetsLowerCase;
     }
     else
     {
-        
+        type = FontSpriteTypeNumbers;
     }
+    
+    NSString *key = [NSString stringWithFormat:@"%@%@:%d:%f",character,fontName,type,size];
+    
+    FontSpriteSheet *fSheet = dictionary[key];
+    
+    
+    if (fSheet != nil) {
+        return [fSheet getFontSprite:character];
+    }
+    else
+    {
+        fSheet = [[FontSpriteSheet alloc]initWithType:type andFontName:fontName andFontSize:size];
+        [dictionary setObject:fSheet forKey:key];
+    }
+    
 }
 
 @end

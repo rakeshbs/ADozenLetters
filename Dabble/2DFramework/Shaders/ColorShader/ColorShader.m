@@ -8,6 +8,9 @@
 
 #import "ColorShader.h"
 
+#define NUMBEROFMATRICES 50
+#define NUMBEROFVERTICES 1000
+
 @implementation ColorShader
 @synthesize colors,vertices,drawMode,count;
 
@@ -42,9 +45,15 @@
         
         mvpMatrixUniform = [shader uniformIndex:@"mvpmatrix"];
         
+        mvpMatrices = malloc(NUMBEROFMATRICES * sizeof(Matrix3D));
+        vertices = malloc(sizeof(Vector3D)*NUMBEROFVERTICES);
+        colors = malloc(sizeof(Color4B)*NUMBEROFVERTICES);
+
+        
 }
     return self;
 }
+
 
 -(void)draw
 {

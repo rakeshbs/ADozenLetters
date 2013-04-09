@@ -11,7 +11,7 @@
 
 static NSString *fontCharactersUpper = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 static NSString *fontCharactersLower = @"abcdefghijklmnopqrstuvwxvz";
-static NSString *fontCharactersNumbers = @"1234567890:.";
+static NSString *fontCharactersNumbers = @"1234567890";
 
 @implementation FontSprite
 
@@ -92,6 +92,11 @@ static NSString *fontCharactersNumbers = @"1234567890:.";
     {
         [f calculateCoordinates];
     }
+}
+
+-(FontSprite *)getFontSprite:(NSString *)str
+{
+    return fontSpriteDictionary[str];
 }
 
 -(void)addFontSprite:(FontSprite *)fontSprite
