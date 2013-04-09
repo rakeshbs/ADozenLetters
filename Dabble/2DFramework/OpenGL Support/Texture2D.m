@@ -504,9 +504,10 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         fontSprite = [[FontSprite alloc]init];
         fontSprite.offSetX = lineWidth/width;
         fontSprite.offSetY = totalHeight/height;
-        fontSprite.width = dimensions.width/width;
-        fontSprite.height = dimensions.height/height;
-        
+        fontSprite.textureWidth = dimensions.width/width;
+        fontSprite.textureHeight = dimensions.height/height;
+        fontSprite.width = dimensions.width;
+        fontSprite.height = dimensions.height;
         [fontSpriteSheet addFontSprite:fontSprite];
         [fontSprite release];
         
@@ -531,9 +532,10 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	
     fontSpriteSheet.textureHeight = height;
     fontSpriteSheet.textureWidth = width;
-    fontSprite.width = totalWidth;
-    fontSprite.height = totalHeight;
+    fontSprite.textureWidth = totalWidth;
+    fontSprite.textureHeight = totalHeight;
     
+    [fontSpriteSheet calculateCoordinates];
     
 	return self;
 }

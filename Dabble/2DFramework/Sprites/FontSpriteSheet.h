@@ -24,11 +24,15 @@ typedef enum
 @property (nonatomic,retain) NSString *key;
 @property (nonatomic) CGFloat offSetX;
 @property (nonatomic) CGFloat offSetY;
+@property (nonatomic) CGFloat textureWidth;
+@property (nonatomic) CGFloat textureHeight;
 @property (nonatomic) CGFloat width;
 @property (nonatomic) CGFloat height;
 @property (nonatomic,retain) FontSpriteSheet *fontSpriteSheet;
 @property (nonatomic) TextureCoord *textureCoordinates;
 @property (nonatomic) Vector3D *texureRect;
+
+-(void)calculateCoordinates;
 
 @end
 
@@ -48,6 +52,6 @@ typedef enum
 @property (nonatomic) CGFloat width;
 @property (nonatomic) CGFloat height;
 
-
+-(void)calculateCoordinates;
 -(void)addFontSprite:(FontSprite *)fontSprite;
 @end
