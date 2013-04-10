@@ -315,13 +315,22 @@ static inline void Matrix3DSetFrustumProjection(Matrix3D matrix,
     matrix[14] = -(2 * zFar * zNear) / (zFar - zNear);
 }
 
-static inline void Matrix3DCopy(Matrix3D source,Matrix3D destination)
+static inline void Matrix3DCopyS(Matrix3D source,Matrix3D destination)
 {
     for (int i =0;i<16;i++)
     {
         destination[i] = source[i];
     }
 }
+
+static inline void Matrix3DCopy(Matrix3D *source,Matrix3D *destination)
+{
+    for (int i =0;i<16;i++)
+    {
+        *(destination)[i]= *(source)[i];
+    }
+}
+
 static inline void Matrix3DSetPerspectiveProjectionWithFieldOfView
     (Matrix3D matrix, GLfloat fieldOfVision, GLfloat near,
      GLfloat far, GLfloat aspectRatio)

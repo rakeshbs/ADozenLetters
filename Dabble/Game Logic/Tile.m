@@ -146,20 +146,6 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     
     [self setupColors];
     
-    tileColorShader = [[ColorShader alloc]init];
-    tileColorShader.drawMode = GL_TRIANGLES;
-    tileColorShader.count = 12;
-    for (int i = 0;i<6;i++)
-    {
-        Vector3DCopy(&rectVertices[i],(tileColorShader.vertices+i));
-        Color4fCopy(&tileColors[0][colorIndex], (tileColorShader.colors+i));
-    }
-    for (int i = 0;i<6;i++)
-    {
-        Vector3DCopy(&rectVertices[i],(tileColorShader.vertices+i+6));
-    }
-
-    
     shadowTextureShader = [[TextureShader alloc]init];
     shadowTextureShader.drawMode = GL_TRIANGLES;
     shadowTextureShader.count = 6;
@@ -238,7 +224,6 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 {
     for (int i = 0;i<6;i++)
     {
-        Color4fCopyS(currentTileColor[colorIndex], (tileColorShader.colors+i+6));
         Color4fCopy(shadowColor, (shadowTextureShader.textureColors+i));
         Color4fCopy(currentCharacterColor, (characterTextureShader.textureColors+i+6));
     }
@@ -247,11 +232,10 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:0];
     
-    //[tileColorShader draw];
+    [triangleColorShader addMatrix];
+    [triangleColorShader addVertices:rectVertices withUniformColor:tileColors[0][colorIndex] andCount:6];
+    [triangleColorShader addVertices:rectVertices withUniformColor:currentTileColor[colorIndex] andCount:6];
     
- //   [characterTextureShader draw];
-  //  [shadowTextureShader draw];
-
     [mvpMatrixManager popModelViewMatrix];
     
 }

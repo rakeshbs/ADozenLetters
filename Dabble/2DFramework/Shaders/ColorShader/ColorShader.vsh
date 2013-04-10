@@ -1,7 +1,7 @@
 attribute vec4 vertex;
 attribute vec4 color;
 attribute float mvpmatrixIndex;
-uniform mat4 mvpmatrix;
+uniform mat4 mvpmatrix[50];
 
 varying vec4 frag_color;
 

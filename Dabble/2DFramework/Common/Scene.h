@@ -26,7 +26,7 @@
 	NSMutableArray *elements;
     Animator *animator;
     NSMutableArray *touchesInScene;
-    ColorShader *triangleShader;
+    ColorShader *triangleColorShader;
 }
 @property (nonatomic,retain) UIView *view;
 @property (nonatomic,retain) Director *director;

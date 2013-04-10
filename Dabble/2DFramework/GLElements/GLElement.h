@@ -22,11 +22,11 @@
     TextureManager *textureManager;
     NSMutableArray *touchesInElement;
     MVPMatrixManager *mvpMatrixManager;
-    ColorShader *triangleShader;
+    ColorShader *triangleColorShader;
     
 }
 @property (nonatomic,retain) Scene *scene;
-@property (nonatomic,retain) ColorShader *triangleShader;
+@property (nonatomic,retain) ColorShader *triangleColorShader;
  @property (nonatomic)   CGRect frame;
 @property (nonatomic,retain) NSMutableArray *touchesInElement;
 -(void)draw;
