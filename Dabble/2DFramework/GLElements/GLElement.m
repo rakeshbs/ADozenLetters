@@ -17,7 +17,7 @@
 
 @implementation GLElement
 
-@synthesize touchesInElement;
+@synthesize touchesInElement,triangleShader;
 
 @synthesize scene,frame;
 

@@ -247,10 +247,10 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:0];
     
-    [tileColorShader draw];
+    //[tileColorShader draw];
     
-    [characterTextureShader draw];
-    [shadowTextureShader draw];
+ //   [characterTextureShader draw];
+  //  [shadowTextureShader draw];
 
     [mvpMatrixManager popModelViewMatrix];
     
