@@ -47,15 +47,6 @@ SoundManager *soundManager;
 int letterScores[NUMBEROFSCORES] = {1,2,3,4,5,8,10};
 NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY",@"K",@"JX",@"QZ"};
 
--(void)setColorIndex:(int)_colorIndex
-{
-    colorIndex = _colorIndex;
-    for (int i = 0;i<6;i++)
-    {
-        Color4fCopy(&tileColors[0][colorIndex], (tileColorShader.colors+i));
-    }
-}
-
 -(CGRect)frame
 {
     return CGRectMake(self.centerPoint.x-tileSquareSize/2, [UIScreen mainScreen].bounds.size.height - (self.centerPoint.y + tileSquareSize/2), tileSquareSize, tileSquareSize);
@@ -146,22 +137,16 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     
     [self setupColors];
     
-    shadowTextureShader = [[TextureShader alloc]init];
-    shadowTextureShader.drawMode = GL_TRIANGLES;
-    shadowTextureShader.count = 6;
-    shadowTextureShader.texture = shadowTexture;
     
     Vector3D *texVertices1 = [shadowTexture getTextureVertices];
     TextureCoord *texCoords1 = [shadowTexture getTextureCoordinates];
     for (int i = 0;i<6;i++)
     {
-        Vector3DCopy((texVertices1+i), (shadowTextureShader.vertices+i));
-        TextureCoordCopy((texCoords1+i), (shadowTextureShader.textureCoordinates+i));
+    //    Vector3DCopy((texVertices1+i), (shadowTextureShader.vertices+i));
+      //  TextureCoordCopy((texCoords1+i), (shadowTextureShader.textureCoordinates+i));
     }
     
-    shadowTextureShader.vertices = [shadowTexture getTextureVertices];
-    shadowTextureShader.textureCoordinates = [shadowTexture getTextureCoordinates];
-    
+    /*
     characterTextureShader = [[StringTextureShader alloc]init];
     characterTextureShader.drawMode = GL_TRIANGLES;
     characterTextureShader.count = 12;
@@ -182,7 +167,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         TextureCoordCopy((texCoords2+i), (characterTextureShader.textureCoordinates+i+6));
 
     }
-    
+*/
 }
 
 -(void)setupColors
@@ -224,17 +209,22 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 {
     for (int i = 0;i<6;i++)
     {
-        Color4fCopy(shadowColor, (shadowTextureShader.textureColors+i));
-        Color4fCopy(currentCharacterColor, (characterTextureShader.textureColors+i+6));
+      //  Color4fCopy(shadowColor, (shadowTextureShader.textureColors+i));
+    //    Color4fCopy(currentCharacterColor, (characterTextureShader.textureColors+i+6));
     }
     
     [mvpMatrixManager pushModelViewMatrix];
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:0];
     
-    [triangleColorShader addMatrix];
-    [triangleColorShader addVertices:rectVertices withUniformColor:tileColors[0][colorIndex] andCount:6];
-    [triangleColorShader addVertices:rectVertices withUniformColor:currentTileColor[colorIndex] andCount:6];
+    [triangleColorRenderer addMatrix];
+    [triangleColorRenderer addVertices:rectVertices withUniformColor:tileColors[0][colorIndex] andCount:6];
+    [triangleColorRenderer addVertices:rectVertices withUniformColor:currentTileColor[colorIndex] andCount:6];
+    
+    [textureRenderer addMatrix];
+    [textureRenderer setTexture:shadowTexture];
+    [textureRenderer addVertices:[shadowTexture getTextureVertices]
+                        andColor:*shadowColor andCount:6];
     
     [mvpMatrixManager popModelViewMatrix];
     

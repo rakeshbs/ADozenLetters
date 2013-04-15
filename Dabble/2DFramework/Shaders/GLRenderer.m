@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Rakesh. All rights reserved.
 //
 
-#import "GLShader.h"
+#import "GLRenderer.h"
 
-@implementation GLShader
+@implementation GLRenderer
 -(id)init
 {
     if (self = [super init])

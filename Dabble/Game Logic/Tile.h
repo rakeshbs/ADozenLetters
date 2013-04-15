@@ -8,9 +8,9 @@
 
 #import "GLElement.h"
 #import "TextureManager.h"
-#import "ColorShader.h"
-#import "TextureShader.h"
-#import "StringTextureShader.h"
+#import "ColorRenderer.h"
+#import "TextureRenderer.h"
+
 #define tileSquareSize 60.0f
 #define shadowSize 90.0f
 
@@ -47,10 +47,7 @@
     CGFloat redColor;
     
     int score;
-    
-    ColorShader *tileColorShader;
-    StringTextureShader *characterTextureShader;
-    TextureShader *shadowTextureShader;
+    TextureRenderer *shadowTextureShader;
     
     int isBonded;
     

@@ -6,12 +6,12 @@
 //  Copyright (c) 2013 Rakesh. All rights reserved.
 //
 
-#import "ColorShader.h"
+#import "ColorRenderer.h"
 
 #define NUMBEROFMATRICES 50
 #define NUMBEROFVERTICES 1000
 
-@implementation ColorShader
+@implementation ColorRenderer
 @synthesize colors,vertices,drawMode,count;
 
 -(id)init
@@ -60,10 +60,12 @@
 
 -(void)addVertices:(Vertex3D *)_vertices withColorsPerVertex:(Color4B *)_colors andCount:(int)_count
 {
-    memccpy(vertices+count,_vertices, 0, _count*sizeof(Vertex3D));
-    memccpy(colors+count,_colors, 0, _count*sizeof(Color4B));
     for (int i = 0;i<_count;i++)
+    {
+        *(vertices+count+i) = _vertices[i];
         *(matrixIndices+count+i) = mvpMatrixCount-1;
+        *(colors+count+i) = *(_colors + i);
+    }
     count+=_count;
 }
 

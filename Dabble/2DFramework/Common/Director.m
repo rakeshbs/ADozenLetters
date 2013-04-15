@@ -8,9 +8,8 @@
 
 #import "Director.h"
 #import "Scene.h"
-#import "ColorShader.h"
-#import "TextureShader.h"
-#import "StringTextureShader.h"
+#import "ColorRenderer.h"
+#import "TextureRenderer.h"
 
 @interface Director (Private)
 
@@ -103,12 +102,10 @@
 
 -(void)loadShaders
 {
-    ColorShader *shader1 = [[ColorShader alloc]init];
+    ColorRenderer *shader1 = [[ColorRenderer alloc]init];
     [shader1 release];
-    TextureShader *shader2 = [[TextureShader alloc]init];
+    TextureRenderer *shader2 = [[TextureRenderer alloc]init];
     [shader2 release];
-    StringTextureShader *shader3 = [[StringTextureShader alloc]init];
-    [shader3 release];
     
 }
 

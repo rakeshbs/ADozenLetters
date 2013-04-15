@@ -10,7 +10,8 @@
 #import "Animator.h"
 #import "TextureManager.h"
 #import "MVPMatrixManager.h"
-#import "ColorShader.h"
+#import "ColorRenderer.h"
+#import "TextureRenderer.h"
 
 @class Scene;
 
@@ -22,11 +23,12 @@
     TextureManager *textureManager;
     NSMutableArray *touchesInElement;
     MVPMatrixManager *mvpMatrixManager;
-    ColorShader *triangleColorShader;
-    
+    ColorRenderer *triangleColorRenderer;
+    TextureRenderer *textureRenderer;
 }
 @property (nonatomic,retain) Scene *scene;
-@property (nonatomic,retain) ColorShader *triangleColorShader;
+@property (nonatomic,retain) ColorRenderer *triangleColorRenderer;
+@property (nonatomic,retain) TextureRenderer *textureRenderer;
  @property (nonatomic)   CGRect frame;
 @property (nonatomic,retain) NSMutableArray *touchesInElement;
 -(void)draw;

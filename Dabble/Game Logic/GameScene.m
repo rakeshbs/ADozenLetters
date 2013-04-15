@@ -37,11 +37,6 @@ Dictionary *dictionary;
                             horizontalAlignment:UITextAlignmentLeft
                             verticalAlignment:UITextAlignmentMiddle
                             fontName:@"Helvetica" fontSize:20];
-        analyticsShader = [[StringTextureShader alloc]init];
-        analyticsShader.texture = analyticsTexture;
-        analyticsShader.count = 6;
-        analyticsShader.vertices = [analyticsTexture getTextureVertices];
-        analyticsShader.textureCoordinates = [analyticsTexture getTextureCoordinates];
         
         //analyticsShader.textureColor = ((Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 1.0});
         
@@ -182,7 +177,6 @@ Dictionary *dictionary;
     
    [mvpMatrixManager pushModelViewMatrix];
     [mvpMatrixManager translateInX:200 Y:380 Z:0];
-    [analyticsShader draw];
    [mvpMatrixManager popModelViewMatrix];
     
 }
@@ -322,9 +316,6 @@ Dictionary *dictionary;
                         horizontalAlignment:UITextAlignmentLeft
                         verticalAlignment:UITextAlignmentMiddle
                         fontName:@"Helvetica" fontSize:20];
-    analyticsShader.texture = analyticsTexture;
-    analyticsShader.vertices = [analyticsTexture getTextureVertices];
-    analyticsShader.textureCoordinates = [analyticsTexture getTextureCoordinates];
 }
 
 NSMutableArray *tilesArray;

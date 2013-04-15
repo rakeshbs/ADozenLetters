@@ -11,17 +11,12 @@
 #import "GLCommon.h"
 #import "MVPMatrixManager.h"
 #import "GLShaderManager.h"
-#import "GLShader.h"
+#import "GLRenderer.h"
 #import "Texture2D.h"
+#import "TextureRenderUnit.h"
 
-
-@interface StringTextureShader : GLShader
+@interface TextureRenderer : GLRenderer
 {
-    Vector3D *vertices;
-    TextureCoord *textureCoordinates;
-    Texture2D *texture;
-    Color4B *textureColors;
-    
     GLShaderProgram *shader;
     
     GLuint textureCoordinatesAttribute;
@@ -30,18 +25,18 @@
     GLuint mvpMatrixUniform;
     GLuint textureColorsAttribute;
     GLuint textureUniform;
+    GLuint mvpmatrixIndexAttribute;
     
-    GLenum drawMode;
-    int count;
-
+    NSMutableDictionary *textureRenderUnits;
+    TextureRenderUnit *currentRenderUnit;
     
+    BOOL isFontSprite;
+    TextureCoord *currentTextureCoordinates;
 }
 
-@property (nonatomic) TextureCoord *textureCoordinates;
-@property (nonatomic) Color4B *textureColors;
-@property (nonatomic) Vector3D *vertices;
-@property (nonatomic) int count;
-@property (nonatomic)   GLenum drawMode;
-@property (nonatomic,retain) Texture2D *texture;
-
+-(void)addVertices:(Vertex3D *)_vertices andColor:(Color4B)_textureColor andCount:(int)count;
+-(void)addMatrix;
+-(void)setTexture:(Texture2D *)_texture;
+-(void)begin;
+-(void)end;
 @end

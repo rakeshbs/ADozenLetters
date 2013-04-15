@@ -33,7 +33,7 @@
 
     
     Texture2D *analyticsTexture;
-    StringTextureShader *analyticsShader;
+  //  StringTextureShader *analyticsShader;
     NSMutableArray *onBoardWords;
      int shouldHighlight[3];
     

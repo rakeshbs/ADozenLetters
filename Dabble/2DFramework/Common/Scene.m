@@ -22,9 +22,9 @@
         touchesInScene = [[NSMutableArray alloc]init];
         animator = [Animator getSharedAnimator];
         mvpMatrixManager = [MVPMatrixManager sharedMVPMatrixManager];
-        triangleColorShader = [[ColorShader alloc]init];
-        triangleColorShader.drawMode = GL_TRIANGLES;
-        
+        triangleColorRenderer = [[ColorRenderer alloc]init];
+        triangleColorRenderer.drawMode = GL_TRIANGLES;
+        textureRenderer = [[TextureRenderer alloc]init];
         if (elements == nil)
             elements = [[NSMutableArray alloc]init];
 
@@ -36,11 +36,13 @@
 {
     [self update];
     [animator update];
-    [triangleColorShader begin];
+    [triangleColorRenderer begin];
+    [textureRenderer begin];
 	[self draw];
 	[self drawElements];
-    [triangleColorShader end];
-  
+
+    [triangleColorRenderer end];
+    [textureRenderer end];
 }
 
 -(void)draw{
@@ -65,7 +67,8 @@
 -(void)addElement:(GLElement *)_element
 {
     [_element setScene:self];
-    _element.triangleColorShader = triangleColorShader;
+    _element.triangleColorRenderer = triangleColorRenderer;
+    _element.textureRenderer = textureRenderer;
 	[elements addObject:_element];
 }
 

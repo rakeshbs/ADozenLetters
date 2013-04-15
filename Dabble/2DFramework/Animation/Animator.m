@@ -157,7 +157,6 @@
 
 -(NSMutableArray *)getRunningAnimationsForObject:(NSObject<AnimationDelegate> *) obj ofType:(int)type
 {
-    int count = 0;
     NSMutableArray *arr = [[NSMutableArray alloc]init];
     for (int i =0;i<queuedAnimations.count;i++)
     {

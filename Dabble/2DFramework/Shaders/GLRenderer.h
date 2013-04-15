@@ -10,7 +10,7 @@
 #import "MVPMatrixManager.h"
 #import "GLShaderManager.h"
 
-@interface GLShader : NSObject
+@interface GLRenderer : NSObject
 {
     MVPMatrixManager *matrixManager;
     GLShaderManager *shaderManager;

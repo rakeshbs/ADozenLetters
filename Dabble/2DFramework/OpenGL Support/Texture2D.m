@@ -579,8 +579,6 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     textureCoordinates[5] = (TextureCoord) { .s = _maxS, .t = 0};
     
     return textureCoordinates;
-    
-    
 }
 
 

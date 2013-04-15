@@ -11,9 +11,9 @@
 #import "GLCommon.h"
 #import "MVPMatrixManager.h"
 #import "GLShaderManager.h"
-#import "GLShader.h"
+#import "GLRenderer.h"
 
-@interface ColorShader : GLShader
+@interface ColorRenderer : GLRenderer
 {
     Color4B *colors;
     Vector3D *vertices;
