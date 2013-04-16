@@ -127,13 +127,13 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     [self setupStrings];
     shadowTexture = [textureManager getTexture:@"shadow" OfType:@"png"];
     
-    rectVertices[0] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 10.0f};
-    rectVertices[1] = (Vector3D)  {.x = tileSquareSize/(2), .y = - tileSquareSize/(2), .z = 10.0f};
-    rectVertices[2] = (Vector3D)  {.x = tileSquareSize/(2), .y =  tileSquareSize/(2), .z = 10.0f};
+    rectVertices[0] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 3.0f};
+    rectVertices[1] = (Vector3D)  {.x = tileSquareSize/(2), .y = - tileSquareSize/(2), .z = 3.0f};
+    rectVertices[2] = (Vector3D)  {.x = tileSquareSize/(2), .y =  tileSquareSize/(2), .z = 3.0f};
     
-    rectVertices[3] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 10.0f};
-    rectVertices[4] = (Vector3D)  {.x = -tileSquareSize/(2), .y = tileSquareSize/(2), .z = 10.0f};
-    rectVertices[5] =  (Vector3D) {.x = tileSquareSize/(2), .y = tileSquareSize/(2), .z = 10.0f};
+    rectVertices[3] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 3.0f};
+    rectVertices[4] = (Vector3D)  {.x = -tileSquareSize/(2), .y = tileSquareSize/(2), .z = 3.0f};
+    rectVertices[5] =  (Vector3D) {.x = tileSquareSize/(2), .y = tileSquareSize/(2), .z = 3.0f};
     
     [self setupColors];
 }
@@ -188,7 +188,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     
     [mvpMatrixManager pushModelViewMatrix];
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
-    [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:tileDepth];
+    [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:120-tileDepth];
     
     [triangleColorRenderer addMatrix];
     [triangleColorRenderer addVertices:rectVertices withUniformColor:tileColors[0][colorIndex] andCount:6];
