@@ -190,14 +190,16 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:120-tileDepth];
     
-    [triangleColorRenderer addMatrix];
-    [triangleColorRenderer addVertices:rectVertices withUniformColor:tileColors[0][colorIndex] andCount:6];
-    [triangleColorRenderer addVertices:rectVertices withUniformColor:currentTileColor[colorIndex] andCount:6];
-    
     [textureRenderer addMatrix];
     [textureRenderer setTexture:shadowTexture];
     [textureRenderer addVertices:[shadowTexture getTextureVertices]
                         andColor:*shadowColor andCount:6];
+    
+    
+    [triangleColorRenderer addMatrix];
+    [triangleColorRenderer addVertices:rectVertices withUniformColor:tileColors[0][colorIndex] andCount:6];
+    [triangleColorRenderer addVertices:rectVertices withUniformColor:currentTileColor[colorIndex] andCount:6];
+    
     
     [mvpMatrixManager popModelViewMatrix];
  
