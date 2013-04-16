@@ -40,7 +40,7 @@ Vector3D rectVertices[6];
 static Color4B tileColors[2][2];
 static Color4B characterColors;
 static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 255, .alpha = 0};
-
+static int tileDepth = 0;
 
 SoundManager *soundManager;
 
@@ -136,38 +136,6 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     rectVertices[5] =  (Vector3D) {.x = tileSquareSize/(2), .y = tileSquareSize/(2), .z = 10.0f};
     
     [self setupColors];
-    
-    
-    Vector3D *texVertices1 = [shadowTexture getTextureVertices];
-    TextureCoord *texCoords1 = [shadowTexture getTextureCoordinates];
-    for (int i = 0;i<6;i++)
-    {
-    //    Vector3DCopy((texVertices1+i), (shadowTextureShader.vertices+i));
-      //  TextureCoordCopy((texCoords1+i), (shadowTextureShader.textureCoordinates+i));
-    }
-    
-    /*
-    characterTextureShader = [[StringTextureShader alloc]init];
-    characterTextureShader.drawMode = GL_TRIANGLES;
-    characterTextureShader.count = 12;
-    characterTextureShader.texture = characterTexture;
-    Vector3D *texVertices2 = [characterTexture getTextureVertices];
-    TextureCoord *texCoords2 = [characterTexture getTextureCoordinates];
-    
-    for (int i = 0;i<6;i++)
-    {
-        Vector3DCopy((texVertices2+i), (characterTextureShader.vertices+i));
-        TextureCoordCopy((texCoords2+i), (characterTextureShader.textureCoordinates+i));
-        Color4fCopyS(tileColors[0][0], (characterTextureShader.textureColors+i));
-
-    }
-    for (int i = 0;i<6;i++)
-    {
-        Vector3DCopy((texVertices2+i), (characterTextureShader.vertices+i+6));
-        TextureCoordCopy((texCoords2+i), (characterTextureShader.textureCoordinates+i+6));
-
-    }
-*/
 }
 
 -(void)setupColors
@@ -207,15 +175,20 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)draw
 {
-    for (int i = 0;i<6;i++)
-    {
-      //  Color4fCopy(shadowColor, (shadowTextureShader.textureColors+i));
-    //    Color4fCopy(currentCharacterColor, (characterTextureShader.textureColors+i+6));
-    }
+    tileDepth = (tileDepth + 10)%(self.tilesArray.count *10);
+    
+    if (self.touchesInElement.count > 0)
+        NSLog(@"%d",120 - tileDepth);
+    if (shadowAnimationCount > 0)
+        NSLog(@"%d",120 - tileDepth);
+    
+ //   [triangleColorRenderer begin];
+ //   [textureRenderer begin];
+    
     
     [mvpMatrixManager pushModelViewMatrix];
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
-    [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:0];
+    [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:tileDepth];
     
     [triangleColorRenderer addMatrix];
     [triangleColorRenderer addVertices:rectVertices withUniformColor:tileColors[0][colorIndex] andCount:6];
@@ -227,6 +200,10 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
                         andColor:*shadowColor andCount:6];
     
     [mvpMatrixManager popModelViewMatrix];
+ 
+//    [triangleColorRenderer end];
+   // [textureRenderer end];
+    
     
 }
 

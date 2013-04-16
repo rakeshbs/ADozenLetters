@@ -41,8 +41,9 @@
 	[self draw];
 	[self drawElements];
 
+        [textureRenderer end];
     [triangleColorRenderer end];
-    [textureRenderer end];
+
 }
 
 -(void)draw{

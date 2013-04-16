@@ -92,6 +92,7 @@
     
     for (TextureRenderUnit *renderUnit in [textureRenderUnits objectEnumerator])
     {
+        glActiveTexture (GL_TEXTURE0);
         [renderUnit.texture bindTexture];
     
         glVertexAttribPointer(verticesAttribute, 3, GL_FLOAT, 0, 0, renderUnit.vertices);
@@ -109,10 +110,8 @@
         glVertexAttribPointer(mvpmatrixIndexAttribute, 1, GL_FLOAT, GL_FALSE, 0, renderUnit.matrixIndices);
         glEnableVertexAttribArray(mvpmatrixIndexAttribute);
     
-        glActiveTexture (GL_TEXTURE0);
-        [renderUnit.texture bindTexture];
         glUniform1i (textureUniform, 0);
-    
+        
         glDrawArrays(GL_TRIANGLES, 0, renderUnit.count);
     }
     
