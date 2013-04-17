@@ -96,7 +96,10 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 {
     characterFontSprite = [[FontSpriteSheetManager
                    getSharedFontSpriteSheetManager]getFontForCharacter:character
-                  withFont:@"Lato" andSize:20];
+                  withFont:@"Lato" andSize:40];
+    scoreTexture = [[FontSpriteSheetManager
+                       getSharedFontSpriteSheetManager]getFontForCharacter:[NSString stringWithFormat:@"%d",score]
+                      withFont:@"Lato" andSize:12];
 }
 
 -(void)setupGraphics
@@ -104,21 +107,21 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     [self setupStrings];
     shadowTexture = [textureManager getTexture:@"shadow" OfType:@"png"];
     
-    rectVertices[0] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 3.0f};
-    rectVertices[1] = (Vector3D)  {.x = tileSquareSize/(2), .y = - tileSquareSize/(2), .z = 3.0f};
-    rectVertices[2] = (Vector3D)  {.x = tileSquareSize/(2), .y =  tileSquareSize/(2), .z = 3.0f};
+    rectVertices[0] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 0.0f};
+    rectVertices[1] = (Vector3D)  {.x = tileSquareSize/(2), .y = - tileSquareSize/(2), .z = 0.0f};
+    rectVertices[2] = (Vector3D)  {.x = tileSquareSize/(2), .y =  tileSquareSize/(2), .z = 0.0f};
     
-    rectVertices[3] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 3.0f};
-    rectVertices[4] = (Vector3D)  {.x = -tileSquareSize/(2), .y = tileSquareSize/(2), .z = 3.0f};
-    rectVertices[5] =  (Vector3D) {.x = tileSquareSize/(2), .y = tileSquareSize/(2), .z = 3.0f};
+    rectVertices[3] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 0.0f};
+    rectVertices[4] = (Vector3D)  {.x = -tileSquareSize/(2), .y = tileSquareSize/(2), .z = 0.0f};
+    rectVertices[5] =  (Vector3D) {.x = tileSquareSize/(2), .y = tileSquareSize/(2), .z = 0.0f};
     
-    shadowVertices[0] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 1.0f};
-    shadowVertices[1] = (Vector3D)  {.x = shadowSize/(2), .y = - shadowSize/(2), .z = 1.0f};
-    shadowVertices[2] = (Vector3D)  {.x = shadowSize/(2), .y =  shadowSize/(2), .z = 1.0f};
+    shadowVertices[0] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 0.0f};
+    shadowVertices[1] = (Vector3D)  {.x = shadowSize/(2), .y = - shadowSize/(2), .z = 0.0f};
+    shadowVertices[2] = (Vector3D)  {.x = shadowSize/(2), .y =  shadowSize/(2), .z = 0.0f};
     
-    shadowVertices[3] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 1.0f};
-    shadowVertices[4] = (Vector3D)  {.x = -shadowSize/(2), .y = shadowSize/(2), .z = 1.0f};
-    shadowVertices[5] =  (Vector3D) {.x = shadowSize/(2), .y = shadowSize/(2), .z = 1.0f};
+    shadowVertices[3] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 0.0f};
+    shadowVertices[4] = (Vector3D)  {.x = -shadowSize/(2), .y = shadowSize/(2), .z = 0.0f};
+    shadowVertices[5] =  (Vector3D) {.x = shadowSize/(2), .y = shadowSize/(2), .z = 0.0f};
     
     
     
@@ -166,18 +169,36 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:self.indexOfElementInScene*20];
     
-   /* [triangleColorRenderer addMatrix];
+    
+    [mvpMatrixManager translateInX:0 Y:0 Z:1];
+    [triangleColorRenderer addMatrix];
     [triangleColorRenderer addVertices:rectVertices withUniformColor:tileColors[0][colorIndex] andCount:6];
+    
+    [mvpMatrixManager translateInX:0 Y:0 Z:1];
+    [triangleColorRenderer addMatrix];
     [triangleColorRenderer addVertices:rectVertices withUniformColor:currentTileColor[colorIndex] andCount:6];
     
-    [textureRenderer addMatrix];
-    [textureRenderer setTexture:shadowTexture];
-    [textureRenderer addVertices:shadowVertices andColor:*shadowColor andCount:6];
-    */
-    
-    [textureRenderer addMatrix];
+   /* [mvpMatrixManager translateInX:0 Y:0 Z:1];
     [textureRenderer setFontSprite:characterFontSprite];
-    [textureRenderer addVertices:characterFontSprite.texureRect andColor:characterColors andCount:6];
+    [textureRenderer addMatrix];
+    [textureRenderer addVertices:characterFontSprite.texureRect andColor:characterColors andCount:6];*/
+    
+    [mvpMatrixManager translateInX:0 Y:0 Z:1];
+    [textureRenderer setFontSprite:characterFontSprite];
+    [textureRenderer addMatrix];
+    [textureRenderer addVertices:characterFontSprite.texureRect andColor:*currentCharacterColor andCount:6];
+    
+    [mvpMatrixManager translateInX:20 Y:-15 Z:1];
+    [textureRenderer setFontSprite:scoreTexture];
+    [textureRenderer addMatrix];
+    [textureRenderer addVertices:scoreTexture.texureRect andColor:*currentCharacterColor andCount:6];
+
+
+    [mvpMatrixManager translateInX:-20 Y:15 Z:1];
+    [textureRenderer setTexture:shadowTexture];
+    [textureRenderer addMatrix];
+    [textureRenderer addVertices:shadowVertices andColor:*shadowColor andCount:6];
+    
     
     [mvpMatrixManager popModelViewMatrix];
  

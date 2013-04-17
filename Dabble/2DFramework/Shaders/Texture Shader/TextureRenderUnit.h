@@ -24,6 +24,7 @@
 @property (nonatomic) GLfloat *matrixIndices;
 @property (nonatomic) int mvpMatrixCount;
 @property (nonatomic) int count;
+@property (nonatomic) BOOL isFont;
 
 @property (nonatomic) GLfloat *mvpMatrices;
 

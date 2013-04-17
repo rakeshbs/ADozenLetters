@@ -46,6 +46,7 @@
     TextureRenderUnit *renderUnit = [textureRenderUnits valueForKey:key];
     if (renderUnit == nil)
     {
+        NSLog(@"new");
         renderUnit = [[TextureRenderUnit alloc]init];
         renderUnit.texture = _fontSprite.fontSpriteSheet.texture;
         [textureRenderUnits setObject:renderUnit forKey:key];
@@ -54,6 +55,7 @@
     isFontSprite = YES;
     currentTextureCoordinates = _fontSprite.textureCoordinates;
     currentRenderUnit = renderUnit;
+    currentRenderUnit.isFont = YES;
 }
 
 -(void)setTexture:(Texture2D *)_texture
@@ -68,8 +70,10 @@
         [renderUnit release];
     }
     isFontSprite = NO;
+
     currentTextureCoordinates = [_texture getTextureCoordinates];
     currentRenderUnit = renderUnit;
+    currentRenderUnit.isFont = NO;
 }
 
 -(void)addMatrix
@@ -81,9 +85,6 @@
 {
     [currentRenderUnit addVertices:_vertices andTextureCoords:currentTextureCoordinates
                           andColor:_textureColor andCount:count];
-    
-    if (!isFontSprite)
-        free(currentTextureCoordinates);
 }
 
 -(void)begin
@@ -104,12 +105,20 @@
 {
     
     glEnable(GL_TEXTURE_2D);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     [shader use];
     
     for (TextureRenderUnit *renderUnit in [textureRenderUnits objectEnumerator])
     {
+        if (renderUnit.isFont)
+        {
+            glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
+        }
+        else
+        {
+            glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+        }
+        
         glActiveTexture (GL_TEXTURE0);
         [renderUnit.texture bindTexture];
     

@@ -82,6 +82,7 @@
             if (!used[index][mid])
             {
                 used[index][mid] = YES;
+                NSLog(@"%@",word);
                 return mid;
             }
             return -2;

@@ -26,6 +26,7 @@
         matrixManager = [MVPMatrixManager sharedMVPMatrixManager];
         _mvpMatrixCount = 0;
         _count = 0;
+        _isFont = NO;
     }
     return self;
 }

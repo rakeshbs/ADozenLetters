@@ -62,7 +62,6 @@ static NSString *fontCharactersNumbers = @"1234567890";
     
     
     if (fSheet != nil) {
-        NSLog(@"found");
         return [fSheet getFontSprite:character];
     }
     else

@@ -89,6 +89,8 @@ Be aware that the content of the generated textures will be upside-down!
 	Texture2DPixelFormat		_format;
 	GLfloat						_maxS,
 								_maxT;
+    TextureCoord *textureCoordinates;
+    Vector3D *textureVertices;
 }
 - (id) initWithData:(const void*)data pixelFormat:(Texture2DPixelFormat)pixelFormat pixelsWide:(NSUInteger)width pixelsHigh:(NSUInteger)height contentSize:(CGSize)size;
 
@@ -101,6 +103,7 @@ Be aware that the content of the generated textures will be upside-down!
 @property(readonly, nonatomic) CGSize contentSize;
 @property(readonly) GLfloat maxS;
 @property(readonly) GLfloat maxT;
+
 @end
 
 /*

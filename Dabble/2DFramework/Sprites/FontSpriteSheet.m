@@ -26,40 +26,19 @@ static NSString *fontCharactersNumbers = @"1234567890";
     CGFloat totalHeight = self.fontSpriteSheet.height;
     
     _textureCoordinates[0] = (TextureCoord) { .s = (_offSetX/totalWidth), .t = ((_offSetY+_height)/totalHeight)};
-    _textureCoordinates[1] = (TextureCoord) { .s = ( (_offSetX+_width)/totalWidth),
-        .t = ((_offSetY+_height)/totalHeight)};
+    _textureCoordinates[1] = (TextureCoord)
+        {.s = ( (_offSetX+_width)/totalWidth), .t = ((_offSetY+_height)/totalHeight)};
     
-    _textureCoordinates[2] = (TextureCoord) {  .s = ( (_offSetX+_width)/totalWidth),
-        .t = (_offSetY/totalHeight)};
+    _textureCoordinates[2] = (TextureCoord)
+        {.s = ( (_offSetX+_width)/totalWidth), .t = (_offSetY/totalHeight)};
     
     _textureCoordinates[3] = (TextureCoord) { .s = (_offSetX/totalWidth), .t = ((_offSetY+_height)/totalHeight)};
     _textureCoordinates[4] = (TextureCoord) { .s = (_offSetX/totalWidth), .t = (_offSetY/totalHeight)};
-    _textureCoordinates[5] = (TextureCoord) {  .s = ( (_offSetX+_width)/totalWidth),
-        .t = (_offSetY/totalHeight)};
+    _textureCoordinates[5] = (TextureCoord)
+        {.s = ( (_offSetX+_width)/totalWidth), .t = (_offSetY/totalHeight)};
     
     
-    /*
-     
-     textureCoordinates[0] = (TextureCoord) { .s = 0, .t = _maxT};
-     textureCoordinates[1] = (TextureCoord) { .s = _maxS, .t =_maxT};
-     textureCoordinates[2] = (TextureCoord) { .s = _maxS, .t = 0};
-     
-     textureCoordinates[3] = (TextureCoord) { .s = 0, .t = _maxT};
-     textureCoordinates[4] = (TextureCoord) { .s = 0, .t = 0};
-     textureCoordinates[5] = (TextureCoord) { .s = _maxS, .t = 0};
-     
-     
-     textureVertices[0] = (Vector3D) {.x = -width / (2*scale) , .y = -height / (2*scale), .z = 0.0};
-     textureVertices[1] = (Vector3D) {.x = width / (2*scale) , .y = -height / (2*scale),  .z = 0.0};
-     textureVertices[2] = (Vector3D) {.x = width / (2*scale) , .y = height / (2*scale),	.z = 0.0};
-     
-     textureVertices[3] = (Vector3D) {.x = -width / (2*scale) , .y = -height / (2*scale), .z = 0.0};
-     textureVertices[4] = (Vector3D) {.x = -width / (2*scale) , .y = height / (2*scale),	.z = 0.0};
-     textureVertices[5] = (Vector3D) {.x = width / (2*scale) , .y = height / (2*scale),	.z = 0.0};
-     
-     */
-    
-    CGFloat scale = [[UIScreen mainScreen]scale];
+    CGFloat scale = [[UIScreen mainScreen]scale]*2;
     
     _texureRect[0] = (Vector3D) { .x = -_width/scale, .y = -_height/scale, .z = 0.0};
     _texureRect[1] = (Vector3D) { .x = _width/scale, .y = -_height/scale, .z = 0.0};
@@ -88,7 +67,7 @@ static NSString *fontCharactersNumbers = @"1234567890";
 
 -(id)initWithType:(FontSpriteType)type andFontName:(NSString *)fontName andFontSize:(CGFloat)fontSize
 {
-    if (self = [super init])
+    if (self = [super init]) 
     {
         fontSpriteDictionary = [[NSMutableDictionary alloc]init];
         self.fontSpriteType = type;

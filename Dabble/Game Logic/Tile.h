@@ -19,7 +19,7 @@
     NSString *character;
     FontSprite *characterFontSprite;
     Texture2D *shadowTexture;
-    Texture2D *scoreTexture;
+    FontSprite *scoreTexture;
     
     CGPoint startPoint;
     CGPoint endPoint;

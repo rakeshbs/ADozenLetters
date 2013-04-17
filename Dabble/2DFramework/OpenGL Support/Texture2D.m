@@ -326,12 +326,14 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 - (id) initFontSpriteSheetWith:(NSString *)fontString andFontSprite:(FontSpriteSheet *)fontSpriteSheet
 {
     int nsquare = 1;
+    
+    
     while (nsquare * nsquare < fontString.length)
     {
         nsquare++;
     }
     
-    UIFont *font = [UIFont fontWithName:fontSpriteSheet.fontName size:fontSpriteSheet.fontSize];
+    UIFont *font = [UIFont fontWithName:fontSpriteSheet.fontName size:fontSpriteSheet.fontSize*[[UIScreen mainScreen]scale]];
     
     int col = 0;
     int row = 0;
@@ -344,13 +346,11 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         
         CGSize dimensions = [[fontString substringWithRange:subStrRange] sizeWithFont:font];
         
-        dimensions = CGSizeMake(dimensions.width*[[UIScreen mainScreen]scale], dimensions.height * [[UIScreen mainScreen]scale]);
-        
         lineWidth += dimensions.width;
         lineHeight = (lineHeight < dimensions.height) ? dimensions.height:lineHeight;
         
         col++;
-        if (col >nsquare)
+        if (col >=nsquare)
         {
             
             totalWidth = (totalWidth < lineWidth) ? lineWidth:totalWidth;
@@ -391,42 +391,44 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	CGColorSpaceRelease(colorSpace);
     
     CGContextSetFillColorWithColor(context, [[UIColor whiteColor]CGColor]);
+   // CGContextFillRect(context,  CGRectMake(0, 0, width, height));
+    //CGContextSetFillColorWithColor(context, [[UIColor blackColor]CGColor]);
     CGContextSetAlpha(context, 1.0);
     
     CGContextTranslateCTM(context, 0.0, height);
     
-    CGContextScaleCTM(context, 1.0, -1.0); //NOTE: NSString draws in UIKit referential i.e. renders upside-down compared to CGBitmapContext referential
+    CGContextScaleCTM(context, 1.0, -1.0); 
 
-    lineHeight = 0,lineWidth = 0,totalHeight = 0,totalWidth = 0;
+    lineHeight = 0,lineWidth = 0,totalHeight = 0,totalWidth = 0,col = 0;
     
     FontSprite *fontSprite = nil;
+    UIGraphicsPushContext(context);
+
     for (int i = 0;i<fontString.length;i++)
     {
-        UIGraphicsPushContext(context);
-        
+       
         NSRange subStrRange = NSMakeRange(i, 1);
         NSString *subStr = [fontString substringWithRange:subStrRange];
         CGSize dimensions = [subStr sizeWithFont:font];
         
-        dimensions = CGSizeMake(dimensions.width*[[UIScreen mainScreen]scale], dimensions.height * [[UIScreen mainScreen]scale]);
-        
-        lineWidth += dimensions.width;
-        lineHeight = (lineHeight < dimensions.height) ? dimensions.height:lineHeight;
-        
         CGContextTranslateCTM(context, lineWidth, totalHeight);
         [subStr drawInRect:CGRectMake(0, 0, dimensions.width, dimensions.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:NSTextAlignmentCenter];
+        CGContextTranslateCTM(context, -lineWidth, -totalHeight);
         
         fontSprite = [[FontSprite alloc]init];
         fontSprite.offSetX = lineWidth;
         fontSprite.offSetY = totalHeight;
-        fontSprite.height = dimensions.width;
-        fontSprite.width = dimensions.height;
+        fontSprite.width = dimensions.width;
+        fontSprite.height = dimensions.height;
         fontSprite.key = subStr;
         [fontSpriteSheet addFontSprite:fontSprite];
-        [fontSprite release];
+         [fontSprite release];
+     
+        lineWidth += dimensions.width;
+        lineHeight = (lineHeight < dimensions.height) ? dimensions.height:lineHeight;
         
         col++;
-        if (col >nsquare)
+        if (col >=nsquare)
         {
             totalWidth = (totalWidth < lineWidth) ? lineWidth:totalWidth;
             totalHeight += lineHeight;
@@ -435,9 +437,13 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
             row++;
         }
         
-        UIGraphicsPopContext();
-        
+
     }
+/*
+    CGImageRef imageRef = CGBitmapContextCreateImage (context);
+    UIImage *fileImage = [UIImage imageWithCGImage:imageRef];
+    UIImageWriteToSavedPhotosAlbum(fileImage,nil,nil,nil);
+*/
     
     self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:width pixelsHigh:height contentSize:CGSizeMake(totalWidth, totalHeight)];
 	
@@ -459,40 +465,41 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 -(Vector3D *)getTextureVertices
 {
-    GLfloat	width = (GLfloat)_width * _maxS,
-    height = (GLfloat)_height * _maxT;
+    if (textureVertices == nil)
+    {
+        textureVertices = malloc(sizeof(Vector3D)*6);
     
-    CGFloat scale = [[UIScreen mainScreen]scale];
+        GLfloat	width = (GLfloat)_width * _maxS,
+        height = (GLfloat)_height * _maxT;
     
-    Vector3D *textureVertices = malloc(sizeof(Vector3D)*6);
+        CGFloat scale = [[UIScreen mainScreen]scale];
     
-    textureVertices[0] = (Vector3D) {.x = -width / (2*scale) , .y = -height / (2*scale), .z = 0.0};
-    textureVertices[1] = (Vector3D) {.x = width / (2*scale) , .y = -height / (2*scale),  .z = 0.0};
-    textureVertices[2] = (Vector3D) {.x = width / (2*scale) , .y = height / (2*scale),	.z = 0.0};
+        textureVertices[0] = (Vector3D) {.x = -width / (2*scale) , .y = -height / (2*scale), .z = 0.0};
+        textureVertices[1] = (Vector3D) {.x = width / (2*scale) , .y = -height / (2*scale),  .z = 0.0};
+        textureVertices[2] = (Vector3D) {.x = width / (2*scale) , .y = height / (2*scale),	.z = 0.0};
 
-    textureVertices[3] = (Vector3D) {.x = -width / (2*scale) , .y = -height / (2*scale), .z = 0.0};
-    textureVertices[4] = (Vector3D) {.x = -width / (2*scale) , .y = height / (2*scale),	.z = 0.0};
-    textureVertices[5] = (Vector3D) {.x = width / (2*scale) , .y = height / (2*scale),	.z = 0.0};
-    
+        textureVertices[3] = (Vector3D) {.x = -width / (2*scale) , .y = -height / (2*scale), .z = 0.0};
+        textureVertices[4] = (Vector3D) {.x = -width / (2*scale) , .y = height / (2*scale),	.z = 0.0};
+        textureVertices[5] = (Vector3D) {.x = width / (2*scale) , .y = height / (2*scale),	.z = 0.0};
+    }
     return textureVertices;
 }
 
 -(TextureCoord *)getTextureCoordinates
 {
+    if (textureCoordinates == nil)
+    {
+        textureCoordinates = malloc(sizeof(TextureCoord)*6);
+        textureCoordinates[0] = (TextureCoord) { .s = 0, .t = _maxT};
+        textureCoordinates[1] = (TextureCoord) { .s = _maxS, .t =_maxT};
+        textureCoordinates[2] = (TextureCoord) { .s = _maxS, .t = 0};
     
-    TextureCoord *textureCoordinates = malloc(sizeof(TextureCoord)*6);
-    
-    textureCoordinates[0] = (TextureCoord) { .s = 0, .t = _maxT};
-    textureCoordinates[1] = (TextureCoord) { .s = _maxS, .t =_maxT};
-    textureCoordinates[2] = (TextureCoord) { .s = _maxS, .t = 0};
-    
-    textureCoordinates[3] = (TextureCoord) { .s = 0, .t = _maxT};
-    textureCoordinates[4] = (TextureCoord) { .s = 0, .t = 0};
-    textureCoordinates[5] = (TextureCoord) { .s = _maxS, .t = 0};
-    
+        textureCoordinates[3] = (TextureCoord) { .s = 0, .t = _maxT};
+        textureCoordinates[4] = (TextureCoord) { .s = 0, .t = 0};
+        textureCoordinates[5] = (TextureCoord) { .s = _maxS, .t = 0};
+    }
     return textureCoordinates;
 }
-
 
 -(void)bindTexture
 {

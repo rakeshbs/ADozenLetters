@@ -73,7 +73,7 @@ Dictionary *dictionary;
     //NSString *stringData = [dataDict[@"chars"] uppercaseString];
     //[self performSelectorOnMainThread:@selector(sendCharData:) withObject:stringData waitUntilDone:YES];
     
-    [self performSelectorOnMainThread:@selector(createTiles:) withObject:@"TEHWRODAGMER" waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(createTiles:) withObject:@"ABCDEFGHIJKL" waitUntilDone:YES];
     
 }
 
