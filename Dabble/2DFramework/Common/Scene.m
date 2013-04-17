@@ -71,6 +71,8 @@
     _element.triangleColorRenderer = triangleColorRenderer;
     _element.textureRenderer = textureRenderer;
 	[elements addObject:_element];
+    for (int i = 0;i < elements.count;i++)
+        ((GLElement *)elements[i]).indexOfElementInScene = i;
 }
 
 -(void)sceneMadeActive
@@ -85,8 +87,8 @@
 }
 ;
 -(void)drawElements{
-	for(GLElement *e in elements)
-		[e draw];
+	for(int i = 0;i<elements.count;i++)
+		[elements[i] draw];
 }
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
@@ -179,11 +181,18 @@
     }
 }
 
+-(int)indexOfElement:(GLElement *)element
+{
+    return [elements indexOfObject:element];
+}
+
 -(void)moveElementToFront:(GLElement *)element
 {
     int index = [elements indexOfObject:element];
     [elements addObject:element];
     [elements removeObjectAtIndex:index];
+    for (int i = 0;i < elements.count;i++)
+        ((GLElement *)elements[i]).indexOfElementInScene = i;
 }
 
 -(BOOL)touchBeganInScene:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event{

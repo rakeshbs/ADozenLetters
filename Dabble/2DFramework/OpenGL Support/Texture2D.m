@@ -48,7 +48,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 #import <OpenGLES/ES1/glext.h>
 #import "GLCommon.h"
 #import "Texture2D.h"
-#import "TextureStringLayer.h"
+
 
 
 //CONSTANTS:
@@ -323,96 +323,6 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	return self;
 }
 
-
-
-- (id) initWithTextureStrings:(NSMutableArray *)_textureStrings
-{
-	NSUInteger				width,
-    height,
-    i;
-	CGContextRef			context;
-	void*					data;
-	CGColorSpaceRef			colorSpace;
-	UIFont *				font;
-    
-    CGFloat maxWidth = 0;
-    CGFloat maxHeight = 0;
-    
-    for (TextureStringLayer *ts in _textureStrings)
-    {
-        if ([[UIScreen mainScreen]scale] > 1.0)
-        {
-            ts.fontSize *=2;
-            ts.dimensions = CGSizeMake(ts.dimensions.width*2, ts.dimensions.height*2);
-        }
-        
-        if (maxHeight < ts.dimensions.height)
-            maxHeight = ts.dimensions.height;
-        if (maxWidth < ts.dimensions.width)
-            maxWidth = ts.dimensions.width;
-        
-    }
-    
-    CGSize dimensions = CGSizeMake(maxWidth, maxHeight);
-
-	
-	width = dimensions.width;
-	if((width != 1) && (width & (width - 1))) {
-		i = 1;
-		while(i < width)
-            i *= 2;
-		width = i;
-	}
-	height = dimensions.height;
-	if((height != 1) && (height & (height - 1))) {
-		i = 1;
-		while(i < height)
-            i *= 2;
-		height = i;
-	}
-    
-	colorSpace = CGColorSpaceCreateDeviceRGB();
-	data = calloc(height, width*4 );
-	context = CGBitmapContextCreateWithData(data, width, height, 8, width * 4 ,
-                                            colorSpace, kCGImageAlphaPremultipliedLast,nil,nil);
-    CGContextClearRect(context, CGRectMake(0, 0, width, height));
-	CGColorSpaceRelease(colorSpace);
-	
-	CGContextSetFillColorWithColor(context, [[UIColor whiteColor]CGColor]);
-    CGContextSetAlpha(context, 1.0);
-    CGContextTranslateCTM(context, 0.0, height);
-//    CGContextSetShadowWithColor(context, CGSizeMake(-2, -2), 10, [[UIColor grayColor]CGColor]);
-
-
-    CGContextScaleCTM(context, 1.0, -1.0); //NOTE: NSString draws in UIKit referential i.e. renders upside-down compared to CGBitmapContext referential
-	UIGraphicsPushContext(context);
-    
-    for (TextureStringLayer *ts in _textureStrings)
-    {
-    
-        font = [UIFont fontWithName:ts.fontName size:ts.fontSize];
-        CGSize fsize = [ts.string sizeWithFont:font];
-        CGFloat offsetY = 0;
-        
-        if (ts.verticalTextAlignment == UITextAlignmentCenter)
-            offsetY = (ts.dimensions.height-fsize.height)/2;
-        else if (ts.verticalTextAlignment == UITextAlignmentBottom)
-            offsetY = (ts.dimensions.height-fsize.height);
-            
-            
-        [ts.string  drawInRect:CGRectMake(0, offsetY, ts.dimensions.width, fsize.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:ts.horizontalTextAlignment];
-	}
-    UIGraphicsPopContext();
-	
-	self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:width pixelsHigh:height contentSize:dimensions];
-	
-	CGContextRelease(context);
-	free(data);
-	
-	return self;
-}
-
-
 - (id) initFontSpriteSheetWith:(NSString *)fontString andFontSprite:(FontSpriteSheet *)fontSpriteSheet
 {
     int nsquare = 1;
@@ -433,6 +343,9 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         NSRange subStrRange = NSMakeRange(i, 1);
         
         CGSize dimensions = [[fontString substringWithRange:subStrRange] sizeWithFont:font];
+        
+        dimensions = CGSizeMake(dimensions.width*[[UIScreen mainScreen]scale], dimensions.height * [[UIScreen mainScreen]scale]);
+        
         lineWidth += dimensions.width;
         lineHeight = (lineHeight < dimensions.height) ? dimensions.height:lineHeight;
         
@@ -495,19 +408,20 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         NSString *subStr = [fontString substringWithRange:subStrRange];
         CGSize dimensions = [subStr sizeWithFont:font];
         
+        dimensions = CGSizeMake(dimensions.width*[[UIScreen mainScreen]scale], dimensions.height * [[UIScreen mainScreen]scale]);
+        
         lineWidth += dimensions.width;
         lineHeight = (lineHeight < dimensions.height) ? dimensions.height:lineHeight;
         
-        CGContextTranslateCTM(context, lineWidth, -totalHeight);
+        CGContextTranslateCTM(context, lineWidth, totalHeight);
         [subStr drawInRect:CGRectMake(0, 0, dimensions.width, dimensions.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:NSTextAlignmentCenter];
         
         fontSprite = [[FontSprite alloc]init];
-        fontSprite.offSetX = lineWidth/width;
-        fontSprite.offSetY = totalHeight/height;
-        fontSprite.textureWidth = dimensions.width/width;
-        fontSprite.textureHeight = dimensions.height/height;
-        fontSprite.width = dimensions.width;
-        fontSprite.height = dimensions.height;
+        fontSprite.offSetX = lineWidth;
+        fontSprite.offSetY = totalHeight;
+        fontSprite.height = dimensions.width;
+        fontSprite.width = dimensions.height;
+        fontSprite.key = subStr;
         [fontSpriteSheet addFontSprite:fontSprite];
         [fontSprite release];
         
@@ -522,7 +436,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         }
         
         UIGraphicsPopContext();
-      
+        
     }
     
     self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:width pixelsHigh:height contentSize:CGSizeMake(totalWidth, totalHeight)];
@@ -530,11 +444,9 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	CGContextRelease(context);
 	free(data);
 	
-    fontSpriteSheet.textureHeight = height;
-    fontSpriteSheet.textureWidth = width;
-    fontSprite.textureWidth = totalWidth;
-    fontSprite.textureHeight = totalHeight;
-    
+    fontSpriteSheet.height = height;
+    fontSpriteSheet.width = width;
+
     [fontSpriteSheet calculateCoordinates];
     
 	return self;

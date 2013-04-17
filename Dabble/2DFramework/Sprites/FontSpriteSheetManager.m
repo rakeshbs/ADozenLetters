@@ -56,12 +56,13 @@ static NSString *fontCharactersNumbers = @"1234567890";
         type = FontSpriteTypeNumbers;
     }
     
-    NSString *key = [NSString stringWithFormat:@"%@%@:%d:%f",character,fontName,type,size];
+    NSString *key = [NSString stringWithFormat:@"%@:%d:%f",fontName,type,size];
     
     FontSpriteSheet *fSheet = dictionary[key];
     
     
     if (fSheet != nil) {
+        NSLog(@"found");
         return [fSheet getFontSprite:character];
     }
     else
@@ -69,6 +70,7 @@ static NSString *fontCharactersNumbers = @"1234567890";
         fSheet = [[FontSpriteSheet alloc]initWithType:type andFontName:fontName andFontSize:size];
         [dictionary setObject:fSheet forKey:key];
     }
+    return [fSheet getFontSprite:character];
     
 }
 

@@ -14,4 +14,5 @@
     NSMutableDictionary *dictionary;
 }
 +(FontSpriteSheetManager *)getSharedFontSpriteSheetManager;
+-(FontSprite *)getFontForCharacter:(NSString *)character withFont:(NSString *)fontName andSize:(CGFloat)size;
 @end

@@ -39,4 +39,5 @@
 -(void)setTexture:(Texture2D *)_texture;
 -(void)begin;
 -(void)end;
+-(void)setFontSprite:(FontSprite *)_fontSprite;
 @end

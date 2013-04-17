@@ -40,6 +40,22 @@
     return self;
 }
 
+-(void)setFontSprite:(FontSprite *)_fontSprite
+{
+    NSString *key = [NSString stringWithFormat:@"%d",_fontSprite.fontSpriteSheet.texture.name];
+    TextureRenderUnit *renderUnit = [textureRenderUnits valueForKey:key];
+    if (renderUnit == nil)
+    {
+        renderUnit = [[TextureRenderUnit alloc]init];
+        renderUnit.texture = _fontSprite.fontSpriteSheet.texture;
+        [textureRenderUnits setObject:renderUnit forKey:key];
+        [renderUnit release];
+    }
+    isFontSprite = YES;
+    currentTextureCoordinates = _fontSprite.textureCoordinates;
+    currentRenderUnit = renderUnit;
+}
+
 -(void)setTexture:(Texture2D *)_texture
 {
     NSString *key = [NSString stringWithFormat:@"%d",_texture.name];
@@ -63,9 +79,11 @@
 
 -(void)addVertices:(Vertex3D *)_vertices andColor:(Color4B)_textureColor andCount:(int)count
 {
-    [currentRenderUnit addVertices:_vertices andTextureCoords:currentTextureCoordinates andColor:_textureColor andCount:count];
+    [currentRenderUnit addVertices:_vertices andTextureCoords:currentTextureCoordinates
+                          andColor:_textureColor andCount:count];
     
-    free(currentTextureCoordinates);
+    if (!isFontSprite)
+        free(currentTextureCoordinates);
 }
 
 -(void)begin
@@ -86,7 +104,7 @@
 {
     
     glEnable(GL_TEXTURE_2D);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     [shader use];
     

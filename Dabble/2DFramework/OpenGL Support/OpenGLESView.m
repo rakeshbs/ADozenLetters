@@ -102,6 +102,8 @@
 		
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         
+        glEnable(GL_DEPTH_TEST);
+        
         
         NSLog(@"%d %d %f %f",backingWidth,backingHeight,self.frame.size.width,self.frame.size.height);
         

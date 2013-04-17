@@ -11,7 +11,6 @@
 #import "EasingFunctions.h"
 #import "Scene.h"
 #import "SoundManager.h"
-#import "TextureStringLayer.h"
 
 #define ANIMATION_MOVE 1
 #define ANIMATION_WIGGLE 2
@@ -37,10 +36,10 @@
 @synthesize character,anchorPoint,colorIndex,isBonded;
 
 Vector3D rectVertices[6];
+Vector3D shadowVertices[6];
 static Color4B tileColors[2][2];
 static Color4B characterColors;
 static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 255, .alpha = 0};
-static int tileDepth = 0;
 
 SoundManager *soundManager;
 
@@ -95,31 +94,9 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)setupStrings
 {
-    TextureStringLayer *texString1 = [[TextureStringLayer alloc]init];
-    texString1.string = self.character;
-    texString1.dimensions = CGSizeMake(tileSquareSize, tileSquareSize);
-    texString1.horizontalTextAlignment = UITextAlignmentCenter;
-    texString1.verticalTextAlignment = UITextAlignmentMiddle;
-    texString1.fontName= @"Lato";
-    texString1.fontSize = 40;
-    
-    TextureStringLayer *texString2 = [[TextureStringLayer alloc]init];
-    texString2.string = [NSString stringWithFormat:@"%d",score];
-    texString2.dimensions = CGSizeMake(tileSquareSize-5, tileSquareSize-5);
-    texString2.horizontalTextAlignment = UITextAlignmentRight;
-    texString2.verticalTextAlignment = UITextAlignmentBottom;
-    texString2.fontName= @"Lato";
-    texString2.fontSize = 15;
-    
-    NSMutableArray *array = [[NSMutableArray alloc]init];
-    [array addObject:texString1];
-    [array addObject:texString2];
-    
-    characterTexture = [textureManager getLayeredStringTexture:array :self.character];
-    
-    [array release];
-    [texString1 release];
-    [texString2 release];
+    characterFontSprite = [[FontSpriteSheetManager
+                   getSharedFontSpriteSheetManager]getFontForCharacter:character
+                  withFont:@"Lato" andSize:20];
 }
 
 -(void)setupGraphics
@@ -134,6 +111,16 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     rectVertices[3] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 3.0f};
     rectVertices[4] = (Vector3D)  {.x = -tileSquareSize/(2), .y = tileSquareSize/(2), .z = 3.0f};
     rectVertices[5] =  (Vector3D) {.x = tileSquareSize/(2), .y = tileSquareSize/(2), .z = 3.0f};
+    
+    shadowVertices[0] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 1.0f};
+    shadowVertices[1] = (Vector3D)  {.x = shadowSize/(2), .y = - shadowSize/(2), .z = 1.0f};
+    shadowVertices[2] = (Vector3D)  {.x = shadowSize/(2), .y =  shadowSize/(2), .z = 1.0f};
+    
+    shadowVertices[3] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 1.0f};
+    shadowVertices[4] = (Vector3D)  {.x = -shadowSize/(2), .y = shadowSize/(2), .z = 1.0f};
+    shadowVertices[5] =  (Vector3D) {.x = shadowSize/(2), .y = shadowSize/(2), .z = 1.0f};
+    
+    
     
     [self setupColors];
 }
@@ -175,37 +162,25 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)draw
 {
-    tileDepth = (tileDepth + 10)%(self.tilesArray.count *10);
-    
-    if (self.touchesInElement.count > 0)
-        NSLog(@"%d",120 - tileDepth);
-    if (shadowAnimationCount > 0)
-        NSLog(@"%d",120 - tileDepth);
-    
- //   [triangleColorRenderer begin];
- //   [textureRenderer begin];
-    
-    
     [mvpMatrixManager pushModelViewMatrix];
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
-    [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:120-tileDepth];
+    [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:self.indexOfElementInScene*20];
     
-    [textureRenderer addMatrix];
-    [textureRenderer setTexture:shadowTexture];
-    [textureRenderer addVertices:[shadowTexture getTextureVertices]
-                        andColor:*shadowColor andCount:6];
-    
-    
-    [triangleColorRenderer addMatrix];
+   /* [triangleColorRenderer addMatrix];
     [triangleColorRenderer addVertices:rectVertices withUniformColor:tileColors[0][colorIndex] andCount:6];
     [triangleColorRenderer addVertices:rectVertices withUniformColor:currentTileColor[colorIndex] andCount:6];
     
+    [textureRenderer addMatrix];
+    [textureRenderer setTexture:shadowTexture];
+    [textureRenderer addVertices:shadowVertices andColor:*shadowColor andCount:6];
+    */
+    
+    [textureRenderer addMatrix];
+    [textureRenderer setFontSprite:characterFontSprite];
+    [textureRenderer addVertices:characterFontSprite.texureRect andColor:characterColors andCount:6];
     
     [mvpMatrixManager popModelViewMatrix];
  
-//    [triangleColorRenderer end];
-   // [textureRenderer end];
-    
     
 }
 
@@ -314,6 +289,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         
         CGPoint touchPoint = [touch locationInView:self.scene.view];
         wiggleAngle = 0;
+        [self moveToFront];
         
         [animator removeQueuedAnimationsForObject:self];
         [animator removeRunningAnimationsForObject:self];
@@ -326,28 +302,6 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         [self updateShadow];
         
         touchOffSet = CGPointMake(_centerPoint.x-touchPoint.x, _centerPoint.y-(460 - touchPoint.y));
-        
-        if (touchOffSet.x > 0 && touchOffSet.y < 0)
-        {
-            touchCorner = 1;
-        }
-        else if (touchOffSet.x < 0 && touchOffSet.y < 0)
-        {
-            touchCorner = 2;
-        }
-        else if (touchOffSet.x > 0 && touchOffSet.y > 0)
-        {
-            touchCorner = 3;
-        }
-        else if (touchOffSet.x > 0 && touchOffSet.y > 0)
-        {
-            touchCorner = 4;
-        }
-        else
-        {
-            touchCorner = 4;
-        }
-        
         prevTouchPoint = touchPoint;
     }
 }
@@ -358,12 +312,15 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     
     if (index == 0)
     {
+        
         CGPoint touchPoint = [touch locationInView:self.scene.view];
         
         self.centerPoint =  CGPointMake(touchPoint.x+touchOffSet.x, 460 - touchPoint.y + touchOffSet.y);
         
         CGFloat diffX = touchPoint.x - prevTouchPoint.x;
         CGFloat diffY = touchPoint.y - prevTouchPoint.y;
+        
+        [self moveToFront];
         
         if (fabs(diffY)>fabs(diffX)+5)
         {

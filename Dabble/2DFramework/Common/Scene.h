@@ -44,4 +44,5 @@
 -(BOOL)touchesEndedInScene:(UITouch *)touches withIndex:(int)index withEvent:(UIEvent *)event;
 
 -(void)moveElementToFront:(GLElement *)element;
+-(int)indexOfElement:(GLElement *)element;
 @end

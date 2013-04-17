@@ -26,6 +26,7 @@
     ColorRenderer *triangleColorRenderer;
     TextureRenderer *textureRenderer;
 }
+@property (nonatomic) int indexOfElementInScene;
 @property (nonatomic,retain) Scene *scene;
 @property (nonatomic,retain) ColorRenderer *triangleColorRenderer;
 @property (nonatomic,retain) TextureRenderer *textureRenderer;

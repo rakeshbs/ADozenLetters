@@ -24,8 +24,6 @@ typedef enum
 @property (nonatomic,retain) NSString *key;
 @property (nonatomic) CGFloat offSetX;
 @property (nonatomic) CGFloat offSetY;
-@property (nonatomic) CGFloat textureWidth;
-@property (nonatomic) CGFloat textureHeight;
 @property (nonatomic) CGFloat width;
 @property (nonatomic) CGFloat height;
 @property (nonatomic,retain) FontSpriteSheet *fontSpriteSheet;
@@ -37,18 +35,16 @@ typedef enum
 @end
 
 @interface FontSpriteSheet : NSObject {
-	Texture2D *fontSpriteSheet;
+	Texture2D *texture;
     NSDictionary *fontSpriteDictionary;
     
 
 }
-
+@property (nonatomic,retain) Texture2D *texture;
 @property (nonatomic,retain) NSString *fontName;
 @property (nonatomic) CGFloat fontSize;
 @property (nonatomic) FontSpriteType fontSpriteType;
 @property (nonatomic,retain) UIColor* fontColor;
-@property (nonatomic) CGFloat textureWidth;
-@property (nonatomic) CGFloat textureHeight;
 @property (nonatomic) CGFloat width;
 @property (nonatomic) CGFloat height;
 

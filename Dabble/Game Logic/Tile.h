@@ -17,7 +17,7 @@
 @interface Tile : GLElement <AnimationDelegate>
 {
     NSString *character;
-    Texture2D *characterTexture;
+    FontSprite *characterFontSprite;
     Texture2D *shadowTexture;
     Texture2D *scoreTexture;
     
