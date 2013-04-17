@@ -27,10 +27,10 @@
     
     [[Director getSharedDirector]setWindow:self.window];
     [[Director getSharedDirector]setInterfaceOrientation:UIInterfaceOrientationPortrait];
-    
+   
     GameScene *gameScene = [[GameScene alloc]init];
     [[Director getSharedDirector]presentScene:gameScene];
-   [gameScene release];
+  [gameScene release];
     return YES;
 }
 

@@ -1,8 +1,8 @@
 //
 //  CanvasClass.m
 //
-//  Created by Trucid on 17/08/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//  Created by Rakesh on 17/08/09.
+//  Copyright 2009 Qucentis. All rights reserved.
 //
 
 #import "Scene.h"
@@ -40,10 +40,9 @@
     [textureRenderer begin];
 	[self draw];
 	[self drawElements];
-
-
     [triangleColorRenderer end];
-        [textureRenderer end];
+    [textureRenderer end];
+    
 }
 
 -(void)draw{
@@ -204,6 +203,15 @@
 -(BOOL)touchesEndedInScene:(UITouch *)touches withIndex:(int)index withEvent:(UIEvent *)event
 {
     return YES;
+}
+
+-(void)dealloc
+{
+    [super dealloc];
+    [elements release];
+    [triangleColorRenderer release];
+    [textureRenderer release];
+    [touchesInScene release];
 }
 
 @end

@@ -46,7 +46,6 @@
     TextureRenderUnit *renderUnit = [textureRenderUnits valueForKey:key];
     if (renderUnit == nil)
     {
-        NSLog(@"new");
         renderUnit = [[TextureRenderUnit alloc]init];
         renderUnit.texture = _fontSprite.fontSpriteSheet.texture;
         [textureRenderUnits setObject:renderUnit forKey:key];
@@ -142,8 +141,15 @@
         glDrawArrays(GL_TRIANGLES, 0, renderUnit.count);
     }
     
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_TEXTURE_2D);
      
+}
+
+-(void)dealloc
+{
+    [super dealloc];
+    [textureRenderUnits release];
 }
 
 

@@ -25,6 +25,7 @@
         [shader addAttribute:@"vertex"];
         [shader addAttribute:@"color"];        
         [shader addAttribute:@"mvpmatrixIndex"];
+        
         if (![shader link])
             NSLog(@"Link failed");
         
@@ -34,11 +35,12 @@
         
         mvpMatrixUniform = [shader uniformIndex:@"mvpmatrix"];
         
-        mvpMatrices = malloc(NUMBEROFMATRICES * sizeof(GLfloat)*16);
-        memset(mvpMatrices, 0, sizeof(GLfloat)*16);
-        vertices = malloc(sizeof(Vector3D)*NUMBEROFVERTICES);
-        colors = malloc(sizeof(Color4B)*NUMBEROFVERTICES);
         matrixIndices = malloc(sizeof(GLubyte)*NUMBEROFVERTICES);
+        mvpMatrices = malloc(NUMBEROFMATRICES * sizeof(GLfloat) * 16);
+        vertices = malloc(sizeof(GLfloat)*3*NUMBEROFVERTICES);
+        colors = malloc(sizeof(GLubyte)*4*NUMBEROFVERTICES);
+        
+        NSLog(@"color allocated");
     }
     return self;
 }
@@ -71,17 +73,21 @@
 
 -(void)addVertices:(Vertex3D *)_vertices withUniformColor:(Color4B)_color andCount:(int)_count
 {
+ //   NSLog(@"add vertices start %d",count);
     for (int i = 0;i<_count;i++)
     {
         *(vertices+count+i) = _vertices[i];
         *(matrixIndices+count+i) = mvpMatrixCount-1;
         *(colors+count+i) = _color;
     }
+
     count+=_count;
+    //NSLog(@"add vertices end %d",count);
 }
 
 -(void)end
 {
+    
     [self draw];
 }
 
@@ -102,6 +108,16 @@
     
     glDrawArrays(GL_TRIANGLES, 0, count);
    
+}
+
+-(void)dealloc
+{
+    [super dealloc];
+    free(vertices);
+    free(colors);
+    free(matrixIndices);
+    free(mvpMatrices);
+    
 }
 
 

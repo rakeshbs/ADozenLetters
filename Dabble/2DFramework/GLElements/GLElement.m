@@ -2,8 +2,8 @@
 //  GLNode.m
 //  GameDemo
 //
-//  Created by Trucid on 11/11/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//  Created by Rakesh on 11/11/09.
+//  Copyright 2009 Qucentis. All rights reserved.
 //
 
 #import "GLElement.h"
@@ -91,5 +91,6 @@
 {
     [super dealloc];
     self.scene = nil;
+    self.touchesInElement = nil;
 }
 @end

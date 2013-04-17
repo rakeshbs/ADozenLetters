@@ -3,7 +3,7 @@
 //  GameDemo
 //
 //  Created by Rakesh BS on 11/9/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//  Copyright 2009 Qucentis. All rights reserved.
 //
 
 #import "FontSpriteSheet.h"
@@ -19,6 +19,8 @@ static NSString *fontCharactersNumbers = @"1234567890";
 
 -(void)calculateCoordinates
 {
+    if (_textureCoordinates !=nil)
+        return;
     _textureCoordinates = malloc(sizeof(TextureCoord)*6);
     _texureRect = malloc(sizeof(Vector3D)*6);
     

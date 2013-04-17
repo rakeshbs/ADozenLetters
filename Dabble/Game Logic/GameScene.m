@@ -51,7 +51,7 @@ Dictionary *dictionary;
         madeDoubles = [[NSMutableArray alloc]init];
         
         
-        [self loadDictionary];
+   //     [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
         
         [self loadData];
         
@@ -309,13 +309,14 @@ Dictionary *dictionary;
 
 -(void)updateAnalytics
 {
-    
+    /*
     [analyticsTexture release];
     analyticsTexture = [[Texture2D alloc]
                         initWithString:[NSString stringWithFormat:@"W : %d (%d, %d, %d) D : %d T : %d",numberOfWordsMade,numberOfWordsPerLetter[0],numberOfWordsPerLetter[1],numberOfWordsPerLetter[2],numberOfDoublesMade,numberOfTripletsMade]                                                 dimensions:CGSizeMake(320, 50)
                         horizontalAlignment:UITextAlignmentLeft
                         verticalAlignment:UITextAlignmentMiddle
                         fontName:@"Helvetica" fontSize:20];
+     */
 }
 
 NSMutableArray *tilesArray;

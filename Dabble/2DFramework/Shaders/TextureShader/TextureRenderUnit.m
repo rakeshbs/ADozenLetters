@@ -8,7 +8,7 @@
 
 #import "TextureRenderUnit.h"
 
-#define NUMBEROFMATRICES 50
+#define NUMBEROFMATRICES 150
 #define NUMBEROFVERTICES 500
 
 @implementation TextureRenderUnit
@@ -18,9 +18,9 @@
     if (self = [super init])
     {
         _mvpMatrices = malloc(NUMBEROFMATRICES * sizeof(GLfloat)*16);
-        _vertices = malloc(sizeof(Vector3D)*NUMBEROFVERTICES);
-        _textureColors = malloc(sizeof(Color4B)*NUMBEROFVERTICES);
-        _textureCoordinates = malloc(sizeof(TextureCoord)*NUMBEROFVERTICES);
+        _vertices = malloc(sizeof(GLfloat)*3*NUMBEROFVERTICES);
+        _textureColors = malloc(sizeof(GLubyte)*4*NUMBEROFVERTICES);
+        _textureCoordinates = malloc(sizeof(GLfloat)*2*NUMBEROFVERTICES);
         _matrixIndices = malloc(sizeof(GLubyte)*NUMBEROFVERTICES);
 
         matrixManager = [MVPMatrixManager sharedMVPMatrixManager];
@@ -43,6 +43,7 @@
 -(void)addVertices:(Vertex3D *)_cvertices andTextureCoords:(TextureCoord *)_ctextureCoordinates
           andColor:(Color4B)_ctextureColor andCount:(int)ccount
 {
+     //   NSLog(@"add vertices start %d",_count);
     for (int i = 0;i<ccount;i++)
     {
         *(_vertices+_count+i) = *(_cvertices+i);
@@ -51,7 +52,18 @@
         *(_textureCoordinates + _count + i) = *(_ctextureCoordinates+i);
     }
     _count+=ccount;
+      //      NSLog(@"add vertices end %d",_count);
 }
 
+-(void)dealloc
+{
+    [super dealloc];
+    free(self.matrixIndices);
+    free(self.mvpMatrices);
+    free(self.textureCoordinates);
+    free(self.textureColors);
+    self.texture = nil;
+    free(self.vertices);
+}
 
 @end

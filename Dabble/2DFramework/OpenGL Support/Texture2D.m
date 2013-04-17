@@ -422,7 +422,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         fontSprite.height = dimensions.height;
         fontSprite.key = subStr;
         [fontSpriteSheet addFontSprite:fontSprite];
-         [fontSprite release];
+        [fontSprite release];
      
         lineWidth += dimensions.width;
         lineHeight = (lineHeight < dimensions.height) ? dimensions.height:lineHeight;

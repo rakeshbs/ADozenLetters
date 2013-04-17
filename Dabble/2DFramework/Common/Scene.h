@@ -2,8 +2,8 @@
 //  CanvasClass.h
 //  MusiMusi
 //
-//  Created by Trucid on 17/08/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//  Created by Rakesh on 17/08/09.
+//  Copyright 2009 Qucentis. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

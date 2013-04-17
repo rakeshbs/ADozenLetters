@@ -195,7 +195,7 @@
 	if (view_delegate != nil && !isLoopRunning)
 	{
 		isLoopRunning = YES;
-		NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1/60 target:self selector:@selector(drawView) userInfo:nil repeats:YES];
+		NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1/60.0 target:self selector:@selector(drawView) userInfo:nil repeats:YES];
         self.animationTimer = timer;
         [view_delegate sceneMadeActive];
 	}

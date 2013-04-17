@@ -3,7 +3,7 @@
 //  MusiMusi
 //
 //  Created by Rakesh BS on 9/6/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//  Copyright 2009 Qucentis. All rights reserved.
 //
 
 #import "GLButton.h"

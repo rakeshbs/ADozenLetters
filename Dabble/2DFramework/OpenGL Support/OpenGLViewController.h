@@ -2,8 +2,8 @@
 //  OpenGLViewController.h
 //  GameDemo
 //
-//  Created by Trucid on 12/11/09.
-//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//  Created by Rakesh on 12/11/09.
+//  Copyright 2009 Qucentis. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

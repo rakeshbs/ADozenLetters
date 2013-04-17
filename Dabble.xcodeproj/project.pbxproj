@@ -23,7 +23,6 @@
 		1445DC9116F97AD600EBBCCF /* GLShaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC4F16F97AD600EBBCCF /* GLShaderManager.m */; };
 		1445DC9216F97AD600EBBCCF /* GLShaderProgram.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC5116F97AD600EBBCCF /* GLShaderProgram.m */; };
 		1445DC9316F97AD600EBBCCF /* MVPMatrixManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC5316F97AD600EBBCCF /* MVPMatrixManager.m */; };
-		1445DC9816F97AD600EBBCCF /* TextureRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC5C16F97AD600EBBCCF /* TextureRenderer.m */; };
 		1445DC9A16F97AD600EBBCCF /* MyOpenALSupport.c in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC5F16F97AD600EBBCCF /* MyOpenALSupport.c */; };
 		1445DC9B16F97AD600EBBCCF /* SoundManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC6216F97AD600EBBCCF /* SoundManager.m */; };
 		1445DC9D16F97AD600EBBCCF /* FontSpriteSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC6816F97AD600EBBCCF /* FontSpriteSheet.m */; };
@@ -40,8 +39,6 @@
 		1445DCAE16F97B0700EBBCCF /* Dabble-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1445DCAD16F97B0700EBBCCF /* Dabble-Info.plist */; };
 		1445DCB416F97B8300EBBCCF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DCB116F97B3700EBBCCF /* main.m */; };
 		1445DCB516F97B8900EBBCCF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DCB016F97B3700EBBCCF /* AppDelegate.m */; };
-		1445DCB716F97C0E00EBBCCF /* TextureShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC5A16F97AD600EBBCCF /* TextureShader.fsh */; };
-		1445DCB816F97C1000EBBCCF /* TextureShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC5D16F97AD600EBBCCF /* TextureShader.vsh */; };
 		1445DCBB16F97C1600EBBCCF /* ColorShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC4816F97AD600EBBCCF /* ColorShader.fsh */; };
 		1445DCBC16F97C1700EBBCCF /* ColorShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC4B16F97AD600EBBCCF /* ColorShader.vsh */; };
 		144D9CE817042B3500F6EE15 /* Lato-Bol.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 144D9CE717042AF400F6EE15 /* Lato-Bol.ttf */; };
@@ -57,7 +54,10 @@
 		146472D016D278B5000C8FB4 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472CA16D278B5000C8FB4 /* OpenGLES.framework */; };
 		146472D116D278B5000C8FB4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472CB16D278B5000C8FB4 /* QuartzCore.framework */; };
 		146472D616D278F0000C8FB4 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472D516D278F0000C8FB4 /* GameKit.framework */; };
-		14760891171715BC008FEDD2 /* TextureRenderUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 14760890171715BC008FEDD2 /* TextureRenderUnit.m */; };
+		14817040171F0A2B0058FE43 /* TextureRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1481703B171F0A2B0058FE43 /* TextureRenderer.m */; };
+		14817041171F0A2B0058FE43 /* TextureRenderUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 1481703D171F0A2B0058FE43 /* TextureRenderUnit.m */; };
+		14817044171F0A510058FE43 /* TextureShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1481703E171F0A2B0058FE43 /* TextureShader.fsh */; };
+		14817045171F0A540058FE43 /* TextureShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1481703F171F0A2B0058FE43 /* TextureShader.vsh */; };
 		14C0F4051703311100F6D422 /* NSArray+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C0F4041703311100F6D422 /* NSArray+Additions.m */; };
 		14D4248E1700255C0010657A /* sprite.png in Resources */ = {isa = PBXBuildFile; fileRef = 14D4248D1700255C0010657A /* sprite.png */; };
 		14F1197A170297E400721BEE /* w3 in Resources */ = {isa = PBXBuildFile; fileRef = 14F11977170297E400721BEE /* w3 */; };
@@ -106,10 +106,6 @@
 		1445DC5116F97AD600EBBCCF /* GLShaderProgram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLShaderProgram.m; sourceTree = "<group>"; };
 		1445DC5216F97AD600EBBCCF /* MVPMatrixManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MVPMatrixManager.h; sourceTree = "<group>"; };
 		1445DC5316F97AD600EBBCCF /* MVPMatrixManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MVPMatrixManager.m; sourceTree = "<group>"; };
-		1445DC5A16F97AD600EBBCCF /* TextureShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = TextureShader.fsh; sourceTree = "<group>"; };
-		1445DC5B16F97AD600EBBCCF /* TextureRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureRenderer.h; sourceTree = "<group>"; };
-		1445DC5C16F97AD600EBBCCF /* TextureRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextureRenderer.m; sourceTree = "<group>"; };
-		1445DC5D16F97AD600EBBCCF /* TextureShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = TextureShader.vsh; sourceTree = "<group>"; };
 		1445DC5F16F97AD600EBBCCF /* MyOpenALSupport.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MyOpenALSupport.c; sourceTree = "<group>"; };
 		1445DC6016F97AD600EBBCCF /* MyOpenALSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyOpenALSupport.h; sourceTree = "<group>"; };
 		1445DC6116F97AD600EBBCCF /* SoundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundManager.h; sourceTree = "<group>"; };
@@ -151,8 +147,12 @@
 		146472CA16D278B5000C8FB4 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		146472CB16D278B5000C8FB4 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		146472D516D278F0000C8FB4 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
-		1476088F171715BC008FEDD2 /* TextureRenderUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureRenderUnit.h; sourceTree = "<group>"; };
-		14760890171715BC008FEDD2 /* TextureRenderUnit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextureRenderUnit.m; sourceTree = "<group>"; };
+		1481703A171F0A2B0058FE43 /* TextureRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureRenderer.h; sourceTree = "<group>"; };
+		1481703B171F0A2B0058FE43 /* TextureRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextureRenderer.m; sourceTree = "<group>"; };
+		1481703C171F0A2B0058FE43 /* TextureRenderUnit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureRenderUnit.h; sourceTree = "<group>"; };
+		1481703D171F0A2B0058FE43 /* TextureRenderUnit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextureRenderUnit.m; sourceTree = "<group>"; };
+		1481703E171F0A2B0058FE43 /* TextureShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = TextureShader.fsh; sourceTree = "<group>"; };
+		1481703F171F0A2B0058FE43 /* TextureShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = TextureShader.vsh; sourceTree = "<group>"; };
 		14C0F4031703311100F6D422 /* NSArray+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Additions.h"; sourceTree = "<group>"; };
 		14C0F4041703311100F6D422 /* NSArray+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Additions.m"; sourceTree = "<group>"; };
 		14D4248D1700255C0010657A /* sprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sprite.png; sourceTree = "<group>"; };
@@ -271,7 +271,7 @@
 		1445DC4616F97AD600EBBCCF /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				1445DC5916F97AD600EBBCCF /* Texture Shader */,
+				14817039171F0A2B0058FE43 /* TextureShader */,
 				1445DC4716F97AD600EBBCCF /* ColorShader */,
 				1445DC4C16F97AD600EBBCCF /* GLRenderer.h */,
 				1445DC4D16F97AD600EBBCCF /* GLRenderer.m */,
@@ -294,19 +294,6 @@
 				1445DC4B16F97AD600EBBCCF /* ColorShader.vsh */,
 			);
 			path = ColorShader;
-			sourceTree = "<group>";
-		};
-		1445DC5916F97AD600EBBCCF /* Texture Shader */ = {
-			isa = PBXGroup;
-			children = (
-				1445DC5A16F97AD600EBBCCF /* TextureShader.fsh */,
-				1445DC5B16F97AD600EBBCCF /* TextureRenderer.h */,
-				1445DC5C16F97AD600EBBCCF /* TextureRenderer.m */,
-				1445DC5D16F97AD600EBBCCF /* TextureShader.vsh */,
-				1476088F171715BC008FEDD2 /* TextureRenderUnit.h */,
-				14760890171715BC008FEDD2 /* TextureRenderUnit.m */,
-			);
-			path = "Texture Shader";
 			sourceTree = "<group>";
 		};
 		1445DC5E16F97AD600EBBCCF /* SoundManager */ = {
@@ -427,6 +414,19 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		14817039171F0A2B0058FE43 /* TextureShader */ = {
+			isa = PBXGroup;
+			children = (
+				1481703A171F0A2B0058FE43 /* TextureRenderer.h */,
+				1481703B171F0A2B0058FE43 /* TextureRenderer.m */,
+				1481703C171F0A2B0058FE43 /* TextureRenderUnit.h */,
+				1481703D171F0A2B0058FE43 /* TextureRenderUnit.m */,
+				1481703E171F0A2B0058FE43 /* TextureShader.fsh */,
+				1481703F171F0A2B0058FE43 /* TextureShader.vsh */,
+			);
+			path = TextureShader;
+			sourceTree = "<group>";
+		};
 		14F11976170297E400721BEE /* Wordslist */ = {
 			isa = PBXGroup;
 			children = (
@@ -512,13 +512,13 @@
 			files = (
 				1445DCA516F97AD700EBBCCF /* Default-568h@2x.png in Resources */,
 				1445DCA616F97AD700EBBCCF /* Default.png in Resources */,
-				1445DCB816F97C1000EBBCCF /* TextureShader.vsh in Resources */,
-				1445DCA716F97AD700EBBCCF /* Default@2x.png in Resources */,
 				1445DCBC16F97C1700EBBCCF /* ColorShader.vsh in Resources */,
 				1445DCBB16F97C1600EBBCCF /* ColorShader.fsh in Resources */,
+				1445DCA716F97AD700EBBCCF /* Default@2x.png in Resources */,
 				1445DCA816F97AD700EBBCCF /* shadow.png in Resources */,
+				14817045171F0A540058FE43 /* TextureShader.vsh in Resources */,
+				14817044171F0A510058FE43 /* TextureShader.fsh in Resources */,
 				1445DCA916F97AD700EBBCCF /* shadow@2X.png in Resources */,
-				1445DCB716F97C0E00EBBCCF /* TextureShader.fsh in Resources */,
 				1445DCAA16F97AD700EBBCCF /* bip1.aiff in Resources */,
 				144D9CE817042B3500F6EE15 /* Lato-Bol.ttf in Resources */,
 				1445DCAB16F97AD700EBBCCF /* bip2.aiff in Resources */,
@@ -556,7 +556,6 @@
 				1445DC9116F97AD600EBBCCF /* GLShaderManager.m in Sources */,
 				1445DC9216F97AD600EBBCCF /* GLShaderProgram.m in Sources */,
 				1445DC9316F97AD600EBBCCF /* MVPMatrixManager.m in Sources */,
-				1445DC9816F97AD600EBBCCF /* TextureRenderer.m in Sources */,
 				1445DC9A16F97AD600EBBCCF /* MyOpenALSupport.c in Sources */,
 				1445DC9B16F97AD600EBBCCF /* SoundManager.m in Sources */,
 				1445DC9F16F97AD700EBBCCF /* Dictionary.m in Sources */,
@@ -568,7 +567,8 @@
 				14F119861702A0A400721BEE /* NSDataExtensions.m in Sources */,
 				14C0F4051703311100F6D422 /* NSArray+Additions.m in Sources */,
 				145EF9F817132320007CF929 /* FontSpriteSheetManager.m in Sources */,
-				14760891171715BC008FEDD2 /* TextureRenderUnit.m in Sources */,
+				14817040171F0A2B0058FE43 /* TextureRenderer.m in Sources */,
+				14817041171F0A2B0058FE43 /* TextureRenderUnit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
