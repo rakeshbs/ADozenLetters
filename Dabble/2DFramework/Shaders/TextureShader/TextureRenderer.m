@@ -46,7 +46,7 @@
     TextureRenderUnit *renderUnit = [textureRenderUnits valueForKey:key];
     if (renderUnit == nil)
     {
-        renderUnit = [[TextureRenderUnit alloc]init];
+       renderUnit = [[TextureRenderUnit alloc]init];
         renderUnit.texture = _fontSprite.fontSpriteSheet.texture;
         [textureRenderUnits setObject:renderUnit forKey:key];
         [renderUnit release];

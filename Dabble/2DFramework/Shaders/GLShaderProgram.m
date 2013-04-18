@@ -35,7 +35,7 @@ typedef void (*GLLogFunction) (GLuint program,
         attributes = [[NSMutableArray alloc] init];
         NSString *vertShaderPathname, *fragShaderPathname;
         program = glCreateProgram();
-        
+       
         vertShaderPathname = [[NSBundle mainBundle] 
                               pathForResource:vShaderFilename 
                               ofType:@"vsh"];
@@ -58,7 +58,7 @@ typedef void (*GLLogFunction) (GLuint program,
 
         
         glAttachShader(program, vertShader);
-        glAttachShader(program, fragShader);
+         glAttachShader(program, fragShader);
     }
     
     return self;

@@ -3,7 +3,7 @@ attribute vec2 textureCoordinates;
 attribute vec4 textureColors;
 
 attribute float mvpmatrixIndex;
-uniform mat4 mvpmatrix[150];
+uniform mat4 mvpmatrix[100];
 
 varying vec2 fragmentTextureCoordinates;
 varying lowp vec4 textureFragColor;

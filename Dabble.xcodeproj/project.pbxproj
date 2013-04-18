@@ -288,10 +288,10 @@
 		1445DC4716F97AD600EBBCCF /* ColorShader */ = {
 			isa = PBXGroup;
 			children = (
-				1445DC4816F97AD600EBBCCF /* ColorShader.fsh */,
 				1445DC4916F97AD600EBBCCF /* ColorRenderer.h */,
 				1445DC4A16F97AD600EBBCCF /* ColorRenderer.m */,
 				1445DC4B16F97AD600EBBCCF /* ColorShader.vsh */,
+				1445DC4816F97AD600EBBCCF /* ColorShader.fsh */,
 			);
 			path = ColorShader;
 			sourceTree = "<group>";

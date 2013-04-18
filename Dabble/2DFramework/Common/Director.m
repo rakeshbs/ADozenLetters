@@ -104,9 +104,9 @@
 {
     ColorRenderer *shader1 = [[ColorRenderer alloc]init];
     [shader1 release];
-    TextureRenderer *shader2 = [[TextureRenderer alloc]init];
+  /*  TextureRenderer *shader2 = [[TextureRenderer alloc]init];
     [shader2 release];
-    
+    */
 }
 
 -(void)dealloc
