@@ -113,6 +113,7 @@
 -(void)dealloc
 {
     [super dealloc];
+        NSLog(@"deallocating color renderer");
     free(vertices);
     free(colors);
     free(matrixIndices);

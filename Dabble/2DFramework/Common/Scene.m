@@ -208,6 +208,7 @@
 -(void)dealloc
 {
     [super dealloc];
+    NSLog(@"deallocating scene");
     [elements release];
     [triangleColorRenderer release];
     [textureRenderer release];

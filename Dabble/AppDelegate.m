@@ -28,6 +28,9 @@
     [[Director getSharedDirector]setWindow:self.window];
     [[Director getSharedDirector]setInterfaceOrientation:UIInterfaceOrientationPortrait];
    
+    //Scene *scene = [[Scene alloc]init];
+    //[[Director getSharedDirector]presentScene:scene];
+    
     GameScene *gameScene = [[GameScene alloc]init];
     [[Director getSharedDirector]presentScene:gameScene];
     [gameScene release];

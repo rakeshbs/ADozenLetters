@@ -90,6 +90,7 @@
 -(void)dealloc
 {
     [super dealloc];
+    NSLog(@"deallocating element");
     self.scene = nil;
     self.touchesInElement = nil;
 }

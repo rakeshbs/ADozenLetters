@@ -149,6 +149,7 @@
 -(void)dealloc
 {
     [super dealloc];
+    NSLog(@"deallocation texture renderer");
     [textureRenderUnits release];
 }
 

@@ -8,7 +8,7 @@
 
 #import "TextureRenderUnit.h"
 
-#define NUMBEROFMATRICES 150
+#define NUMBEROFMATRICES 50
 #define NUMBEROFVERTICES 500
 
 @implementation TextureRenderUnit
@@ -58,6 +58,7 @@
 -(void)dealloc
 {
     [super dealloc];
+    NSLog(@"deallocating texture render unit");
     free(self.matrixIndices);
     free(self.mvpMatrices);
     free(self.textureCoordinates);
