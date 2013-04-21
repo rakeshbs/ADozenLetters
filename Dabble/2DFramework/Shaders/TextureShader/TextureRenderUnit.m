@@ -7,9 +7,9 @@
 //
 
 #import "TextureRenderUnit.h"
+#import "GLShaderManager.h"
 
-#define NUMBEROFMATRICES 50
-#define NUMBEROFVERTICES 500
+#define VBOLENGTH 5000
 
 @implementation TextureRenderUnit
 
@@ -17,54 +17,143 @@
 {
     if (self = [super init])
     {
-        _mvpMatrices = malloc(NUMBEROFMATRICES * sizeof(GLfloat)*16);
-        _vertices = malloc(sizeof(GLfloat)*3*NUMBEROFVERTICES);
-        _textureColors = malloc(sizeof(GLubyte)*4*NUMBEROFVERTICES);
-        _textureCoordinates = malloc(sizeof(GLfloat)*2*NUMBEROFVERTICES);
-        _matrixIndices = malloc(sizeof(GLubyte)*NUMBEROFVERTICES);
-
         matrixManager = [MVPMatrixManager sharedMVPMatrixManager];
-        _mvpMatrixCount = 0;
-        _count = 0;
+        count = 0;
         _isFont = NO;
+        
+        currentVBO = 0;
+        
+        shader = [[GLShaderManager sharedGLShaderManager] getShaderByVertexShaderFileName:@"TextureShader"
+                                      andFragmentShaderFileName:@"TextureShader"];
+        
+        [shader addAttribute:@"vertices"];
+        [shader addAttribute:@"textureCoordinates"];
+        [shader addAttribute:@"textureColors"];
+        [shader addAttribute:@"mvpmatrix"];
+        
+        if (![shader link])
+            NSLog(@"Link failed");
+        
+        
+        ATTRIB_VERTICES = [shader attributeIndex:@"vertex"];
+        ATTRIB_COLORS = [shader attributeIndex:@"color"];
+        ATTRIB_MVPMATRICES = [shader attributeIndex:@"mvpmatrix"];
+        ATTRIB_TEXCOORDS = [shader attributeIndex:@"textureCoordinates"];
+        
+        SIZE_MATRIX = sizeof(GLfloat) * 16;
+        SIZE_COLOR = sizeof(Color4B);
+        SIZE_VERTEX = sizeof(Vertex3D);
+        SIZE_TEXCOORDS = sizeof(TextureCoord);
+        STRIDE = SIZE_MATRIX + SIZE_COLOR + SIZE_VERTEX + SIZE_TEXCOORDS;
+        
+        [self setupVBO];
+        
     }
     return self;
 }
 
--(void)addMatrix
+-(void)setupVBO
 {
-    Matrix3D mvpMatrix;
-    [matrixManager getMVPMatrix:mvpMatrix];
-    int ind = _mvpMatrixCount*16;
-    Matrix3DCopyS(mvpMatrix, (_mvpMatrices+ind));
-    _mvpMatrixCount++;
+    glGenBuffers(VBO_COUNT, vbos);
+    for (int i = 0;i<VBO_COUNT;i++)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, vbos[i]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*VBOLENGTH, NULL, GL_STREAM_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
 }
+
+-(void)begin
+{
+    count = 0;
+    glBindBuffer(GL_ARRAY_BUFFER, vbos[currentVBO]);
+    buffer = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 
 -(void)addVertices:(Vertex3D *)_cvertices andTextureCoords:(TextureCoord *)_ctextureCoordinates
           andColor:(Color4B)_ctextureColor andCount:(int)ccount
 {
-     //   NSLog(@"add vertices start %d",_count);
+    Matrix3D mvpMatrix;
+    [matrixManager getMVPMatrix:mvpMatrix];
+    
     for (int i = 0;i<ccount;i++)
     {
-        *(_vertices+_count+i) = *(_cvertices+i);
-        *(_textureColors + _count +i) = _ctextureColor;
-        *(_matrixIndices+ _count +i) = _mvpMatrixCount-1;
-        *(_textureCoordinates + _count + i) = *(_ctextureCoordinates+i);
+        memcpy( buffer,mvpMatrix, SIZE_MATRIX);
+        buffer+=SIZE_MATRIX;
+        memcpy(buffer,_cvertices+i, SIZE_VERTEX);
+        buffer+=SIZE_VERTEX;
+        memcpy(buffer,_ctextureCoordinates+i, SIZE_TEXCOORDS);
+        buffer+=SIZE_TEXCOORDS;
+        memcpy(buffer,&_ctextureColor, SIZE_COLOR);
+        buffer+=SIZE_COLOR;
     }
-    _count+=ccount;
-      //      NSLog(@"add vertices end %d",_count);
+    count+=ccount;
+    
+}
+
+-(void)draw
+{
+    
+    glBindBuffer(GL_ARRAY_BUFFER, vbos[currentVBO]);
+    glUnmapBufferOES(GL_ARRAY_BUFFER);
+    
+    [shader use];
+    
+    if (_isFont)
+    {
+        glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
+    }
+    else
+    {
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+    }
+    
+    
+    glActiveTexture (GL_TEXTURE0);
+    [_texture bindTexture];
+    
+    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 0);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 1);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 2);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 3);
+    
+    glVertexAttribPointer(ATTRIB_MVPMATRICES + 0, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)0);
+    glVertexAttribPointer(ATTRIB_MVPMATRICES + 1, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)16);
+    glVertexAttribPointer(ATTRIB_MVPMATRICES + 2, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)32);
+    glVertexAttribPointer(ATTRIB_MVPMATRICES + 3, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)48);
+    
+    glEnableVertexAttribArray(ATTRIB_VERTICES);
+    glVertexAttribPointer(ATTRIB_VERTICES, 3, GL_FLOAT, 0, STRIDE, (GLvoid*)SIZE_MATRIX);
+    
+    glEnableVertexAttribArray(ATTRIB_TEXCOORDS);
+    glVertexAttribPointer(ATTRIB_TEXCOORDS, 2, GL_FLOAT, 0, STRIDE, (GLvoid*)(SIZE_MATRIX+SIZE_VERTEX));
+    
+    glEnableVertexAttribArray(ATTRIB_COLORS);
+    glVertexAttribPointer(ATTRIB_COLORS, 4, GL_UNSIGNED_BYTE, GL_TRUE, STRIDE, (GLvoid*)(SIZE_MATRIX+SIZE_VERTEX+SIZE_TEXCOORDS));
+    
+    glDrawArrays(GL_TRIANGLES, 0, count);
+    
+    glDisableVertexAttribArray(ATTRIB_VERTICES);
+    glDisableVertexAttribArray(ATTRIB_COLORS);
+    glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 0);
+    glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 1);
+    glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 2);
+    glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 3);
+    glDisableVertexAttribArray(ATTRIB_TEXCOORDS);
+    
+    currentVBO++;
+    currentVBO%=VBO_COUNT;
 }
 
 -(void)dealloc
 {
     [super dealloc];
     NSLog(@"deallocating texture render unit");
-    free(self.matrixIndices);
-    free(self.mvpMatrices);
-    free(self.textureCoordinates);
-    free(self.textureColors);
-    self.texture = nil;
-    free(self.vertices);
+    glDeleteBuffers(VBO_COUNT, vbos);
+//    self.texture = nil;
 }
 
 @end

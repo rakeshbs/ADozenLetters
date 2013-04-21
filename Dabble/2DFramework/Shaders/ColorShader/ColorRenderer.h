@@ -13,31 +13,33 @@
 #import "GLShaderManager.h"
 #import "GLRenderer.h"
 
+#define VBO_COUNT 2
+
 @interface ColorRenderer : GLRenderer
 {
-    Color4B *colors;
-    Vector3D *vertices;
-    GLfloat *matrixIndices;
-    int mvpMatrixCount;
     GLShaderProgram *shader;
     
-    GLfloat *mvpMatrices;
+    GLuint vao;
+    GLuint vbos[VBO_COUNT];
+    GLvoid *buffer;
     
-    GLuint colorAttribute;
-    GLuint verticesAttribute;
-    GLuint mvpMatrixUniform;
-    GLuint mvpmatrixIndexAttribute;
-    GLenum drawMode;
+    GLuint ATTRIB_COLORS;
+    GLuint ATTRIB_VERTICES;
+    GLuint ATTRIB_MVPMATRICES;
+    GLenum DRAW_MODE;
+    
     int count;
     
+    size_t SIZE_MATRIX;
+    size_t SIZE_VERTEX;
+    size_t SIZE_COLOR;
+    size_t STRIDE;
+    
+    int currentVBO;
 }
 @property (nonatomic)    CGFloat pointSize;
-@property (nonatomic)     GLenum drawMode;
-@property (nonatomic) Color4B *colors;
-@property (nonatomic) Vector3D *vertices;
-@property (nonatomic) int count;
+@property (nonatomic)     GLenum DRAW_MODE;
 
--(void)addMatrix;
 -(void)begin;
 -(void)end;
 -(void)addVertices:(Vertex3D *)_vertices withColorsPerVertex:(Color4B *)_colors andCount:(int)_count;

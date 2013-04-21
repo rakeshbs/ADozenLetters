@@ -19,19 +19,17 @@
 {
     GLShaderProgram *shader;
     
-    GLuint textureCoordinatesAttribute;
-    GLuint verticesAttribute;
-    
-    GLuint mvpMatrixUniform;
-    GLuint textureColorsAttribute;
-    GLuint textureUniform;
-    GLuint mvpmatrixIndexAttribute;
-    
     NSMutableDictionary *textureRenderUnits;
     TextureRenderUnit *currentRenderUnit;
     
     BOOL isFontSprite;
     TextureCoord *currentTextureCoordinates;
+    
+    size_t SIZE_MATRIX;
+    size_t SIZE_VERTEX;
+    size_t SIZE_TEXCOORDS;
+    size_t SIZE_COLOR;
+    size_t STRIDE;
 }
 
 -(void)addVertices:(Vertex3D *)_vertices andColor:(Color4B)_textureColor andCount:(int)count;

@@ -23,6 +23,7 @@
 	GLuint viewRenderbuffer, viewFramebuffer,depthBuffer,sampleFramebuffer,sampleColorRenderbuffer,sampleDepthRenderbuffer;
 	GLint backingWidth, backingHeight;
 	NSTimer *animationTimer;
+
 	Scene *view_delegate;
 	BOOL isLoopRunning;
 	CFTimeInterval refreshTimeInterval;
@@ -36,7 +37,7 @@
 @property (nonatomic,retain) Scene *view_delegate;
 @property (nonatomic) BOOL isActive;
 @property (nonatomic,retain) NSTimer *animationTimer;
-
+@property (nonatomic,retain) CADisplayLink *displayLink;
 -(void)bindBuffers;
 -(void)setScene:(Scene *)scene;
 -(void)resumeTimer;

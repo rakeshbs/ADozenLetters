@@ -170,40 +170,34 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:self.indexOfElementInScene*20];
     
     [mvpMatrixManager translateInX:0 Y:0 Z:1];
-    [triangleColorRenderer addMatrix];
     [triangleColorRenderer addVertices:rectVertices withUniformColor:tileColors[0][colorIndex] andCount:6];
     
     [mvpMatrixManager translateInX:0 Y:0 Z:1];
-    [triangleColorRenderer addMatrix];
     [triangleColorRenderer addVertices:rectVertices withUniformColor:currentTileColor[colorIndex] andCount:6];
-   /*
+   
+    
     [mvpMatrixManager translateInX:0 Y:0 Z:1];
     [textureRenderer setFontSprite:characterFontSprite];
-    [textureRenderer addMatrix];
     [textureRenderer addVertices:characterFontSprite.texureRect andColor:tileColors[0][0] andCount:6];
     
     [mvpMatrixManager translateInX:0 Y:0 Z:1];
     [textureRenderer setFontSprite:characterFontSprite];
-    [textureRenderer addMatrix];
     [textureRenderer addVertices:characterFontSprite.texureRect andColor:*currentCharacterColor andCount:6];
     
     
     [mvpMatrixManager translateInX:20 Y:-15 Z:1];
     [textureRenderer setFontSprite:scoreTexture];
-    [textureRenderer addMatrix];
     [textureRenderer addVertices:scoreTexture.texureRect andColor:tileColors[0][0] andCount:6];
     
     [mvpMatrixManager translateInX:0 Y:0 Z:1];
     [textureRenderer setFontSprite:scoreTexture];
-    [textureRenderer addMatrix];
     [textureRenderer addVertices:scoreTexture.texureRect andColor:*currentCharacterColor andCount:6];
 
 
     [mvpMatrixManager translateInX:-20 Y:15 Z:1];
     [textureRenderer setTexture:shadowTexture];
-    [textureRenderer addMatrix];
     [textureRenderer addVertices:shadowVertices andColor:*shadowColor andCount:6];
-    */
+    
     
     [mvpMatrixManager popModelViewMatrix];
  

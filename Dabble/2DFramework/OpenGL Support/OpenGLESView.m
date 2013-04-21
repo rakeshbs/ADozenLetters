@@ -122,7 +122,7 @@
 
 -(void)drawView
 {
-    if (!isLoopRunning || self.animationTimer == nil)
+    if (!isLoopRunning || self.displayLink == nil)
         return;
     
     glBindFramebuffer(GL_FRAMEBUFFER, viewFramebuffer);
@@ -131,9 +131,9 @@
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     
-	//while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.002, TRUE) == kCFRunLoopRunHandledSource){};
+	while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.002, TRUE) == kCFRunLoopRunHandledSource){};
 
-    if (!isLoopRunning || self.animationTimer == nil)
+    if (!isLoopRunning || self.displayLink == nil)
         return;
     
     [view_delegate drawScene];
@@ -186,8 +186,8 @@
     [view_delegate sceneMadeInActive];
 	isLoopRunning = NO;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(drawView) object:nil];
-    [self.animationTimer invalidate];
-	self.animationTimer = nil;
+    [self.displayLink invalidate];
+    self.displayLink = nil;
 }
 
 -(void)resumeTimer
@@ -195,8 +195,8 @@
 	if (view_delegate != nil && !isLoopRunning)
 	{
 		isLoopRunning = YES;
-		NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:1/60.0 target:self selector:@selector(drawView) userInfo:nil repeats:YES];
-        self.animationTimer = timer;
+		self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(drawView)];
+        [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
         [view_delegate sceneMadeActive];
 	}
 }
