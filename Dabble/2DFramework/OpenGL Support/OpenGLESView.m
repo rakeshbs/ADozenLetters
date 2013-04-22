@@ -111,7 +111,8 @@
                                             :0 :-self.frame.size.height
                                             :0 :-1 :1000];
 		
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        glClearColor(1, 1, 1, 1);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
 		[context presentRenderbuffer:GL_RENDERBUFFER_OES];
 	}
@@ -121,21 +122,11 @@
 }
 
 -(void)drawView
-{
-    if (!isLoopRunning || self.displayLink == nil)
-        return;
-    
+{    
     glBindFramebuffer(GL_FRAMEBUFFER, viewFramebuffer);
-    glViewport(0, 0, backingWidth, backingHeight);
-    glClearColor(1, 1, 1, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    
-	while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.002, TRUE) == kCFRunLoopRunHandledSource){};
+   // while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.002, TRUE) == kCFRunLoopRunHandledSource){};
 
-    if (!isLoopRunning || self.displayLink == nil)
-        return;
-    
     [view_delegate drawScene];
     
  //   glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, viewFramebuffer);
