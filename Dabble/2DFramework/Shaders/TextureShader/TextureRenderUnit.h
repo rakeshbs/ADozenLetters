@@ -24,17 +24,17 @@
 
     GLvoid *buffer;
     
-    GLuint ATTRIB_COLORS;
-    GLuint ATTRIB_VERTICES;
-    GLuint ATTRIB_MVPMATRICES;
-    GLuint ATTRIB_TEXCOORDS;
+    GLuint ATTRIB_COLOR;
+    GLuint ATTRIB_VERTEX;
+    GLuint ATTRIB_MVPMATRIX;
+    GLuint ATTRIB_TEXCOORD;
     
     int currentVBO;
     int count;
     
     size_t SIZE_MATRIX;
     size_t SIZE_VERTEX;
-    size_t SIZE_TEXCOORDS;
+    size_t SIZE_TEXCOORD;
     size_t SIZE_COLOR;
     size_t STRIDE;
     

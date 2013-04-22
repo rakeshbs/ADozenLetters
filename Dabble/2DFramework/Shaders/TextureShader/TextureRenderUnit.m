@@ -26,25 +26,25 @@
         shader = [[GLShaderManager sharedGLShaderManager] getShaderByVertexShaderFileName:@"TextureShader"
                                       andFragmentShaderFileName:@"TextureShader"];
         
-        [shader addAttribute:@"vertices"];
-        [shader addAttribute:@"textureCoordinates"];
-        [shader addAttribute:@"textureColors"];
+        [shader addAttribute:@"vertex"];
+        [shader addAttribute:@"textureCoordinate"];
+        [shader addAttribute:@"textureColor"];
         [shader addAttribute:@"mvpmatrix"];
         
         if (![shader link])
             NSLog(@"Link failed");
         
         
-        ATTRIB_VERTICES = [shader attributeIndex:@"vertex"];
-        ATTRIB_COLORS = [shader attributeIndex:@"color"];
-        ATTRIB_MVPMATRICES = [shader attributeIndex:@"mvpmatrix"];
-        ATTRIB_TEXCOORDS = [shader attributeIndex:@"textureCoordinates"];
+        ATTRIB_VERTEX = [shader attributeIndex:@"vertex"];
+        ATTRIB_COLOR = [shader attributeIndex:@"textureColor"];
+        ATTRIB_MVPMATRIX = [shader attributeIndex:@"mvpmatrix"];
+        ATTRIB_TEXCOORD = [shader attributeIndex:@"textureCoordinate"];
         
         SIZE_MATRIX = sizeof(GLfloat) * 16;
         SIZE_COLOR = sizeof(Color4B);
         SIZE_VERTEX = sizeof(Vertex3D);
-        SIZE_TEXCOORDS = sizeof(TextureCoord);
-        STRIDE = SIZE_MATRIX + SIZE_COLOR + SIZE_VERTEX + SIZE_TEXCOORDS;
+        SIZE_TEXCOORD = sizeof(TextureCoord);
+        STRIDE = SIZE_MATRIX + SIZE_COLOR + SIZE_VERTEX + SIZE_TEXCOORD;
         
         [self setupVBO];
         
@@ -85,8 +85,8 @@
         buffer+=SIZE_MATRIX;
         memcpy(buffer,_cvertices+i, SIZE_VERTEX);
         buffer+=SIZE_VERTEX;
-        memcpy(buffer,_ctextureCoordinates+i, SIZE_TEXCOORDS);
-        buffer+=SIZE_TEXCOORDS;
+        memcpy(buffer,_ctextureCoordinates+i, SIZE_TEXCOORD);
+        buffer+=SIZE_TEXCOORD;
         memcpy(buffer,&_ctextureColor, SIZE_COLOR);
         buffer+=SIZE_COLOR;
     }
@@ -115,34 +115,34 @@
     glActiveTexture (GL_TEXTURE0);
     [_texture bindTexture];
     
-    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 0);
-    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 1);
-    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 2);
-    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 3);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 0);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 1);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 2);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 3);
     
-    glVertexAttribPointer(ATTRIB_MVPMATRICES + 0, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)0);
-    glVertexAttribPointer(ATTRIB_MVPMATRICES + 1, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)16);
-    glVertexAttribPointer(ATTRIB_MVPMATRICES + 2, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)32);
-    glVertexAttribPointer(ATTRIB_MVPMATRICES + 3, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)48);
+    glVertexAttribPointer(ATTRIB_MVPMATRIX + 0, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)0);
+    glVertexAttribPointer(ATTRIB_MVPMATRIX + 1, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)16);
+    glVertexAttribPointer(ATTRIB_MVPMATRIX + 2, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)32);
+    glVertexAttribPointer(ATTRIB_MVPMATRIX + 3, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)48);
     
-    glEnableVertexAttribArray(ATTRIB_VERTICES);
-    glVertexAttribPointer(ATTRIB_VERTICES, 3, GL_FLOAT, 0, STRIDE, (GLvoid*)SIZE_MATRIX);
+    glEnableVertexAttribArray(ATTRIB_VERTEX);
+    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0, STRIDE, (GLvoid*)SIZE_MATRIX);
     
-    glEnableVertexAttribArray(ATTRIB_TEXCOORDS);
-    glVertexAttribPointer(ATTRIB_TEXCOORDS, 2, GL_FLOAT, 0, STRIDE, (GLvoid*)(SIZE_MATRIX+SIZE_VERTEX));
+    glEnableVertexAttribArray(ATTRIB_TEXCOORD);
+    glVertexAttribPointer(ATTRIB_TEXCOORD, 2, GL_FLOAT, 0, STRIDE, (GLvoid*)(SIZE_MATRIX+SIZE_VERTEX));
     
-    glEnableVertexAttribArray(ATTRIB_COLORS);
-    glVertexAttribPointer(ATTRIB_COLORS, 4, GL_UNSIGNED_BYTE, GL_TRUE, STRIDE, (GLvoid*)(SIZE_MATRIX+SIZE_VERTEX+SIZE_TEXCOORDS));
+    glEnableVertexAttribArray(ATTRIB_COLOR);
+    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, STRIDE, (GLvoid*)(SIZE_MATRIX+SIZE_VERTEX+SIZE_TEXCOORD));
     
     glDrawArrays(GL_TRIANGLES, 0, count);
     
-    glDisableVertexAttribArray(ATTRIB_VERTICES);
-    glDisableVertexAttribArray(ATTRIB_COLORS);
-    glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 0);
-    glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 1);
-    glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 2);
-    glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 3);
-    glDisableVertexAttribArray(ATTRIB_TEXCOORDS);
+    glDisableVertexAttribArray(ATTRIB_VERTEX);
+    glDisableVertexAttribArray(ATTRIB_COLOR);
+    glDisableVertexAttribArray(ATTRIB_MVPMATRIX + 0);
+    glDisableVertexAttribArray(ATTRIB_MVPMATRIX + 1);
+    glDisableVertexAttribArray(ATTRIB_MVPMATRIX + 2);
+    glDisableVertexAttribArray(ATTRIB_MVPMATRIX + 3);
+    glDisableVertexAttribArray(ATTRIB_TEXCOORD);
     
     currentVBO++;
     currentVBO%=VBO_COUNT;

@@ -1,6 +1,6 @@
-attribute vec4 vertices;
-attribute vec2 textureCoordinates;
-attribute vec4 textureColors;
+attribute vec4 vertex;
+attribute vec2 textureCoordinate;
+attribute vec4 textureColor;
 attribute mat4 mvpmatrix;
 
 varying vec2 fragmentTextureCoordinates;
