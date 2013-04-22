@@ -51,7 +51,7 @@ Dictionary *dictionary;
         madeDoubles = [[NSMutableArray alloc]init];
         
         
-   //     [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
+        [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
         
         [self loadData];
         

@@ -8,7 +8,7 @@ varying lowp vec4 textureFragColor;
 
 void main()
 {
-    gl_Position = mvpmatrix * vertices;
-    fragmentTextureCoordinates = textureCoordinates;
-    textureFragColor = textureColors;
+    gl_Position = mvpmatrix * vertex;
+    fragmentTextureCoordinates = textureCoordinate;
+    textureFragColor = textureColor;
 }

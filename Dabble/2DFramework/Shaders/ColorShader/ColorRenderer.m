@@ -8,7 +8,7 @@
 
 #import "ColorRenderer.h"
 
-#define VBOLENGTH 5000
+#define VBOLENGTH 100000
 
 @implementation ColorRenderer
 @synthesize DRAW_MODE;

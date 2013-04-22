@@ -9,7 +9,7 @@
 #import "TextureRenderUnit.h"
 #import "GLShaderManager.h"
 
-#define VBOLENGTH 5000
+#define VBOLENGTH 100000
 
 @implementation TextureRenderUnit
 
@@ -68,7 +68,6 @@
     count = 0;
     glBindBuffer(GL_ARRAY_BUFFER, vbos[currentVBO]);
     buffer = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -78,7 +77,7 @@
 {
     Matrix3D mvpMatrix;
     [matrixManager getMVPMatrix:mvpMatrix];
-    
+ 
     for (int i = 0;i<ccount;i++)
     {
         memcpy( buffer,mvpMatrix, SIZE_MATRIX);
