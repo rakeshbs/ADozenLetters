@@ -103,7 +103,7 @@
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         
         glEnable(GL_DEPTH_TEST);
-        
+        glDisable(GL_ALPHA_TEST);
         
         NSLog(@"%d %d %f %f",backingWidth,backingHeight,self.frame.size.width,self.frame.size.height);
         
@@ -188,6 +188,7 @@
 		isLoopRunning = YES;
 		self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(drawView)];
         [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
+        
         [view_delegate sceneMadeActive];
 	}
 }

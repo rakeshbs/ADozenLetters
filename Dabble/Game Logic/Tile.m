@@ -167,28 +167,24 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 {
     [mvpMatrixManager pushModelViewMatrix];
     
-    
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:self.indexOfElementInScene*20];
-    
-    for (int i = 0;i<1;i++)
-    {
     
     [mvpMatrixManager translateInX:0 Y:0 Z:1];
     [triangleColorRenderer addVertices:rectVertices withUniformColor:tileColors[0][colorIndex] andCount:6];
     
     [mvpMatrixManager translateInX:0 Y:0 Z:1];
     [triangleColorRenderer addVertices:rectVertices withUniformColor:currentTileColor[colorIndex] andCount:6];
-   
+  
     
     [mvpMatrixManager translateInX:0 Y:0 Z:1];
     [textureRenderer setFontSprite:characterFontSprite];
     [textureRenderer addVertices:characterFontSprite.texureRect andColor:tileColors[0][0] andCount:6];
-    
+   
     [mvpMatrixManager translateInX:0 Y:0 Z:1];
     [textureRenderer setFontSprite:characterFontSprite];
     [textureRenderer addVertices:characterFontSprite.texureRect andColor:*currentCharacterColor andCount:6];
-    
+ 
     
     [mvpMatrixManager translateInX:20 Y:-15 Z:1];
     [textureRenderer setFontSprite:scoreTexture];
@@ -198,17 +194,11 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     [textureRenderer setFontSprite:scoreTexture];
     [textureRenderer addVertices:scoreTexture.texureRect andColor:*currentCharacterColor andCount:6];
 
-    [mvpMatrixManager translateInX:0 Y:0 Z:1];
-    [textureRenderer setFontSprite:scoreTexture];
-    [textureRenderer addVertices:scoreTexture.texureRect andColor:*currentCharacterColor andCount:6];
-    [mvpMatrixManager translateInX:0 Y:0 Z:1];
-    [textureRenderer setFontSprite:scoreTexture];
-    [textureRenderer addVertices:scoreTexture.texureRect andColor:*currentCharacterColor andCount:6];
-
     [mvpMatrixManager translateInX:-20 Y:15 Z:1];
     [textureRenderer setTexture:shadowTexture];
     [textureRenderer addVertices:shadowVertices andColor:*shadowColor andCount:6];
-    }
+    
+        
     [mvpMatrixManager popModelViewMatrix];
  
     
