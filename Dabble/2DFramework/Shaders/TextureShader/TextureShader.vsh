@@ -1,7 +1,7 @@
-attribute lowp vec4 vertex;
-attribute lowp vec2 textureCoordinate;
-attribute lowp vec4 textureColor;
-attribute lowp mat4 mvpmatrix;
+attribute  vec4 vertex;
+attribute  vec2 textureCoordinate;
+attribute  vec4 textureColor;
+attribute  mat4 mvpmatrix;
 
 varying lowp vec2 fragmentTextureCoordinates;
 varying lowp vec4 textureFragColor;

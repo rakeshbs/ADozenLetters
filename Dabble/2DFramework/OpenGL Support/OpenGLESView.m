@@ -82,7 +82,6 @@
         if ([self respondsToSelector:@selector(contentScaleFactor)])
         {
             self.contentScaleFactor = [[UIScreen mainScreen] scale];
-//                        self.contentScaleFactor = 1;
         }
         
 		CAEAGLLayer *eaglLayer = (CAEAGLLayer*) self.layer;
@@ -119,7 +118,7 @@
 
 -(void)drawView
 {    
-    glBindFramebuffer(GL_FRAMEBUFFER, viewFramebuffer);
+  //  glBindFramebuffer(GL_FRAMEBUFFER, viewFramebuffer);
     
    // while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.002, TRUE) == kCFRunLoopRunHandledSource){};
 
@@ -129,7 +128,7 @@
  //   glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
   //  glResolveMultisampleFramebufferAPPLE();
     
-    glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
+//    glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
     [context presentRenderbuffer:GL_RENDERBUFFER_OES];
     
 }
@@ -141,31 +140,26 @@
 		[view_delegate sceneMadeInActive];
 	self.view_delegate = scene;
 	scene.view = self;
-	//[scene sceneMadeActive];
 	refreshTimeInterval = CFAbsoluteTimeGetCurrent();
 }
 
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	if (view_delegate != nil)
 		[view_delegate touchesBegan:touches withEvent:event];
 }
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	if (view_delegate != nil)
-		[view_delegate touchesMoved:touches withEvent:event];
+    [view_delegate touchesMoved:touches withEvent:event];
 }
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	if (view_delegate != nil)
-		[view_delegate touchesEnded:touches withEvent:event];
+    [view_delegate touchesEnded:touches withEvent:event];
 }
 
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if (view_delegate != nil)
-		[view_delegate touchesEnded:touches withEvent:event];
+    [view_delegate touchesEnded:touches withEvent:event];
 }
 
 -(void)pauseTimer
@@ -179,12 +173,11 @@
 
 -(void)resumeTimer
 {
-	if (view_delegate != nil && !isLoopRunning)
+	if (!isLoopRunning)
 	{
 		isLoopRunning = YES;
 		self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(drawView)];
         [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
-        
         [view_delegate sceneMadeActive];
 	}
 }

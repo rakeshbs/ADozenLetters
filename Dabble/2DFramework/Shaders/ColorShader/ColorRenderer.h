@@ -13,13 +13,23 @@
 #import "GLShaderManager.h"
 #import "GLRenderer.h"
 
-#define VBO_COUNT 3
+#define VBO_COUNT 1
 
 typedef struct
 {
+    Matrix3D mvpMatrix;
     Vector3D vertex;
     Color4B color;
+    
 } ColorVertexData;
+
+@interface ColorVertexLayer : NSObject
+{
+    ColorVertexData *data;
+    int count;
+}
+@end
+
 
 @interface ColorRenderer : GLRenderer
 {
@@ -42,6 +52,9 @@ typedef struct
     size_t STRIDE;
     
     ColorVertexData *dataBuffer;
+    NSMutableArray *layers;
+    
+    int  countDataBuffer;
     
     int currentVBO;
 }

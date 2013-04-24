@@ -13,7 +13,17 @@
 #import "MVPMatrixManager.h"
 #import "GLShaderProgram.h"
 
-#define VBO_COUNT 3
+#define VBO_COUNT 1
+
+typedef struct
+{
+    Matrix3D mvpMatrix;
+    Vector3D vertex;
+    TextureCoord texCoords;
+    Color4B color;
+    
+} TextureVertexData;
+
 
 @interface TextureRenderUnit : NSObject
 {
@@ -21,8 +31,6 @@
     
     MVPMatrixManager *matrixManager;
     GLuint vbos[VBO_COUNT];
-
-    GLvoid *buffer;
     
     GLuint ATTRIB_COLOR;
     GLuint ATTRIB_VERTEX;
@@ -38,6 +46,7 @@
     size_t SIZE_COLOR;
     size_t STRIDE;
     
+    TextureVertexData *dataBuffer;
 }
 
 @property (nonatomic,retain) Texture2D *texture;

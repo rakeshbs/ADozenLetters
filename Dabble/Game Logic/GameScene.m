@@ -173,7 +173,6 @@ Dictionary *dictionary;
 	color.green = 15;
 	color.alpha = 255;
     [director clearScene:color];
-    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     
    [mvpMatrixManager pushModelViewMatrix];
     [mvpMatrixManager translateInX:200 Y:380 Z:0];

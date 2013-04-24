@@ -46,6 +46,8 @@
         SIZE_TEXCOORD = sizeof(TextureCoord);
         STRIDE = SIZE_MATRIX + SIZE_COLOR + SIZE_VERTEX + SIZE_TEXCOORD;
         
+        dataBuffer = malloc(sizeof(TextureVertexData)*VBOLENGTH);
+        
         [self setupVBO];
         
     }
@@ -55,40 +57,30 @@
 -(void)setupVBO
 {
     glGenBuffers(VBO_COUNT, vbos);
-    for (int i = 0;i<VBO_COUNT;i++)
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, vbos[i]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*VBOLENGTH, NULL, GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-    }
 }
 
 -(void)begin
 {
     count = 0;
-    glBindBuffer(GL_ARRAY_BUFFER, vbos[currentVBO]);
-    buffer = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
 -(void)addVertices:(Vertex3D *)_cvertices andTextureCoords:(TextureCoord *)_ctextureCoordinates
           andColor:(Color4B)_ctextureColor andCount:(int)ccount
 {
+    
     Matrix3D mvpMatrix;
     [matrixManager getMVPMatrix:mvpMatrix];
  
     for (int i = 0;i<ccount;i++)
     {
-        memcpy( buffer,mvpMatrix, SIZE_MATRIX);
-        buffer+=SIZE_MATRIX;
-        memcpy(buffer,_cvertices+i, SIZE_VERTEX);
-        buffer+=SIZE_VERTEX;
-        memcpy(buffer,_ctextureCoordinates+i, SIZE_TEXCOORD);
-        buffer+=SIZE_TEXCOORD;
-        memcpy(buffer,&_ctextureColor, SIZE_COLOR);
-        buffer+=SIZE_COLOR;
+        Matrix3DCopyS(mvpMatrix, dataBuffer[count].mvpMatrix);
+        dataBuffer[count].vertex = *(_cvertices + i);
+        dataBuffer[count].color = _ctextureColor;
+        dataBuffer[count].texCoords = *(_ctextureCoordinates + i);
+        count ++;
     }
+    
     count+=ccount;
     
 }
@@ -97,7 +89,7 @@
 {
     
     glBindBuffer(GL_ARRAY_BUFFER, vbos[currentVBO]);
-    glUnmapBufferOES(GL_ARRAY_BUFFER);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(TextureVertexData)*count, dataBuffer, GL_STREAM_DRAW);
     
     [shader use];
     
@@ -152,7 +144,7 @@
     [super dealloc];
     NSLog(@"deallocating texture render unit");
     glDeleteBuffers(VBO_COUNT, vbos);
-//    self.texture = nil;
+    self.texture = nil;
 }
 
 @end

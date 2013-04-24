@@ -70,8 +70,6 @@
 
 -(void)clearScene:(Color4B)_clear_color
 {
- //   glClearColor(1.0f,0.0f,0.0f,1.0f);
-//    glClearColorx((GLfixed)0,(GLfixed)0,(GLfixed)0,(GLfixed)1);
 	glClearColor(_clear_color.red/255.0f, _clear_color.blue/255.0f, _clear_color.green/255.0f, _clear_color.alpha/255.0f);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 }

@@ -37,13 +37,11 @@
 {
     [self update];
     [animator update];
-    if (count<700)
-    {
-        [triangleColorRenderer begin];
-        [textureRenderer begin];
-        [self draw];
-        [self drawElements];
-    }
+    [triangleColorRenderer begin];
+    [textureRenderer begin];
+    [self draw];
+    [self drawElements];
+    
     [triangleColorRenderer end];
     [textureRenderer end];
     count ++;

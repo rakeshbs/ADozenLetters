@@ -8,11 +8,14 @@
 
 #import "ColorRenderer.h"
 
-#define VBOLENGTH 100000
+#define VBOLENGTH 10000
+
+@implementation ColorVertexLayer
+
+@end
 
 @implementation ColorRenderer
 @synthesize DRAW_MODE;
-
 
 
 -(id)init
@@ -25,7 +28,7 @@
         [shader addAttribute:@"vertex"];
         [shader addAttribute:@"color"];        
         [shader addAttribute:@"mvpmatrix"];
-        
+    
         if (![shader link])
             NSLog(@"Link failed");
         
@@ -40,77 +43,69 @@
         
         currentVBO = 0;
         
-        dataBuffer = malloc(sizeof(ColorVertexData) * 10000);
-        
+        dataBuffer = malloc(sizeof(ColorVertexData) * VBOLENGTH);
         [self setupVBO];
     }
     return self;
 }
 
+
+
 -(void)setupVBO
 {
     glGenBuffers(VBO_COUNT, vbos);
-    for (int i = 0;i<VBO_COUNT;i++)
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, vbos[i]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*VBOLENGTH, NULL, GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-    }
+}
+
+-(void)setupVAO
+{
+    glGenVertexArraysOES(1, &vao);
+    glBindVertexArrayOES(vao);
+    glBindVertexArrayOES(0);
 }
 
 -(void)begin
 {
     count = 0;
-    glBindBuffer(GL_ARRAY_BUFFER, vbos[currentVBO]);
-    buffer = glMapBufferOES(GL_ARRAY_BUFFER, GL_WRITE_ONLY_OES);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 -(void)addVertices:(Vertex3D *)_vertices withColorsPerVertex:(Color4B *)_colors andCount:(int)_count
 {
     Matrix3D mvpMatrix;
     [matrixManager getMVPMatrix:mvpMatrix];
-    
+
     for (int i = 0;i<_count;i++)
     {
-        memcpy( buffer,mvpMatrix, SIZE_MATRIX);
-        buffer+=SIZE_MATRIX;
-        memcpy(buffer,_vertices+i, SIZE_VERTEX);
-        buffer+=SIZE_VERTEX;
-        memcpy(buffer,_colors+i, SIZE_COLOR);
-        buffer+=SIZE_COLOR;
-
+        Matrix3DCopyS(mvpMatrix, dataBuffer[count].mvpMatrix);
+        dataBuffer[count].vertex = *(_vertices + i);
+        dataBuffer[count].color = *(_colors + i);
+        count ++;
     }
-    count+=_count;
 }
 
 -(void)addVertices:(Vertex3D *)_vertices withUniformColor:(Color4B)_color andCount:(int)_count
 {
+    
     Matrix3D mvpMatrix;
     [matrixManager getMVPMatrix:mvpMatrix];
-    
+
     for (int i = 0;i<_count;i++)
     {
-        memcpy( buffer,mvpMatrix, SIZE_MATRIX);
-        buffer+=SIZE_MATRIX;
-        memcpy(buffer,_vertices+i, SIZE_VERTEX);
-        buffer+=SIZE_VERTEX;
-        memcpy(buffer,&_color, SIZE_COLOR);
-        buffer+=SIZE_COLOR;
+        Matrix3DCopyS(mvpMatrix, dataBuffer[count].mvpMatrix);
+        dataBuffer[count].vertex = *(_vertices + i);
+        dataBuffer[count].color = _color;
+        count ++;
     }
-    count+=_count;
 }
 
 -(void)end
 {
-
     [self draw];
 }
 
 -(void)draw
 {
     glBindBuffer(GL_ARRAY_BUFFER, vbos[currentVBO]);
-    glUnmapBufferOES(GL_ARRAY_BUFFER);
+    glBufferData(GL_ARRAY_BUFFER, count * sizeof(ColorVertexData), dataBuffer, GL_STREAM_DRAW);
     
     [shader use];
     
@@ -137,12 +132,7 @@
     glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 1);
     glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 2);
     glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 3);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
-    currentVBO++;
-    currentVBO = currentVBO % VBO_COUNT;
-   
+       
 }
 
 -(void)dealloc
