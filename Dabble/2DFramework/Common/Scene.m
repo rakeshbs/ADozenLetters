@@ -27,6 +27,7 @@
         textureRenderer = [[TextureRenderer alloc]init];
         if (elements == nil)
             elements = [[NSMutableArray alloc]init];
+        count = 0;
 
 	}
 	return self;
@@ -36,13 +37,16 @@
 {
     [self update];
     [animator update];
-    [triangleColorRenderer begin];
-    [textureRenderer begin];
-	[self draw];
-	[self drawElements];
+    if (count<700)
+    {
+        [triangleColorRenderer begin];
+        [textureRenderer begin];
+        [self draw];
+        [self drawElements];
+    }
     [triangleColorRenderer end];
     [textureRenderer end];
-    
+    count ++;
 }
 
 -(void)draw{

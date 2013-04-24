@@ -13,6 +13,8 @@
 @implementation ColorRenderer
 @synthesize DRAW_MODE;
 
+
+
 -(id)init
 {
     if (self = [super init])
@@ -38,6 +40,8 @@
         
         currentVBO = 0;
         
+        dataBuffer = malloc(sizeof(ColorVertexData) * 10000);
+        
         [self setupVBO];
     }
     return self;
@@ -49,7 +53,7 @@
     for (int i = 0;i<VBO_COUNT;i++)
     {
         glBindBuffer(GL_ARRAY_BUFFER, vbos[i]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*VBOLENGTH, NULL, GL_STREAM_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*VBOLENGTH, NULL, GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 }

@@ -135,7 +135,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     tileColors[0][0] = (Color4B) { .red = 255, .blue = 255 , .green = 255, .alpha = 255};
     
     //255 250 231
-    tileColors[0][1] = (Color4B) { .red = 255, .blue = 250 , .green = 250, .alpha = 238};
+    tileColors[0][1] = (Color4B) { .red = 255, .blue = 250 , .green = 250, .alpha = 255};
     
     //    rgb 243 156 18
     tileColors[1][0] = (Color4B) { .red = 243, .green = 156 , .blue = 18, .alpha = 255};
@@ -147,6 +147,10 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     
     shadowColor = malloc(sizeof(Color4B));
     Color4fCopyS(transparentColor, shadowColor);
+//    shadowColor->red = 50;
+  //  shadowColor->green = 50;
+    //shadowColor->blue = 50;
+    
     
     currentTileColor = malloc(sizeof(Color4B)*2);
     currentCharacterColor = malloc(sizeof(Color4B));
@@ -169,10 +173,11 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:self.indexOfElementInScene*20];
-    
-    [mvpMatrixManager translateInX:0 Y:0 Z:1];
+
+   
+    [mvpMatrixManager translateInX:0 Y:0 Z:2];
     [triangleColorRenderer addVertices:rectVertices withUniformColor:tileColors[0][colorIndex] andCount:6];
-    
+   
     [mvpMatrixManager translateInX:0 Y:0 Z:1];
     [triangleColorRenderer addVertices:rectVertices withUniformColor:currentTileColor[colorIndex] andCount:6];
   
@@ -197,7 +202,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     [mvpMatrixManager translateInX:-20 Y:15 Z:1];
     [textureRenderer setTexture:shadowTexture];
     [textureRenderer addVertices:shadowVertices andColor:*shadowColor andCount:6];
-    
+   
         
     [mvpMatrixManager popModelViewMatrix];
  

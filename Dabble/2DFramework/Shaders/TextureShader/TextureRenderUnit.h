@@ -13,7 +13,7 @@
 #import "MVPMatrixManager.h"
 #import "GLShaderProgram.h"
 
-#define VBO_COUNT 2
+#define VBO_COUNT 3
 
 @interface TextureRenderUnit : NSObject
 {

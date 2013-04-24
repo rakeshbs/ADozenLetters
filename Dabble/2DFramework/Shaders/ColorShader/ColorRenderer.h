@@ -13,7 +13,13 @@
 #import "GLShaderManager.h"
 #import "GLRenderer.h"
 
-#define VBO_COUNT 2
+#define VBO_COUNT 3
+
+typedef struct
+{
+    Vector3D vertex;
+    Color4B color;
+} ColorVertexData;
 
 @interface ColorRenderer : GLRenderer
 {
@@ -34,6 +40,8 @@
     size_t SIZE_VERTEX;
     size_t SIZE_COLOR;
     size_t STRIDE;
+    
+    ColorVertexData *dataBuffer;
     
     int currentVBO;
 }

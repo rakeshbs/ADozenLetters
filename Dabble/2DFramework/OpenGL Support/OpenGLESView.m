@@ -97,12 +97,8 @@
 		}
 		
 		glBindFramebufferOES(GL_FRAMEBUFFER_OES, viewFramebuffer);
-        
-		glViewport(0, 0, backingWidth, backingHeight);
-		
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-        
-        glEnable(GL_DEPTH_TEST);
+        glViewport(0, 0, backingWidth, backingHeight);
+		glEnable(GL_DEPTH_TEST);
         glDisable(GL_ALPHA_TEST);
         
         NSLog(@"%d %d %f %f",backingWidth,backingHeight,self.frame.size.width,self.frame.size.height);

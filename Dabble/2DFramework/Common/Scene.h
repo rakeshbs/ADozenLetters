@@ -26,6 +26,7 @@
     MVPMatrixManager *mvpMatrixManager;
 	NSMutableArray *elements;
     Animator *animator;
+    int count;
     NSMutableArray *touchesInScene;
     ColorRenderer *triangleColorRenderer;
     TextureRenderer *textureRenderer;
