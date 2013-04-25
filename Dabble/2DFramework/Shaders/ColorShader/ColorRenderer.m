@@ -53,14 +53,35 @@
 
 -(void)setupVBO
 {
-    glGenBuffers(VBO_COUNT, vbos);
+    glGenBuffers(1, &vbo);
+    glGenVertexArraysOES(1, &vao);
+    glBindVertexArrayOES(vao);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, count * sizeof(ColorVertexData), dataBuffer, GL_STREAM_DRAW);
+    
+    
+    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 0);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 1);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 2);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 3);
+    
+    glVertexAttribPointer(ATTRIB_MVPMATRICES + 0, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)0);
+    glVertexAttribPointer(ATTRIB_MVPMATRICES + 1, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)16);
+    glVertexAttribPointer(ATTRIB_MVPMATRICES + 2, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)32);
+    glVertexAttribPointer(ATTRIB_MVPMATRICES + 3, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)48);
+    
+    glEnableVertexAttribArray(ATTRIB_VERTICES);
+    glVertexAttribPointer(ATTRIB_VERTICES, 3, GL_FLOAT, 0, STRIDE, (GLvoid*)SIZE_MATRIX);
+    glEnableVertexAttribArray(ATTRIB_COLORS);
+    glVertexAttribPointer(ATTRIB_COLORS, 4, GL_UNSIGNED_BYTE, GL_TRUE, STRIDE, (GLvoid*)(SIZE_MATRIX+SIZE_VERTEX));
+    
+    glBindVertexArrayOES(0);
 }
 
 -(void)setupVAO
 {
-    glGenVertexArraysOES(1, &vao);
-    glBindVertexArrayOES(vao);
-    glBindVertexArrayOES(0);
+   
 }
 
 -(void)begin
@@ -84,7 +105,6 @@
 
 -(void)addVertices:(Vertex3D *)_vertices withUniformColor:(Color4B)_color andCount:(int)_count
 {
-    
     Matrix3D mvpMatrix;
     [matrixManager getMVPMatrix:mvpMatrix];
 
@@ -95,6 +115,7 @@
         dataBuffer[count].color = _color;
         count ++;
     }
+ 
 }
 
 -(void)end
@@ -104,34 +125,22 @@
 
 -(void)draw
 {
-    glBindBuffer(GL_ARRAY_BUFFER, vbos[currentVBO]);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, count * sizeof(ColorVertexData), dataBuffer, GL_STREAM_DRAW);
     
     [shader use];
     
-    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 0);
-    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 1);
-    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 2);
-    glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 3);
-    
-    glVertexAttribPointer(ATTRIB_MVPMATRICES + 0, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)0);
-    glVertexAttribPointer(ATTRIB_MVPMATRICES + 1, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)16);
-    glVertexAttribPointer(ATTRIB_MVPMATRICES + 2, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)32);
-    glVertexAttribPointer(ATTRIB_MVPMATRICES + 3, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)48);
-
-    glEnableVertexAttribArray(ATTRIB_VERTICES);
-    glVertexAttribPointer(ATTRIB_VERTICES, 3, GL_FLOAT, 0, STRIDE, (GLvoid*)SIZE_MATRIX);
-    glEnableVertexAttribArray(ATTRIB_COLORS);
-    glVertexAttribPointer(ATTRIB_COLORS, 4, GL_UNSIGNED_BYTE, GL_TRUE, STRIDE, (GLvoid*)(SIZE_MATRIX+SIZE_VERTEX));
+    glBindVertexArrayOES(vao);
     
     glDrawArrays(GL_TRIANGLES, 0, count);
-    
+ /*
     glDisableVertexAttribArray(ATTRIB_VERTICES);
     glDisableVertexAttribArray(ATTRIB_COLORS);
     glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 0);
     glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 1);
     glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 2);
-    glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 3);
+    glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 3);*/
        
 }
 
@@ -140,7 +149,7 @@
     [super dealloc];
         NSLog(@"deallocating color renderer");
 
-    glDeleteBuffers(VBO_COUNT, vbos);
+    glDeleteBuffers(1,&vbo);
     
 }
 

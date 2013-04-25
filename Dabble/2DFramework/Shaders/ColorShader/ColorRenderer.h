@@ -13,8 +13,6 @@
 #import "GLShaderManager.h"
 #import "GLRenderer.h"
 
-#define VBO_COUNT 1
-
 typedef struct
 {
     Matrix3D mvpMatrix;
@@ -36,7 +34,7 @@ typedef struct
     GLShaderProgram *shader;
     
     GLuint vao;
-    GLuint vbos[VBO_COUNT];
+    GLuint vbo;
     GLvoid *buffer;
     
     GLuint ATTRIB_COLORS;

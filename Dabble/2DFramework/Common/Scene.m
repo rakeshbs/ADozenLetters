@@ -40,7 +40,7 @@
     [triangleColorRenderer begin];
     [textureRenderer begin];
     [self draw];
-    [self drawElements];
+     [self drawElements];
     
     [triangleColorRenderer end];
     [textureRenderer end];

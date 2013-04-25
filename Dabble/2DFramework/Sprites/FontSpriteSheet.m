@@ -46,7 +46,7 @@ static NSString *fontCharactersNumbers = @"1234567890";
     _texureRect[1] = (Vector3D) { .x = _width/scale, .y = -_height/scale, .z = 0.0};
     _texureRect[2] = (Vector3D) { .x = _width/scale, .y = _height/scale, .z = 0.0};
     
-    _texureRect[3] = (Vector3D) { .x = -_width/scale, .y = -_height/scale, .z = 0.0};
+    _texureRect[3] = (Vector3D) { .x = -_width/scale, .y =   -_height/scale, .z = 0.0};
     _texureRect[4] = (Vector3D) { .x = -_width/scale, .y = _height/scale, .z = 0.0};
     _texureRect[5] = (Vector3D) { .x = _width/scale, .y = _height/scale, .z = 0.0};
     
@@ -58,6 +58,7 @@ static NSString *fontCharactersNumbers = @"1234567890";
     self.fontSpriteSheet = nil;
     self.key = nil;
     free(_texureRect);
+    
     free(_textureCoordinates);
 }
 
@@ -127,6 +128,7 @@ static NSString *fontCharactersNumbers = @"1234567890";
     [texture release];
     self.fontName = nil;
     self.fontColor = nil;
+    self.renderUnit = nil;
 }
 
 

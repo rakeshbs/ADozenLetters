@@ -9,7 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "GLCommon.h"
 
-typedef enum 
+@class TextureRenderUnit;
+
+typedef enum
 {
     FontSpriteTypeAlphabetsUppercase = 0,
     FontSpriteTypeAlphabetsLowerCase,
@@ -21,6 +23,7 @@ typedef enum
 @class FontSpriteSheet;
 
 @interface FontSprite : NSObject
+
 @property (nonatomic,retain) NSString *key;
 @property (nonatomic) CGFloat offSetX;
 @property (nonatomic) CGFloat offSetY;
@@ -29,6 +32,7 @@ typedef enum
 @property (nonatomic,retain) FontSpriteSheet *fontSpriteSheet;
 @property (nonatomic) TextureCoord *textureCoordinates;
 @property (nonatomic) Vector3D *texureRect;
+
 
 -(void)calculateCoordinates;
 
@@ -47,6 +51,7 @@ typedef enum
 @property (nonatomic,retain) UIColor* fontColor;
 @property (nonatomic) CGFloat width;
 @property (nonatomic) CGFloat height;
+@property (nonatomic,assign) TextureRenderUnit *renderUnit;
 
 -(void)calculateCoordinates;
 -(id)initWithType:(FontSpriteType)type andFontName:(NSString *)fontName andFontSize:(CGFloat)fontSize;

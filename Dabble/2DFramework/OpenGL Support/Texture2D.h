@@ -50,6 +50,8 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 #import "GLCommon.h"
 #import "FontSpriteSheet.h"
 
+@class TextureRenderUnit;
+
 //CONSTANTS:
 
 typedef enum {
@@ -102,7 +104,7 @@ Be aware that the content of the generated textures will be upside-down!
 @property(readonly, nonatomic) CGSize contentSize;
 @property(readonly) GLfloat maxS;
 @property(readonly) GLfloat maxT;
-
+@property (nonatomic,assign) TextureRenderUnit *renderUnit;
 @end
 
 /*

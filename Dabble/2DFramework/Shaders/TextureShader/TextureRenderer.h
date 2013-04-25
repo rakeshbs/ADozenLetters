@@ -19,7 +19,7 @@
 {
     GLShaderProgram *shader;
     
-    NSMutableDictionary *textureRenderUnits;
+    NSMutableArray *textureRenderUnits;
     TextureRenderUnit *currentRenderUnit;
     
     BOOL isFontSprite;

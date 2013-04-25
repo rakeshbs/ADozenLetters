@@ -15,7 +15,7 @@
 {
     if (self = [super init])
     {
-        textureRenderUnits = [[NSMutableDictionary alloc]init];
+        textureRenderUnits = [[NSMutableArray alloc]init];
         
         SIZE_MATRIX = sizeof(GLfloat) * 16;
         SIZE_COLOR = sizeof(Color4B);
@@ -29,51 +29,47 @@
 
 -(void)setFontSprite:(FontSprite *)_fontSprite
 {
-    NSString *key = [NSString stringWithFormat:@"%d",_fontSprite.fontSpriteSheet.texture.name];
-    TextureRenderUnit *renderUnit = [textureRenderUnits valueForKey:key];
-    if (renderUnit == nil)
+    if (_fontSprite.fontSpriteSheet.renderUnit == nil)
     {
-       renderUnit = [[TextureRenderUnit alloc]init];
+       TextureRenderUnit *renderUnit = [[TextureRenderUnit alloc]init];
         renderUnit.texture = _fontSprite.fontSpriteSheet.texture;
-        [textureRenderUnits setValue:renderUnit forKey:key];
+        _fontSprite.fontSpriteSheet.renderUnit = renderUnit;
+        [textureRenderUnits addObject:renderUnit];
         [renderUnit begin];
         [renderUnit release];
     }
     isFontSprite = YES;
     currentTextureCoordinates = _fontSprite.textureCoordinates;
-    currentRenderUnit = renderUnit;
+    currentRenderUnit = _fontSprite.fontSpriteSheet.renderUnit;
     currentRenderUnit.isFont = YES;
 }
 
 -(void)setTexture:(Texture2D *)_texture
 {
-    NSString *key = [NSString stringWithFormat:@"%d",_texture.name];
-    TextureRenderUnit *renderUnit = [textureRenderUnits valueForKey:key];
-    if (renderUnit == nil)
+    if (_texture.renderUnit == nil)
     {
-        renderUnit = [[TextureRenderUnit alloc]init];
+        TextureRenderUnit *renderUnit = [[TextureRenderUnit alloc]init];
         renderUnit.texture = _texture;
-        [textureRenderUnits setValue:renderUnit forKey:key];
+        _texture.renderUnit = renderUnit;
+        [textureRenderUnits addObject:renderUnit];
         [renderUnit begin];
-        [renderUnit release];
+       [renderUnit release];
     }
     isFontSprite = NO;
-
     currentTextureCoordinates = [_texture getTextureCoordinates];
-    currentRenderUnit = renderUnit;
+    currentRenderUnit = _texture.renderUnit;
     currentRenderUnit.isFont = NO;
 }
 
 
 -(void)addVertices:(Vertex3D *)_vertices andColor:(Color4B)_textureColor andCount:(int)count
 {
-    [currentRenderUnit addVertices:_vertices andTextureCoords:currentTextureCoordinates
-                          andColor:_textureColor andCount:count];
+    [currentRenderUnit addVertices:_vertices andTextureCoords:currentTextureCoordinates andColor:_textureColor andCount:count];
 }
 
 -(void)begin
 {
-    for (TextureRenderUnit *renderUnit in [textureRenderUnits objectEnumerator])
+    for (TextureRenderUnit *renderUnit in textureRenderUnits)
     {
         [renderUnit begin];
     }
@@ -89,7 +85,7 @@
     
     glEnable(GL_TEXTURE_2D);
     
-    for (TextureRenderUnit *renderUnit in [textureRenderUnits objectEnumerator])
+    for (TextureRenderUnit *renderUnit in textureRenderUnits)
     {
         [renderUnit draw];
     }

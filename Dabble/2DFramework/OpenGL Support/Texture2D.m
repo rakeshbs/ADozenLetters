@@ -124,7 +124,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 {
 	if(_name)
 	 glDeleteTextures(1, &_name);
-	
+	self.renderUnit = nil;
 	[super dealloc];
 }
 
