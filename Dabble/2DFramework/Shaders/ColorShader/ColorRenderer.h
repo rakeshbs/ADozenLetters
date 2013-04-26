@@ -15,8 +15,8 @@
 
 typedef struct
 {
-    Matrix3D mvpMatrix;
-    Vector3D vertex;
+   // Matrix3D mvpMatrix;
+    Vertex4D vertex;
     Color4B color;
     
 } ColorVertexData;

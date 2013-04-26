@@ -204,7 +204,6 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     [textureRenderer setTexture:shadowTexture];
     [textureRenderer addVertices:shadowVertices andColor:*shadowColor andCount:6];
    
-     
     [mvpMatrixManager popModelViewMatrix];
   
     

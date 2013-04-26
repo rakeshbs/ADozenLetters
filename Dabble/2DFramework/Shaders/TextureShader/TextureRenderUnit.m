@@ -29,7 +29,7 @@
         [shader addAttribute:@"vertex"];
         [shader addAttribute:@"textureCoordinate"];
         [shader addAttribute:@"textureColor"];
-        [shader addAttribute:@"mvpmatrix"];
+  //      [shader addAttribute:@"mvpmatrix"];
         
         if (![shader link])
             NSLog(@"Link failed");
@@ -37,12 +37,12 @@
         
         ATTRIB_VERTEX = [shader attributeIndex:@"vertex"];
         ATTRIB_COLOR = [shader attributeIndex:@"textureColor"];
-        ATTRIB_MVPMATRIX = [shader attributeIndex:@"mvpmatrix"];
+  //      ATTRIB_MVPMATRIX = [shader attributeIndex:@"mvpmatrix"];
         ATTRIB_TEXCOORD = [shader attributeIndex:@"textureCoordinate"];
         
-        SIZE_MATRIX = sizeof(GLfloat) * 16;
+        SIZE_MATRIX = 0;//sizeof(GLfloat) * 16;
         SIZE_COLOR = sizeof(Color4B);
-        SIZE_VERTEX = sizeof(Vertex3D);
+        SIZE_VERTEX = sizeof(Vertex4D);
         SIZE_TEXCOORD = sizeof(TextureCoord);
         STRIDE = SIZE_MATRIX + SIZE_COLOR + SIZE_VERTEX + SIZE_TEXCOORD;
         
@@ -64,7 +64,7 @@
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(TextureVertexData)*count, dataBuffer, GL_STREAM_DRAW);
     
-    
+   /*
     glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 0);
     glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 1);
     glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 2);
@@ -74,9 +74,9 @@
     glVertexAttribPointer(ATTRIB_MVPMATRIX + 1, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)16);
     glVertexAttribPointer(ATTRIB_MVPMATRIX + 2, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)32);
     glVertexAttribPointer(ATTRIB_MVPMATRIX + 3, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)48);
-    
+    */
     glEnableVertexAttribArray(ATTRIB_VERTEX);
-    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0, STRIDE, (GLvoid*)SIZE_MATRIX);
+    glVertexAttribPointer(ATTRIB_VERTEX, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)SIZE_MATRIX);
     
     glEnableVertexAttribArray(ATTRIB_TEXCOORD);
     glVertexAttribPointer(ATTRIB_TEXCOORD, 2, GL_FLOAT, 0, STRIDE, (GLvoid*)(SIZE_MATRIX+SIZE_VERTEX));
@@ -103,8 +103,8 @@
  
     for (int i = 0;i<ccount;i++)
     {
-        Matrix3DCopyS(mvpMatrix, dataBuffer[count].mvpMatrix);
-        dataBuffer[count].vertex = *(_cvertices + i);
+//        Matrix3DCopyS(mvpMatrix, dataBuffer[count].mvpMatrix);
+        dataBuffer[count].vertex = Matrix3DMultiplyWithVector3D(mvpMatrix,(_cvertices + i));
         dataBuffer[count].color = _ctextureColor;
         dataBuffer[count].texCoords = *(_ctextureCoordinates + i);
         count ++;

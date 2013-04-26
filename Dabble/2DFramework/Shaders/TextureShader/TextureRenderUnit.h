@@ -15,8 +15,8 @@
 
 typedef struct
 {
-    Matrix3D mvpMatrix;
-    Vector3D vertex;
+ //   Matrix3D mvpMatrix;
+    Vertex4D vertex;
     TextureCoord texCoords;
     Color4B color;
     
@@ -33,7 +33,7 @@ typedef struct
     
     GLuint ATTRIB_COLOR;
     GLuint ATTRIB_VERTEX;
-    GLuint ATTRIB_MVPMATRIX;
+   // GLuint ATTRIB_MVPMATRIX;
     GLuint ATTRIB_TEXCOORD;
     
     int currentVBO;
