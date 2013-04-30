@@ -12,11 +12,16 @@
 
 #define yOffset 75
 
+#define totalTimePerGame 122
+
 @interface GameScene (Private)
 -(void)createTiless;
 @end
 
 @implementation GameScene
+
+Color4B whiteColor4B = (Color4B){.red = 255, .green = 255, .blue = 255, .alpha=255};
+Color4B blackColor4B = (Color4B){.red = 0, .green = 0, .blue = 0, .alpha=255};
 
 
 Dictionary *dictionary;
@@ -33,13 +38,15 @@ Dictionary *dictionary;
             numberOfWordsPerLetter[i] = 0;
         
         analyticsTexture = [[Texture2D alloc]
-                            initWithString:@"W : 0 (0,0,0) D : 0 T : 0"                                                 dimensions:CGSizeMake(320, 50)
+                            initWithString:@"W : 0 (0,0,0) D : 0 T : 0"                                                 dimensions:CGSizeMake(320, 30)
                             horizontalAlignment:UITextAlignmentLeft
                             verticalAlignment:UITextAlignmentMiddle
-                            fontName:@"Helvetica" fontSize:20];
+                            fontName:@"Lato" fontSize:30];
         
-        //analyticsShader.textureColor = ((Color4f) {.red = 1.0, .blue = 1.0, .green = 1.0, .alpha = 1.0});
-        
+    
+        analyticsTextureRenderUnit = [textureRenderer getNewTextureRenderUnit];
+        timerTextureRenderUnit = [textureRenderer getNewTextureRenderUnit];
+        analyticsTextureRenderUnit.texture = analyticsTexture;
         
         
         resString[0] = [[NSMutableString alloc]initWithString:@"#####"];
@@ -51,6 +58,7 @@ Dictionary *dictionary;
         madeDoubles = [[NSMutableArray alloc]init];
         
         
+        remainingTime = totalTimePerGame;
         [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
         
         [self loadData];
@@ -73,6 +81,10 @@ Dictionary *dictionary;
     //NSString *stringData = [dataDict[@"chars"] uppercaseString];
     //[self performSelectorOnMainThread:@selector(sendCharData:) withObject:stringData waitUntilDone:YES];
     
+    remainingTime = totalTimePerGame;
+    lastUpdate = CFAbsoluteTimeGetCurrent();
+    prevTimeLeft=totalTimePerGame;
+    [self update];
     [self performSelectorOnMainThread:@selector(createTiles:) withObject:@"ABCDEFGHIJKL" waitUntilDone:YES];
     
 }
@@ -174,9 +186,17 @@ Dictionary *dictionary;
 	color.alpha = 255;
     [director clearScene:color];
     
-   [mvpMatrixManager pushModelViewMatrix];
-    [mvpMatrixManager translateInX:200 Y:380 Z:0];
-   [mvpMatrixManager popModelViewMatrix];
+    
+    
+    [mvpMatrixManager pushModelViewMatrix];
+    [mvpMatrixManager translateInX:170 Y:340 Z:0];
+    
+    [analyticsTextureRenderUnit addDefaultTextureCoordinatesWithColor:whiteColor4B];
+    [mvpMatrixManager translateInX:-40 Y:40 Z:0];
+    
+    [timerTextureRenderUnit addDefaultTextureCoordinatesWithColor:whiteColor4B];
+    
+    [mvpMatrixManager popModelViewMatrix];
     
 }
 
@@ -191,6 +211,27 @@ Dictionary *dictionary;
             [t animateHideColorInDuration:0.2];
         }
     }
+}
+
+-(void)update
+{
+    CFTimeInterval currentTime = CFAbsoluteTimeGetCurrent();
+    remainingTime-=(currentTime - lastUpdate);
+    int currentTimeLeft = (int)remainingTime;
+    if (currentTimeLeft< prevTimeLeft)
+    {
+        int minutes = currentTimeLeft/60;
+        int seconds = currentTimeLeft%60;
+        
+        NSString *time = [NSString stringWithFormat:@"%d:%02d",minutes,seconds];
+        
+        Texture2D *timeTexture = [[Texture2D alloc]initWithString:time dimensions:CGSizeMake(140, 40) horizontalAlignment:UITextAlignmentCenter verticalAlignment:UITextAlignmentMiddle fontName:@"Lato" fontSize:30];
+        timerTextureRenderUnit.texture = timeTexture;
+        [timeTexture release];
+        
+    }
+    prevTimeLeft = currentTimeLeft;
+    lastUpdate = currentTime;
 }
 
 -(void)tileFinishedMoving:(NSNotification *)notification
@@ -308,14 +349,15 @@ Dictionary *dictionary;
 
 -(void)updateAnalytics
 {
-    /*
+    
     [analyticsTexture release];
     analyticsTexture = [[Texture2D alloc]
-                        initWithString:[NSString stringWithFormat:@"W : %d (%d, %d, %d) D : %d T : %d",numberOfWordsMade,numberOfWordsPerLetter[0],numberOfWordsPerLetter[1],numberOfWordsPerLetter[2],numberOfDoublesMade,numberOfTripletsMade]                                                 dimensions:CGSizeMake(320, 50)
+                        initWithString:[NSString stringWithFormat:@"W : %d (%d, %d, %d) D : %d T : %d",numberOfWordsMade,numberOfWordsPerLetter[0],numberOfWordsPerLetter[1],numberOfWordsPerLetter[2],numberOfDoublesMade,numberOfTripletsMade]                                                 dimensions:CGSizeMake(320, 30)
                         horizontalAlignment:UITextAlignmentLeft
                         verticalAlignment:UITextAlignmentMiddle
-                        fontName:@"Helvetica" fontSize:20];
-     */
+                        fontName:@"Lato" fontSize:30];
+    analyticsTextureRenderUnit.texture = analyticsTexture;
+     
 }
 
 NSMutableArray *tilesArray;
@@ -338,7 +380,7 @@ NSMutableArray *tilesArray;
     if (touch.tapCount == 2)
     {
         [[NSNotificationCenter defaultCenter]removeObserver:self name:@"TileFinishedMoving" object:nil];
-        [self performSelectorInBackground:@selector(loadData) withObject:nil];
+        [self loadData];
         numberOfDoublesMade = 0;
         numberOfTripletsMade = 0;
         numberOfWordsMade = 0;

@@ -33,9 +33,16 @@
 
     
     Texture2D *analyticsTexture;
-  //  StringTextureShader *analyticsShader;
+
+    TextureRenderUnit *analyticsTextureRenderUnit;
+    TextureRenderUnit *timerTextureRenderUnit;
+    
     NSMutableArray *onBoardWords;
      int shouldHighlight[3];
+    
+    CGFloat remainingTime;
+    int prevTimeLeft;
+    CFTimeInterval lastUpdate;
     
 }
 @end

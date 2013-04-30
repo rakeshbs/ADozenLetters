@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "GLCommon.h"
+#import "NEONMatrix.h"
 #import "TextureManager.h"
 #import "FontSpriteSheetManager.h"
 #import "MVPMatrixManager.h"
@@ -15,8 +16,8 @@
 
 typedef struct
 {
- //   Matrix3D mvpMatrix;
-    Vertex4D vertex;
+    Matrix3D mvpMatrix;
+    Vertex3D vertex;
     TextureCoord texCoords;
     Color4B color;
     
@@ -33,7 +34,7 @@ typedef struct
     
     GLuint ATTRIB_COLOR;
     GLuint ATTRIB_VERTEX;
-   // GLuint ATTRIB_MVPMATRIX;
+    GLuint ATTRIB_MVPMATRIX;
     GLuint ATTRIB_TEXCOORD;
     
     int currentVBO;
@@ -55,5 +56,6 @@ typedef struct
           andColor:(Color4B)_ctextureColor andCount:(int)ccount;
 -(void)draw;
 -(void)begin;
+-(void)addDefaultTextureCoordinatesWithColor:(Color4B)_ctextureColor;
 
 @end

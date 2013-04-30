@@ -27,18 +27,18 @@
         
         [shader addAttribute:@"vertex"];
         [shader addAttribute:@"color"];        
-//        [shader addAttribute:@"mvpmatrix"];
+        [shader addAttribute:@"mvpmatrix"];
     
         if (![shader link])
             NSLog(@"Link failed");
         
         ATTRIB_VERTICES = [shader attributeIndex:@"vertex"];
         ATTRIB_COLORS = [shader attributeIndex:@"color"];
-   //     ATTRIB_MVPMATRICES = [shader attributeIndex:@"mvpmatrix"];
+        ATTRIB_MVPMATRICES = [shader attributeIndex:@"mvpmatrix"];
          
-        SIZE_MATRIX = 0;//sizeof(GLfloat) * 16;
+        SIZE_MATRIX = sizeof(GLfloat) * 16;
         SIZE_COLOR = sizeof(Color4B);
-        SIZE_VERTEX = sizeof(Vertex4D);
+        SIZE_VERTEX = sizeof(Vertex3D);
         STRIDE = SIZE_MATRIX + SIZE_COLOR + SIZE_VERTEX;
         
         currentVBO = 0;
@@ -60,7 +60,7 @@
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, count * sizeof(ColorVertexData), dataBuffer, GL_STREAM_DRAW);
     
-    /*
+    
     glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 0);
     glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 1);
     glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 2);
@@ -70,10 +70,10 @@
     glVertexAttribPointer(ATTRIB_MVPMATRICES + 1, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)16);
     glVertexAttribPointer(ATTRIB_MVPMATRICES + 2, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)32);
     glVertexAttribPointer(ATTRIB_MVPMATRICES + 3, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)48);
-    */
+    
     
     glEnableVertexAttribArray(ATTRIB_VERTICES);
-    glVertexAttribPointer(ATTRIB_VERTICES, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)SIZE_MATRIX);
+    glVertexAttribPointer(ATTRIB_VERTICES, 3, GL_FLOAT, 0, STRIDE, (GLvoid*)SIZE_MATRIX);
     glEnableVertexAttribArray(ATTRIB_COLORS);
     glVertexAttribPointer(ATTRIB_COLORS, 4, GL_UNSIGNED_BYTE, GL_TRUE, STRIDE, (GLvoid*)(SIZE_MATRIX+SIZE_VERTEX));
     
@@ -92,8 +92,9 @@
 
     for (int i = 0;i<_count;i++)
     {
-        dataBuffer[count].vertex = Matrix3DMultiplyWithVector3D(mvpMatrix, (_vertices + i));
-        dataBuffer[count].color = *(_colors + i);
+        Matrix3DCopyS(mvpMatrix, dataBuffer[count].mvpMatrix);
+        dataBuffer[count].vertex = _vertices[i];
+        dataBuffer[count].color = _colors[i];
         count ++;
     }
 }
@@ -105,7 +106,9 @@
 
     for (int i = 0;i<_count;i++)
     {
-        dataBuffer[count].vertex = Matrix3DMultiplyWithVector3D(mvpMatrix, (_vertices + i));
+        memcpy(dataBuffer[count].mvpMatrix, mvpMatrix, SIZE_MATRIX);
+       // Matrix3DCopyS(mvpMatrix, dataBuffer[count].mvpMatrix);
+        dataBuffer[count].vertex = _vertices[i];
         dataBuffer[count].color = _color;
         count ++;
     }
@@ -128,13 +131,6 @@
     glBindVertexArrayOES(vao);
     
     glDrawArrays(GL_TRIANGLES, 0, count);
- /*
-    glDisableVertexAttribArray(ATTRIB_VERTICES);
-    glDisableVertexAttribArray(ATTRIB_COLORS);
-    glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 0);
-    glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 1);
-    glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 2);
-    glDisableVertexAttribArray(ATTRIB_MVPMATRICES + 3);*/
        
 }
 

@@ -61,6 +61,14 @@
     currentRenderUnit.isFont = NO;
 }
 
+-(TextureRenderUnit *)getNewTextureRenderUnit
+{
+    TextureRenderUnit *renderUnit = [[TextureRenderUnit alloc]init];
+    [textureRenderUnits addObject:renderUnit];
+    [renderUnit begin];
+    [renderUnit release];
+    return renderUnit;
+}
 
 -(void)addVertices:(Vertex3D *)_vertices andColor:(Color4B)_textureColor andCount:(int)count
 {

@@ -9,14 +9,15 @@
 #import <Foundation/Foundation.h>
 #import "GLShaderProgram.h"
 #import "GLCommon.h"
+#import "NEONMatrix.h"
 #import "MVPMatrixManager.h"
 #import "GLShaderManager.h"
 #import "GLRenderer.h"
 
 typedef struct
 {
-   // Matrix3D mvpMatrix;
-    Vertex4D vertex;
+    Matrix3D mvpMatrix;
+    Vertex3D vertex;
     Color4B color;
     
 } ColorVertexData;

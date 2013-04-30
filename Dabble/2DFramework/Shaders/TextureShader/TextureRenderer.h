@@ -38,4 +38,5 @@
 -(void)begin;
 -(void)end;
 -(void)setFontSprite:(FontSprite *)_fontSprite;
+-(TextureRenderUnit *)getNewTextureRenderUnit;
 @end

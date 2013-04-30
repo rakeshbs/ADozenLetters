@@ -1,21 +1,14 @@
 #define DEGREES_TO_RADIANS(x) ((x) / 180.0 * M_PI)
 #define RADIANS_TO_DEGREES(x) ((x) / M_PI * 180.0)
 
+#import "NEONMatrix.h"
+
 typedef struct 
 {
     GLfloat	x;
     GLfloat y;
     GLfloat z;
 } Vertex3D;
-
-typedef struct
-{
-    GLfloat	x;
-    GLfloat y;
-    GLfloat z;
-    GLfloat w;
-    
-} Vertex4D;
 
 typedef Vertex3D Vector3D;
 
@@ -96,6 +89,7 @@ typedef struct {
     GLubyte blue;
     GLubyte alpha;
 } Color4B;
+
 
 static inline void Vector3DCopy(Vector3D *source,Vector3D *destination)
 {
@@ -255,55 +249,7 @@ static inline void Matrix3DSetRotationByDegrees
 {
     Matrix3DSetRotationByRadians(matrix, DEGREES_TO_RADIANS(degrees), vec);
 }
-static inline void Matrix3DMultiply(Matrix3D m1, Matrix3D m2, Matrix3D result)
-{
-    result[0] = m1[0] * m2[0] + m1[4] * m2[1] 
-    + m1[8] * m2[2] + m1[12] * m2[3];
-    result[1] = m1[1] * m2[0] + m1[5] * m2[1] 
-    + m1[9] * m2[2] + m1[13] * m2[3];
-    result[2] = m1[2] * m2[0] + m1[6] * m2[1] 
-    + m1[10] * m2[2] + m1[14] * m2[3];
-    result[3] = m1[3] * m2[0] + m1[7] * m2[1]
-    + m1[11] * m2[2] + m1[15] * m2[3];
-    
-    result[4] = m1[0] * m2[4] + m1[4] * m2[5] 
-    + m1[8] * m2[6] + m1[12] * m2[7];
-    result[5] = m1[1] * m2[4] + m1[5] * m2[5] 
-    + m1[9] * m2[6] + m1[13] * m2[7];
-    result[6] = m1[2] * m2[4] + m1[6] * m2[5] 
-    + m1[10] * m2[6] + m1[14] * m2[7];
-    result[7] = m1[3] * m2[4] + m1[7] * m2[5] 
-    + m1[11] * m2[6] + m1[15] * m2[7];
-    
-    result[8] = m1[0] * m2[8] + m1[4] * m2[9] 
-    + m1[8] * m2[10] + m1[12] * m2[11];
-    result[9] = m1[1] * m2[8] + m1[5] * m2[9] 
-    + m1[9] * m2[10] + m1[13] * m2[11];
-    result[10] = m1[2] * m2[8] + m1[6] * m2[9] 
-    + m1[10] * m2[10] + m1[14] * m2[11];
-    result[11] = m1[3] * m2[8] + m1[7] * m2[9] 
-    + m1[11] * m2[10] + m1[15] * m2[11];
-    
-    result[12] = m1[0] * m2[12] + m1[4] * m2[13] 
-    + m1[8] * m2[14] + m1[12] * m2[15];
-    result[13] = m1[1] * m2[12] + m1[5] * m2[13] 
-    + m1[9] * m2[14] + m1[13] * m2[15];
-    result[14] = m1[2] * m2[12] + m1[6] * m2[13] 
-    + m1[10] * m2[14] + m1[14] * m2[15];
-    result[15] = m1[3] * m2[12] + m1[7] * m2[13] 
-    + m1[11] * m2[14] + m1[15] * m2[15];
-}
 
-static inline Vertex4D Matrix3DMultiplyWithVector3D(Matrix3D m, Vector3D *v)
-{
-    Vertex4D result;
-    
-    result.x = m[0] * v->x + m[4] * v->y + m[8] * v->z + m[12];
-    result.y = m[1] * v->x + m[5] * v->y + m[9] * v->z + m[13];
-    result.z = m[2] * v->x + m[6] * v->y + m[10] * v->z + m[14];
-    result.w = m[3] * v->x + m[7] * v->y + m[11] * v->z + m[15];
-    return result;
-}
 
 static inline void Matrix3DSetOrthoProjection(Matrix3D matrix, GLfloat left, 
     GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far)
@@ -387,77 +333,4 @@ static inline void TextureCoordCopyS(TextureCoord source,TextureCoord *destinati
     destination->t = source.t;
 }
 
-
-#if defined(__ARM_NEON__)
-
-void NEON_Matrix4Mul(const float* a, const float* b, float* output )
-{
-	__asm__ volatile
-	(
-	 // Store A & B leaving room for q4-q7, which should be preserved
-	 "vldmia %1, { q0-q3 } \n\t"
-	 "vldmia %2, { q8-q11 }\n\t"
-     
-	 // result = first column of B x first row of A
-	 "vmul.f32 q12, q8, d0[0]\n\t"
-	 "vmul.f32 q13, q8, d2[0]\n\t"
-	 "vmul.f32 q14, q8, d4[0]\n\t"
-	 "vmul.f32 q15, q8, d6[0]\n\t"
-     
-	 // result += second column of B x second row of A
-	 "vmla.f32 q12, q9, d0[1]\n\t"
-	 "vmla.f32 q13, q9, d2[1]\n\t"
-	 "vmla.f32 q14, q9, d4[1]\n\t"
-	 "vmla.f32 q15, q9, d6[1]\n\t"
-     
-	 // result += third column of B x third row of A
-	 "vmla.f32 q12, q10, d1[0]\n\t"
-	 "vmla.f32 q13, q10, d3[0]\n\t"
-	 "vmla.f32 q14, q10, d5[0]\n\t"
-	 "vmla.f32 q15, q10, d7[0]\n\t"
-     
-	 // result += last column of B x last row of A
-	 "vmla.f32 q12, q11, d1[1]\n\t"
-	 "vmla.f32 q13, q11, d3[1]\n\t"
-	 "vmla.f32 q14, q11, d5[1]\n\t"
-	 "vmla.f32 q15, q11, d7[1]\n\t"
-     
-	 // output = result registers
-	 "vstmia %0, { q12-q15 }"
-	 : // no output
-	 : "r" (output), "r" (a), "r" (b) 	// input - note *value* of pointer doesn't change
-	 : "memory", "q0", "q1", "q2", "q3", "q8", "q9", "q10", "q11", "q12", "q13", "q14", "q15" //clobber
-	 );
-}
-
-void NEON_Matrix4Vector4Mul(const float* m, const Vector3D* v, Vertex4D* output)
-{
-	__asm__ volatile
-	(
-	 // Store m & v - avoiding q4-q7 which need to be preserved - q0 = result
-	 "vldmia %1, { q8-q11 }	\n\t"	// q8-q11 = m
-	 "vldmia %2, { q1 }		\n\t"	// q1     = v
-     
-	 // result = first column of A x V.x
-	 "vmul.f32 q0, q8, d2[0]\n\t"
-     
-	 // result += second column of A x V.y
-	 "vmla.f32 q0, q9, d2[1]\n\t"
-     
-	 // result += third column of A x V.z
-	 "vmla.f32 q0, q10, d3[0]\n\t"
-     
-	 // result += last column of A x V.w
-	 "vmla.f32 q0, q11, d3[1]\n\t"
-     
-	 // output = result registers
-	 "vstmia %0, { q0 }"
-     
-	 : // no output
-	 : "r" (output), "r" (m), "r" (v) 	// input - note *value* of pointer doesn't change
-	 : "memory", "q0", "q1", "q8", "q9", "q10", "q11" //clobber
-	 );
-}
-
-#endif
 
