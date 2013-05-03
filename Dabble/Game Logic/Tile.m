@@ -56,7 +56,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 {
     if (self = [super init])
     {
-        
+        isColorAnimating = NO;
         startAngle = 0;
         wiggleAngle = 0;
         shadowAlpha = 0;
@@ -175,31 +175,47 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:self.indexOfElementInScene*20];
     
+    if (isColorAnimating || !isBonded)
+    {
+        [mvpMatrixManager translateInX:0 Y:0 Z:2];
+        [triangleColorRenderer addVertices:rectVertices withUniformColor:tileColors[0][colorIndex] andCount:6];
+    }
+    
+    if (isColorAnimating || isBonded)
+    {
+        [mvpMatrixManager translateInX:0 Y:0 Z:1];
+        [triangleColorRenderer addVertices:rectVertices withUniformColor:currentTileColor[colorIndex] andCount:6];
+    }
   
-    [mvpMatrixManager translateInX:0 Y:0 Z:2];
-    [triangleColorRenderer addVertices:rectVertices withUniformColor:tileColors[0][colorIndex] andCount:6];
-   
-    [mvpMatrixManager translateInX:0 Y:0 Z:1];
-    [triangleColorRenderer addVertices:rectVertices withUniformColor:currentTileColor[colorIndex] andCount:6];
-  
-  
-    [mvpMatrixManager translateInX:0 Y:0 Z:1];
-    [textureRenderer setFontSprite:characterFontSprite];
-    [textureRenderer addVertices:characterFontSprite.texureRect andColor:tileColors[0][0] andCount:6];
-   
-    [mvpMatrixManager translateInX:0 Y:0 Z:1];
-    [textureRenderer setFontSprite:characterFontSprite];
-    [textureRenderer addVertices:characterFontSprite.texureRect andColor:*currentCharacterColor andCount:6];
- 
+    if (isColorAnimating || isBonded)
+    {
+        [mvpMatrixManager translateInX:0 Y:0 Z:1];
+        [textureRenderer setFontSprite:characterFontSprite];
+        [textureRenderer addVertices:characterFontSprite.texureRect andColor:tileColors[0][0] andCount:6];
+    }
+    
+    if (isColorAnimating || !isBonded)
+    {
+        [mvpMatrixManager translateInX:0 Y:0 Z:1];
+        [textureRenderer setFontSprite:characterFontSprite];
+        [textureRenderer addVertices:characterFontSprite.texureRect andColor:*currentCharacterColor andCount:6];
+    }
     
     [mvpMatrixManager translateInX:20 Y:-15 Z:1];
-    [textureRenderer setFontSprite:scoreTexture];
-    [textureRenderer addVertices:scoreTexture.texureRect andColor:tileColors[0][0] andCount:6];
-    
-    [mvpMatrixManager translateInX:0 Y:0 Z:1];
-    [textureRenderer setFontSprite:scoreTexture];
-    [textureRenderer addVertices:scoreTexture.texureRect andColor:*currentCharacterColor andCount:6];
 
+    if (isColorAnimating || isBonded)
+    {
+        [textureRenderer setFontSprite:scoreTexture];
+        [textureRenderer addVertices:scoreTexture.texureRect andColor:tileColors[0][0] andCount:6];
+    }
+    
+    if (isColorAnimating || !isBonded)
+    {
+        [mvpMatrixManager translateInX:0 Y:0 Z:1];
+        [textureRenderer setFontSprite:scoreTexture];
+        [textureRenderer addVertices:scoreTexture.texureRect andColor:*currentCharacterColor andCount:6];
+    }
+    
     [mvpMatrixManager translateInX:-20 Y:15 Z:1];
     [textureRenderer setTexture:shadowTexture];
     [textureRenderer addVertices:shadowVertices andColor:*shadowColor andCount:6];
@@ -477,7 +493,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
             *(startAlphas+c) = (currentTileColor + c)->alpha;
         }
         characterStartAlpha = currentCharacterColor->alpha;
-
+        isColorAnimating = YES;
     }
 }
 
@@ -492,6 +508,10 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         }
         shadowAnimationCount--;
         [self updateShadow];
+    }
+    else if (animation.type == ANIMATION_SHOW_COLOR||animation.type == ANIMATION_HIDE_COLOR)
+    {
+        isColorAnimating = NO;
     }
 }
 

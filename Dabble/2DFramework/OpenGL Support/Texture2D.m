@@ -291,10 +291,10 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 		height = i;
 	}
     
-	colorSpace = CGColorSpaceCreateDeviceGray();
-	data = calloc(height, width );
-	context = CGBitmapContextCreateWithData(data, width, height, 8, width ,
-                                            colorSpace, kCGImageAlphaNone,nil,nil);
+	colorSpace = CGColorSpaceCreateDeviceRGB();
+	data = calloc(height, width*4 );
+	context = CGBitmapContextCreateWithData(data, width, height, 8, width * 4 ,
+                                            colorSpace, kCGImageAlphaPremultipliedLast,nil,nil);
 	CGColorSpaceRelease(colorSpace);
 	
 	
@@ -315,7 +315,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     [string drawInRect:CGRectMake(0, offsetY, dimensions.width, fsize.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:alignment];
 	UIGraphicsPopContext();
 	
-	self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_A8 pixelsWide:width pixelsHigh:height contentSize:dimensions];
+	self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:width pixelsHigh:height contentSize:dimensions];
 	
 	CGContextRelease(context);
 	free(data);
@@ -439,11 +439,6 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         
 
     }
-/*
-    CGImageRef imageRef = CGBitmapContextCreateImage (context);
-    UIImage *fileImage = [UIImage imageWithCGImage:imageRef];
-    UIImageWriteToSavedPhotosAlbum(fileImage,nil,nil,nil);
-*/
     
     self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:width pixelsHigh:height contentSize:CGSizeMake(totalWidth, totalHeight)];
 	

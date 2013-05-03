@@ -58,6 +58,8 @@
     CGFloat *startAlphas;
     CGFloat characterStartAlpha;
 
+    BOOL isColorAnimating;
+    
 }
 @property (nonatomic,retain) NSString *character;
 -(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration;

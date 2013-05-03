@@ -43,6 +43,7 @@
     CGFloat remainingTime;
     int prevTimeLeft;
     CFTimeInterval lastUpdate;
+    BOOL isTimerRunning;
     
 }
 @end

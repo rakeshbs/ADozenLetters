@@ -47,7 +47,8 @@ Dictionary *dictionary;
         analyticsTextureRenderUnit = [textureRenderer getNewTextureRenderUnit];
         timerTextureRenderUnit = [textureRenderer getNewTextureRenderUnit];
         analyticsTextureRenderUnit.texture = analyticsTexture;
-        
+        analyticsTextureRenderUnit.isFont = YES;
+        timerTextureRenderUnit.isFont = YES;
         
         resString[0] = [[NSMutableString alloc]initWithString:@"#####"];
         resString[1] = [[NSMutableString alloc]initWithString:@"####"];
@@ -84,6 +85,7 @@ Dictionary *dictionary;
     remainingTime = totalTimePerGame;
     lastUpdate = CFAbsoluteTimeGetCurrent();
     prevTimeLeft=totalTimePerGame;
+    isTimerRunning = YES;
     [self update];
     [self performSelectorOnMainThread:@selector(createTiles:) withObject:@"ABCDEFGHIJKL" waitUntilDone:YES];
     
@@ -215,6 +217,9 @@ Dictionary *dictionary;
 
 -(void)update
 {
+    if (!isTimerRunning)
+        return;
+    
     CFTimeInterval currentTime = CFAbsoluteTimeGetCurrent();
     remainingTime-=(currentTime - lastUpdate);
     int currentTimeLeft = (int)remainingTime;
@@ -230,12 +235,17 @@ Dictionary *dictionary;
         [timeTexture release];
         
     }
+    if (currentTimeLeft <= 0)
+        isTimerRunning = NO;
     prevTimeLeft = currentTimeLeft;
     lastUpdate = currentTime;
 }
 
 -(void)tileFinishedMoving:(NSNotification *)notification
 {
+    if (!isTimerRunning)
+        return;
+    
     for (Tile *sq in tilesArray)
     {
         int arrIndex = (sq.anchorPoint.y-yOffset-50)/80;
