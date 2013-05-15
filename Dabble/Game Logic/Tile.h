@@ -49,7 +49,7 @@
     int score;
     TextureRenderer *shadowTextureShader;
     
-    int isBonded;
+    BOOL isBonded;
     
     CGPoint anchorPoint;
     
@@ -57,8 +57,12 @@
     Color4B *currentCharacterColor;
     CGFloat *startAlphas;
     CGFloat characterStartAlpha;
+    
+    Color4B *startTileColor;
+    Color4B startCharacterColor;
 
     BOOL isColorAnimating;
+    BOOL isBondedColor;
     
 }
 @property (nonatomic,retain) NSString *character;
@@ -67,7 +71,7 @@
 @property (nonatomic) int colorIndex;
 @property (nonatomic) CGPoint centerPoint;
 @property (nonatomic,assign) NSMutableArray *tilesArray;
-@property (nonatomic)    int isBonded;
+@property (nonatomic)    BOOL isBonded;
 -(id)initWithCharacter:(NSString *)_character;
 
 -(void)wiggleFor:(CGFloat)duration;

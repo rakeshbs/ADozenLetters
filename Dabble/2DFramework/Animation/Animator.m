@@ -158,9 +158,9 @@
 -(NSMutableArray *)getRunningAnimationsForObject:(NSObject<AnimationDelegate> *) obj ofType:(int)type
 {
     NSMutableArray *arr = [[NSMutableArray alloc]init];
-    for (int i =0;i<queuedAnimations.count;i++)
+    for (int i =0;i<currentAnimations.count;i++)
     {
-        Animation *animation = queuedAnimations[i];
+        Animation *animation = currentAnimations[i];
         if (animation.animatedObject == obj && animation.type == type)
         {
             [arr addObject:animation];

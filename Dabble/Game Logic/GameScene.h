@@ -8,12 +8,11 @@
 
 #import "Scene.h"
 #import "Tile.h"
-#import "GCHelper.h"
 #import "NSArray+Additions.h"
+#import "DabbleGCHelper.h"
 
-@interface GameScene : Scene <GCHelperDelegate>
+@interface GameScene : Scene
 {
-    GCHelper *gcHelper;
     BOOL isServer;
     int currentRandomNumber;
     
@@ -44,6 +43,8 @@
     int prevTimeLeft;
     CFTimeInterval lastUpdate;
     BOOL isTimerRunning;
+    
+    DabbleGCHelper *gcHelper;
     
 }
 @end

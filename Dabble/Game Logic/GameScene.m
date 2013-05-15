@@ -29,6 +29,8 @@ Dictionary *dictionary;
 {
     if (self = [super init])
     {
+        gcHelper = [[DabbleGCHelper alloc]init];
+        
         currentRandomNumber =  arc4random()+1;
         
         numberOfTripletsMade = 0;
@@ -62,7 +64,8 @@ Dictionary *dictionary;
         remainingTime = totalTimePerGame;
         [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
         
-        [self loadData];
+        [self performSelector:@selector(loadData) withObject:nil afterDelay:0.0];
+        
         
     }
     return  self;
@@ -77,9 +80,11 @@ Dictionary *dictionary;
 {
     
     NSURL *url = [NSURL URLWithString:@"http://qucentis.com/dabble.php"];
-   // NSData *data = [NSData dataWithContentsOfURL:url];
-   // NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    //NSString *stringData = [dataDict[@"chars"] uppercaseString];
+
+    
+    NSData *data = [NSData dataWithContentsOfURL:url];
+    NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    NSString *stringData = [dataDict[@"chars"] uppercaseString];
     //[self performSelectorOnMainThread:@selector(sendCharData:) withObject:stringData waitUntilDone:YES];
     
     remainingTime = totalTimePerGame;
@@ -87,8 +92,8 @@ Dictionary *dictionary;
     prevTimeLeft=totalTimePerGame;
     isTimerRunning = YES;
     [self update];
-    [self performSelectorOnMainThread:@selector(createTiles:) withObject:@"ABCDEFGHIJKL" waitUntilDone:YES];
-    
+    [self performSelectorOnMainThread:@selector(createTiles:) withObject:stringData waitUntilDone:YES];
+    [gcHelper presentGCTurnViewController:self.director.openGLViewController];
 }
 
 -(void)createTiles:(NSString *)dataStr
@@ -401,96 +406,6 @@ NSMutableArray *tilesArray;
     }
     return YES;
 }
-
-//GameCenter Functions
-- (void)matchStarted
-{
-    [self sendRandomNumber];
-    
-}
-- (void)matchEnded
-{
-    NSLog(@"match Ended");
-}
-- (void)match:(GKMatch *)match didReceiveData:(NSData *)data fromPlayer:(NSString *)playerID
-{
-    Message *message = (Message *) [data bytes];
-    
-    int messageType = message->messageType;
-    
-    NSLog(@"message recieved");
-    
-    if (messageType== kMessageTypeRandomNumber)
-    {
-        if (currentRandomNumber == 0)
-            return;
-        
-        MessageRandomNumber * messRandom = (MessageRandomNumber *) [data bytes];
-        if (currentRandomNumber > messRandom->randomNumber)
-        {
-            isServer = YES;
-            [self performSelectorInBackground:@selector(loadData) withObject:nil];
-            NSLog(@"is server");
-        }
-        else if (currentRandomNumber == messRandom->randomNumber)
-        {
-            currentRandomNumber =  arc4random()+1;
-            [self sendRandomNumber];
-        }
-        else
-        {
-            isServer = NO;
-            NSLog(@"is not server");
-        }
-    }
-    else if (messageType == kMessageTypeCharData)
-    {
-        MessageCharData * messData = (MessageCharData *) [data bytes];
-        
-        NSString *stringData = [NSString stringWithCString:messData->charData encoding:NSUTF8StringEncoding];
-        //          int k = 0;
-        [self performSelectorOnMainThread:@selector(createTiless:) withObject:stringData waitUntilDone:YES];
-    }
-}
-- (void)inviteReceived
-{
-    
-}
-- (void)localUserAuthenticated
-{
-    
-    [gcHelper findMatchWithMinPlayers:2 maxPlayers:2 viewController:director.openGLViewController delegate:self];
-}
-
--(void)sendRandomNumber
-{
-    MessageRandomNumber message;
-    message.message.messageType = kMessageTypeRandomNumber;
-    message.randomNumber = currentRandomNumber;
-    NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageRandomNumber)];
-    [self sendDataToOthers:data];
-}
-
--(void)sendCharData:(NSString *)stringData
-{
-    MessageCharData message;
-    message.message.messageType = kMessageTypeCharData;
-    const char *charArray = [stringData cStringUsingEncoding:NSUTF8StringEncoding];
-    
-    for (size_t idx = 0; idx < 12; ++idx) {
-        message.charData[idx] = charArray[idx];
-    }
-    message.charData[12]='\0';
-    
-    NSData *data = [NSData dataWithBytes:&message length:sizeof(MessageCharData)];
-    [self sendDataToOthers:data];
-}
-
--(void)sendDataToOthers:(NSData *)data
-{
-    [gcHelper.match sendDataToAllPlayers:data withDataMode:GKMatchSendDataReliable error:nil];
-}
-
 
 -(void)dealloc
 {

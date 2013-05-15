@@ -160,7 +160,7 @@ static GCTurnBasedMatchHelper *sharedHelper = nil;
     [presentingViewController dismissModalViewControllerAnimated:YES];
     GKMatchRequest *request = [[[GKMatchRequest alloc] init] autorelease]; 
     request.playersToInvite = playersToInvite;
-    request.maxPlayers = 12;
+    request.maxPlayers = 2;
     request.minPlayers = 2;
     GKTurnBasedMatchmakerViewController *viewController =
     [[GKTurnBasedMatchmakerViewController alloc] initWithMatchRequest:request];

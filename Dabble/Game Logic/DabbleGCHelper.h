@@ -7,7 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "GCTurnBasedMatchHelper.h"
 
-@interface DabbleGCHelper : NSObject
 
+@interface DabbleGCHelper : NSObject <GCTurnBasedMatchHelperDelegate>
+{
+    GCTurnBasedMatchHelper *gcHelper;
+}
+
+- (void)presentGCTurnViewController:(UIViewController *)parent;
 @end

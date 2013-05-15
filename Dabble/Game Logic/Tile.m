@@ -64,6 +64,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         shadowAnimationCount = 0;
         isBonded = 0;
         shadowVisible = NO;
+        isBondedColor = NO;
         
         for (int i = 0;i<NUMBEROFSCORES;i++)
         {
@@ -76,8 +77,8 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         
         
         [self setupGraphics];
-       // [self setupSounds];
-    
+        // [self setupSounds];
+        
     }
     
     return self;
@@ -95,11 +96,11 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 -(void)setupStrings
 {
     characterFontSprite = [[FontSpriteSheetManager
-                   getSharedFontSpriteSheetManager]getFontForCharacter:character
-                  withFont:@"Lato" andSize:40];
+                            getSharedFontSpriteSheetManager]getFontForCharacter:character
+                           withFont:@"Lato" andSize:40];
     scoreTexture = [[FontSpriteSheetManager
-                       getSharedFontSpriteSheetManager]getFontForCharacter:[NSString stringWithFormat:@"%d",score]
-                      withFont:@"Lato" andSize:12];
+                     getSharedFontSpriteSheetManager]getFontForCharacter:[NSString stringWithFormat:@"%d",score]
+                    withFont:@"Lato" andSize:12];
 }
 
 -(void)setupGraphics
@@ -132,23 +133,23 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 {
     CGFloat alpha = 0.93f;
     
-    tileColors[0][0] = (Color4B) { .red = 255, .blue = 255 , .green = 255, .alpha = 255};
+    tileColors[0][0] = (Color4B) { .red = 255, .blue = 255 , .green = 255, .alpha = 230};
     
     //255 250 231
-    tileColors[0][1] = (Color4B) { .red = 255, .blue = 250 , .green = 250, .alpha = 255};
+    tileColors[0][1] = (Color4B) { .red = 255, .blue = 255 , .green = 255, .alpha = 200};
     
     //    rgb 243 156 18
-    tileColors[1][0] = (Color4B) { .red = 243, .green = 156 , .blue = 18, .alpha = 255};
+    tileColors[1][0] = (Color4B) { .red = 0, .green = 0 , .blue = 0, .alpha = 230};
     //    rgb 243 156 18
-    tileColors[1][1] = (Color4B) { .red = 243, .green = 156 , .blue = 18, .alpha = 238};
+    tileColors[1][1] = (Color4B) { .red = 0, .green = 0 , .blue = 0, .alpha = 200};
     
     
-    characterColors = (Color4B) { .red = 243, .green = 156 , .blue = 18, .alpha = 255};
+    characterColors = (Color4B) { .red = 0, .green = 0 , .blue = 0, .alpha = 255};
     
     shadowColor = malloc(sizeof(Color4B));
     Color4fCopyS(transparentColor, shadowColor);
-//    shadowColor->red = 50;
-  //  shadowColor->green = 50;
+    //    shadowColor->red = 50;
+    //  shadowColor->green = 50;
     //shadowColor->blue = 50;
     
     
@@ -156,10 +157,12 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     currentCharacterColor = malloc(sizeof(Color4B));
     startAlphas = malloc(sizeof(CGFloat)*2);
     
+    startTileColor = malloc(sizeof(Color4B)*2);
+    
     for (int c = 0;c<2;c++)
     {
-        Color4fCopy(&(tileColors[1][c]), (currentTileColor+c));
-        (currentTileColor+c)->alpha = 0.0;
+        Color4fCopy(&(tileColors[0][c]), (currentTileColor+c));
+        //        (currentTileColor+c)->alpha = 0.0;
     }
     
     Color4fCopy(&characterColors , currentCharacterColor);
@@ -169,59 +172,32 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)draw
 {
-   
+    
     [mvpMatrixManager pushModelViewMatrix];
     
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:self.indexOfElementInScene*20];
     
-    if (isColorAnimating || !isBonded)
-    {
-        [mvpMatrixManager translateInX:0 Y:0 Z:2];
-        [triangleColorRenderer addVertices:rectVertices withUniformColor:tileColors[0][colorIndex] andCount:6];
-    }
+    [mvpMatrixManager translateInX:0 Y:0 Z:1];
+    [triangleColorRenderer addVertices:rectVertices withUniformColor:currentTileColor[colorIndex] andCount:6];
     
-    if (isColorAnimating || isBonded)
-    {
-        [mvpMatrixManager translateInX:0 Y:0 Z:1];
-        [triangleColorRenderer addVertices:rectVertices withUniformColor:currentTileColor[colorIndex] andCount:6];
-    }
-  
-    if (isColorAnimating || isBonded)
-    {
-        [mvpMatrixManager translateInX:0 Y:0 Z:1];
-        [textureRenderer setFontSprite:characterFontSprite];
-        [textureRenderer addVertices:characterFontSprite.texureRect andColor:tileColors[0][0] andCount:6];
-    }
-    
-    if (isColorAnimating || !isBonded)
-    {
-        [mvpMatrixManager translateInX:0 Y:0 Z:1];
-        [textureRenderer setFontSprite:characterFontSprite];
-        [textureRenderer addVertices:characterFontSprite.texureRect andColor:*currentCharacterColor andCount:6];
-    }
+    [mvpMatrixManager translateInX:0 Y:0 Z:1];
+    [textureRenderer setFontSprite:characterFontSprite];
+    [textureRenderer addVertices:characterFontSprite.texureRect andColor:*currentCharacterColor andCount:6];
     
     [mvpMatrixManager translateInX:20 Y:-15 Z:1];
-
-    if (isColorAnimating || isBonded)
-    {
-        [textureRenderer setFontSprite:scoreTexture];
-        [textureRenderer addVertices:scoreTexture.texureRect andColor:tileColors[0][0] andCount:6];
-    }
     
-    if (isColorAnimating || !isBonded)
-    {
-        [mvpMatrixManager translateInX:0 Y:0 Z:1];
-        [textureRenderer setFontSprite:scoreTexture];
-        [textureRenderer addVertices:scoreTexture.texureRect andColor:*currentCharacterColor andCount:6];
-    }
+    [textureRenderer setFontSprite:scoreTexture];
+    [textureRenderer addVertices:scoreTexture.texureRect andColor:*currentCharacterColor andCount:6];
     
     [mvpMatrixManager translateInX:-20 Y:15 Z:1];
+    
+    
     [textureRenderer setTexture:shadowTexture];
     [textureRenderer addVertices:shadowVertices andColor:*shadowColor andCount:6];
-   
+    
     [mvpMatrixManager popModelViewMatrix];
-  
+    
     
 }
 
@@ -242,8 +218,8 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     }
     else if (animation.type == ANIMATION_SHOW_SHADOW)
     {
-       if (shadowAlpha>= SHADOW_ALPHA_MAX)
-           return YES;
+        if (shadowAlpha>= SHADOW_ALPHA_MAX)
+            return YES;
         shadowAlpha = getEaseOut(SHADOW_ALPHA_MIN, SHADOW_ALPHA_MAX, animationRatio);
         shadowColor->alpha = shadowAlpha;
     }
@@ -263,26 +239,35 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     {
         for (int c = 0;c<2;c++)
         {
-            CGFloat alpha = getEaseIn(*(startAlphas+c), tileColors[1][c].alpha, animationRatio);
-            (currentTileColor + c)->alpha = alpha;
+            (currentTileColor + c)->red = getEaseIn((startTileColor+c)->red, tileColors[1][c].red, animationRatio);
+            (currentTileColor + c)->green = getEaseIn((startTileColor+c)->green, tileColors[1][c].green, animationRatio);
+            (currentTileColor + c)->blue = getEaseIn((startTileColor+c)->blue, tileColors[1][c].blue, animationRatio);
+            (currentTileColor + c)->alpha = getEaseIn((startTileColor+c)->alpha, tileColors[1][c].alpha, animationRatio);
+            
         }
         
-        CGFloat alpha = getEaseOut(characterStartAlpha, 0, animationRatio);
-        currentCharacterColor->alpha = alpha;
-
+        currentCharacterColor->red  = getEaseIn(startCharacterColor.red, tileColors[0][0].red, animationRatio);
+        currentCharacterColor->green = getEaseIn(startCharacterColor.green, tileColors[0][0].green, animationRatio);
+        currentCharacterColor->blue = getEaseIn(startCharacterColor.blue, tileColors[0][0].blue, animationRatio);
+        currentCharacterColor->alpha = getEaseIn(startCharacterColor.alpha, tileColors[0][0].alpha, animationRatio);
+        
     }
     else if (animation.type == ANIMATION_HIDE_COLOR)
     {
         
         for (int c = 0;c<2;c++)
         {
-            CGFloat alpha = getEaseIn(*(startAlphas+c), 0, animationRatio);
-            (currentTileColor + c)->alpha = alpha;
+            (currentTileColor + c)->red = getEaseIn((startTileColor+c)->red, tileColors[0][c].red, animationRatio);
+            (currentTileColor + c)->green = getEaseIn((startTileColor+c)->green, tileColors[0][c].green, animationRatio);
+            (currentTileColor + c)->blue = getEaseIn((startTileColor+c)->blue, tileColors[0][c].blue, animationRatio);
+            (currentTileColor + c)->alpha = getEaseIn((startTileColor+c)->alpha, tileColors[0][c].alpha, animationRatio);
+            
         }
         
-        CGFloat alpha = getEaseOut(characterStartAlpha, 255, animationRatio);
-        currentCharacterColor->alpha = alpha;
-
+        currentCharacterColor->red  = getEaseIn(startCharacterColor.red, tileColors[1][0].red, animationRatio);
+        currentCharacterColor->green = getEaseIn(startCharacterColor.green, tileColors[1][0].green, animationRatio);
+        currentCharacterColor->blue = getEaseIn(startCharacterColor.blue, tileColors[1][0].blue, animationRatio);
+        currentCharacterColor->alpha = getEaseIn(startCharacterColor.alpha, tileColors[1][0].alpha, animationRatio);
         
     }
     if (animationRatio >= 1.0)
@@ -396,7 +381,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         
         [animator removeQueuedAnimationsForObject:self ofType:ANIMATION_QUEUE_MOVE];
         [self checkCollissionAndMove];
-  
+        
         if (touch.tapCount >= 1)
         {
             [self moveToPoint:CGPointMake(self.anchorPoint.x ,  self.anchorPoint.y) inDuration:0.2];
@@ -472,15 +457,15 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     }
     else if (animation.type == ANIMATION_HIDE_SHADOW)
     {
-  /*     [soundManager playSoundWithKey:@"place" gain:10.0f
-                                 pitch:1.0f
-                              location:CGPointZero
-                            shouldLoop:NO];*/
+        /*     [soundManager playSoundWithKey:@"place" gain:10.0f
+         pitch:1.0f
+         location:CGPointZero
+         shouldLoop:NO];*/
     }
     else if (animation.type == ANIMATION_SHOW_SHADOW)
     {
         CGFloat p = (rand()%10 - 5)/20.0;
-       // NSLog(@"%f",p);
+        // NSLog(@"%f",p);
         [soundManager playSoundWithKey:@"pick" gain:10.0f
                                  pitch:1.0f+p
                               location:CGPointZero
@@ -490,9 +475,10 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     {
         for (int c = 0;c<2;c++)
         {
-            *(startAlphas+c) = (currentTileColor + c)->alpha;
+            *(startTileColor + c) = *(currentTileColor + c);
         }
-        characterStartAlpha = currentCharacterColor->alpha;
+        startCharacterColor = *currentCharacterColor;
+        
         isColorAnimating = YES;
     }
 }
@@ -509,9 +495,15 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         shadowAnimationCount--;
         [self updateShadow];
     }
-    else if (animation.type == ANIMATION_SHOW_COLOR||animation.type == ANIMATION_HIDE_COLOR)
+    else if (animation.type == ANIMATION_SHOW_COLOR)
     {
         isColorAnimating = NO;
+        isBondedColor = YES;
+    }
+    else if (animation.type == ANIMATION_HIDE_COLOR)
+    {
+        isColorAnimating = NO;
+        isBondedColor = NO;
     }
 }
 
@@ -534,12 +526,12 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay
 {
-
+    
     if (isBonded == 1)
     {
         [[NSNotificationCenter defaultCenter]postNotificationName:@"TileBreakBond" object:self];
     }
-
+    
     startPoint = self.centerPoint;
     endPoint = newPoint;
     [animator addAnimationFor:self ofType:ANIMATION_MOVE ofDuration:duration afterDelayInSeconds:delay];
@@ -547,7 +539,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration
 {
-
+    
     startPoint = self.centerPoint;
     endPoint = newPoint;
     [animator addAnimationFor:self ofType:ANIMATION_THROW ofDuration:duration afterDelayInSeconds:0];
@@ -562,22 +554,26 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)animateShowColorInDuration:(CGFloat)duration
 {
-    if (isBonded == 0)
+    //if (isBonded == NO)
+    // {
+    isBonded = YES;
+    NSMutableArray *hideAnimations = [animator getRunningAnimationsForObject:self ofType:ANIMATION_HIDE_COLOR];
+    
+    
+    if (hideAnimations.count>0)
     {
-        NSMutableArray *hideAnimations = [animator getRunningAnimationsForObject:self ofType:ANIMATION_HIDE_COLOR];
-        
-        if (hideAnimations.count>0)
-        {
-            Animation *animation = hideAnimations[0];
-            duration = [animation getAnimatedRatio]*duration;
-            [animator removeRunningAnimationsForObject:self ofType:ANIMATION_HIDE_COLOR];
-        }
-        [animator removeQueuedAnimationsForObject:self ofType:ANIMATION_HIDE_COLOR];
-        
-        [animator addAnimationFor:self ofType:ANIMATION_SHOW_COLOR ofDuration:duration afterDelayInSeconds:0];
-        [hideAnimations release];
-        isBonded = 1;
+        Animation *animation = hideAnimations[0];
+        duration = [animation getAnimatedRatio]*duration;
+        [animator removeRunningAnimationsForObject:self ofType:ANIMATION_HIDE_COLOR];
     }
+    [animator removeQueuedAnimationsForObject:self ofType:ANIMATION_HIDE_COLOR];
+    [animator removeQueuedAnimationsForObject:self ofType:ANIMATION_SHOW_COLOR];
+    [animator removeRunningAnimationsForObject:self ofType:ANIMATION_SHOW_COLOR];
+    
+    [animator addAnimationFor:self ofType:ANIMATION_SHOW_COLOR ofDuration:duration afterDelayInSeconds:0];
+    [hideAnimations release];
+    
+    //}
 }
 
 -(void)animateHideColorInDuration:(CGFloat)duration
@@ -585,6 +581,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     NSMutableArray *showAnimations = [animator getRunningAnimationsForObject:self
                                                                       ofType:ANIMATION_SHOW_COLOR];
     
+    isBonded = NO;
     if (showAnimations.count>0)
     {
         Animation *animation = showAnimations[0];
@@ -592,11 +589,14 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         [animator removeRunningAnimationsForObject:self ofType:ANIMATION_SHOW_COLOR];
     }
     [animator removeQueuedAnimationsForObject:self ofType:ANIMATION_SHOW_COLOR];
+    [animator removeQueuedAnimationsForObject:self ofType:ANIMATION_HIDE_COLOR];
+    [animator removeRunningAnimationsForObject:self ofType:ANIMATION_HIDE_COLOR];
+    
     
     [animator addAnimationFor:self ofType:ANIMATION_HIDE_COLOR ofDuration:duration afterDelayInSeconds:0];
-    isBonded = 0;
+    
     [showAnimations release];
-
+    
 }
 
 -(void)dealloc

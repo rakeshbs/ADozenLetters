@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		141E4AAE1738B1F400A5F515 /* GCTurnBasedMatchHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 141E4AAD1738B1F400A5F515 /* GCTurnBasedMatchHelper.m */; };
+		141E4AB11738B22700A5F515 /* DabbleGCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 141E4AB01738B22700A5F515 /* DabbleGCHelper.m */; };
 		14362C75172F4A2F00277C93 /* NEONMatrix.c in Sources */ = {isa = PBXBuildFile; fileRef = 14362C73172F4A2F00277C93 /* NEONMatrix.c */; };
 		1445DC8216F97AD600EBBCCF /* Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC2B16F97AD600EBBCCF /* Animation.m */; };
 		1445DC8316F97AD600EBBCCF /* Animator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC2D16F97AD600EBBCCF /* Animator.m */; };
@@ -43,7 +45,6 @@
 		1445DCBB16F97C1600EBBCCF /* ColorShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC4816F97AD600EBBCCF /* ColorShader.fsh */; };
 		1445DCBC16F97C1700EBBCCF /* ColorShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC4B16F97AD600EBBCCF /* ColorShader.vsh */; };
 		144D9CE817042B3500F6EE15 /* Lato-Bol.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 144D9CE717042AF400F6EE15 /* Lato-Bol.ttf */; };
-		145ABAC616FB144D00DA2488 /* GCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 145ABAC516FB144D00DA2488 /* GCHelper.m */; };
 		145EF9F817132320007CF929 /* FontSpriteSheetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 145EF9F717132320007CF929 /* FontSpriteSheetManager.m */; };
 		1464725F16D27801000C8FB4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1464725E16D27801000C8FB4 /* UIKit.framework */; };
 		1464726116D27801000C8FB4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1464726016D27801000C8FB4 /* Foundation.framework */; };
@@ -70,6 +71,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		141E4AAC1738B1F400A5F515 /* GCTurnBasedMatchHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCTurnBasedMatchHelper.h; sourceTree = "<group>"; };
+		141E4AAD1738B1F400A5F515 /* GCTurnBasedMatchHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCTurnBasedMatchHelper.m; sourceTree = "<group>"; };
+		141E4AAF1738B22700A5F515 /* DabbleGCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DabbleGCHelper.h; sourceTree = "<group>"; };
+		141E4AB01738B22700A5F515 /* DabbleGCHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DabbleGCHelper.m; sourceTree = "<group>"; };
 		14362C73172F4A2F00277C93 /* NEONMatrix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = NEONMatrix.c; sourceTree = "<group>"; };
 		14362C74172F4A2F00277C93 /* NEONMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NEONMatrix.h; sourceTree = "<group>"; };
 		1445DC2A16F97AD600EBBCCF /* Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animation.h; sourceTree = "<group>"; };
@@ -135,8 +140,6 @@
 		1445DCB116F97B3700EBBCCF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1445DCB316F97B6900EBBCCF /* Dabble-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Dabble-Prefix.pch"; sourceTree = "<group>"; };
 		144D9CE717042AF400F6EE15 /* Lato-Bol.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Bol.ttf"; sourceTree = "<group>"; };
-		145ABAC416FB144D00DA2488 /* GCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCHelper.h; sourceTree = "<group>"; };
-		145ABAC516FB144D00DA2488 /* GCHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCHelper.m; sourceTree = "<group>"; };
 		145EF9F617132320007CF929 /* FontSpriteSheetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontSpriteSheetManager.h; sourceTree = "<group>"; };
 		145EF9F717132320007CF929 /* FontSpriteSheetManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FontSpriteSheetManager.m; sourceTree = "<group>"; };
 		1464725B16D27801000C8FB4 /* Dabble.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dabble.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -191,6 +194,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		141E4AAB1738B1F400A5F515 /* GameCenter */ = {
+			isa = PBXGroup;
+			children = (
+				141E4AAC1738B1F400A5F515 /* GCTurnBasedMatchHelper.h */,
+				141E4AAD1738B1F400A5F515 /* GCTurnBasedMatchHelper.m */,
+			);
+			path = GameCenter;
+			sourceTree = "<group>";
+		};
 		14362C72172F4A2F00277C93 /* NEON */ = {
 			isa = PBXGroup;
 			children = (
@@ -216,7 +228,7 @@
 		1445DC2816F97AD600EBBCCF /* 2DFramework */ = {
 			isa = PBXGroup;
 			children = (
-				145ABAC316FB144D00DA2488 /* GameCenter */,
+				141E4AAB1738B1F400A5F515 /* GameCenter */,
 				1445DC2916F97AD600EBBCCF /* Animation */,
 				1445DC3016F97AD600EBBCCF /* Common */,
 				1445DC3716F97AD600EBBCCF /* GLElements */,
@@ -335,6 +347,8 @@
 		1445DC6B16F97AD600EBBCCF /* Game Logic */ = {
 			isa = PBXGroup;
 			children = (
+				141E4AAF1738B22700A5F515 /* DabbleGCHelper.h */,
+				141E4AB01738B22700A5F515 /* DabbleGCHelper.m */,
 				1445DC6C16F97AD600EBBCCF /* Dictionary.h */,
 				1445DC6D16F97AD600EBBCCF /* Dictionary.m */,
 				1445DC6E16F97AD600EBBCCF /* GameScene.h */,
@@ -382,15 +396,6 @@
 			);
 			name = "Other Files";
 			path = ..;
-			sourceTree = "<group>";
-		};
-		145ABAC316FB144D00DA2488 /* GameCenter */ = {
-			isa = PBXGroup;
-			children = (
-				145ABAC416FB144D00DA2488 /* GCHelper.h */,
-				145ABAC516FB144D00DA2488 /* GCHelper.m */,
-			);
-			path = GameCenter;
 			sourceTree = "<group>";
 		};
 		1464725216D27801000C8FB4 = {
@@ -574,7 +579,6 @@
 				1445DC9F16F97AD700EBBCCF /* Dictionary.m in Sources */,
 				1445DCA016F97AD700EBBCCF /* GameScene.m in Sources */,
 				1445DCA116F97AD700EBBCCF /* Tile.m in Sources */,
-				145ABAC616FB144D00DA2488 /* GCHelper.m in Sources */,
 				14F119841702A0A400721BEE /* DirectoryReader.m in Sources */,
 				14F119851702A0A400721BEE /* FileReader.m in Sources */,
 				14F119861702A0A400721BEE /* NSDataExtensions.m in Sources */,
@@ -583,6 +587,8 @@
 				14C0F4051703311100F6D422 /* NSArray+Additions.m in Sources */,
 				14817041171F0A2B0058FE43 /* TextureRenderUnit.m in Sources */,
 				14362C75172F4A2F00277C93 /* NEONMatrix.c in Sources */,
+				141E4AAE1738B1F400A5F515 /* GCTurnBasedMatchHelper.m in Sources */,
+				141E4AB11738B22700A5F515 /* DabbleGCHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
