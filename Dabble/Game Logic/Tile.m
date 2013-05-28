@@ -155,9 +155,9 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     
     currentTileColor = malloc(sizeof(Color4B)*2);
     currentCharacterColor = malloc(sizeof(Color4B));
-    startAlphas = malloc(sizeof(CGFloat)*2);
+   // startAlphas = malloc(sizeof(CGFloat)*2);
     
-    startTileColor = malloc(sizeof(Color4B)*2);
+    startTileColors = malloc(sizeof(Color4B)*2);
     
     for (int c = 0;c<2;c++)
     {
@@ -239,10 +239,10 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     {
         for (int c = 0;c<2;c++)
         {
-            (currentTileColor + c)->red = getEaseIn((startTileColor+c)->red, tileColors[1][c].red, animationRatio);
-            (currentTileColor + c)->green = getEaseIn((startTileColor+c)->green, tileColors[1][c].green, animationRatio);
-            (currentTileColor + c)->blue = getEaseIn((startTileColor+c)->blue, tileColors[1][c].blue, animationRatio);
-            (currentTileColor + c)->alpha = getEaseIn((startTileColor+c)->alpha, tileColors[1][c].alpha, animationRatio);
+            (currentTileColor + c)->red = getEaseIn((startTileColors+c)->red, tileColors[1][c].red, animationRatio);
+            (currentTileColor + c)->green = getEaseIn((startTileColors+c)->green, tileColors[1][c].green, animationRatio);
+            (currentTileColor + c)->blue = getEaseIn((startTileColors+c)->blue, tileColors[1][c].blue, animationRatio);
+            (currentTileColor + c)->alpha = getEaseIn((startTileColors+c)->alpha, tileColors[1][c].alpha, animationRatio);
             
         }
         
@@ -257,10 +257,10 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         
         for (int c = 0;c<2;c++)
         {
-            (currentTileColor + c)->red = getEaseIn((startTileColor+c)->red, tileColors[0][c].red, animationRatio);
-            (currentTileColor + c)->green = getEaseIn((startTileColor+c)->green, tileColors[0][c].green, animationRatio);
-            (currentTileColor + c)->blue = getEaseIn((startTileColor+c)->blue, tileColors[0][c].blue, animationRatio);
-            (currentTileColor + c)->alpha = getEaseIn((startTileColor+c)->alpha, tileColors[0][c].alpha, animationRatio);
+            (currentTileColor + c)->red = getEaseIn((startTileColors+c)->red, tileColors[0][c].red, animationRatio);
+            (currentTileColor + c)->green = getEaseIn((startTileColors+c)->green, tileColors[0][c].green, animationRatio);
+            (currentTileColor + c)->blue = getEaseIn((startTileColors+c)->blue, tileColors[0][c].blue, animationRatio);
+            (currentTileColor + c)->alpha = getEaseIn((startTileColors+c)->alpha, tileColors[0][c].alpha, animationRatio);
             
         }
         
@@ -475,7 +475,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     {
         for (int c = 0;c<2;c++)
         {
-            *(startTileColor + c) = *(currentTileColor + c);
+            *(startTileColors + c) = *(currentTileColor + c);
         }
         startCharacterColor = *currentCharacterColor;
         
@@ -605,7 +605,8 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     free(shadowColor);
     free(currentCharacterColor);
     free(currentTileColor);
-    free(startAlphas);
+    free(startTileColors);
+    //free(startAlphas);
     self.tilesArray = nil;
 }
 

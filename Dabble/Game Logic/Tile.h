@@ -55,16 +55,15 @@
     
     Color4B *currentTileColor;
     Color4B *currentCharacterColor;
-    CGFloat *startAlphas;
-    CGFloat characterStartAlpha;
-    
-    Color4B *startTileColor;
+
+    Color4B *startTileColors;
     Color4B startCharacterColor;
 
     BOOL isColorAnimating;
     BOOL isBondedColor;
-    
+
 }
+
 @property (nonatomic,retain) NSString *character;
 -(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration;
 @property (nonatomic) CGPoint anchorPoint;
@@ -73,7 +72,6 @@
 @property (nonatomic,assign) NSMutableArray *tilesArray;
 @property (nonatomic)    BOOL isBonded;
 -(id)initWithCharacter:(NSString *)_character;
-
 -(void)wiggleFor:(CGFloat)duration;
 -(void)resetToAnchorPoint;
 -(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay;
@@ -81,4 +79,5 @@
 -(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay;
 -(void)animateShowColorInDuration:(CGFloat)duration;
 -(void)animateHideColorInDuration:(CGFloat)duration;
+
 @end
