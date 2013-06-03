@@ -175,7 +175,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 {
     
     [mvpMatrixManager pushModelViewMatrix];
-    
+    /*
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:self.indexOfElementInScene*20];
     
@@ -197,7 +197,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     [textureRenderer setTexture:shadowTexture];
     [textureRenderer addVertices:shadowVertices andColor:*shadowColor andCount:6];
     
-    [mvpMatrixManager popModelViewMatrix];
+    [mvpMatrixManager popModelViewMatrix];*/
     
     
 }
@@ -314,7 +314,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     if (index == 0)
     {
         
-        CGPoint touchPoint = [touch locationInView:self.scene.view];
+        CGPoint touchPoint = [touch locationInGLElement:self];
         wiggleAngle = 0;
         [self moveToFront];
         
@@ -340,7 +340,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     if (index == 0)
     {
         
-        CGPoint touchPoint = [touch locationInView:self.scene.view];
+        CGPoint touchPoint = [touch locationInGLElement:self];
         
         self.centerPoint =  CGPointMake(touchPoint.x+touchOffSet.x, 460 - touchPoint.y + touchOffSet.y);
         

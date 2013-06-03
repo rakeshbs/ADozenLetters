@@ -3,12 +3,7 @@
 
 #import "NEONMatrix.h"
 
-typedef struct 
-{
-    GLfloat	x;
-    GLfloat y;
-    GLfloat z;
-} Vertex3D;
+
 
 typedef Vertex3D Vector3D;
 
@@ -122,7 +117,7 @@ static inline void Color4fCopyS(Color4B source,Color4B *destination)
     destination->alpha = source.alpha;
 }
 
-typedef GLfloat Matrix3D[16];
+typedef float Matrix3D[16];
 static inline void Matrix3DSetIdentity(Matrix3D matrix)
 {
     matrix[0] = matrix[5] = matrix[10] = matrix[15] = 1.0;

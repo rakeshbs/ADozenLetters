@@ -63,6 +63,7 @@
 		14817044171F0A510058FE43 /* TextureShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1481703E171F0A2B0058FE43 /* TextureShader.fsh */; };
 		14817045171F0A540058FE43 /* TextureShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1481703F171F0A2B0058FE43 /* TextureShader.vsh */; };
 		149D383C175883440067A122 /* UITouch+GLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 149D383B175883440067A122 /* UITouch+GLElement.m */; };
+		14BB17B4175C6E8D00662647 /* LocalModelViewMatrixStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 14BB17B3175C6E8C00662647 /* LocalModelViewMatrixStack.m */; };
 		14C0F4051703311100F6D422 /* NSArray+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C0F4041703311100F6D422 /* NSArray+Additions.m */; };
 		14D4248E1700255C0010657A /* sprite.png in Resources */ = {isa = PBXBuildFile; fileRef = 14D4248D1700255C0010657A /* sprite.png */; };
 		14F1197A170297E400721BEE /* w3 in Resources */ = {isa = PBXBuildFile; fileRef = 14F11977170297E400721BEE /* w3 */; };
@@ -168,6 +169,8 @@
 		1481703F171F0A2B0058FE43 /* TextureShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = TextureShader.vsh; sourceTree = "<group>"; };
 		149D383A175883440067A122 /* UITouch+GLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITouch+GLElement.h"; sourceTree = "<group>"; };
 		149D383B175883440067A122 /* UITouch+GLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITouch+GLElement.m"; sourceTree = "<group>"; };
+		14BB17B2175C6E8C00662647 /* LocalModelViewMatrixStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocalModelViewMatrixStack.h; path = ../LocalModelViewMatrixStack.h; sourceTree = "<group>"; };
+		14BB17B3175C6E8C00662647 /* LocalModelViewMatrixStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LocalModelViewMatrixStack.m; path = ../LocalModelViewMatrixStack.m; sourceTree = "<group>"; };
 		14C0F4031703311100F6D422 /* NSArray+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Additions.h"; sourceTree = "<group>"; };
 		14C0F4041703311100F6D422 /* NSArray+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Additions.m"; sourceTree = "<group>"; };
 		14D4248D1700255C0010657A /* sprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sprite.png; sourceTree = "<group>"; };
@@ -316,6 +319,8 @@
 				1445DC4F16F97AD600EBBCCF /* GLShaderManager.m */,
 				1445DC5016F97AD600EBBCCF /* GLShaderProgram.h */,
 				1445DC5116F97AD600EBBCCF /* GLShaderProgram.m */,
+				14BB17B2175C6E8C00662647 /* LocalModelViewMatrixStack.h */,
+				14BB17B3175C6E8C00662647 /* LocalModelViewMatrixStack.m */,
 				1445DC5216F97AD600EBBCCF /* MVPMatrixManager.h */,
 				1445DC5316F97AD600EBBCCF /* MVPMatrixManager.m */,
 			);
@@ -615,6 +620,7 @@
 				1408EBD01754429900462F62 /* Round.m in Sources */,
 				146646F91756029B0029B8C2 /* TileControl.m in Sources */,
 				149D383C175883440067A122 /* UITouch+GLElement.m in Sources */,
+				14BB17B4175C6E8D00662647 /* LocalModelViewMatrixStack.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

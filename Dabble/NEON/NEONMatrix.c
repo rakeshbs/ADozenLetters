@@ -98,16 +98,15 @@ void Matrix3DMultiply(float m0[16], float m1[16], float d[16])
 
 //matrix vector multiplication. d = m * v
 void
-matvec4_c(float m[16], float v[4], float d[4])
+matvec4_c(float m[16], Vertex3D *v, Vertex3D *d)
 {
-	d[0] = m[0]*v[0] + m[4]*v[1] + m[8]*v[2] + m[12]*v[3];
-	d[1] = m[1]*v[0] + m[5]*v[1] + m[9]*v[2] + m[13]*v[3];
-	d[2] = m[2]*v[0] + m[6]*v[1] + m[10]*v[2] + m[14]*v[3];
-	d[3] = m[3]*v[0] + m[7]*v[1] + m[11]*v[2] + m[15]*v[3];
+	d->x = m[0]*v->x + m[4]*v->y + m[8]*v->z + m[12]*v->t;
+	d->y = m[1]*v->x + m[5]*v->y + m[9]*v->z + m[13]*v->t;
+	d->z = m[2]*v->x + m[6]*v->y + m[10]*v->z + m[14]*v->t;
+	d->t = m[3]*v->x + m[7]*v->y + m[11]*v->z + m[15]*v->t;
 }
 
-void
-matvec4_neon(float m[16], float v[4], float d[4])
+void MatrixVectorMultiply(float m[16], Vertex3D *v, Vertex3D *d)
 {
 #ifdef __MATH_NEON
 	asm volatile (
