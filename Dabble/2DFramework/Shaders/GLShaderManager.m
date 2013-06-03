@@ -10,6 +10,7 @@
 #import "GLShaderProgram.h"
 #import "SynthesizeSingleton.h"
 
+
 @implementation GLShaderManager
 
 SYNTHESIZE_SINGLETON_FOR_CLASS(GLShaderManager)
@@ -23,6 +24,50 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(GLShaderManager)
     return self;
 }
 
+
+-(ShaderAttributeTypes)getAttributeType:(NSString *)vertexShaderName
+{
+    if ([vertexShaderName isEqualToString:@"ColorShader"])
+    {
+        return ShaderAttributeVertexColor;
+    }
+    else  if ([vertexShaderName isEqualToString:@"TextureShader"])
+    {
+        return ShaderAttributeVertexColorTexture;
+    }
+    
+    return ShaderAttributeVertexColor;
+}
+
+-(void)addAttributesOfType:(ShaderAttributeTypes)attType toShader:(GLShaderProgram *)program
+{
+    if (attType == ShaderAttributeVertexColor)
+    {
+        [program addAttribute:@"vertex"];
+        [program addAttribute:@"color"];
+        
+    }
+    else if (attType == ShaderAttributeVertexColorTexture)
+    {
+        [program addAttribute:@"vertex"];
+        [program addAttribute:@"textureColor"];
+        [program addAttribute:@"textureCoordinate"];
+    }
+    else if (attType == ShaderAttributeMatrixVertexColor)
+    {
+        [program addAttribute:@"mvpMatrix"];
+        [program addAttribute:@"vertex"];
+        [program addAttribute:@"color"];
+    }
+    else if (attType == ShaderAttributeMatrixVertexColorTexture)
+    {
+        [program addAttribute:@"mvpMatrix"];
+        [program addAttribute:@"vertex"];
+        [program addAttribute:@"textureColor"];
+        [program addAttribute:@"textureCoordinate"];
+    }
+}
+
 -(GLShaderProgram *)getShaderByVertexShaderFileName:(NSString *)vertexShaderFilename andFragmentShaderFileName:(NSString *)fragmentShaderFilename
 {
     NSString *key = [NSString stringWithFormat:@"%@&%@",vertexShaderFilename,fragmentShaderFilename];
@@ -31,13 +76,19 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(GLShaderManager)
     
     shader = shaders[key];
     
+    ShaderAttributeTypes type = [self getAttributeType:vertexShaderFilename];
+    
     if (shader == nil)
     {
         shader = [[GLShaderProgram alloc]initWithVertexShaderFilename:vertexShaderFilename
-                                        fragmentShaderFilename:fragmentShaderFilename];
+                                               fragmentShaderFilename:fragmentShaderFilename];
         shaders[key] = shader;
         [shader release];
     }
+    
+    [self addAttributesOfType:type toShader:shader];
+    [shader link];
+    
     return shader;
 }
 

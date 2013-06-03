@@ -8,10 +8,21 @@
 
 #import <Foundation/Foundation.h>
 #import "GLShaderProgram.h"
+
+typedef enum
+{
+    ShaderAttributeVertexColor = 1,
+    ShaderAttributeVertexColorTexture = 2,
+    ShaderAttributeMatrixVertexColor = 3,
+    ShaderAttributeMatrixVertexColorTexture = 4
+}ShaderAttributeTypes;
+
 @interface GLShaderManager : NSObject
 {
     NSMutableDictionary *shaders;
 }
 +(id)sharedGLShaderManager;
 -(GLShaderProgram *)getShaderByVertexShaderFileName:(NSString *)vertexShaderFilename andFragmentShaderFileName:(NSString *)fragmentShaderFilename;
+
+
 @end
