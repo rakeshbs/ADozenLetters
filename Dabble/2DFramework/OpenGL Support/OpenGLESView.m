@@ -121,7 +121,8 @@
   //  glBindFramebuffer(GL_FRAMEBUFFER, viewFramebuffer);
     
    // while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.002, TRUE) == kCFRunLoopRunHandledSource){};
-
+    currentZLayer = 1;
+    
     [view_delegate drawScene];
     
  //   glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, viewFramebuffer);
@@ -139,7 +140,7 @@
 	if (view_delegate != nil)
 		[view_delegate sceneMadeInActive];
 	self.view_delegate = scene;
-	scene.view = self;
+	scene.openGLView = self;
 	refreshTimeInterval = CFAbsoluteTimeGetCurrent();
 }
 

@@ -13,14 +13,14 @@
 #import "GLShaderManager.h"
 #import "GLRenderer.h"
 #import "Texture2D.h"
-#import "TextureRenderUnit.h"
+#import "BatchTextureRenderUnit.h"
 
-@interface TextureRenderer : GLRenderer
+@interface BatchTextureRenderer : GLRenderer
 {
     GLShaderProgram *shader;
     
     NSMutableArray *textureRenderUnits;
-    TextureRenderUnit *currentRenderUnit;
+    BatchTextureRenderUnit *currentRenderUnit;
     
     BOOL isFontSprite;
     TextureCoord *currentTextureCoordinates;
@@ -38,5 +38,5 @@
 -(void)begin;
 -(void)end;
 -(void)setFontSprite:(FontSprite *)_fontSprite;
--(TextureRenderUnit *)getNewTextureRenderUnit;
+-(BatchTextureRenderUnit *)getNewTextureRenderUnit;
 @end

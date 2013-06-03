@@ -29,7 +29,7 @@ Dictionary *dictionary;
 {
     if (self = [super init])
     {
-        gcHelper = [[DabbleGCHelper alloc]init];
+        
         
         currentRandomNumber =  arc4random()+1;
         
@@ -46,8 +46,8 @@ Dictionary *dictionary;
                             fontName:@"Lato" fontSize:30];
         
     
-        analyticsTextureRenderUnit = [textureRenderer getNewTextureRenderUnit];
-        timerTextureRenderUnit = [textureRenderer getNewTextureRenderUnit];
+        //analyticsTextureRenderUnit = [textureRenderer getNewTextureRenderUnit];
+       // timerTextureRenderUnit = [textureRenderer getNewTextureRenderUnit];
         analyticsTextureRenderUnit.texture = analyticsTexture;
         analyticsTextureRenderUnit.isFont = YES;
         timerTextureRenderUnit.isFont = YES;
@@ -93,7 +93,7 @@ Dictionary *dictionary;
     isTimerRunning = YES;
     [self update];
     [self performSelectorOnMainThread:@selector(createTiles:) withObject:stringData waitUntilDone:YES];
-    [gcHelper presentGCTurnViewController:self.director.openGLViewController];
+    
 }
 
 -(void)createTiles:(NSString *)dataStr
@@ -121,7 +121,7 @@ Dictionary *dictionary;
     Tile *tile;
     if (tilesArray != nil)
     {
-        [elements removeObjectsInArray:tilesArray];
+        [subElements removeObjectsInArray:tilesArray];
         [tilesArray release];
     }
     

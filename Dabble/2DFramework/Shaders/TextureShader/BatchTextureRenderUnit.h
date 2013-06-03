@@ -24,7 +24,7 @@ typedef struct
 } TextureVertexData;
 
 
-@interface TextureRenderUnit : NSObject
+@interface BatchTextureRenderUnit : NSObject
 {
     GLShaderProgram *shader;
     

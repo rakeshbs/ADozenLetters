@@ -9,7 +9,7 @@
 #import "Scene.h"
 #import "Tile.h"
 #import "NSArray+Additions.h"
-#import "DabbleGCHelper.h"
+#import "GCHelper.h"
 
 @interface GameScene : Scene
 {
@@ -33,8 +33,8 @@
     
     Texture2D *analyticsTexture;
 
-    TextureRenderUnit *analyticsTextureRenderUnit;
-    TextureRenderUnit *timerTextureRenderUnit;
+    BatchTextureRenderUnit *analyticsTextureRenderUnit;
+    BatchTextureRenderUnit *timerTextureRenderUnit;
     
     NSMutableArray *onBoardWords;
      int shouldHighlight[3];
@@ -44,7 +44,6 @@
     CFTimeInterval lastUpdate;
     BOOL isTimerRunning;
     
-    DabbleGCHelper *gcHelper;
     
 }
 @end

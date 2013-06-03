@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Rakesh. All rights reserved.
 //
 
-#import "ColorRenderer.h"
+#import "BatchColorRenderer.h"
 
 #define VBOLENGTH 10000
 
@@ -14,7 +14,7 @@
 
 @end
 
-@implementation ColorRenderer
+@implementation BatchColorRenderer
 @synthesize DRAW_MODE;
 
 
@@ -42,6 +42,8 @@
         STRIDE = SIZE_MATRIX + SIZE_COLOR + SIZE_VERTEX;
         
         currentVBO = 0;
+        
+        DRAW_MODE = GL_TRIANGLES;
         
         dataBuffer = malloc(sizeof(ColorVertexData) * VBOLENGTH);
         [self setupVBO];
@@ -107,7 +109,6 @@
     for (int i = 0;i<_count;i++)
     {
         memcpy(dataBuffer[count].mvpMatrix, mvpMatrix, SIZE_MATRIX);
-       // Matrix3DCopyS(mvpMatrix, dataBuffer[count].mvpMatrix);
         dataBuffer[count].vertex = _vertices[i];
         dataBuffer[count].color = _color;
         count ++;
@@ -117,20 +118,22 @@
 
 -(void)end
 {
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, count * sizeof(ColorVertexData), dataBuffer, GL_STREAM_DRAW);
+    
+    
     [self draw];
 }
 
 -(void)draw
 {
-    
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, count * sizeof(ColorVertexData), dataBuffer, GL_STREAM_DRAW);
     
     [shader use];
     
     glBindVertexArrayOES(vao);
     
-    glDrawArrays(GL_TRIANGLES, 0, count);
+    glDrawArrays(DRAW_MODE, 0, count);
        
 }
 

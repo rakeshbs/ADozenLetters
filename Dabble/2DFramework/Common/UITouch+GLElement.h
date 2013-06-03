@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UITouch (UITouch_GLElement)
+@class GLElement;
 
+@interface UITouch (UITouch_GLElement)
+-(CGPoint)locationInGLElement:(GLElement *)element;
 @end

@@ -29,8 +29,11 @@
 	CFTimeInterval refreshTimeInterval;
 	CFTimeInterval currentTime;
 	BOOL isActive;
+    
+    int currentZLayer;
 }
 
+@property (nonatomic) int currentZLayer;
 @property (nonatomic) GLuint viewRenderbuffer;
 @property (nonatomic) GLuint  viewFramebuffer;
 @property (nonatomic,retain) EAGLContext *context;

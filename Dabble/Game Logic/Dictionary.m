@@ -95,6 +95,69 @@
     return -1;
 }
 
+-(NSString *)generateDozenLetters
+{
+    BOOL found = NO;
+    NSString *letters = nil;
+    while (!found)
+    {
+        int r3 = arc4random()%words[0].count;
+        int r4 = arc4random()%words[1].count;
+        int r5 = arc4random()%words[2].count;
+    
+        letters = [NSString stringWithFormat:@"%@%@%@",words[0][r3],words[1][r4],words[2][r5]];
+    
+        for (int i = 0;i<20;i++)
+        {
+            letters = [self permuteLetters:letters];
+            if ([self checkIfValid:letters])
+            {
+                found = YES;
+                break;
+
+            }
+        }
+    }
+    
+    return letters;
+    
+}
+
+-(BOOL)checkIfValid:(NSString *)letters
+{
+    if ([self checkIfWordExists:[letters substringWithRange:NSMakeRange(0, 3)]])
+        return NO;
+    if ([self checkIfWordExists:[letters substringWithRange:NSMakeRange(3, 4)]])
+        return NO;
+    if ([self checkIfWordExists:[letters substringWithRange:NSMakeRange(8, 5)]])
+        return NO;
+    
+    return YES;
+    
+}
+
+-(NSString *)permuteLetters:(NSString *)letters
+{
+    NSMutableString *permute = [[NSMutableString alloc]initWithString:letters];
+    NSMutableString *ordered = [[NSMutableString alloc]init];
+    
+    while (permute.length > 0)
+    {
+        int r = arc4random()%permute.length;
+        NSRange range = NSMakeRange(r, 1);
+        
+        [ordered appendString:[permute substringWithRange:range]];
+        [permute deleteCharactersInRange:range];
+    }
+    
+
+    NSString *ret = [NSString stringWithString:ordered];
+    [ordered release];
+    [permute release];
+    
+    return ret;
+}
+
 -(void)reset
 {
     for (int i = 0;i<3;i++)

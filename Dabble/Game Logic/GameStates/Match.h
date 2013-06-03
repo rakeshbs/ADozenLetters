@@ -7,7 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "GCHelper.h"
 
-@interface Game : NSObject
+@interface Match : NSObject
+{
+    NSString *gcMatchID;
+    NSMutableArray *rounds;
+}
+@property (nonatomic,retain)  NSString *gcMatchID;
+@property (nonatomic,retain) NSMutableArray *rounds;
+
++(Match *)deserialize:(NSData *)data;
+-(NSData *)serialize;
+
 
 @end

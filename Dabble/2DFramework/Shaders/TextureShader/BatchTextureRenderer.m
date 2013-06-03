@@ -6,10 +6,10 @@
 //  Copyright (c) 2013 Rakesh. All rights reserved.
 //
 
-#import "TextureRenderer.h"
+#import "BatchTextureRenderer.h"
 
 
-@implementation TextureRenderer
+@implementation BatchTextureRenderer
 
 -(id)init
 {
@@ -25,13 +25,13 @@
         
     }
     return self;
-}
+} 
 
 -(void)setFontSprite:(FontSprite *)_fontSprite
 {
     if (_fontSprite.fontSpriteSheet.renderUnit == nil)
     {
-       TextureRenderUnit *renderUnit = [[TextureRenderUnit alloc]init];
+       BatchTextureRenderUnit *renderUnit = [[BatchTextureRenderUnit alloc]init];
         renderUnit.texture = _fontSprite.fontSpriteSheet.texture;
         _fontSprite.fontSpriteSheet.renderUnit = renderUnit;
         [textureRenderUnits addObject:renderUnit];
@@ -48,7 +48,7 @@
 {
     if (_texture.renderUnit == nil)
     {
-        TextureRenderUnit *renderUnit = [[TextureRenderUnit alloc]init];
+        BatchTextureRenderUnit *renderUnit = [[BatchTextureRenderUnit alloc]init];
         renderUnit.texture = _texture;
         _texture.renderUnit = renderUnit;
         [textureRenderUnits addObject:renderUnit];
@@ -61,9 +61,9 @@
     currentRenderUnit.isFont = NO;
 }
 
--(TextureRenderUnit *)getNewTextureRenderUnit
+-(BatchTextureRenderUnit *)getNewTextureRenderUnit
 {
-    TextureRenderUnit *renderUnit = [[TextureRenderUnit alloc]init];
+    BatchTextureRenderUnit *renderUnit = [[BatchTextureRenderUnit alloc]init];
     [textureRenderUnits addObject:renderUnit];
     [renderUnit begin];
     [renderUnit release];
@@ -77,7 +77,7 @@
 
 -(void)begin
 {
-    for (TextureRenderUnit *renderUnit in textureRenderUnits)
+    for (BatchTextureRenderUnit *renderUnit in textureRenderUnits)
     {
         [renderUnit begin];
     }
@@ -93,7 +93,7 @@
     
     glEnable(GL_TEXTURE_2D);
     
-    for (TextureRenderUnit *renderUnit in textureRenderUnits)
+    for (BatchTextureRenderUnit *renderUnit in textureRenderUnits)
     {
         [renderUnit draw];
     }

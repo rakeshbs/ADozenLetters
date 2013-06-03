@@ -21,4 +21,5 @@
 -(int)checkIfWordExists:(NSString *)word;
 +(Dictionary * )getSharedDictionary;
 -(void)reset;
+-(NSString *)generateDozenLetters;
 @end

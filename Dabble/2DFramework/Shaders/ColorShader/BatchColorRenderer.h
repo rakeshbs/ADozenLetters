@@ -30,7 +30,7 @@ typedef struct
 @end
 
 
-@interface ColorRenderer : GLRenderer
+@interface BatchColorRenderer : GLRenderer
 {
     GLShaderProgram *shader;
     

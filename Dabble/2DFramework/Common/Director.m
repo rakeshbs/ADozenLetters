@@ -8,8 +8,8 @@
 
 #import "Director.h"
 #import "Scene.h"
-#import "ColorRenderer.h"
-#import "TextureRenderer.h"
+#import "BatchColorRenderer.h"
+#import "BatchTextureRenderer.h"
 
 @interface Director (Private)
 

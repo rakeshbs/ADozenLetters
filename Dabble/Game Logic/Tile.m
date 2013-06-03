@@ -70,6 +70,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         {
             if ([lettersPerScore[i] rangeOfString:_character].location != NSNotFound)
             {
+                
                 score = letterScores[i];
                 break;
             }

@@ -6,8 +6,24 @@
 //  Copyright (c) 2013 Rakesh. All rights reserved.
 //
 
-#import "UITouch+UITouch_GLElement.h"
+#import "UITouch+GLElement.h"
+#import "GLElement.h"
 
 @implementation UITouch (UITouch_GLElement)
 
+-(CGPoint)locationInGLElement:(GLElement *)element
+{
+    CGPoint locationInView = [self locationInView:element.openGLView];
+    CGPoint locationInOpenGLView = CGPointMake(locationInView.x,
+                                               element.openGLView.frame.size.height - locationInView.y);
+    
+    CGRect frame = element.absoluteFrame;
+    if (CGRectContainsPoint(frame, locationInView))
+    {
+        return CGPointMake(locationInOpenGLView.x - frame.origin.x,
+                           locationInOpenGLView.y - frame.origin.y);
+    }
+    
+    return CGPointMake(-1, -1);
+}
 @end

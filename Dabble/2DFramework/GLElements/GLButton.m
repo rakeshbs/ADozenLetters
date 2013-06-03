@@ -10,7 +10,7 @@
 #import "TextureManager.h"
 
 @implementation GLButton
-@synthesize highlighted,tag,type,drawPoint,texture_btn,texture_high;
+@synthesize highlighted,type,drawPoint,texture_btn,texture_high;
 
 -(id)initWithImage:(NSString *)img1 andHighlitedImage:(NSString *)img2
 {
@@ -34,9 +34,16 @@
 	selector_double_click = _selector;
 }
 
+
+
 -(void)draw
 {
 
+}
+
+-(void)update
+{
+    
 }
 
 -(void)performSingleClick

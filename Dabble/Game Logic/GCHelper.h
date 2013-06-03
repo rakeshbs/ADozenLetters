@@ -7,13 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GCTurnBasedMatchHelper.h"
+#import <GameKit/GameKit.h>
+
+#import "Match.h"
 
 
-@interface DabbleGCHelper : NSObject <GCTurnBasedMatchHelperDelegate>
+@interface GCHelper : NSObject
 {
-    GCTurnBasedMatchHelper *gcHelper;
+    BOOL isUserAuthenticated;
+    NSMutableArray *matches;
 }
 
-- (void)presentGCTurnViewController:(UIViewController *)parent;
 @end

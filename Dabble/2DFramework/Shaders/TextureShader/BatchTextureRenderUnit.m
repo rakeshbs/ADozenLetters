@@ -6,12 +6,12 @@
 //  Copyright (c) 2013 Rakesh. All rights reserved.
 //
 
-#import "TextureRenderUnit.h"
+#import "BatchTextureRenderUnit.h"
 #import "GLShaderManager.h"
 
 #define VBOLENGTH 100000
 
-@implementation TextureRenderUnit
+@implementation BatchTextureRenderUnit
 
 -(id)init
 {

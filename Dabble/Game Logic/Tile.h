@@ -8,8 +8,8 @@
 
 #import "GLElement.h"
 #import "TextureManager.h"
-#import "ColorRenderer.h"
-#import "TextureRenderer.h"
+#import "BatchColorRenderer.h"
+#import "BatchTextureRenderer.h"
 
 #define tileSquareSize 60.0f
 #define shadowSize 90.0f
@@ -47,7 +47,6 @@
     CGFloat redColor;
     
     int score;
-    TextureRenderer *shadowTextureShader;
     
     BOOL isBonded;
     

@@ -21,14 +21,12 @@
 	int type;
 	BOOL highlighted;
 	CGPoint drawPoint;
-	int tag;
 	SEL selector_single_click;
 	SEL selector_double_click;
 	NSObject *target;
 }
 
 @property (nonatomic) int type;
-@property (nonatomic) int tag;
 @property (nonatomic) CGPoint drawPoint;
 @property (nonatomic) BOOL highlighted;
 @property (nonatomic,assign) Texture2D* texture_btn;

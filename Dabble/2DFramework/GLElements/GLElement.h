@@ -10,27 +10,40 @@
 #import "Animator.h"
 #import "TextureManager.h"
 #import "MVPMatrixManager.h"
-#import "ColorRenderer.h"
-#import "TextureRenderer.h"
-
-@class Scene;
+#import "BatchColorRenderer.h"
+#import "BatchTextureRenderer.h"
+#import "OpenGLESView.h"
+#import "Director.h"
+#import "UITouch+GLElement.h"
 
 @interface GLElement : NSObject
 {
-    Scene *scene;
+    OpenGLESView *openGLView;
+    Director *director;
     CGRect frame;
-    Animator *animator;
-    TextureManager *textureManager;
+    GLElement *parent;
+    
+    
+    int numberOfLayers;
+    int tag;
+    
     NSMutableArray *touchesInElement;
+    NSMutableArray *subElements;
+    
+    TextureManager *textureManager;
     MVPMatrixManager *mvpMatrixManager;
-    ColorRenderer *triangleColorRenderer;
-    TextureRenderer *textureRenderer;
+    Animator *animator;
 }
-@property (nonatomic) int indexOfElementInScene;
-@property (nonatomic,retain) Scene *scene;
-@property (nonatomic,retain) ColorRenderer *triangleColorRenderer;
-@property (nonatomic,retain) TextureRenderer *textureRenderer;
- @property (nonatomic)   CGRect frame;
+
+
+@property (nonatomic,readonly) CGRect absoluteFrame;
+@property (nonatomic) int tag;
+@property (nonatomic,readonly) int numberOfLayers;
+@property (nonatomic,retain) OpenGLESView *openGLView;
+@property (nonatomic) int indexOfElement;
+@property (nonatomic,retain) GLElement *parent;
+
+@property (nonatomic)   CGRect frame;
 @property (nonatomic,retain) NSMutableArray *touchesInElement;
 -(void)draw;
 -(BOOL)touchBegan:(UITouch *)touch withEvent:(UIEvent *)event;
@@ -38,4 +51,5 @@
 -(BOOL)touchEnded:(UITouch *)touch withEvent:(UIEvent *)event;
 
 -(void)moveToFront;
+-(void)update;
 @end
