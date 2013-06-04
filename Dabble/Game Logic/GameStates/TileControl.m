@@ -16,6 +16,86 @@
     {
         
     }
+    return self;
 }
+
+
+-(void)createTiles:(NSString *)dataStr
+{
+    int ind = 0;
+    
+    for (int i = 0; i < 3; i++)
+    {
+        charArray1[i] = [dataStr substringWithRange:NSMakeRange(ind, 1)];
+        ind++;
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        charArray2[i] = [dataStr substringWithRange:NSMakeRange(ind, 1)];
+        ind++;
+    }
+    for (int i = 0; i < 5; i++)
+    {
+        charArray3[i] = [dataStr substringWithRange:NSMakeRange(ind, 1)];
+        ind++;
+    }
+    
+    Tile *tile;
+    if (tilesArray != nil)
+    {
+        [subElements removeObjectsInArray:tilesArray];
+        [tilesArray release];
+    }
+    
+    tilesArray = [[NSMutableArray alloc]init];
+    
+    for (int i = 0;i<3;i++)
+    {
+        tile = [[Tile alloc]initWithCharacter:charArray1[i]];
+        tile.centerPoint = CGPointMake(160, 160+yOffset);
+        tile.anchorPoint = CGPointMake(100+60*i, 210+yOffset);
+        tile.colorIndex = i%2;
+        [self addElement:tile];
+        [tilesArray addObject:tile];
+        tile.tilesArray  = tilesArray;
+        [tile release];
+    }
+    
+    
+    for (int i = 0;i<4;i++)
+    {
+        tile = [[Tile alloc]initWithCharacter:charArray2[i]];
+        tile.centerPoint = CGPointMake(160, 160+yOffset);
+        tile.anchorPoint = CGPointMake(70+60*i, 130+yOffset);
+        tile.colorIndex = i%2;
+        [self addElement:tile];
+        [tilesArray addObject:tile];
+        tile.tilesArray  = tilesArray;
+        [tile release];
+    }
+    
+    for (int i = 0;i<5;i++)
+    {
+        tile = [[Tile alloc]initWithCharacter:charArray3[i]];
+        tile.centerPoint = CGPointMake(160, 160+yOffset);
+        tile.anchorPoint = CGPointMake(40+60*i, 50+yOffset);
+        tile.colorIndex = i%2;
+        [self addElement:tile];
+        [tilesArray addObject:tile];
+        tile.tilesArray  = tilesArray;
+        [tile release];
+    }
+    
+    CGFloat delay = 0.0;
+    
+    for (Tile *sq in [tilesArray reverseObjectEnumerator])
+    {
+        [sq throwToPoint:sq.anchorPoint inDuration:0.7 afterDelay:delay];
+        delay += 0.1;
+    }
+    
+    
+}
+
 
 @end

@@ -21,9 +21,6 @@
     int numberOfDoublesMade;
     int numberOfWordsPerLetter[3];
     
-    NSString *charArray1[3];
-    NSString *charArray2[4];
-    NSString *charArray3[5];
     NSMutableString *resString[3];
     
     NSMutableArray *madeWords;
