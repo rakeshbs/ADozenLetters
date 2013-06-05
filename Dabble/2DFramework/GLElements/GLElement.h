@@ -50,6 +50,13 @@
 -(BOOL)touchMoved:(UITouch *)touch withEvent:(UIEvent *)event;
 -(BOOL)touchEnded:(UITouch *)touch withEvent:(UIEvent *)event;
 
--(void)moveToFront;
 -(void)update;
+
+-(void)addElement:(GLElement *)e;
+-(void)moveElementToFront:(GLElement *)e;
+-(void)moveElementToBack:(GLElement *)e;
+-(void)moveElement:(GLElement *)e toIndex:(int)index;
+-(void)removeElement:(GLElement *)e;
+-(void)removeAllElements;
+
 @end

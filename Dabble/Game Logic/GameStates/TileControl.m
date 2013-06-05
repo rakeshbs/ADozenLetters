@@ -52,8 +52,8 @@
     for (int i = 0;i<3;i++)
     {
         tile = [[Tile alloc]initWithCharacter:charArray1[i]];
-        tile.centerPoint = CGPointMake(160, 160+yOffset);
-        tile.anchorPoint = CGPointMake(100+60*i, 210+yOffset);
+        tile.centerPoint = CGPointMake(160, 160);
+        tile.anchorPoint = CGPointMake(100+60*i, 210);
         tile.colorIndex = i%2;
         [self addElement:tile];
         [tilesArray addObject:tile];
@@ -65,8 +65,8 @@
     for (int i = 0;i<4;i++)
     {
         tile = [[Tile alloc]initWithCharacter:charArray2[i]];
-        tile.centerPoint = CGPointMake(160, 160+yOffset);
-        tile.anchorPoint = CGPointMake(70+60*i, 130+yOffset);
+        tile.centerPoint = CGPointMake(160, 160);
+        tile.anchorPoint = CGPointMake(70+60*i, 130);
         tile.colorIndex = i%2;
         [self addElement:tile];
         [tilesArray addObject:tile];
@@ -77,8 +77,8 @@
     for (int i = 0;i<5;i++)
     {
         tile = [[Tile alloc]initWithCharacter:charArray3[i]];
-        tile.centerPoint = CGPointMake(160, 160+yOffset);
-        tile.anchorPoint = CGPointMake(40+60*i, 50+yOffset);
+        tile.centerPoint = CGPointMake(160, 160);
+        tile.anchorPoint = CGPointMake(40+60*i, 50);
         tile.colorIndex = i%2;
         [self addElement:tile];
         [tilesArray addObject:tile];
