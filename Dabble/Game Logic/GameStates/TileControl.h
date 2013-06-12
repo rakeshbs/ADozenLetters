@@ -8,6 +8,7 @@
 
 #import "GLElement.h"
 #import "Tile.h"
+#import "GLShaderManager.h"
 
 @interface TileControl : GLElement
 {
@@ -16,5 +17,13 @@
     NSString *charArray1[3];
     NSString *charArray2[4];
     NSString *charArray3[5];
+    
+    GLShaderProgram *colorShaderProgram;
+    GLShaderProgram *textureShaderProgram;
+    
+    
+    ColorVertexData *tileColorData;
+    TextureVertexData *tileTextureVertexData[3];
+    
 }
 @end

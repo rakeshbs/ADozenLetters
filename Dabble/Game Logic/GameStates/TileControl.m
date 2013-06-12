@@ -14,6 +14,10 @@
 {
     if (self = [super init])
     {
+        colorShaderProgram = [shaderManager initWithVertexShaderFilename:@"ColorShader" fragmentShaderFilename:@"ColorShader"];
+        
+        textureShaderProgram = [shaderManager initWithVertexShaderFilename:@"TextureShader" fragmentShaderFilename:@"TextureShader"];
+        
         
     }
     return self;
@@ -22,6 +26,13 @@
 
 -(void)createTiles:(NSString *)dataStr
 {
+    
+    tileColorData = malloc(sizeof(ColorVertexData)*4*dataStr.length);
+    for (int i = 0;i < 3;i++)
+    {
+        tileTextureVertexData[i] = malloc(sizeof(TextureVertexData)* 4 * dataStr.length);
+    }
+     
     int ind = 0;
     
     for (int i = 0; i < 3; i++)
@@ -93,6 +104,7 @@
         [sq throwToPoint:sq.anchorPoint inDuration:0.7 afterDelay:delay];
         delay += 0.1;
     }
+    
     
     
 }

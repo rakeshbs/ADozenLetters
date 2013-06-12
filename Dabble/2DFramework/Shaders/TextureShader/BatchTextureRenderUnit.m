@@ -48,7 +48,7 @@
         
         dataBuffer = malloc(sizeof(TextureVertexData)*VBOLENGTH);
         
-        [self setupVBO];
+      //  [self setupVBO];
         
     }
     return self;

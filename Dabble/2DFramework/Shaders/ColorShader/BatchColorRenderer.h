@@ -14,21 +14,6 @@
 #import "GLShaderManager.h"
 #import "GLRenderer.h"
 
-typedef struct
-{
-    Matrix3D mvpMatrix;
-    Vertex3D vertex;
-    Color4B color;
-    
-} ColorVertexData;
-
-@interface ColorVertexLayer : NSObject
-{
-    ColorVertexData *data;
-    int count;
-}
-@end
-
 
 @interface BatchColorRenderer : GLRenderer
 {

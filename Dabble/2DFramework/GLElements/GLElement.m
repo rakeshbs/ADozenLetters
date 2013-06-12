@@ -33,6 +33,7 @@
         textureManager = [TextureManager getSharedTextureManager];
         touchesInElement = [[NSMutableArray alloc]init];
         mvpMatrixManager = [MVPMatrixManager sharedMVPMatrixManager];
+        shaderManager = [GLShaderManager sharedGLShaderManager];
     }
     return self;
 }

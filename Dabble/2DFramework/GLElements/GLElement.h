@@ -32,6 +32,7 @@
     
     TextureManager *textureManager;
     MVPMatrixManager *mvpMatrixManager;
+    GLShaderProgram *shaderManager;
     Animator *animator;
 }
 

@@ -328,4 +328,20 @@ static inline void TextureCoordCopyS(TextureCoord source,TextureCoord *destinati
     destination->t = source.t;
 }
 
+typedef struct
+{
+    Vertex3D vertex;
+    Color4B color;
+    
+} ColorVertexData;
+
+typedef struct
+{
+    TextureCoord texCoord;
+    Vertex3D vertex;
+    Color4B color;
+
+    
+} TextureVertexColorData;
+
 

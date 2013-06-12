@@ -46,7 +46,7 @@
         DRAW_MODE = GL_TRIANGLES;
         
         dataBuffer = malloc(sizeof(ColorVertexData) * VBOLENGTH);
-        [self setupVBO];
+     //   [self setupVBO];
     }
     return self;
 }
