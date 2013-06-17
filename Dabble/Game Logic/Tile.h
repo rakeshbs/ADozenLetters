@@ -14,9 +14,13 @@
 #define tileSquareSize 60.0f
 #define shadowSize 90.0f
 
+@class TileControl;
+
+
 @interface Tile : GLElement <AnimationDelegate>
 {
     NSString *character;
+    
     FontSprite *characterFontSprite;
     Texture2D *shadowTexture;
     FontSprite *scoreTexture;
@@ -25,7 +29,6 @@
     CGPoint endPoint;
     
     CGFloat shadowAlpha;
-    Color4B *shadowColor;
     CGFloat wiggleAngle;
     CGFloat startAngle;
     
@@ -57,6 +60,7 @@
 
     Color4B *startTileColors;
     Color4B startCharacterColor;
+        Color4B *shadowColor;
 
     BOOL isColorAnimating;
     BOOL isBondedColor;
@@ -64,12 +68,24 @@
 }
 
 @property (nonatomic,retain) NSString *character;
--(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration;
+
+@property (nonatomic) Color4B *currentTileColor;
+@property (nonatomic) Color4B *currentCharacterColor;
+@property (nonatomic) Color4B *shadowColor;
+@property (nonatomic)     CGFloat wiggleAngle;
+
 @property (nonatomic) CGPoint anchorPoint;
 @property (nonatomic) int colorIndex;
 @property (nonatomic) CGPoint centerPoint;
 @property (nonatomic,assign) NSMutableArray *tilesArray;
 @property (nonatomic)    BOOL isBonded;
+
+@property (nonatomic,assign) FontSprite *characterFontSprite;
+@property (nonatomic, assign) Texture2D *shadowTexture;
+@property (nonatomic, assign) FontSprite *scoreTexture;
+
+@property (nonatomic,readonly) TileControl *tileControl;
+
 -(id)initWithCharacter:(NSString *)_character;
 -(void)wiggleFor:(CGFloat)duration;
 -(void)resetToAnchorPoint;
@@ -78,5 +94,6 @@
 -(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay;
 -(void)animateShowColorInDuration:(CGFloat)duration;
 -(void)animateHideColorInDuration:(CGFloat)duration;
+-(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration;
 
 @end

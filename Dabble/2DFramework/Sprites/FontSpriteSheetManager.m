@@ -40,6 +40,21 @@ static NSString *fontCharactersNumbers = @"1234567890";
     return self;
 }
 
+-(FontSpriteSheet *)getFontSpriteSheetOfType:(FontSpriteType)type withFont:(NSString *)fontName andSize:(CGFloat)size
+{
+    NSString *key = [NSString stringWithFormat:@"%@:%d:%f",fontName,type,size];
+    
+    FontSpriteSheet *fSheet = dictionary[key];
+    
+    if (fSheet == nil)
+    {
+        fSheet = [[FontSpriteSheet alloc]initWithType:type andFontName:fontName andFontSize:size];
+        [dictionary setObject:fSheet forKey:key];
+    }
+    return fSheet;
+}
+
+
 -(FontSprite *)getFontForCharacter:(NSString *)character withFont:(NSString *)fontName andSize:(CGFloat)size
 {
     FontSpriteType type = -1;

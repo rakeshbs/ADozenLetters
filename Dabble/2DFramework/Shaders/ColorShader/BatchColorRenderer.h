@@ -35,7 +35,7 @@
     size_t SIZE_COLOR;
     size_t STRIDE;
     
-    ColorVertexData *dataBuffer;
+    VertexColorData *dataBuffer;
     NSMutableArray *layers;
     
     int  countDataBuffer;

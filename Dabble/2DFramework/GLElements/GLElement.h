@@ -23,6 +23,8 @@
     CGRect frame;
     GLElement *parent;
     
+    BOOL isDrawable;
+    
     
     int numberOfLayers;
     int tag;
@@ -34,9 +36,11 @@
     MVPMatrixManager *mvpMatrixManager;
     GLShaderProgram *shaderManager;
     Animator *animator;
+    FontSpriteSheetManager *fontSpriteSheetManager;
+    
 }
 
-
+@property (nonatomic,readonly) BOOL isDrawable;
 @property (nonatomic,readonly) CGRect absoluteFrame;
 @property (nonatomic) int tag;
 @property (nonatomic,readonly) int numberOfLayers;
@@ -59,5 +63,9 @@
 -(void)moveElement:(GLElement *)e toIndex:(int)index;
 -(void)removeElement:(GLElement *)e;
 -(void)removeAllElements;
+-(void)moveToFront;
+-(void)moveToBack;
+-(void)moveToIndex:(int)index;
+-(void)copyMVPMatrixToDestination:(Matrix3D *)destination;
 
 @end

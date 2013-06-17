@@ -13,6 +13,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <OpenGLES/EAGLDrawable.h>
 #import "GLCommon.h"
+#import "Animator.h"
 
 @class Scene;
 
@@ -31,6 +32,7 @@
 	BOOL isActive;
     
     int currentZLayer;
+    Animator *animator;
 }
 
 @property (nonatomic) int currentZLayer;

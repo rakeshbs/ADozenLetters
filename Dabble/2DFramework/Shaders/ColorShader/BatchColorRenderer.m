@@ -45,7 +45,7 @@
         
         DRAW_MODE = GL_TRIANGLES;
         
-        dataBuffer = malloc(sizeof(ColorVertexData) * VBOLENGTH);
+        dataBuffer = malloc(sizeof(VertexColorData) * VBOLENGTH);
      //   [self setupVBO];
     }
     return self;
@@ -60,7 +60,7 @@
     glBindVertexArrayOES(vao);
     
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, count * sizeof(ColorVertexData), dataBuffer, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, count * sizeof(VertexColorData), dataBuffer, GL_STREAM_DRAW);
     
     
     glEnableVertexAttribArray(ATTRIB_MVPMATRICES + 0);
@@ -89,37 +89,18 @@
 
 -(void)addVertices:(Vertex3D *)_vertices withColorsPerVertex:(Color4B *)_colors andCount:(int)_count
 {
-    Matrix3D mvpMatrix;
-    [matrixManager getMVPMatrix:mvpMatrix];
-
-    for (int i = 0;i<_count;i++)
-    {
-        Matrix3DCopyS(mvpMatrix, dataBuffer[count].mvpMatrix);
-        dataBuffer[count].vertex = _vertices[i];
-        dataBuffer[count].color = _colors[i];
-        count ++;
-    }
+   
 }
 
 -(void)addVertices:(Vertex3D *)_vertices withUniformColor:(Color4B)_color andCount:(int)_count
 {
-    Matrix3D mvpMatrix;
-    [matrixManager getMVPMatrix:mvpMatrix];
-
-    for (int i = 0;i<_count;i++)
-    {
-        memcpy(dataBuffer[count].mvpMatrix, mvpMatrix, SIZE_MATRIX);
-        dataBuffer[count].vertex = _vertices[i];
-        dataBuffer[count].color = _color;
-        count ++;
-    }
- 
+   
 }
 
 -(void)end
 {
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, count * sizeof(ColorVertexData), dataBuffer, GL_STREAM_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, count * sizeof(VertexColorData), dataBuffer, GL_STREAM_DRAW);
     
     
     [self draw];

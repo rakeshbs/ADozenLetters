@@ -79,6 +79,8 @@
 	if((self = [super initWithFrame:frame])) {
 		// Get the layer
         
+        animator = [Animator getSharedAnimator];
+        
         if ([self respondsToSelector:@selector(contentScaleFactor)])
         {
             self.contentScaleFactor = [[UIScreen mainScreen] scale];
@@ -124,6 +126,7 @@
     currentZLayer = 1;
     
     [view_delegate drawScene];
+    [animator update];
     
  //   glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, viewFramebuffer);
  //   glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);

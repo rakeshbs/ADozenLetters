@@ -15,15 +15,28 @@
     NSMutableArray *tilesArray;
     
     NSString *charArray1[3];
-    NSString *charArray2[4];
-    NSString *charArray3[5];
     
     GLShaderProgram *colorShaderProgram;
     GLShaderProgram *textureShaderProgram;
     
     
-    ColorVertexData *tileColorData;
-    TextureVertexData *tileTextureVertexData[3];
+    InstancedVertexColorData *tileColorData;
+    InstancedTextureVertexColorData *shadowTextureData;
+    InstancedTextureVertexColorData *characterTextureData;
+    InstancedTextureVertexColorData *scoreTextureData;
     
+    
+    FontSpriteSheet *characterSpriteSheet;
+    FontSpriteSheet *scoreSpriteSheet;
+    Texture2D *shadowTexture;
+    
+    Vector3D tileVertices[6];
+    Vector3D shadowVertices[6];
+    
+    Color4B tileColors[2][2];
+
 }
+
+-(Color4B)getColorForState:(int)state andColorIndex:(int)index;
+
 @end

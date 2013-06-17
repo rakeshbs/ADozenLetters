@@ -15,4 +15,5 @@
 }
 +(FontSpriteSheetManager *)getSharedFontSpriteSheetManager;
 -(FontSprite *)getFontForCharacter:(NSString *)character withFont:(NSString *)fontName andSize:(CGFloat)size;
+-(FontSpriteSheet *)getFontSpriteSheetOfType:(FontSpriteType)type withFont:(NSString *)fontName andSize:(CGFloat)size;
 @end

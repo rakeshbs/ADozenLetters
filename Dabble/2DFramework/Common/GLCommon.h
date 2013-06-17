@@ -322,6 +322,7 @@ static inline void TextureCoordCopy(TextureCoord *source,TextureCoord *destinati
 
 }
 
+
 static inline void TextureCoordCopyS(TextureCoord source,TextureCoord *destination)
 {
     destination->s = source.s;
@@ -333,15 +334,61 @@ typedef struct
     Vertex3D vertex;
     Color4B color;
     
-} ColorVertexData;
+} VertexColorData;
 
 typedef struct
 {
     TextureCoord texCoord;
     Vertex3D vertex;
     Color4B color;
-
-    
 } TextureVertexColorData;
 
+typedef struct
+{
+    Matrix3D mvpMatrix;
+    Vertex3D vertex;
+    Color4B color;
+    
+} InstancedVertexColorData;
 
+typedef struct
+{
+    Matrix3D mvpMatrix;
+    TextureCoord texCoord;
+    Vertex3D vertex;
+    Color4B color;
+} InstancedTextureVertexColorData;
+
+
+
+static inline void setUniformColor(Color4B *data,Color4B *color,int count,size_t offset)
+{
+    for (int i = 0;i<count;i++)
+    {
+        *(data + offset * i) =  *color;
+    }
+}
+
+static inline void setColors(Color4B *data,Color4B *color,int count,size_t offset)
+{
+    for (int i = 0;i<count;i++)
+    {
+        *(data + offset * i) =  *(color + i);
+    }
+}
+
+static inline void setTextureCoordinates(TextureCoord *data,TextureCoord *textureCoordinates,int count,size_t offset)
+{
+    for (int i = 0;i<count;i++)
+    {
+        *(data + offset * i) =  *(textureCoordinates + i);
+    }
+}
+
+static inline void setVertices(Vertex3D *data,Vertex3D *vertices,int count,size_t offset)
+{
+    for (int i = 0;i<count;i++)
+    {
+        *(data + offset * i) =  *(vertices + i);
+    }
+}

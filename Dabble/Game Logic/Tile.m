@@ -11,6 +11,7 @@
 #import "EasingFunctions.h"
 #import "Scene.h"
 #import "SoundManager.h"
+#import "TileControl.h"
 
 #define ANIMATION_MOVE 1
 #define ANIMATION_WIGGLE 2
@@ -31,15 +32,12 @@
 #define NUMBEROFSCORES 7
 
 
+
 @implementation Tile
 
-@synthesize character,anchorPoint,colorIndex,isBonded;
+@synthesize character,anchorPoint,colorIndex,isBonded,characterFontSprite,scoreTexture,shadowTexture;
 
-Vector3D rectVertices[6];
-Vector3D shadowVertices[6];
-static Color4B tileColors[2][2];
-static Color4B characterColors;
-static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 255, .alpha = 0};
+@synthesize currentTileColor,currentCharacterColor,shadowColor,wiggleAngle;
 
 SoundManager *soundManager;
 
@@ -51,6 +49,12 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     return CGRectMake(self.centerPoint.x-tileSquareSize/2, [UIScreen mainScreen].bounds.size.height - (self.centerPoint.y + tileSquareSize/2), tileSquareSize, tileSquareSize);
     
 }
+
+-(TileControl *)tileControl
+{
+    return (TileControl *)self.parent;
+}
+
 
 -(id)initWithCharacter:(NSString *)_character
 {
@@ -77,7 +81,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         }
         
         
-        [self setupGraphics];
+        [self setupColors];
         // [self setupSounds];
         
     }
@@ -94,76 +98,23 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     
 }
 
--(void)setupStrings
-{
-    characterFontSprite = [[FontSpriteSheetManager
-                            getSharedFontSpriteSheetManager]getFontForCharacter:character
-                           withFont:@"Lato" andSize:40];
-    scoreTexture = [[FontSpriteSheetManager
-                     getSharedFontSpriteSheetManager]getFontForCharacter:[NSString stringWithFormat:@"%d",score]
-                    withFont:@"Lato" andSize:12];
-}
-
--(void)setupGraphics
-{
-    [self setupStrings];
-    shadowTexture = [textureManager getTexture:@"shadow" OfType:@"png"];
-    
-    rectVertices[0] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 0.0f};
-    rectVertices[1] = (Vector3D)  {.x = tileSquareSize/(2), .y = - tileSquareSize/(2), .z = 0.0f};
-    rectVertices[2] = (Vector3D)  {.x = tileSquareSize/(2), .y =  tileSquareSize/(2), .z = 0.0f};
-    
-    rectVertices[3] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 0.0f};
-    rectVertices[4] = (Vector3D)  {.x = -tileSquareSize/(2), .y = tileSquareSize/(2), .z = 0.0f};
-    rectVertices[5] =  (Vector3D) {.x = tileSquareSize/(2), .y = tileSquareSize/(2), .z = 0.0f};
-    
-    shadowVertices[0] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 0.0f};
-    shadowVertices[1] = (Vector3D)  {.x = shadowSize/(2), .y = - shadowSize/(2), .z = 0.0f};
-    shadowVertices[2] = (Vector3D)  {.x = shadowSize/(2), .y =  shadowSize/(2), .z = 0.0f};
-    
-    shadowVertices[3] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 0.0f};
-    shadowVertices[4] = (Vector3D)  {.x = -shadowSize/(2), .y = shadowSize/(2), .z = 0.0f};
-    shadowVertices[5] =  (Vector3D) {.x = shadowSize/(2), .y = shadowSize/(2), .z = 0.0f};
-    
-    
-    
-    [self setupColors];
-}
 
 -(void)setupColors
 {
-    CGFloat alpha = 0.93f;
     
-    tileColors[0][0] = (Color4B) { .red = 255, .blue = 255 , .green = 255, .alpha = 230};
-    
-    //255 250 231
-    tileColors[0][1] = (Color4B) { .red = 255, .blue = 255 , .green = 255, .alpha = 200};
-    
-    //    rgb 243 156 18
-    tileColors[1][0] = (Color4B) { .red = 0, .green = 0 , .blue = 0, .alpha = 230};
-    //    rgb 243 156 18
-    tileColors[1][1] = (Color4B) { .red = 0, .green = 0 , .blue = 0, .alpha = 200};
-    
-    
-    characterColors = (Color4B) { .red = 0, .green = 0 , .blue = 0, .alpha = 255};
+    Color4B characterColors = (Color4B) { .red = 0, .green = 0 , .blue = 0, .alpha = 255};
     
     shadowColor = malloc(sizeof(Color4B));
-    Color4fCopyS(transparentColor, shadowColor);
-    //    shadowColor->red = 50;
-    //  shadowColor->green = 50;
-    //shadowColor->blue = 50;
-    
+    *shadowColor = (Color4B) {.red = 255, .green = 0, .blue = 0, .alpha = 0};
     
     currentTileColor = malloc(sizeof(Color4B)*2);
     currentCharacterColor = malloc(sizeof(Color4B));
-   // startAlphas = malloc(sizeof(CGFloat)*2);
-    
     startTileColors = malloc(sizeof(Color4B)*2);
     
     for (int c = 0;c<2;c++)
     {
-        Color4fCopy(&(tileColors[0][c]), (currentTileColor+c));
-        //        (currentTileColor+c)->alpha = 0.0;
+        Color4B tileColor = [self.tileControl getColorForState:0 andColorIndex:c];
+        Color4fCopy(&tileColor, (currentTileColor+c));
     }
     
     Color4fCopy(&characterColors , currentCharacterColor);
@@ -174,8 +125,8 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 -(void)draw
 {
     
-    [mvpMatrixManager pushModelViewMatrix];
-    /*
+    /*[mvpMatrixManager pushModelViewMatrix];
+    
     [mvpMatrixManager rotateByAngleInDegrees:wiggleAngle InX:0 Y:0 Z:1];
     [mvpMatrixManager translateInX:self.centerPoint.x Y:self.centerPoint.y Z:self.indexOfElementInScene*20];
     
@@ -240,35 +191,44 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     {
         for (int c = 0;c<2;c++)
         {
-            (currentTileColor + c)->red = getEaseIn((startTileColors+c)->red, tileColors[1][c].red, animationRatio);
-            (currentTileColor + c)->green = getEaseIn((startTileColors+c)->green, tileColors[1][c].green, animationRatio);
-            (currentTileColor + c)->blue = getEaseIn((startTileColors+c)->blue, tileColors[1][c].blue, animationRatio);
-            (currentTileColor + c)->alpha = getEaseIn((startTileColors+c)->alpha, tileColors[1][c].alpha, animationRatio);
+            Color4B tileColor = [self.tileControl getColorForState:1 andColorIndex:c];
+            
+            (currentTileColor + c)->red = getEaseIn((startTileColors+c)->red, tileColor.red, animationRatio);
+            (currentTileColor + c)->green = getEaseIn((startTileColors+c)->green, tileColor.green, animationRatio);
+            (currentTileColor + c)->blue = getEaseIn((startTileColors+c)->blue, tileColor.blue, animationRatio);
+            (currentTileColor + c)->alpha = getEaseIn((startTileColors+c)->alpha, tileColor.alpha, animationRatio);
             
         }
         
-        currentCharacterColor->red  = getEaseIn(startCharacterColor.red, tileColors[0][0].red, animationRatio);
-        currentCharacterColor->green = getEaseIn(startCharacterColor.green, tileColors[0][0].green, animationRatio);
-        currentCharacterColor->blue = getEaseIn(startCharacterColor.blue, tileColors[0][0].blue, animationRatio);
-        currentCharacterColor->alpha = getEaseIn(startCharacterColor.alpha, tileColors[0][0].alpha, animationRatio);
+        Color4B charColor = [self.tileControl getColorForState:0 andColorIndex:0];
+        
+        
+        currentCharacterColor->red  = getEaseIn(startCharacterColor.red, charColor.red, animationRatio);
+        currentCharacterColor->green = getEaseIn(startCharacterColor.green, charColor.green, animationRatio);
+        currentCharacterColor->blue = getEaseIn(startCharacterColor.blue, charColor.blue, animationRatio);
+        currentCharacterColor->alpha = getEaseIn(startCharacterColor.alpha, charColor.alpha, animationRatio);
         
     }
     else if (animation.type == ANIMATION_HIDE_COLOR)
     {
-        
         for (int c = 0;c<2;c++)
         {
-            (currentTileColor + c)->red = getEaseIn((startTileColors+c)->red, tileColors[0][c].red, animationRatio);
-            (currentTileColor + c)->green = getEaseIn((startTileColors+c)->green, tileColors[0][c].green, animationRatio);
-            (currentTileColor + c)->blue = getEaseIn((startTileColors+c)->blue, tileColors[0][c].blue, animationRatio);
-            (currentTileColor + c)->alpha = getEaseIn((startTileColors+c)->alpha, tileColors[0][c].alpha, animationRatio);
+            Color4B tileColor = [self.tileControl getColorForState:0 andColorIndex:c];
+            
+            (currentTileColor + c)->red = getEaseIn((startTileColors+c)->red, tileColor.red, animationRatio);
+            (currentTileColor + c)->green = getEaseIn((startTileColors+c)->green, tileColor.green, animationRatio);
+            (currentTileColor + c)->blue = getEaseIn((startTileColors+c)->blue, tileColor.blue, animationRatio);
+            (currentTileColor + c)->alpha = getEaseIn((startTileColors+c)->alpha, tileColor.alpha, animationRatio);
             
         }
         
-        currentCharacterColor->red  = getEaseIn(startCharacterColor.red, tileColors[1][0].red, animationRatio);
-        currentCharacterColor->green = getEaseIn(startCharacterColor.green, tileColors[1][0].green, animationRatio);
-        currentCharacterColor->blue = getEaseIn(startCharacterColor.blue, tileColors[1][0].blue, animationRatio);
-        currentCharacterColor->alpha = getEaseIn(startCharacterColor.alpha, tileColors[1][0].alpha, animationRatio);
+        Color4B charColor = [self.tileControl getColorForState:1 andColorIndex:0];
+        
+        
+        currentCharacterColor->red  = getEaseIn(startCharacterColor.red, charColor.red, animationRatio);
+        currentCharacterColor->green = getEaseIn(startCharacterColor.green, charColor.green, animationRatio);
+        currentCharacterColor->blue = getEaseIn(startCharacterColor.blue, charColor.blue, animationRatio);
+        currentCharacterColor->alpha = getEaseIn(startCharacterColor.alpha, charColor.alpha, animationRatio);
         
     }
     if (animationRatio >= 1.0)

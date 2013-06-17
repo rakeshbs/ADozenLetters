@@ -21,7 +21,7 @@
 
 @synthesize touchesInElement;
 
-@synthesize frame,numberOfLayers,tag,openGLView,parent;
+@synthesize frame,numberOfLayers,tag,openGLView,parent,isDrawable;
 
 -(id)init
 {
@@ -34,8 +34,14 @@
         touchesInElement = [[NSMutableArray alloc]init];
         mvpMatrixManager = [MVPMatrixManager sharedMVPMatrixManager];
         shaderManager = [GLShaderManager sharedGLShaderManager];
+        fontSpriteSheetManager = [FontSpriteSheetManager getSharedFontSpriteSheetManager];
     }
     return self;
+}
+
+-(BOOL)isDrawable
+{
+    return YES;
 }
 
 -(CGRect)absoluteFrame
@@ -62,18 +68,17 @@
 {
     [self update];
 
-    [mvpMatrixManager translateInX:self.frame.origin.x Y:self.frame.origin.y Z:self.openGLView.currentZLayer];
-    [self draw];
+    if (isDrawable)
+        [self draw];
+    [mvpMatrixManager translateInX:self.frame.origin.x Y:self.frame.origin.y Z:self.numberOfLayers];
     
     for (GLElement *element in subElements)
     {
-        [element update];
         [element drawElement];
     }
-    self.openGLView.currentZLayer += self.numberOfLayers;
     [mvpMatrixManager translateInX:-self.frame.origin.x Y:-self.frame.origin.y Z:0];
 }
-
+ 
 -(void)update
 {
     
@@ -129,6 +134,19 @@
 -(void)removeAllElements
 {
     [subElements removeAllObjects];
+}
+
+-(void)moveToFront
+{
+    [self.parent moveElementToFront:self];
+}
+-(void)moveToBack
+{
+    [self.parent moveElementToBack:self];
+}
+-(void)moveToIndex:(int)index
+{
+    [self.parent moveElement:self toIndex:index];
 }
 
 
@@ -203,6 +221,17 @@
 -(void)touchEndedInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
 {
 	
+}
+
+//Convenience functions
+
+-(void)copyMVPMatrixToDestination:(Matrix3D *)destination
+{
+    Matrix3D result;
+    
+    [mvpMatrixManager getMVPMatrix:result];
+    
+    memcpy(destination, result, sizeof(Matrix3D));
 }
 
 -(void)dealloc
