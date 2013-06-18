@@ -361,34 +361,34 @@ typedef struct
 
 
 
-static inline void setUniformColor(Color4B *data,Color4B *color,int count,size_t offset)
+static inline void setUniformColor(Color4B *destination,Color4B *source,int count,size_t offset)
 {
     for (int i = 0;i<count;i++)
     {
-        *(data + offset * i) =  *color;
+        *(destination + offset * i) =  *source;
     }
 }
 
-static inline void setColors(Color4B *data,Color4B *color,int count,size_t offset)
+static inline void setColors(Color4B *destination,Color4B *source,int count,size_t offset)
 {
     for (int i = 0;i<count;i++)
     {
-        *(data + offset * i) =  *(color + i);
+        *(destination + offset * i) =  *(source + i);
     }
 }
 
-static inline void setTextureCoordinates(TextureCoord *data,TextureCoord *textureCoordinates,int count,size_t offset)
+static inline void setTextureCoordinates(TextureCoord *destination,TextureCoord *source,int count,size_t offset)
 {
     for (int i = 0;i<count;i++)
     {
-        *(data + offset * i) =  *(textureCoordinates + i);
+        *(destination + offset * i) =  *(source + i);
     }
 }
 
-static inline void setVertices(Vertex3D *data,Vertex3D *vertices,int count,size_t offset)
+static inline void setVertices(Vertex3D *destination,Vertex3D *source,int count,size_t offset)
 {
     for (int i = 0;i<count;i++)
     {
-        *(data + offset * i) =  *(vertices + i);
+        *(destination + offset * i) =  *(source + i);
     }
 }

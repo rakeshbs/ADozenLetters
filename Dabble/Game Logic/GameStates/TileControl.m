@@ -25,7 +25,19 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
         
         textureShaderProgram = [shaderManager initWithVertexShaderFilename:@"InstancedTextureShader" fragmentShaderFilename:@"TextureShader"];
         
-
+        glGenBuffers(1, &colorBuffer);
+        glGenBuffers(1, &textureBuffer);
+        
+        ATTRIB_COLOR_MVPMATRIX = [colorShaderProgram attributeIndex:@"mvpmatrix"];
+        ATTRIB_COLOR_VERTEX = [colorShaderProgram attributeIndex:@"vertex"];
+        ATTRIB_COLOR_COLOR = [colorShaderProgram attributeIndex:@"color"];
+        
+        
+        ATTRIB_TEXTURE_MVPMATRIX = [textureShaderProgram attributeIndex:@"mvpmatrix"];
+        ATTRIB_TEXTURE_VERTEX = [textureShaderProgram attributeIndex:@"vertex"];
+        ATTRIB_TEXTURE_COLOR = [textureShaderProgram attributeIndex:@"textureColor"];
+        ATTRIB_TEXTURE_TEXCOORDS = [textureShaderProgram attributeIndex:@"textureCoordinate"];
+        
         [self setupGraphics];
     }
     return self;
@@ -79,10 +91,7 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
 
 -(void)createTiles:(NSString *)dataStr
 {
-    
-
-    
-    NSArray *dataArray= [dataStr componentsSeparatedByString:@","];
+     NSArray *dataArray= [dataStr componentsSeparatedByString:@","];
     
     if (tilesArray != nil)
     {
@@ -133,6 +142,30 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
     }
 }
 
+-(void)drawColor
+{
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, count * sizeof(VertexColorData), dataBuffer, GL_STREAM_DRAW);
+    
+    
+    glEnableVertexAttribArray(ATTRIB_COLOR_MVPMATRIX + 0);
+    glEnableVertexAttribArray(ATTRIB_COLOR_MVPMATRIX + 1);
+    glEnableVertexAttribArray(ATTRIB_COLOR_MVPMATRIX + 2);
+    glEnableVertexAttribArray(ATTRIB_COLOR_MVPMATRIX + 3);
+    
+    glVertexAttribPointer(ATTRIB_COLOR_MVPMATRIX + 0, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)0);
+    glVertexAttribPointer(ATTRIB_COLOR_MVPMATRIX + 1, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)16);
+    glVertexAttribPointer(ATTRIB_COLOR_MVPMATRIX + 2, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)32);
+    glVertexAttribPointer(ATTRIB_MVPMATRICES + 3, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)48);
+    
+    
+    glEnableVertexAttribArray(ATTRIB_COLOR_VERTEX);
+    glVertexAttribPointer(ATTRIB_COLOR_VERTEX, 3, GL_FLOAT, 0, sizeof(InstancedVertexColorData), (GLvoid*)sizeof(Matrix3D));
+    glEnableVertexAttribArray(ATTRIB_COLOR_VERTEX);
+    glVertexAttribPointer(ATTRIB_COLORS, 4, GL_UNSIGNED_BYTE, GL_TRUE, STRIDE, (GLvoid*)(sizeof(Matrix3D)+sizeof(Vertex3D)));
+    
+}
+
 -(void)draw
 {
     for (int i = 0;i<tilesArray.count;i++)
@@ -145,6 +178,15 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
         
         [self copyMVPMatrixToDestination:&((tileColorData + i)->mvpMatrix)];
         
+        setVertices(&((tileColorData + i)->vertex), tileVertices, 6, sizeof(InstancedVertexColorData));
+        setUniformColor(&((tileColorData + i)->color), tile.currentTileColor, 6, sizeof(InstancedVertexColorData));
+        
+        [mvpMatrixManager translateInX:0 Y:0 Z:1];
+        
+        [self copyMVPMatrixToDestination:&((characterTextureData + i)->mvpMatrix)];
+        
+        setVertices(&((characterTextureData + i)->vertex), tileVertices, 6, sizeof(InstancedTextureVertexColorData));
+        setUniformColor(&((characterTextureData + i)->color), tile.currentTileColor, 6, sizeof(InstancedVertexColorData));
         
     }
 }
