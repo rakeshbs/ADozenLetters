@@ -359,6 +359,16 @@ typedef struct
     Color4B color;
 } InstancedTextureVertexColorData;
 
+static const size_t SIZE_MATRIX = sizeof(Matrix3D);
+static const size_t SIZE_VERTEX = sizeof(Vertex3D);
+static const size_t SIZE_COLOR = sizeof(Color4B);
+static const size_t SIZE_TEXCOORD = sizeof(TextureCoord);
+
+static const size_t SIZE_INSTANCED_VCDATA = sizeof(InstancedVertexColorData);
+static const size_t SIZE_INSTANCED_TVCDATA = sizeof(InstancedTextureVertexColorData);
+
+static const size_t SIZE_VCDATA = sizeof(VertexColorData);
+static const size_t SIZE_TVCDATA = sizeof(TextureVertexColorData);
 
 
 static inline void setUniformColor(Color4B *destination,Color4B *source,int count,size_t offset)

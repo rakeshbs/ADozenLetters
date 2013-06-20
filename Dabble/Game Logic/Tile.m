@@ -55,6 +55,11 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     return (TileControl *)self.parent;
 }
 
+-(BOOL)isDrawable
+{
+    return NO;
+}
+
 
 -(id)initWithCharacter:(NSString *)_character
 {

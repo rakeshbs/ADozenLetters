@@ -55,9 +55,10 @@
     size_t COLOR_STRIDE;
     size_t TEXTURE_STRIDE;
     
-    
+    NSMutableString *resString[3];
 }
 
 -(Color4B)getColorForState:(int)state andColorIndex:(int)index;
+-(void)createTiles:(NSString *)dataStr;
 
 @end

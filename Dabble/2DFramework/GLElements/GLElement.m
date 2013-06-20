@@ -68,8 +68,7 @@
 {
     [self update];
 
-    if (isDrawable)
-        [self draw];
+    [self draw];
     [mvpMatrixManager translateInX:self.frame.origin.x Y:self.frame.origin.y Z:self.numberOfLayers];
     
     for (GLElement *element in subElements)

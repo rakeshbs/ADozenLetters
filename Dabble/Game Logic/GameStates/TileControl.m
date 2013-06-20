@@ -144,8 +144,8 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
 
 -(void)drawColor
 {
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, count * sizeof(VertexColorData), dataBuffer, GL_STREAM_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(VertexColorData), tileColorData, GL_STREAM_DRAW);
     
     
     glEnableVertexAttribArray(ATTRIB_COLOR_MVPMATRIX + 0);
@@ -153,16 +153,19 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
     glEnableVertexAttribArray(ATTRIB_COLOR_MVPMATRIX + 2);
     glEnableVertexAttribArray(ATTRIB_COLOR_MVPMATRIX + 3);
     
-    glVertexAttribPointer(ATTRIB_COLOR_MVPMATRIX + 0, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)0);
-    glVertexAttribPointer(ATTRIB_COLOR_MVPMATRIX + 1, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)16);
-    glVertexAttribPointer(ATTRIB_COLOR_MVPMATRIX + 2, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)32);
-    glVertexAttribPointer(ATTRIB_MVPMATRICES + 3, 4, GL_FLOAT, 0, STRIDE, (GLvoid*)48);
+    glVertexAttribPointer(ATTRIB_COLOR_MVPMATRIX + 0, 4, GL_FLOAT, 0, SIZE_INSTANCED_VCDATA, (GLvoid*)0);
+    glVertexAttribPointer(ATTRIB_COLOR_MVPMATRIX + 1, 4, GL_FLOAT, 0, SIZE_INSTANCED_VCDATA, (GLvoid*)16);
+    glVertexAttribPointer(ATTRIB_COLOR_MVPMATRIX + 2, 4, GL_FLOAT, 0, SIZE_INSTANCED_VCDATA, (GLvoid*)32);
+    glVertexAttribPointer(ATTRIB_COLOR_MVPMATRIX + 3, 4, GL_FLOAT, 0, SIZE_INSTANCED_VCDATA, (GLvoid*)48);
     
     
     glEnableVertexAttribArray(ATTRIB_COLOR_VERTEX);
-    glVertexAttribPointer(ATTRIB_COLOR_VERTEX, 3, GL_FLOAT, 0, sizeof(InstancedVertexColorData), (GLvoid*)sizeof(Matrix3D));
-    glEnableVertexAttribArray(ATTRIB_COLOR_VERTEX);
-    glVertexAttribPointer(ATTRIB_COLORS, 4, GL_UNSIGNED_BYTE, GL_TRUE, STRIDE, (GLvoid*)(sizeof(Matrix3D)+sizeof(Vertex3D)));
+    glVertexAttribPointer(ATTRIB_COLOR_VERTEX, 3, GL_FLOAT, 0, SIZE_INSTANCED_VCDATA, (GLvoid*)SIZE_MATRIX);
+    glEnableVertexAttribArray(ATTRIB_COLOR_COLOR);
+    glVertexAttribPointer(ATTRIB_COLOR_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE, SIZE_INSTANCED_VCDATA,(GLvoid*)(SIZE_MATRIX+SIZE_VERTEX));
+    
+    glDrawArrays(GL_TRIANGLES, 0, tilesArray.count * 6);
+    
     
 }
 
@@ -189,7 +192,125 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
         setUniformColor(&((characterTextureData + i)->color), tile.currentTileColor, 6, sizeof(InstancedVertexColorData));
         
     }
+    
+    [self drawColor];
 }
+
+
+-(void)tileFinishedMoving:(NSNotification *)notification
+{
+    
+    for (Tile *sq in tilesArray)
+    {
+        int arrIndex = (sq.anchorPoint.y-yOffset-50)/80;
+        int charIndex = -1;
+        
+        if (arrIndex == 0)
+            charIndex = (sq.anchorPoint.x-40)/tileSquareSize;
+        if (arrIndex == 1)
+            charIndex = (sq.anchorPoint.x-70)/tileSquareSize;
+        if (arrIndex == 2)
+            charIndex = (sq.anchorPoint.x-100)/tileSquareSize;
+        
+        NSRange range  = NSMakeRange(charIndex, 1);
+        [resString[arrIndex] replaceCharactersInRange:range withString:sq.character];
+        
+    }
+    
+    for (Tile *sq in tilesArray)
+    {
+        if (sq.touchesInElement.count != 0)
+        {
+            int arrIndex = (sq.anchorPoint.y-yOffset-50)/80;
+            if (arrIndex == 0)
+                resString[arrIndex] = [[NSMutableString alloc]initWithString:@"#####"];
+            if (arrIndex == 1)
+                resString[arrIndex] = [[NSMutableString alloc]initWithString:@"####"];
+            if (arrIndex == 2)
+                resString[arrIndex] = [[NSMutableString alloc]initWithString:@"###"];
+            
+        }
+    }
+    
+    BOOL shouldUpdateTexture = NO;
+    
+    memset(shouldHighlight, 0, sizeof(shouldHighlight));
+    [onBoardWords removeAllObjects];
+    
+    for (int i = 0;i<3;i++)
+    {
+        int result = [dictionary checkIfWordExists:resString[i]];
+        if (result >= 0)
+        {
+            [madeWords addObject:resString[i]];
+            shouldHighlight[i] = 1;
+            numberOfWordsMade++;
+            numberOfWordsPerLetter[resString[i].length-3]++;
+            shouldUpdateTexture = 1;
+            [onBoardWords addObject:resString[i]];
+        }
+        else if (result == -2)
+        {
+            shouldHighlight[i] = 2;
+            [onBoardWords addObject:resString[i]];
+        }
+    }
+    if (onBoardWords.count == 3)
+    {
+        NSString *concat = [NSString stringWithFormat:@"%@%@%@",onBoardWords[0],onBoardWords[1],onBoardWords[2]];
+        if ([madeTriples indexOfString:concat] < 0)
+        {
+            [madeTriples addObject:concat];
+            numberOfTripletsMade++;
+            shouldUpdateTexture = YES;
+        }
+    }
+    else if (onBoardWords.count == 2)
+    {
+        NSString *concat = [NSString stringWithFormat:@"%@%@",onBoardWords[0],onBoardWords[1]];
+        if ([madeDoubles indexOfString:concat] < 0)
+        {
+            [madeDoubles addObject:concat];
+            numberOfDoublesMade++;
+            shouldUpdateTexture = YES;
+        }
+    }
+    
+    for (int i = 0;i<3;i++)
+    {
+        if (shouldHighlight[i]==1)
+        {
+            CGFloat anchorY = i*80 + 50 + yOffset;
+            for (Tile *sq in tilesArray)
+            {
+                if (sq.anchorPoint.y == anchorY)
+                {
+                    [sq wiggleFor:1.0];
+                    [sq animateShowColorInDuration:0.2];
+                }
+            }
+        }
+        else if (shouldHighlight[i] == 2)
+        {
+            CGFloat anchorY = i*80 + 50 + yOffset;
+            for (Tile *sq in tilesArray)
+            {
+                if (sq.anchorPoint.y == anchorY)
+                {
+                    [sq animateShowColorInDuration:0.2];
+                }
+            }
+            
+        }
+    }
+    
+    if (shouldUpdateTexture)
+    {
+        [self updateAnalytics];
+    }
+    
+}
+
 
 
 @end

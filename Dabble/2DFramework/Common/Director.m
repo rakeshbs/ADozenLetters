@@ -61,7 +61,7 @@
 				[window bringSubviewToFront:openGLview];
 				openGLview.isActive = YES;
 			}
-			[(Scene *)scene setView:openGLview];
+			[(Scene *)scene setOpenGLView:openGLview];
 			[openGLview setScene:(Scene *)scene];
 			[openGLview resumeTimer];
 		}
