@@ -34,7 +34,7 @@
     
     TextureManager *textureManager;
     MVPMatrixManager *mvpMatrixManager;
-    GLShaderProgram *shaderManager;
+    GLShaderManager *shaderManager;
     Animator *animator;
     FontSpriteSheetManager *fontSpriteSheetManager;
     
@@ -50,7 +50,7 @@
 
 @property (nonatomic)   CGRect frame;
 @property (nonatomic,retain) NSMutableArray *touchesInElement;
--(void)draw;
+-(void)drawElement;
 -(BOOL)touchBegan:(UITouch *)touch withEvent:(UIEvent *)event;
 -(BOOL)touchMoved:(UITouch *)touch withEvent:(UIEvent *)event;
 -(BOOL)touchEnded:(UITouch *)touch withEvent:(UIEvent *)event;

@@ -15,7 +15,6 @@
 #define totalTimePerGame 122
 
 @interface GameScene (Private)
--(void)createTiless;
 @end
 
 @implementation GameScene
@@ -64,8 +63,13 @@ Dictionary *dictionary;
         remainingTime = totalTimePerGame;
         [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
         
-        [self performSelector:@selector(loadData) withObject:nil afterDelay:0.0];
         
+        
+        tileControl = [[TileControl alloc]init];
+        tileControl.frame = CGRectMake(0,100,320,300);
+        [self addElement:tileControl];
+        
+        [self performSelector:@selector(loadData) withObject:nil afterDelay:0.0];
         
     }
     return  self;
@@ -86,21 +90,22 @@ Dictionary *dictionary;
     NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     NSString *stringData = [dataDict[@"chars"] uppercaseString];
     //[self performSelectorOnMainThread:@selector(sendCharData:) withObject:stringData waitUntilDone:YES];
+    [tileControl createTiles:@"TEH,WROD,GAMRE"];
     
     remainingTime = totalTimePerGame;
     lastUpdate = CFAbsoluteTimeGetCurrent();
     prevTimeLeft=totalTimePerGame;
     isTimerRunning = YES;
     [self update];
-    [self performSelectorOnMainThread:@selector(createTiles:) withObject:stringData waitUntilDone:YES];
+//    [self performSelectorOnMainThread:@selector(createTiles:) withObject:stringData waitUntilDone:YES];
     
 }
 
 -(void)enableNotification
 {
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tileFinishedMoving:) name:@"TileFinishedMoving" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tileBreakBond:)
-                                                name:@"TileBreakBond" object:nil];
+//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tileFinishedMoving:) name:@"TileFinishedMoving" object:nil];
+  //  [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tileBreakBond:)
+    //                                            name:@"TileBreakBond" object:nil];
     
     
 }
@@ -144,7 +149,7 @@ Dictionary *dictionary;
 {
     if (!isTimerRunning)
         return;
-    
+    /*
     CFTimeInterval currentTime = CFAbsoluteTimeGetCurrent();
     remainingTime-=(currentTime - lastUpdate);
     int currentTimeLeft = (int)remainingTime;
@@ -160,10 +165,11 @@ Dictionary *dictionary;
         [timeTexture release];
         
     }
+     
     if (currentTimeLeft <= 0)
         isTimerRunning = NO;
     prevTimeLeft = currentTimeLeft;
-    lastUpdate = currentTime;
+    lastUpdate = currentTime;*/
 }
 
 -(void)updateAnalytics

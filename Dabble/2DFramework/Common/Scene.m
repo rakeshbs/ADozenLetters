@@ -6,7 +6,6 @@
 //
 
 #import "Scene.h"
-#import "Scene+Private.h"
 #import "OpenGLESView.h"
 
 @implementation Scene

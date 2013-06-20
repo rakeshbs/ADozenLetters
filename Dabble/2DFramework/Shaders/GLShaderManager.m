@@ -35,6 +35,14 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(GLShaderManager)
     {
         return ShaderAttributeVertexColorTexture;
     }
+    else  if ([vertexShaderName isEqualToString:@"InstancedTextureShader"])
+    {
+        return ShaderAttributeMatrixVertexColorTexture;
+    }
+    else  if ([vertexShaderName isEqualToString:@"InstancedColorShader"])
+    {
+        return ShaderAttributeMatrixVertexColor;
+    }
     
     return ShaderAttributeVertexColor;
 }
@@ -55,13 +63,13 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(GLShaderManager)
     }
     else if (attType == ShaderAttributeMatrixVertexColor)
     {
-        [program addAttribute:@"mvpMatrix"];
+        [program addAttribute:@"mvpmatrix"];
         [program addAttribute:@"vertex"];
         [program addAttribute:@"color"];
     }
     else if (attType == ShaderAttributeMatrixVertexColorTexture)
     {
-        [program addAttribute:@"mvpMatrix"];
+        [program addAttribute:@"mvpmatrix"];
         [program addAttribute:@"vertex"];
         [program addAttribute:@"textureColor"];
         [program addAttribute:@"textureCoordinate"];

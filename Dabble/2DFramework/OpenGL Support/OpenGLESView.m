@@ -8,7 +8,6 @@
 
 #import "OpenGLESView.h"
 #import "Scene.h"
-#import "Scene+Private.h"
 #import "MVPMatrixManager.h"
 
 @interface OpenGLESView (Private)
@@ -125,7 +124,7 @@
    // while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.002, TRUE) == kCFRunLoopRunHandledSource){};
     currentZLayer = 1;
     
-    [view_delegate drawScene];
+    [view_delegate drawElement];
     [animator update];
     
  //   glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, viewFramebuffer);
@@ -150,15 +149,19 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-		[view_delegate touchesBegan:touches withEvent:event];
+    
+    for (UITouch *t in touches)
+        [view_delegate touchBegan:t withEvent:event];
 }
 -(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [view_delegate touchesMoved:touches withEvent:event];
-}
+    for (UITouch *t in touches)
+        [view_delegate touchMoved:t withEvent:event];
+}   
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [view_delegate touchesEnded:touches withEvent:event];
+    for (UITouch *t in touches)
+        [view_delegate touchEnded:t withEvent:event];
 }
 
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event

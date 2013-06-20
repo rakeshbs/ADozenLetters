@@ -21,9 +21,9 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
 {
     if (self = [super init])
     {
-        colorShaderProgram = [shaderManager initWithVertexShaderFilename:@"InstancedColorShader" fragmentShaderFilename:@"ColorShader"];
+        colorShaderProgram = [shaderManager getShaderByVertexShaderFileName:@"InstancedColorShader" andFragmentShaderFileName:@"ColorShader"];
         
-        textureShaderProgram = [shaderManager initWithVertexShaderFilename:@"InstancedTextureShader" fragmentShaderFilename:@"TextureShader"];
+        textureShaderProgram = [shaderManager getShaderByVertexShaderFileName:@"InstancedTextureShader" andFragmentShaderFileName:@"TextureShader"];
         
         glGenBuffers(1, &colorBuffer);
         glGenBuffers(1, &textureBuffer);
@@ -39,6 +39,7 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
         ATTRIB_TEXTURE_TEXCOORDS = [textureShaderProgram attributeIndex:@"textureCoordinate"];
         
         [self setupGraphics];
+        [self setupColors];
     }
     return self;
 }
@@ -99,7 +100,7 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
         [tilesArray release];
     }
     
-    tileColorData = malloc(sizeof(VertexColorData)* 4 * (dataStr.length-dataArray.count+1));
+    tileColorData = malloc(sizeof(VertexColorData)* 6 * (dataStr.length-dataArray.count+1));
 
     
     tilesArray = [[NSMutableArray alloc]init];
@@ -127,6 +128,7 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
             
             tile.colorIndex = j%2;
             
+            [tilesArray addObject:tile];
             [self addElement:tile];
             tile.tilesArray = tilesArray;
             [tile release];
@@ -144,6 +146,8 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
 
 -(void)drawColor
 {
+    [colorShaderProgram use];
+    
     glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
     glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(VertexColorData), tileColorData, GL_STREAM_DRAW);
     
@@ -184,12 +188,14 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
         setVertices(&((tileColorData + i)->vertex), tileVertices, 6, sizeof(InstancedVertexColorData));
         setUniformColor(&((tileColorData + i)->color), tile.currentTileColor, 6, sizeof(InstancedVertexColorData));
         
-        [mvpMatrixManager translateInX:0 Y:0 Z:1];
+        //[mvpMatrixManager translateInX:0 Y:0 Z:1];
         
-        [self copyMVPMatrixToDestination:&((characterTextureData + i)->mvpMatrix)];
+      //  [self copyMVPMatrixToDestination:&((characterTextureData + i)->mvpMatrix)];
         
-        setVertices(&((characterTextureData + i)->vertex), tileVertices, 6, sizeof(InstancedTextureVertexColorData));
-        setUniformColor(&((characterTextureData + i)->color), tile.currentTileColor, 6, sizeof(InstancedVertexColorData));
+      //  setVertices(&((characterTextureData + i)->vertex), tileVertices, 6, sizeof(InstancedTextureVertexColorData));
+      //  setUniformColor(&((characterTextureData + i)->color), tile.currentTileColor, 6, sizeof(InstancedVertexColorData));
+        
+         [mvpMatrixManager popModelViewMatrix];
         
     }
     
@@ -199,7 +205,7 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
 
 -(void)tileFinishedMoving:(NSNotification *)notification
 {
-    
+    /*
     for (Tile *sq in tilesArray)
     {
         int arrIndex = (sq.anchorPoint.y-yOffset-50)/80;
@@ -308,6 +314,7 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
     {
         [self updateAnalytics];
     }
+     */
     
 }
 

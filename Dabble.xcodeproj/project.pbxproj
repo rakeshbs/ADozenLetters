@@ -91,7 +91,6 @@
 		1445DC3116F97AD600EBBCCF /* Director.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Director.h; sourceTree = "<group>"; };
 		1445DC3216F97AD600EBBCCF /* Director.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Director.m; sourceTree = "<group>"; };
 		1445DC3316F97AD600EBBCCF /* GLCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLCommon.h; sourceTree = "<group>"; };
-		1445DC3416F97AD600EBBCCF /* Scene+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Scene+Private.h"; sourceTree = "<group>"; };
 		1445DC3516F97AD600EBBCCF /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
 		1445DC3616F97AD600EBBCCF /* Scene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Scene.m; sourceTree = "<group>"; };
 		1445DC3816F97AD600EBBCCF /* GLButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLButton.h; sourceTree = "<group>"; };
@@ -269,7 +268,6 @@
 				1445DC3116F97AD600EBBCCF /* Director.h */,
 				1445DC3216F97AD600EBBCCF /* Director.m */,
 				1445DC3316F97AD600EBBCCF /* GLCommon.h */,
-				1445DC3416F97AD600EBBCCF /* Scene+Private.h */,
 				1445DC3516F97AD600EBBCCF /* Scene.h */,
 				1445DC3616F97AD600EBBCCF /* Scene.m */,
 				149D383A175883440067A122 /* UITouch+GLElement.h */,

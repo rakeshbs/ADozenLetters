@@ -10,6 +10,8 @@
 #import "Tile.h"
 #import "NSArray+Additions.h"
 #import "GCHelper.h"
+#import "TileControl.h"
+
 
 @interface GameScene : Scene
 {
@@ -40,6 +42,8 @@
     int prevTimeLeft;
     CFTimeInterval lastUpdate;
     BOOL isTimerRunning;
+    
+    TileControl *tileControl;
     
     
 }

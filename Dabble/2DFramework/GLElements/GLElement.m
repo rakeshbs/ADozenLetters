@@ -15,6 +15,7 @@
 -(void)touchEndedInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event;
 
 -(void)reindexSubElements;
+-(void)draw;
 @end
 
 @implementation GLElement
@@ -69,13 +70,13 @@
     [self update];
 
     [self draw];
-    [mvpMatrixManager translateInX:self.frame.origin.x Y:self.frame.origin.y Z:self.numberOfLayers];
+    [mvpMatrixManager translateInX:0 Y:0 Z:self.numberOfLayers];
     
     for (GLElement *element in subElements)
     {
         [element drawElement];
     }
-    [mvpMatrixManager translateInX:-self.frame.origin.x Y:-self.frame.origin.y Z:0];
+    [mvpMatrixManager translateInX:-0 Y:-0 Z:0];
 }
  
 -(void)update
@@ -163,7 +164,7 @@
 {
     for (GLElement *element in subElements.reverseObjectEnumerator)
     {
-        if ([self touchBegan:touch withEvent:event])
+        if ([element touchBegan:touch withEvent:event])
             return YES;
     }
     
@@ -181,7 +182,7 @@
 {
     for (GLElement *element in subElements.reverseObjectEnumerator)
     {
-        if ([self touchMoved:touch withEvent:event])
+        if ([element touchMoved:touch withEvent:event])
             return YES;
     }
     
@@ -196,7 +197,7 @@
 {
     for (GLElement *element in subElements.reverseObjectEnumerator)
     {
-        if ([self touchEnded:touch withEvent:event])
+        if ([element touchEnded:touch withEvent:event])
             return YES;
     }
     
