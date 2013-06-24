@@ -63,16 +63,18 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(GLShaderManager)
     }
     else if (attType == ShaderAttributeMatrixVertexColor)
     {
-        [program addAttribute:@"mvpmatrix"];
+
         [program addAttribute:@"vertex"];
         [program addAttribute:@"color"];
+                [program addAttribute:@"mvpmatrix"];
     }
     else if (attType == ShaderAttributeMatrixVertexColorTexture)
     {
-        [program addAttribute:@"mvpmatrix"];
+     
         [program addAttribute:@"vertex"];
         [program addAttribute:@"textureColor"];
         [program addAttribute:@"textureCoordinate"];
+           [program addAttribute:@"mvpmatrix"];
     }
 }
 
@@ -95,7 +97,9 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(GLShaderManager)
     }
     
     [self addAttributesOfType:type toShader:shader];
-    [shader link];
+    
+    if (![shader link])
+        NSLog(@"Link unsuccessful");
     
     return shader;
 }

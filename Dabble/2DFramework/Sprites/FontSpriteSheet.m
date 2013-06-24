@@ -22,7 +22,7 @@ static NSString *fontCharactersNumbers = @"1234567890";
     if (_textureCoordinates !=nil)
         return;
     _textureCoordinates = malloc(sizeof(TextureCoord)*6);
-    _texureRect = malloc(sizeof(Vector3D)*6);
+    _textureRect = malloc(sizeof(Vector3D)*6);
     
     CGFloat totalWidth = self.fontSpriteSheet.width;
     CGFloat totalHeight = self.fontSpriteSheet.height;
@@ -42,13 +42,13 @@ static NSString *fontCharactersNumbers = @"1234567890";
     
     CGFloat scale = [[UIScreen mainScreen]scale]*2;
     
-    _texureRect[0] = (Vector3D) { .x = -_width/scale, .y = -_height/scale, .z = 0.0};
-    _texureRect[1] = (Vector3D) { .x = _width/scale, .y = -_height/scale, .z = 0.0};
-    _texureRect[2] = (Vector3D) { .x = _width/scale, .y = _height/scale, .z = 0.0};
+    _textureRect[0] = (Vector3D) { .x = -_width/scale, .y = -_height/scale, .z = 0.0};
+    _textureRect[1] = (Vector3D) { .x = _width/scale, .y = -_height/scale, .z = 0.0};
+    _textureRect[2] = (Vector3D) { .x = _width/scale, .y = _height/scale, .z = 0.0};
     
-    _texureRect[3] = (Vector3D) { .x = -_width/scale, .y =   -_height/scale, .z = 0.0};
-    _texureRect[4] = (Vector3D) { .x = -_width/scale, .y = _height/scale, .z = 0.0};
-    _texureRect[5] = (Vector3D) { .x = _width/scale, .y = _height/scale, .z = 0.0};
+    _textureRect[3] = (Vector3D) { .x = -_width/scale, .y =   -_height/scale, .z = 0.0};
+    _textureRect[4] = (Vector3D) { .x = -_width/scale, .y = _height/scale, .z = 0.0};
+    _textureRect[5] = (Vector3D) { .x = _width/scale, .y = _height/scale, .z = 0.0};
     
 }
 
@@ -57,7 +57,7 @@ static NSString *fontCharactersNumbers = @"1234567890";
     [super dealloc];
     self.fontSpriteSheet = nil;
     self.key = nil;
-    free(_texureRect);
+    free(_textureRect);
     
     free(_textureCoordinates);
 }
@@ -128,7 +128,7 @@ static NSString *fontCharactersNumbers = @"1234567890";
     [texture release];
     self.fontName = nil;
     self.fontColor = nil;
-    self.renderUnit = nil;
+
 }
 
 

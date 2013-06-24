@@ -18,12 +18,8 @@
                                                element.openGLView.frame.size.height - locationInView.y);
     
     CGRect frame = element.absoluteFrame;
-    if (CGRectContainsPoint(frame, locationInView))
-    {
-        return CGPointMake(locationInOpenGLView.x - frame.origin.x,
-                           locationInOpenGLView.y - frame.origin.y);
-    }
     
-    return CGPointMake(-1, -1);
+    return CGPointMake(locationInOpenGLView.x - frame.origin.x,
+                       locationInOpenGLView.y - frame.origin.y);
 }
 @end

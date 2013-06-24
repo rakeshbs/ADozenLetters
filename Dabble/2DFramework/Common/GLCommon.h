@@ -5,6 +5,8 @@
 
 
 
+
+
 typedef Vertex3D Vector3D;
 
 static inline GLfloat Vertex3DDistanceBetweenVertices 
@@ -359,46 +361,3 @@ typedef struct
     Color4B color;
 } InstancedTextureVertexColorData;
 
-static const size_t SIZE_MATRIX = sizeof(Matrix3D);
-static const size_t SIZE_VERTEX = sizeof(Vertex3D);
-static const size_t SIZE_COLOR = sizeof(Color4B);
-static const size_t SIZE_TEXCOORD = sizeof(TextureCoord);
-
-static const size_t SIZE_INSTANCED_VCDATA = sizeof(InstancedVertexColorData);
-static const size_t SIZE_INSTANCED_TVCDATA = sizeof(InstancedTextureVertexColorData);
-
-static const size_t SIZE_VCDATA = sizeof(VertexColorData);
-static const size_t SIZE_TVCDATA = sizeof(TextureVertexColorData);
-
-
-static inline void setUniformColor(Color4B *destination,Color4B *source,int count,size_t offset)
-{
-    for (int i = 0;i<count;i++)
-    {
-        *(destination + offset * i) =  *source;
-    }
-}
-
-static inline void setColors(Color4B *destination,Color4B *source,int count,size_t offset)
-{
-    for (int i = 0;i<count;i++)
-    {
-        *(destination + offset * i) =  *(source + i);
-    }
-}
-
-static inline void setTextureCoordinates(TextureCoord *destination,TextureCoord *source,int count,size_t offset)
-{
-    for (int i = 0;i<count;i++)
-    {
-        *(destination + offset * i) =  *(source + i);
-    }
-}
-
-static inline void setVertices(Vertex3D *destination,Vertex3D *source,int count,size_t offset)
-{
-    for (int i = 0;i<count;i++)
-    {
-        *(destination + offset * i) =  *(source + i);
-    }
-}

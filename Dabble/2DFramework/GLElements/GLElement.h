@@ -10,11 +10,12 @@
 #import "Animator.h"
 #import "TextureManager.h"
 #import "MVPMatrixManager.h"
-#import "BatchColorRenderer.h"
-#import "BatchTextureRenderer.h"
 #import "OpenGLESView.h"
 #import "Director.h"
 #import "UITouch+GLElement.h"
+#import "GLShaderManager.h"
+#import "FontSpriteSheetManager.h"
+
 
 @interface GLElement : NSObject
 {
@@ -56,6 +57,8 @@
 -(BOOL)touchEnded:(UITouch *)touch withEvent:(UIEvent *)event;
 
 -(void)update;
+
+
 
 -(void)addElement:(GLElement *)e;
 -(void)moveElementToFront:(GLElement *)e;

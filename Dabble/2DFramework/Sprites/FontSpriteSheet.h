@@ -7,9 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GLCommon.h"
-
-@class BatchTextureRenderUnit;
+#import "GLCommon.h"_textureRect
 
 typedef enum
 {
@@ -31,7 +29,7 @@ typedef enum
 @property (nonatomic) CGFloat height;
 @property (nonatomic,retain) FontSpriteSheet *fontSpriteSheet;
 @property (nonatomic) TextureCoord *textureCoordinates;
-@property (nonatomic) Vector3D *texureRect;
+@property (nonatomic) Vector3D *textureRect;
 
 
 -(void)calculateCoordinates;
@@ -51,7 +49,7 @@ typedef enum
 @property (nonatomic,retain) UIColor* fontColor;
 @property (nonatomic) CGFloat width;
 @property (nonatomic) CGFloat height;
-@property (nonatomic,assign) BatchTextureRenderUnit *renderUnit;
+
 
 -(void)calculateCoordinates;
 -(id)initWithType:(FontSpriteType)type andFontName:(NSString *)fontName andFontSize:(CGFloat)fontSize;

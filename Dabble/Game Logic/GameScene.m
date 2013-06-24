@@ -47,9 +47,6 @@ Dictionary *dictionary;
     
         //analyticsTextureRenderUnit = [textureRenderer getNewTextureRenderUnit];
        // timerTextureRenderUnit = [textureRenderer getNewTextureRenderUnit];
-        analyticsTextureRenderUnit.texture = analyticsTexture;
-        analyticsTextureRenderUnit.isFont = YES;
-        timerTextureRenderUnit.isFont = YES;
         
         resString[0] = [[NSMutableString alloc]initWithString:@"#####"];
         resString[1] = [[NSMutableString alloc]initWithString:@"####"];
@@ -63,13 +60,12 @@ Dictionary *dictionary;
         remainingTime = totalTimePerGame;
         [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
         
-        
-        
         tileControl = [[TileControl alloc]init];
-        tileControl.frame = CGRectMake(0,100,320,300);
         [self addElement:tileControl];
         
-        [self performSelector:@selector(loadData) withObject:nil afterDelay:0.0];
+        [self performSelector:@selector(loadData) withObject:nil afterDelay:0.1];
+
+        
         
     }
     return  self;
@@ -82,15 +78,16 @@ Dictionary *dictionary;
 
 -(void)loadData
 {
-    
+    /*
     NSURL *url = [NSURL URLWithString:@"http://qucentis.com/dabble.php"];
 
     
     NSData *data = [NSData dataWithContentsOfURL:url];
-    NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-    NSString *stringData = [dataDict[@"chars"] uppercaseString];
+    NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];    NSString *stringData = [dataDict[@"chars"] uppercaseString];*/
     //[self performSelectorOnMainThread:@selector(sendCharData:) withObject:stringData waitUntilDone:YES];
-    [tileControl createTiles:@"TEH,WROD,GAMRE"];
+    tileControl.frame = CGRectMake(0,0,self.frame.size.width,self.frame.size.height);
+    
+    [tileControl createTiles:@"GAMRE,WROD,TEH"];
     
     remainingTime = totalTimePerGame;
     lastUpdate = CFAbsoluteTimeGetCurrent();
@@ -111,14 +108,15 @@ Dictionary *dictionary;
 }
 
 -(void)draw{
-	Color4B color;
+    Color4B color;
 	color.red =241;
 	color.blue = 196;
 	color.green = 15;
 	color.alpha = 255;
     [director clearScene:color];
     
-    
+    /*
+     
     
     [mvpMatrixManager pushModelViewMatrix];
     [mvpMatrixManager translateInX:170 Y:340 Z:0];
@@ -128,7 +126,7 @@ Dictionary *dictionary;
     
     [timerTextureRenderUnit addDefaultTextureCoordinatesWithColor:whiteColor4B];
     
-    [mvpMatrixManager popModelViewMatrix];
+    [mvpMatrixManager popModelViewMatrix];*/
     
 }
 
@@ -181,7 +179,6 @@ Dictionary *dictionary;
                         horizontalAlignment:UITextAlignmentLeft
                         verticalAlignment:UITextAlignmentMiddle
                         fontName:@"Lato" fontSize:30];
-    analyticsTextureRenderUnit.texture = analyticsTexture;
      
 }
 

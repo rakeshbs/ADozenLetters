@@ -20,6 +20,11 @@
 	return self;
 }
 
+-(CGRect)frame
+{
+    return CGRectMake(0, 0, self.openGLView.frame.size.width, self.openGLView.frame.size.height);
+}
+
 -(void)sceneMadeActive
 {
     

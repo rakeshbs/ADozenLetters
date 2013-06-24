@@ -122,8 +122,8 @@
   //  glBindFramebuffer(GL_FRAMEBUFFER, viewFramebuffer);
     
    // while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.002, TRUE) == kCFRunLoopRunHandledSource){};
-    currentZLayer = 1;
-    
+    [[MVPMatrixManager sharedMVPMatrixManager]resetModelViewMatrixStack];
+    glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
     [view_delegate drawElement];
     [animator update];
     
@@ -149,7 +149,6 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    
     for (UITouch *t in touches)
         [view_delegate touchBegan:t withEvent:event];
 }
@@ -166,7 +165,8 @@
 
 -(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [view_delegate touchesEnded:touches withEvent:event];
+    for (UITouch *t in touches)
+        [view_delegate touchEnded:t withEvent:event];
 }
 
 -(void)pauseTimer

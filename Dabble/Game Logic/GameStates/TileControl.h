@@ -30,6 +30,8 @@
     FontSpriteSheet *scoreSpriteSheet;
     Texture2D *shadowTexture;
     
+    TextureCoord *shadowTexCoordinates;
+    
     Vector3D tileVertices[6];
     Vector3D shadowVertices[6];
     
@@ -47,13 +49,6 @@
     GLuint ATTRIB_TEXTURE_COLOR;
     GLuint ATTRIB_TEXTURE_TEXCOORDS;
     
-    size_t SIZE_MATRIX;
-    size_t SIZE_VERTEX;
-    size_t SIZE_COLOR;
-    size_t SIZE_TEXCOORDS;
-    
-    size_t COLOR_STRIDE;
-    size_t TEXTURE_STRIDE;
     
     NSMutableString *resString[3];
 }

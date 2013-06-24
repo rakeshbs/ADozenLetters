@@ -28,7 +28,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(MVPMatrixManager);
 -(void)pushModelViewMatrix
 {
     currentModelViewMatrixIndex++;
-    if (currentModelViewMatrixIndex>=10)
+    if (currentModelViewMatrixIndex>=100)
     {
         NSLog(@"Model View Matrix Stack Full");
         return;
@@ -109,6 +109,17 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(MVPMatrixManager);
     Matrix3DMultiply(translationMatrix, modelViewStack[currentModelViewMatrixIndex], resultMatrix);
     Matrix3DCopyS(resultMatrix, modelViewStack[currentModelViewMatrixIndex]);
 
+}
+
+-(void)resetModelViewMatrixStack
+{
+    currentModelViewMatrixIndex = 0;
+    Matrix3DSetIdentity(modelViewStack[currentModelViewMatrixIndex]);
+}
+
+-(void)setIdentity
+{
+    Matrix3DSetIdentity(modelViewStack[currentModelViewMatrixIndex]);
 }
 
 -(void)scaleByXScale:(CGFloat)xScale YScale:(CGFloat)yScale ZScale:(CGFloat)zScale

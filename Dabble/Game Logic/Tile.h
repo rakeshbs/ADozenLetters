@@ -8,8 +8,6 @@
 
 #import "GLElement.h"
 #import "TextureManager.h"
-#import "BatchColorRenderer.h"
-#import "BatchTextureRenderer.h"
 
 #define tileSquareSize 60.0f
 #define shadowSize 90.0f
@@ -34,20 +32,10 @@
     
     int colorIndex;
     
-    CGPoint touchOffSet;
-    BOOL touchStarted;
-    
-    short touchCorner;
-    
-    int horizontalDirection;
-    int verticalDirection;
-    
     CGPoint prevTouchPoint;
     
     int shadowAnimationCount;
     BOOL shadowVisible;
-    
-    CGFloat redColor;
     
     int score;
     
@@ -60,11 +48,10 @@
 
     Color4B *startTileColors;
     Color4B startCharacterColor;
-        Color4B *shadowColor;
+    Color4B *shadowColor;
 
     BOOL isColorAnimating;
     BOOL isBondedColor;
-
 }
 
 @property (nonatomic,retain) NSString *character;
@@ -88,6 +75,7 @@
 
 -(id)initWithCharacter:(NSString *)_character;
 -(void)wiggleFor:(CGFloat)duration;
+-(void)setupColors;
 -(void)resetToAnchorPoint;
 -(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay;
 -(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration;

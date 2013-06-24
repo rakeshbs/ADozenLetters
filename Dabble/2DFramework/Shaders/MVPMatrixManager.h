@@ -10,7 +10,7 @@
 #import "GLCommon.h"
 @interface MVPMatrixManager : NSObject
 {
-    Matrix3D modelViewStack[10];
+    Matrix3D modelViewStack[100];
     Matrix3D projectionMatrixStack[10];
 
     int currentModelViewMatrixIndex;
@@ -32,4 +32,6 @@
 -(void)scaleByXScale:(CGFloat)xScale YScale:(CGFloat)yScale ZScale:(CGFloat)zScale;
 -(void)translateInX:(CGFloat)x Y:(CGFloat)y Z:(CGFloat)z;
 -(void)getMVPMatrix:(Matrix3D)mvpMatrix;
+-(void)resetModelViewMatrixStack;
+-(void)setIdentity;
 @end

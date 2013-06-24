@@ -46,7 +46,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(CGRect)frame
 {
-    return CGRectMake(self.centerPoint.x-tileSquareSize/2, [UIScreen mainScreen].bounds.size.height - (self.centerPoint.y + tileSquareSize/2), tileSquareSize, tileSquareSize);
+    return CGRectMake(self.centerPoint.x-tileSquareSize/2, (self.centerPoint.y - tileSquareSize/2), tileSquareSize, tileSquareSize);
     
 }
 
@@ -85,8 +85,6 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
             }
         }
         
-        
-        [self setupColors];
         // [self setupSounds];
         
     }
@@ -118,7 +116,8 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     
     for (int c = 0;c<2;c++)
     {
-        Color4B tileColor = [self.tileControl getColorForState:0 andColorIndex:c];
+        TileControl *tC = (TileControl *)self.parent;
+        Color4B tileColor = [tC getColorForState:0 andColorIndex:c];
         Color4fCopy(&tileColor, (currentTileColor+c));
     }
     
@@ -278,8 +277,10 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 {
     if (index == 0)
     {
-        
         CGPoint touchPoint = [touch locationInGLElement:self];
+        
+         NSLog(@"touched %@",NSStringFromCGPoint(touchPoint));
+        
         wiggleAngle = 0;
         [self moveToFront];
         
@@ -293,7 +294,6 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         
         [self updateShadow];
         
-        touchOffSet = CGPointMake(_centerPoint.x-touchPoint.x, _centerPoint.y-(460 - touchPoint.y));
         prevTouchPoint = touchPoint;
     }
 }
@@ -301,29 +301,18 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)touchMovedInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
 {
-    
     if (index == 0)
     {
-        
-        CGPoint touchPoint = [touch locationInGLElement:self];
-        
-        self.centerPoint =  CGPointMake(touchPoint.x+touchOffSet.x, 460 - touchPoint.y + touchOffSet.y);
+       CGPoint touchPoint = [touch locationInGLElement:self];
         
         CGFloat diffX = touchPoint.x - prevTouchPoint.x;
         CGFloat diffY = touchPoint.y - prevTouchPoint.y;
         
+        
+        self.centerPoint =  CGPointMake(self.centerPoint.x + diffX, self.centerPoint.y + diffY);
+        
         [self moveToFront];
-        
-        if (fabs(diffY)>fabs(diffX)+5)
-        {
-            
-            prevTouchPoint = touchPoint;
-        }
-        else if (fabs(diffX) > fabs(diffY)+5)
-        {
-            prevTouchPoint = touchPoint;
-        }
-        
+    
         if (fabs(self.anchorPoint.y - self.centerPoint.y) > tileSquareSize/2)
         {
             

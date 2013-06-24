@@ -51,7 +51,8 @@
         return self.frame;
     CGRect parentFrame = self.parent.absoluteFrame;
     CGRect eFrame = self.frame;
-    return CGRectMake(parentFrame.origin.x+eFrame.origin.x, parentFrame.origin.y+eFrame.origin.y, eFrame.size.width, eFrame.size.height);
+    CGRect absFrame = CGRectMake(parentFrame.origin.x+eFrame.origin.x, parentFrame.origin.y+eFrame.origin.y, eFrame.size.width, eFrame.size.height);
+    return absFrame;
 }
 
 -(int)numberOfLayers
@@ -64,11 +65,29 @@
     
 }
 
+-(void)setOpenGLView:(OpenGLESView *)_openGLView
+{
+    if (openGLView != nil)
+    {
+        [openGLView release];
+        openGLView = nil;
+    }
+    
+    openGLView = [_openGLView retain];
+    for (GLElement *element in subElements)
+    {
+        [element setOpenGLView:_openGLView];
+    }
+    
+    
+}
 
 -(void)drawElement
 {
     [self update];
 
+    [mvpMatrixManager pushModelViewMatrix];
+    [mvpMatrixManager translateInX:self.frame.origin.x Y:self.frame.origin.y Z:0];
     [self draw];
     [mvpMatrixManager translateInX:0 Y:0 Z:self.numberOfLayers];
     
@@ -76,7 +95,7 @@
     {
         [element drawElement];
     }
-    [mvpMatrixManager translateInX:-0 Y:-0 Z:0];
+    [mvpMatrixManager popModelViewMatrix];
 }
  
 -(void)update
@@ -89,10 +108,10 @@
 {
     if (subElements == nil)
         subElements = [[NSMutableArray alloc]init];
-    [subElements addObject:e];
     e.indexOfElement = subElements.count-1;
     e.openGLView = self.openGLView;
     e.parent = self;
+    [subElements addObject:e];
 }
 
 -(void)moveElementToFront:(GLElement *)e
@@ -162,15 +181,15 @@
 
 -(BOOL)touchBegan:(UITouch *)touch withEvent:(UIEvent *)event
 {
-    for (GLElement *element in subElements.reverseObjectEnumerator)
-    {
-        if ([element touchBegan:touch withEvent:event])
-            return YES;
-    }
-    
     CGPoint l = [touch locationInGLElement:self];
-    if (l.x >= 0)
+    if (l.x >= 0 && l.y >=0 && l.x <=self.frame.size.width && l.y<=self.frame.size.height)
     {
+        for (GLElement *element in subElements.reverseObjectEnumerator)
+        {
+            if ([element touchBegan:touch withEvent:event])
+                return YES;
+        }
+        
         [touchesInElement addObject:touch];
         [self touchBeganInElement:touch withIndex:[touchesInElement indexOfObject:touch] withEvent:event];
         return YES;
@@ -223,16 +242,7 @@
 	
 }
 
-//Convenience functions
 
--(void)copyMVPMatrixToDestination:(Matrix3D *)destination
-{
-    Matrix3D result;
-    
-    [mvpMatrixManager getMVPMatrix:result];
-    
-    memcpy(destination, result, sizeof(Matrix3D));
-}
 
 -(void)dealloc
 {
