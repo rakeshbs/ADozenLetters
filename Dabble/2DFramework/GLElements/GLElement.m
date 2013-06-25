@@ -108,7 +108,7 @@
 {
     if (subElements == nil)
         subElements = [[NSMutableArray alloc]init];
-    e.indexOfElement = subElements.count-1;
+    e.indexOfElement = subElements.count;
     e.openGLView = self.openGLView;
     e.parent = self;
     [subElements addObject:e];
@@ -120,7 +120,6 @@
     [subElements removeObject:e];
     [subElements addObject:e];
     [e release];
-    
     [self reindexSubElements];
 }
 

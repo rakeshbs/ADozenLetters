@@ -51,6 +51,13 @@
     
     
     NSMutableString *resString[3];
+    
+    int *xMargins;
+    int yMargin;
+    int yOffset;
+    
+    int shadowCount;
+    
 }
 
 -(Color4B)getColorForState:(int)state andColorIndex:(int)index;

@@ -55,6 +55,7 @@
 }
 
 @property (nonatomic,retain) NSString *character;
+@property (nonatomic)     int score;
 
 @property (nonatomic) Color4B *currentTileColor;
 @property (nonatomic) Color4B *currentCharacterColor;

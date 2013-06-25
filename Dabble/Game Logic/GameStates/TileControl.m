@@ -43,6 +43,7 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
         
         [self setupColors];
         [self setupGraphics];
+       // [self enableNotification];
     }
     return self;
 }
@@ -51,27 +52,30 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
 {
     characterSpriteSheet = [fontSpriteSheetManager getFontSpriteSheetOfType:FontSpriteTypeAlphabetsUppercase withFont:@"Lato" andSize:40];
     
-    scoreSpriteSheet = [fontSpriteSheetManager getFontSpriteSheetOfType:FontSpriteTypeAlphabetsUppercase withFont:@"Lato" andSize:12];
+    scoreSpriteSheet = [fontSpriteSheetManager getFontSpriteSheetOfType:FontSpriteTypeNumbers
+                                                               withFont:@"Lato" andSize:12];
     
     shadowTexture = [textureManager getTexture:@"shadow" OfType:@"png"];
     
     shadowTexCoordinates = [shadowTexture getTextureCoordinates];
     
-    tileVertices[0] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 0.0f, .t = 1.0f};
-    tileVertices[1] = (Vector3D)  {.x = tileSquareSize/(2), .y = - tileSquareSize/(2), .z = 0.0f, .t = 1.0f};
-    tileVertices[2] = (Vector3D)  {.x = tileSquareSize/(2), .y =  tileSquareSize/(2), .z = 0.0f, .t = 1.0f};
+    CGFloat t = 1.0f;
     
-    tileVertices[3] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 0.0f, .t = 1.0f};
-    tileVertices[4] = (Vector3D)  {.x = -tileSquareSize/(2), .y = tileSquareSize/(2), .z = 0.0f, .t = 1.0f};
-    tileVertices[5] =  (Vector3D) {.x = tileSquareSize/(2), .y = tileSquareSize/(2), .z = 0.0f, .t = 1.0f};
+    tileVertices[0] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 0.0f, .t = t};
+    tileVertices[1] = (Vector3D)  {.x = tileSquareSize/(2), .y = - tileSquareSize/(2), .z = 0.0f, .t = t};
+    tileVertices[2] = (Vector3D)  {.x = tileSquareSize/(2), .y =  tileSquareSize/(2), .z = 0.0f, .t = t};
     
-    shadowVertices[0] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 0.0f, .t = 1.0f};
-    shadowVertices[1] = (Vector3D)  {.x = shadowSize/(2), .y = - shadowSize/(2), .z = 0.0f, .t = 1.0f};
-    shadowVertices[2] = (Vector3D)  {.x = shadowSize/(2), .y =  shadowSize/(2), .z = 0.0f, .t = 1.0f};
+    tileVertices[3] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 0.0f, .t = t};
+    tileVertices[4] = (Vector3D)  {.x = -tileSquareSize/(2), .y = tileSquareSize/(2), .z = 0.0f, .t = t};
+    tileVertices[5] =  (Vector3D) {.x = tileSquareSize/(2), .y = tileSquareSize/(2), .z = 0.0f, .t = t};
     
-    shadowVertices[3] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 0.0f, .t = 1.0f};
-    shadowVertices[4] = (Vector3D)  {.x = -shadowSize/(2), .y = shadowSize/(2), .z = 0.0f, .t = 1.0f};
-    shadowVertices[5] =  (Vector3D) {.x = shadowSize/(2), .y = shadowSize/(2), .z = 0.0f, .t = 1.0f};
+    shadowVertices[0] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 0.0f, .t = t};
+    shadowVertices[1] = (Vector3D)  {.x = shadowSize/(2), .y = - shadowSize/(2), .z = 0.0f, .t = t};
+    shadowVertices[2] = (Vector3D)  {.x = shadowSize/(2), .y =  shadowSize/(2), .z = 0.0f, .t = t};
+    
+    shadowVertices[3] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 0.0f, .t = t};
+    shadowVertices[4] = (Vector3D)  {.x = -shadowSize/(2), .y = shadowSize/(2), .z = 0.0f, .t = t};
+    shadowVertices[5] =  (Vector3D) {.x = shadowSize/(2), .y = shadowSize/(2), .z = 0.0f, .t = t};
     
 }
 
@@ -106,10 +110,11 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
     tileColorData = malloc(sizeof(InstancedVertexColorData)* 6 * (dataStr.length-dataArray.count+1));
     shadowTextureData = malloc(sizeof(InstancedTextureVertexColorData)* 6 * (dataStr.length-dataArray.count+1));
     characterTextureData = malloc(sizeof(InstancedTextureVertexColorData)* 6 * (dataStr.length-dataArray.count+1));
+    scoreTextureData = malloc(sizeof(InstancedTextureVertexColorData)* 6 * (dataStr.length-dataArray.count+1));
     
     tilesArray = [[NSMutableArray alloc]init];
     
-    for (int i = 0; i <dataArray.count;i++)
+    for (int i = dataArray.count-1; i >=0;i--)
     {
         NSString *charArray = dataArray[i];
         CGFloat marginX = (frame.size.width - tileSquareSize * (charArray.length))/2;
@@ -127,6 +132,7 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
             CGFloat anchorY = marginY + tileSquareSize * i + verticalOffset * i;
             tile.anchorPoint = CGPointMake(anchorX,anchorY);
             tile.characterFontSprite = [characterSpriteSheet getFontSprite:character];
+            tile.scoreTexture = [scoreSpriteSheet getFontSprite:[NSString stringWithFormat:@"%d",tile.score]];
             tile.colorIndex = j%2;
             
             [tilesArray addObject:tile];
@@ -140,9 +146,10 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
     
     CGFloat delay = 0.0;
     
-    for (Tile *sq in [tilesArray reverseObjectEnumerator])
+    for (Tile *tile in [tilesArray reverseObjectEnumerator])
     {
-        [sq throwToPoint:sq.anchorPoint inDuration:0.7 afterDelay:delay];
+        [tile throwToPoint:tile.anchorPoint inDuration:0.7 afterDelay:delay];
+                NSLog(@"%d",tile.indexOfElement);
         delay += 0.1;
     }
 }
@@ -159,6 +166,16 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
 
 -(void)tileFinishedMoving:(NSNotification *)notification
 {
+    
+   // NSMutableDictionary *words = [[NSMutableDictionary alloc]init];
+ //   NSMutableDictionary *words = [[NSMutableDictionary alloc]init];
+    
+    
+    for (Tile *tile in tilesArray)
+    {
+        
+    }
+    
     /*
      for (Tile *sq in tilesArray)
      {
@@ -331,7 +348,7 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
     
     
     glEnableVertexAttribArray(ATTRIB_COLOR_VERTEX);
-    glVertexAttribPointer(ATTRIB_COLOR_VERTEX, 4, GL_FLOAT, 0,  sizeof(InstancedVertexColorData),
+    glVertexAttribPointer(ATTRIB_COLOR_VERTEX, 3, GL_FLOAT, 0,  sizeof(InstancedVertexColorData),
                           (GLvoid*)sizeof(Matrix3D));
     
     glEnableVertexAttribArray(ATTRIB_COLOR_COLOR);
@@ -343,7 +360,7 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
     
 }
 
--(void)drawTexture
+-(void)drawTexture:(int)count
 {
     
     glEnableVertexAttribArray(ATTRIB_TEXTURE_MVPMATRIX + 0);
@@ -371,19 +388,21 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
                           (GLvoid*)sizeof(Matrix3D)+sizeof(Vertex3D)+sizeof(TextureCoord));
     
     
-    glDrawArrays(GL_TRIANGLES, 0, tilesArray.count * 6);
+    glDrawArrays(GL_TRIANGLES, 0, count * 6);
     
 }
 
 -(void)draw
 {
+    shadowCount = 0;
     for (int i = 0;i<subElements.count;i++)
     {
-        
-        Tile *tile = tilesArray[i];
+        Tile *tile = subElements[i];
         [mvpMatrixManager pushModelViewMatrix];
         [mvpMatrixManager rotateByAngleInDegrees:tile.wiggleAngle InX:0 Y:0 Z:1];
-        [mvpMatrixManager translateInX:tile.centerPoint.x Y:tile.centerPoint.y Z:i * 6+1];
+        [mvpMatrixManager translateInX:tile.centerPoint.x Y:tile.centerPoint.y Z:tile.indexOfElement *
+         6 + 1];
+
         
         
         Matrix3D result;
@@ -407,34 +426,57 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
             (characterTextureData + i * 6 + j)->texCoord =  tile.characterFontSprite.textureCoordinates[j];
         }
         
-        [mvpMatrixManager translateInX:0 Y:0 Z:1];
+        [mvpMatrixManager translateInX:20 Y:-15 Z:1];
         [mvpMatrixManager getMVPMatrix:result];
         for (int j = 0;j<6;j++)
         {
-            memcpy(&((shadowTextureData + i * 6 + j)->mvpMatrix), result, sizeof(Matrix3D));
-            (shadowTextureData + i * 6 + j)->vertex = shadowVertices[j];
-            (shadowTextureData + i * 6 + j)->color = *tile.shadowColor;
-            (shadowTextureData + i * 6 + j)->texCoord = shadowTexCoordinates[j];
+            memcpy(&((scoreTextureData + i * 6 + j)->mvpMatrix), result, sizeof(Matrix3D));
+            (scoreTextureData + i * 6 + j)->vertex = tile.scoreTexture.textureRect[j];
+            (scoreTextureData + i * 6 + j)->color = *tile.currentCharacterColor;
+            (scoreTextureData + i * 6 + j)->texCoord =  tile.scoreTexture.textureCoordinates[j];
         }
         
-        [mvpMatrixManager popModelViewMatrix];
         
-        NSLog(@"%@",tile.character);
+        if (tile.shadowColor->alpha > 0)
+        {
+            [mvpMatrixManager translateInX:-20 Y:15 Z:1];
+            [mvpMatrixManager getMVPMatrix:result];
+            
+            for (int j = 0;j<6;j++)
+            {
+                memcpy(&((shadowTextureData + i * 6 + j)->mvpMatrix), result, sizeof(Matrix3D));
+                (shadowTextureData + i * 6 + j)->vertex = shadowVertices[j];
+                (shadowTextureData + i * 6 + j)->color = *tile.shadowColor;
+                (shadowTextureData + i * 6 + j)->texCoord = shadowTexCoordinates[j];
+            }
+            shadowCount++;
+        }
+        [mvpMatrixManager popModelViewMatrix];
         
     }
     
     [self drawColor];
     
     [textureShaderProgram use];
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
     
     glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
     glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), characterTextureData, GL_DYNAMIC_DRAW);
     [characterSpriteSheet.texture bindTexture];
-    [self drawTexture];
+    [self drawTexture:tilesArray.count];
     
-    glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), shadowTextureData, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
+    glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), scoreTextureData, GL_DYNAMIC_DRAW);
+    [scoreSpriteSheet.texture bindTexture];
+    [self drawTexture:tilesArray.count];
+
+
     [shadowTexture bindTexture];
-    [self drawTexture];
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+    glBufferData(GL_ARRAY_BUFFER, shadowCount * 6 * sizeof(InstancedTextureVertexColorData), shadowTextureData, GL_DYNAMIC_DRAW);
+
+    [self drawTexture:shadowCount];
     
 }
 
