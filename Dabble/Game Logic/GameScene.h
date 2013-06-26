@@ -32,8 +32,6 @@
     
     Texture2D *analyticsTexture;
 
-    BatchTextureRenderUnit *analyticsTextureRenderUnit;
-    BatchTextureRenderUnit *timerTextureRenderUnit;
     
     NSMutableArray *onBoardWords;
      int shouldHighlight[3];

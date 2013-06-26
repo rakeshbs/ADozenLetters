@@ -22,7 +22,7 @@
 
 @synthesize touchesInElement;
 
-@synthesize frame,numberOfLayers,tag,openGLView,parent,isDrawable;
+@synthesize frame,numberOfLayers,tag,openGLView,parent;
 
 -(id)init
 {
@@ -40,7 +40,7 @@
     return self;
 }
 
--(BOOL)isDrawable
+-(BOOL)touchable
 {
     return YES;
 }
@@ -59,6 +59,7 @@
 {
     return 1;
 }
+
 
 -(void)draw{
     
@@ -167,6 +168,10 @@
     [self.parent moveElement:self toIndex:index];
 }
 
+-(void)removeFromParent
+{
+    [self.parent removeElement:self];
+}
 
 -(void)reindexSubElements
 {
@@ -189,6 +194,9 @@
                 return YES;
         }
         
+        if (!self.touchable)
+            return NO;
+        
         [touchesInElement addObject:touch];
         [self touchBeganInElement:touch withIndex:[touchesInElement indexOfObject:touch] withEvent:event];
         return YES;
@@ -204,6 +212,9 @@
             return YES;
     }
     
+    if (!self.touchable)
+        return NO;
+    
     if ([touchesInElement containsObject:touch])
     {
         [self touchMovedInElement:touch withIndex:[touchesInElement indexOfObject:touch] withEvent:event];
@@ -218,6 +229,10 @@
         if ([element touchEnded:touch withEvent:event])
             return YES;
     }
+    
+    if (!self.touchable)
+        return NO;
+    
     
     if ([touchesInElement containsObject:touch])
     {

@@ -32,9 +32,9 @@
 {
     if (self = [super init])
     {
-        for (int i = 0; i < 3;i++)
+        for (int i = 3; i < 6;i++)
         {
-            NSString *filePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"w%d",i+3] ofType:@""];
+            NSString *filePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"w%d",i] ofType:@""];
             FileReader *fileReader = [[FileReader alloc]initWithFilePath:filePath];
             
             words[i] = [[NSMutableArray alloc]init];
@@ -58,7 +58,10 @@
 
 -(int)checkIfWordExists:(NSString *)word
 {
-    int index = word.length - 3;
+    int index = word.length;
+    
+    if (words[index].count <= 0)
+        return -1;
     
     int low = 0;
     int high = [words[index] count];
@@ -82,7 +85,6 @@
             if (!used[index][mid])
             {
                 used[index][mid] = YES;
-                NSLog(@"%@",word);
                 return mid;
             }
             return -2;
@@ -101,11 +103,11 @@
     NSString *letters = nil;
     while (!found)
     {
-        int r3 = arc4random()%words[0].count;
-        int r4 = arc4random()%words[1].count;
-        int r5 = arc4random()%words[2].count;
+        int r3 = arc4random()%words[3].count;
+        int r4 = arc4random()%words[4].count;
+        int r5 = arc4random()%words[5].count;
     
-        letters = [NSString stringWithFormat:@"%@%@%@",words[0][r3],words[1][r4],words[2][r5]];
+        letters = [NSString stringWithFormat:@"%@%@%@",words[3][r3],words[4][r4],words[5][r5]];
     
         for (int i = 0;i<20;i++)
         {
@@ -119,17 +121,22 @@
         }
     }
     
-    return letters;
+    NSString *ret = [[NSString stringWithFormat:@"%@,%@,%@",
+                     [letters substringWithRange:NSMakeRange(0, 5)],
+                      [letters substringWithRange:NSMakeRange(5, 4)],
+                       [letters substringWithRange:NSMakeRange(9, 3)]]uppercaseString];
+    
+    return ret;
     
 }
 
 -(BOOL)checkIfValid:(NSString *)letters
 {
-    if ([self checkIfWordExists:[letters substringWithRange:NSMakeRange(0, 3)]])
+    if ([self validateWord:[letters substringWithRange:NSMakeRange(0, 5)]])
         return NO;
-    if ([self checkIfWordExists:[letters substringWithRange:NSMakeRange(3, 4)]])
+    if ([self validateWord:[letters substringWithRange:NSMakeRange(5, 4)]])
         return NO;
-    if ([self checkIfWordExists:[letters substringWithRange:NSMakeRange(8, 5)]])
+    if ([self validateWord:[letters substringWithRange:NSMakeRange(9, 3)]])
         return NO;
     
     return YES;
@@ -157,6 +164,45 @@
     
     return ret;
 }
+
+
+-(BOOL)validateWord:(NSString *)word
+{
+    int index = word.length;
+    
+    if (words[index].count <= 0)
+        return -1;
+    
+    int low = 0;
+    int high = [words[index] count];
+    int mid = (high + low)/2;
+    
+    do {
+        NSString *str = words[index][mid];
+        
+        if ([str caseInsensitiveCompare:word]  == NSOrderedAscending)
+        {
+            low = mid;
+            
+        }
+        else if ([str caseInsensitiveCompare:word] == NSOrderedDescending)
+        {
+            high = mid;
+            
+        }
+        else
+        {
+            return YES;
+            
+        }
+        mid = (high + low)/2;
+    }
+    while ((high - low)>1);
+    
+    
+    return NO;
+}
+
 
 -(void)reset
 {

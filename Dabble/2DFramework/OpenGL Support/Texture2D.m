@@ -124,7 +124,6 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 {
 	if(_name)
 	 glDeleteTextures(1, &_name);
-	self.renderUnit = nil;
 	[super dealloc];
 }
 
@@ -339,12 +338,13 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     int row = 0;
     CGFloat lineHeight = 0,lineWidth = 0,totalHeight = 0,totalWidth = 0;
     
+    NSArray *characterArray = [fontString componentsSeparatedByString:@","];
     
-	for (int i = 0;i<fontString.length;i++)
+	for (int i = 0;i<characterArray.count;i++)
     {
-        NSRange subStrRange = NSMakeRange(i, 1);
+    //    NSRange subStrRange = NSMakeRange(i, 1);
         
-        CGSize dimensions = [[fontString substringWithRange:subStrRange] sizeWithFont:font];
+        CGSize dimensions = [characterArray[i] sizeWithFont:font];
         
         lineWidth += dimensions.width;
         lineHeight = (lineHeight < dimensions.height) ? dimensions.height:lineHeight;
@@ -404,15 +404,13 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     FontSprite *fontSprite = nil;
     UIGraphicsPushContext(context);
 
-    for (int i = 0;i<fontString.length;i++)
+    
+	for (int i = 0;i<characterArray.count;i++)
     {
-       
-        NSRange subStrRange = NSMakeRange(i, 1);
-        NSString *subStr = [fontString substringWithRange:subStrRange];
-        CGSize dimensions = [subStr sizeWithFont:font];
+        CGSize dimensions = [characterArray[i] sizeWithFont:font];
         
         CGContextTranslateCTM(context, lineWidth, totalHeight);
-        [subStr drawInRect:CGRectMake(0, 0, dimensions.width, dimensions.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:NSTextAlignmentCenter];
+        [characterArray[i] drawInRect:CGRectMake(0, 0, dimensions.width, dimensions.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:NSTextAlignmentCenter];
         CGContextTranslateCTM(context, -lineWidth, -totalHeight);
         
         fontSprite = [[FontSprite alloc]init];
@@ -420,7 +418,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         fontSprite.offSetY = totalHeight;
         fontSprite.width = dimensions.width;
         fontSprite.height = dimensions.height;
-        fontSprite.key = subStr;
+        fontSprite.key = characterArray[i];
         [fontSpriteSheet addFontSprite:fontSprite];
         [fontSprite release];
      

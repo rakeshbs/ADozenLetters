@@ -12,8 +12,8 @@
 
 @interface Dictionary : NSObject
 {
-    NSMutableArray *words[3];
-    BOOL *used[3];
+    NSMutableArray *words[10];
+    BOOL *used[10];
 }
 
 @property (nonatomic) char *grid;

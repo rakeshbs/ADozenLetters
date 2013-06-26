@@ -19,38 +19,38 @@
 
 @interface GLElement : NSObject
 {
-    OpenGLESView *openGLView;
-    Director *director;
     CGRect frame;
     GLElement *parent;
     
-    BOOL isDrawable;
-    
-    
-    int numberOfLayers;
     int tag;
+    int numberOfLayers;
     
     NSMutableArray *touchesInElement;
     NSMutableArray *subElements;
     
+    Director *director;
+    Animator *animator;
+    OpenGLESView *openGLView;
     TextureManager *textureManager;
     MVPMatrixManager *mvpMatrixManager;
     GLShaderManager *shaderManager;
-    Animator *animator;
     FontSpriteSheetManager *fontSpriteSheetManager;
     
 }
 
-@property (nonatomic,readonly) BOOL isDrawable;
-@property (nonatomic,readonly) CGRect absoluteFrame;
 @property (nonatomic) int tag;
-@property (nonatomic,readonly) int numberOfLayers;
-@property (nonatomic,retain) OpenGLESView *openGLView;
 @property (nonatomic) int indexOfElement;
-@property (nonatomic,retain) GLElement *parent;
-
 @property (nonatomic)   CGRect frame;
+
+@property (nonatomic,readonly) CGRect absoluteFrame;
+@property (nonatomic,readonly) int numberOfLayers;
+@property (nonatomic,readonly) BOOL touchable;
+
+@property (nonatomic,retain) GLElement *parent;
+@property (nonatomic,retain) OpenGLESView *openGLView;
 @property (nonatomic,retain) NSMutableArray *touchesInElement;
+
+
 -(void)drawElement;
 -(BOOL)touchBegan:(UITouch *)touch withEvent:(UIEvent *)event;
 -(BOOL)touchMoved:(UITouch *)touch withEvent:(UIEvent *)event;

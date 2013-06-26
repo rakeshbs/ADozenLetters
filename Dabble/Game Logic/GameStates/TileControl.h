@@ -8,14 +8,12 @@
 
 #import "GLElement.h"
 #import "Tile.h"
+#import "Dictionary.h"
 #import "GLShaderManager.h"
 
 @interface TileControl : GLElement
 {
     NSMutableArray *tilesArray;
-    
-    NSString *charArray1[3];
-    
     GLShaderProgram *colorShaderProgram;
     GLShaderProgram *textureShaderProgram;
     
@@ -49,18 +47,36 @@
     GLuint ATTRIB_TEXTURE_COLOR;
     GLuint ATTRIB_TEXTURE_TEXCOORDS;
     
-    
-    NSMutableString *resString[3];
-    
-    int *xMargins;
-    int yMargin;
-    int yOffset;
-    
+    float *xMargins;
+    float yMargin;
     int shadowCount;
     
+    
+    char *rearrangedCharacters;
+    int numberOfRows;
+    int *numberOfLettersPerRow;
+    int lengthOfCharRow;
+    
+    NSMutableArray *generatedWords;
+    
+    NSMutableArray *newWordsPerTurn;
+    NSMutableArray *usedWordsPerTurn;
+    NSMutableArray *wordsPerTurn;
+    NSMutableString *concatenatedWords;
+    
+    Dictionary *dictionary;
+    
+    NSObject *target;
+    SEL selector;
 }
+
+@property (nonatomic,readonly) NSMutableArray *newWordsPerTurn;
+@property (nonatomic,readonly) NSMutableArray *usedWordsPerTurn;
+@property (nonatomic,readonly) NSMutableArray *wordsPerTurn;
+@property (nonatomic,readonly)  NSMutableString *concatenatedWords;
 
 -(Color4B)getColorForState:(int)state andColorIndex:(int)index;
 -(void)createTiles:(NSString *)dataStr;
+-(void)addTarget:(NSObject *)_target andSelector:(SEL)_selector;
 
 @end

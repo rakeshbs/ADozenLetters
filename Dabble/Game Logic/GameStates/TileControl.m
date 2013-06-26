@@ -7,15 +7,16 @@
 //
 
 #import "TileControl.h"
+#import "NSArray+Additions.h"
 
 #define verticalOffset 20
 #define horizontalOffset 0
 
 
-static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 255, .alpha = 0};
-
-
 @implementation TileControl
+
+@synthesize newWordsPerTurn,wordsPerTurn,concatenatedWords;
+@synthesize usedWordsPerTurn;
 
 -(id)init
 {
@@ -39,13 +40,22 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
         ATTRIB_TEXTURE_TEXCOORDS = [textureShaderProgram attributeIndex:@"textureCoordinate"];
         
         
-        [colorShaderProgram link];
+        generatedWords = [[NSMutableArray alloc]init];
+        newWordsPerTurn = [[NSMutableArray alloc]init];
+        usedWordsPerTurn = [[NSMutableArray alloc]init];
+        wordsPerTurn = [[NSMutableArray alloc]init];
         
+        [self performSelector:@selector(loadDictionary) withObject:nil];
         [self setupColors];
         [self setupGraphics];
-       // [self enableNotification];
+        [self enableNotification];
     }
     return self;
+}
+
+-(BOOL)touchable
+{
+    return NO;
 }
 
 -(void)setupGraphics
@@ -105,21 +115,38 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
     {
         [subElements removeObjectsInArray:tilesArray];
         [tilesArray release];
+        free(xMargins);
+        free(tileColorData);
+        free(shadowTextureData);
+        free(characterTextureData);
+        free(scoreTextureData);
+        free(rearrangedCharacters);
     }
     
     tileColorData = malloc(sizeof(InstancedVertexColorData)* 6 * (dataStr.length-dataArray.count+1));
     shadowTextureData = malloc(sizeof(InstancedTextureVertexColorData)* 6 * (dataStr.length-dataArray.count+1));
     characterTextureData = malloc(sizeof(InstancedTextureVertexColorData)* 6 * (dataStr.length-dataArray.count+1));
     scoreTextureData = malloc(sizeof(InstancedTextureVertexColorData)* 6 * (dataStr.length-dataArray.count+1));
+    [generatedWords removeAllObjects];
     
     tilesArray = [[NSMutableArray alloc]init];
+    
+    
+    xMargins = malloc(sizeof(float)*dataArray.count);
+    yMargin = (frame.size.height - (tileSquareSize) * (dataArray.count))/2;
+    yMargin -= (verticalOffset * (dataArray.count - 1))/2;
+
+    numberOfRows = dataArray.count;
+    numberOfLettersPerRow = malloc(sizeof(int)*numberOfRows);
+    lengthOfCharRow = (dataStr.length-dataArray.count+1);
+    rearrangedCharacters = malloc(sizeof(char) * lengthOfCharRow * numberOfRows);
     
     for (int i = dataArray.count-1; i >=0;i--)
     {
         NSString *charArray = dataArray[i];
-        CGFloat marginX = (frame.size.width - tileSquareSize * (charArray.length))/2;
-        CGFloat marginY = (frame.size.height - (tileSquareSize) * (dataArray.count))/2;
-        marginY -= (verticalOffset * (dataArray.count - 1))/2;
+        numberOfLettersPerRow[i] = charArray.length;
+        
+        xMargins[i] = (frame.size.width - tileSquareSize * (charArray.length))/2;
         
         for (int j = 0; j < charArray.length; j++)
         {
@@ -128,8 +155,8 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
             Tile *tile = [[Tile alloc]initWithCharacter:character];
             tile.centerPoint = CGPointMake(self.frame.size.width/2, self.frame.size.height/2);
             
-            CGFloat anchorX = marginX + tileSquareSize * j + tileSquareSize/2.0;
-            CGFloat anchorY = marginY + tileSquareSize * i + verticalOffset * i;
+            CGFloat anchorX = xMargins[i] + tileSquareSize * j + tileSquareSize/2.0;
+            CGFloat anchorY = yMargin + tileSquareSize * i + verticalOffset * i;
             tile.anchorPoint = CGPointMake(anchorX,anchorY);
             tile.characterFontSprite = [characterSpriteSheet getFontSprite:character];
             tile.scoreTexture = [scoreSpriteSheet getFontSprite:[NSString stringWithFormat:@"%d",tile.score]];
@@ -149,7 +176,7 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
     for (Tile *tile in [tilesArray reverseObjectEnumerator])
     {
         [tile throwToPoint:tile.anchorPoint inDuration:0.7 afterDelay:delay];
-                NSLog(@"%d",tile.indexOfElement);
+        [tile moveToBack];
         delay += 0.1;
     }
 }
@@ -163,129 +190,75 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
                                                 name:@"TileBreakBond" object:nil];
 }
 
+-(void)loadDictionary
+{
+    dictionary = [Dictionary getSharedDictionary];
+}
+
 
 -(void)tileFinishedMoving:(NSNotification *)notification
 {
+    [newWordsPerTurn removeAllObjects];
+    [usedWordsPerTurn removeAllObjects];
+    [wordsPerTurn removeAllObjects];
     
-   // NSMutableDictionary *words = [[NSMutableDictionary alloc]init];
- //   NSMutableDictionary *words = [[NSMutableDictionary alloc]init];
+    if (concatenatedWords != nil)
+        [concatenatedWords release];
+    concatenatedWords = [[NSMutableString alloc]init];
     
+    memset(rearrangedCharacters, '\0', sizeof(char)*lengthOfCharRow*numberOfRows);
     
     for (Tile *tile in tilesArray)
     {
+        int row = (tile.anchorPoint.y - yMargin)/(verticalOffset + tileSquareSize);
+        int col = (tile.anchorPoint.x - xMargins[row] - tileSquareSize/2.0)/tileSquareSize;
+        
+        const char *characterAt = [tile.character cStringUsingEncoding:NSUTF8StringEncoding];
+        
+        if(tile.touchesInElement.count > 0)
+            *(rearrangedCharacters + row * lengthOfCharRow + col) = '#';
+        else
+            *(rearrangedCharacters + row * lengthOfCharRow + col) = *characterAt;
         
     }
     
-    /*
-     for (Tile *sq in tilesArray)
-     {
-     int arrIndex = (sq.anchorPoint.y-yOffset-50)/80;
-     int charIndex = -1;
-     
-     if (arrIndex == 0)
-     charIndex = (sq.anchorPoint.x-40)/tileSquareSize;
-     if (arrIndex == 1)
-     charIndex = (sq.anchorPoint.x-70)/tileSquareSize;
-     if (arrIndex == 2)
-     charIndex = (sq.anchorPoint.x-100)/tileSquareSize;
-     
-     NSRange range  = NSMakeRange(charIndex, 1);
-     [resString[arrIndex] replaceCharactersInRange:range withString:sq.character];
-     
-     }
-     
-     for (Tile *sq in tilesArray)
-     {
-     if (sq.touchesInElement.count != 0)
-     {
-     int arrIndex = (sq.anchorPoint.y-yOffset-50)/80;
-     if (arrIndex == 0)
-     resString[arrIndex] = [[NSMutableString alloc]initWithString:@"#####"];
-     if (arrIndex == 1)
-     resString[arrIndex] = [[NSMutableString alloc]initWithString:@"####"];
-     if (arrIndex == 2)
-     resString[arrIndex] = [[NSMutableString alloc]initWithString:@"###"];
-     
-     }
-     }
-     
-     BOOL shouldUpdateTexture = NO;
-     
-     memset(shouldHighlight, 0, sizeof(shouldHighlight));
-     [onBoardWords removeAllObjects];
-     
-     for (int i = 0;i<3;i++)
-     {
-     int result = [dictionary checkIfWordExists:resString[i]];
-     if (result >= 0)
-     {
-     [madeWords addObject:resString[i]];
-     shouldHighlight[i] = 1;
-     numberOfWordsMade++;
-     numberOfWordsPerLetter[resString[i].length-3]++;
-     shouldUpdateTexture = 1;
-     [onBoardWords addObject:resString[i]];
-     }
-     else if (result == -2)
-     {
-     shouldHighlight[i] = 2;
-     [onBoardWords addObject:resString[i]];
-     }
-     }
-     if (onBoardWords.count == 3)
-     {
-     NSString *concat = [NSString stringWithFormat:@"%@%@%@",onBoardWords[0],onBoardWords[1],onBoardWords[2]];
-     if ([madeTriples indexOfString:concat] < 0)
-     {
-     [madeTriples addObject:concat];
-     numberOfTripletsMade++;
-     shouldUpdateTexture = YES;
-     }
-     }
-     else if (onBoardWords.count == 2)
-     {
-     NSString *concat = [NSString stringWithFormat:@"%@%@",onBoardWords[0],onBoardWords[1]];
-     if ([madeDoubles indexOfString:concat] < 0)
-     {
-     [madeDoubles addObject:concat];
-     numberOfDoublesMade++;
-     shouldUpdateTexture = YES;
-     }
-     }
-     
-     for (int i = 0;i<3;i++)
-     {
-     if (shouldHighlight[i]==1)
-     {
-     CGFloat anchorY = i*80 + 50 + yOffset;
-     for (Tile *sq in tilesArray)
-     {
-     if (sq.anchorPoint.y == anchorY)
-     {
-     [sq wiggleFor:1.0];
-     [sq animateShowColorInDuration:0.2];
-     }
-     }
-     }
-     else if (shouldHighlight[i] == 2)
-     {
-     CGFloat anchorY = i*80 + 50 + yOffset;
-     for (Tile *sq in tilesArray)
-     {
-     if (sq.anchorPoint.y == anchorY)
-     {
-     [sq animateShowColorInDuration:0.2];
-     }
-     }
-     
-     }
-     }
-     
-     if (shouldUpdateTexture)
-     {
-     [self updateAnalytics];
-     }
-     */
+    for (int i = numberOfRows;i>=0;i--)
+    {
+        NSString *string = [NSString stringWithUTF8String:(rearrangedCharacters + i * lengthOfCharRow)];
+        int ind = [dictionary checkIfWordExists:string];
+        
+        if (ind >= 0)
+        {
+            for (Tile *tile in tilesArray)
+            {
+                int row = (tile.anchorPoint.y - yMargin)/(verticalOffset + tileSquareSize);
+                if (row == i)
+                {
+                    [tile wiggleFor:1.0];
+                    [tile animateShowColorInDuration:0.2];
+                }
+            }
+            [newWordsPerTurn addObject:string];
+            [generatedWords addObject:string];
+            [wordsPerTurn addObject:string];
+            [concatenatedWords appendFormat:@"%@",string];
+        }
+        else if (ind == -2)
+        {
+            [usedWordsPerTurn addObject:string];
+            [wordsPerTurn addObject:string];
+            [concatenatedWords appendFormat:@"%@",string];
+            for (Tile *tile in tilesArray)
+            {
+                int row = (tile.anchorPoint.y - yMargin)/(verticalOffset + tileSquareSize);
+                if (row == i)
+                    [tile animateShowColorInDuration:0.2];
+            }
+        }
+    }
+    
+    if (target)
+        [target performSelector:selector];
     
 }
 
@@ -312,18 +285,14 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
 }
 -(void)touchEndedInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
 {
-	if (touch.tapCount >= 2)
-    {
-        CGFloat delay = 0.0;
-        
-        for (Tile *sq in [tilesArray reverseObjectEnumerator])
-        {
-            sq.centerPoint = CGPointMake(self.frame.size.width/2,self.frame.size.height/2);
-            [sq throwToPoint:sq.anchorPoint inDuration:0.7 afterDelay:delay];
-            delay += 0.1;
-        }
-    }
 }
+
+-(void)addTarget:(NSObject *)_target andSelector:(SEL)_selector
+{
+    target = _target;
+    selector = _selector;
+}
+
 
 
 //Drawing Code
@@ -444,10 +413,10 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
             
             for (int j = 0;j<6;j++)
             {
-                memcpy(&((shadowTextureData + i * 6 + j)->mvpMatrix), result, sizeof(Matrix3D));
-                (shadowTextureData + i * 6 + j)->vertex = shadowVertices[j];
-                (shadowTextureData + i * 6 + j)->color = *tile.shadowColor;
-                (shadowTextureData + i * 6 + j)->texCoord = shadowTexCoordinates[j];
+                memcpy(&((shadowTextureData + shadowCount * 6 + j)->mvpMatrix), result, sizeof(Matrix3D));
+                (shadowTextureData + shadowCount * 6 + j)->vertex = shadowVertices[j];
+                (shadowTextureData + shadowCount * 6 + j)->color = *tile.shadowColor;
+                (shadowTextureData + shadowCount * 6 + j)->texCoord = shadowTexCoordinates[j];
             }
             shadowCount++;
         }
@@ -478,6 +447,17 @@ static Color4B transparentColor = (Color4B) {.red = 255, .blue = 255, .green = 2
 
     [self drawTexture:shadowCount];
     
+}
+
+-(void)dealloc
+{
+    [super dealloc];
+    
+    free(xMargins);
+    free(tileColorData);
+    free(shadowTextureData);
+    free(characterTextureData);
+    free(scoreTextureData);
 }
 
 

@@ -45,8 +45,6 @@ Dictionary *dictionary;
                             fontName:@"Lato" fontSize:30];
         
     
-        //analyticsTextureRenderUnit = [textureRenderer getNewTextureRenderUnit];
-       // timerTextureRenderUnit = [textureRenderer getNewTextureRenderUnit];
         
         resString[0] = [[NSMutableString alloc]initWithString:@"#####"];
         resString[1] = [[NSMutableString alloc]initWithString:@"####"];
@@ -58,10 +56,11 @@ Dictionary *dictionary;
         
         
         remainingTime = totalTimePerGame;
-        [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
+        [self loadDictionary];
         
         tileControl = [[TileControl alloc]init];
         [self addElement:tileControl];
+        [tileControl addTarget:self andSelector:@selector(tileRearranged)];
         
         [self performSelector:@selector(loadData) withObject:nil afterDelay:0.1];
 
@@ -76,36 +75,30 @@ Dictionary *dictionary;
     dictionary = [Dictionary getSharedDictionary];
 }
 
+-(void)tileRearranged
+{
+    NSLog(@"%@",tileControl.concatenatedWords);
+    
+}
+
+
+
 -(void)loadData
 {
-    /*
-    NSURL *url = [NSURL URLWithString:@"http://qucentis.com/dabble.php"];
-
-    
-    NSData *data = [NSData dataWithContentsOfURL:url];
-    NSDictionary *dataDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];    NSString *stringData = [dataDict[@"chars"] uppercaseString];*/
-    //[self performSelectorOnMainThread:@selector(sendCharData:) withObject:stringData waitUntilDone:YES];
     tileControl.frame = CGRectMake(0,0,self.frame.size.width,self.frame.size.height);
     
-    [tileControl createTiles:@"GAMRE,WROD,TEH"];
+    
+    [tileControl createTiles:[dictionary generateDozenLetters]];
+    
+    //[tileControl createTiles:@"XYZ"];
     
     remainingTime = totalTimePerGame;
     lastUpdate = CFAbsoluteTimeGetCurrent();
     prevTimeLeft=totalTimePerGame;
     isTimerRunning = YES;
     [self update];
-//    [self performSelectorOnMainThread:@selector(createTiles:) withObject:stringData waitUntilDone:YES];
-    
 }
 
--(void)enableNotification
-{
-//    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tileFinishedMoving:) name:@"TileFinishedMoving" object:nil];
-  //  [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(tileBreakBond:)
-    //                                            name:@"TileBreakBond" object:nil];
-    
-    
-}
 
 -(void)draw{
     Color4B color;
@@ -114,20 +107,6 @@ Dictionary *dictionary;
 	color.green = 15;
 	color.alpha = 255;
     [director clearScene:color];
-    
-    /*
-     
-    
-    [mvpMatrixManager pushModelViewMatrix];
-    [mvpMatrixManager translateInX:170 Y:340 Z:0];
-    
-    [analyticsTextureRenderUnit addDefaultTextureCoordinatesWithColor:whiteColor4B];
-    [mvpMatrixManager translateInX:-40 Y:40 Z:0];
-    
-    [timerTextureRenderUnit addDefaultTextureCoordinatesWithColor:whiteColor4B];
-    
-    [mvpMatrixManager popModelViewMatrix];*/
-    
 }
 
 -(void)tileBreakBond:(NSNotification *)notification
@@ -147,39 +126,12 @@ Dictionary *dictionary;
 {
     if (!isTimerRunning)
         return;
-    /*
-    CFTimeInterval currentTime = CFAbsoluteTimeGetCurrent();
-    remainingTime-=(currentTime - lastUpdate);
-    int currentTimeLeft = (int)remainingTime;
-    if (currentTimeLeft< prevTimeLeft)
-    {
-        int minutes = currentTimeLeft/60;
-        int seconds = currentTimeLeft%60;
-        
-        NSString *time = [NSString stringWithFormat:@"%d:%02d",minutes,seconds];
-        
-        Texture2D *timeTexture = [[Texture2D alloc]initWithString:time dimensions:CGSizeMake(140, 40) horizontalAlignment:UITextAlignmentCenter verticalAlignment:UITextAlignmentMiddle fontName:@"Lato" fontSize:30];
-        timerTextureRenderUnit.texture = timeTexture;
-        [timeTexture release];
-        
-    }
-     
-    if (currentTimeLeft <= 0)
-        isTimerRunning = NO;
-    prevTimeLeft = currentTimeLeft;
-    lastUpdate = currentTime;*/
 }
 
 -(void)updateAnalytics
 {
     
-    [analyticsTexture release];
-    analyticsTexture = [[Texture2D alloc]
-                        initWithString:[NSString stringWithFormat:@"W : %d (%d, %d, %d) D : %d T : %d",numberOfWordsMade,numberOfWordsPerLetter[0],numberOfWordsPerLetter[1],numberOfWordsPerLetter[2],numberOfDoublesMade,numberOfTripletsMade]                                                 dimensions:CGSizeMake(320, 30)
-                        horizontalAlignment:UITextAlignmentLeft
-                        verticalAlignment:UITextAlignmentMiddle
-                        fontName:@"Lato" fontSize:30];
-     
+  
 }
 
 NSMutableArray *tilesArray;
@@ -197,19 +149,11 @@ NSMutableArray *tilesArray;
     
 }
 
--(BOOL)touchBeganInScene:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
+-(BOOL)touchBeganInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
 {
     if (touch.tapCount == 2)
     {
-        [[NSNotificationCenter defaultCenter]removeObserver:self name:@"TileFinishedMoving" object:nil];
         [self loadData];
-        numberOfDoublesMade = 0;
-        numberOfTripletsMade = 0;
-        numberOfWordsMade = 0;
-        for (int i = 0;i<3;i++)
-            numberOfWordsPerLetter[i] = 0;
-        [dictionary reset];
-        [self updateAnalytics];
     }
     return YES;
 }
