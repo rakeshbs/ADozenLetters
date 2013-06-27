@@ -15,9 +15,8 @@
 
 @implementation TileControl
 
-@synthesize newWordsPerTurn,wordsPerTurn,concatenatedWords;
-@synthesize usedWordsPerTurn;
-
+@synthesize usedWordsPerTurn,wordsPerTurn,concatenatedWords;;;
+@synthesize newWordsPerTurn;
 -(id)init
 {
     if (self = [super init])
@@ -434,12 +433,12 @@
     glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), characterTextureData, GL_DYNAMIC_DRAW);
     [characterSpriteSheet.texture bindTexture];
     [self drawTexture:tilesArray.count];
-    
+    /*
     glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
     glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), scoreTextureData, GL_DYNAMIC_DRAW);
     [scoreSpriteSheet.texture bindTexture];
     [self drawTexture:tilesArray.count];
-
+*/
 
     [shadowTexture bindTexture];
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);

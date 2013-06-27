@@ -70,7 +70,7 @@
     SEL selector;
 }
 
-@property (nonatomic,readonly) NSMutableArray *newWordsPerTurn;
+@property (nonatomic,readonly, getter=theNewWordsPerTurn) NSMutableArray *newWordsPerTurn;
 @property (nonatomic,readonly) NSMutableArray *usedWordsPerTurn;
 @property (nonatomic,readonly) NSMutableArray *wordsPerTurn;
 @property (nonatomic,readonly)  NSMutableString *concatenatedWords;
