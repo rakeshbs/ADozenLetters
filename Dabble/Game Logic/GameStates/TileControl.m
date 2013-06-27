@@ -15,7 +15,7 @@
 
 @implementation TileControl
 
-@synthesize usedWordsPerTurn,wordsPerTurn,concatenatedWords;;;
+@synthesize usedWordsPerTurn,wordsPerTurn,concatenatedWords;
 @synthesize newWordsPerTurn;
 -(id)init
 {
@@ -159,6 +159,7 @@
             tile.anchorPoint = CGPointMake(anchorX,anchorY);
             tile.characterFontSprite = [characterSpriteSheet getFontSprite:character];
             tile.scoreTexture = [scoreSpriteSheet getFontSprite:[NSString stringWithFormat:@"%d",tile.score]];
+           // NSLog(@"%@",[NSString stringWithFormat:@"%d",tile.score]);
             tile.colorIndex = j%2;
             
             [tilesArray addObject:tile];
@@ -394,7 +395,7 @@
             (characterTextureData + i * 6 + j)->texCoord =  tile.characterFontSprite.textureCoordinates[j];
         }
         
-        [mvpMatrixManager translateInX:20 Y:-15 Z:1];
+        [mvpMatrixManager translateInX:23 Y:-15 Z:1];
         [mvpMatrixManager getMVPMatrix:result];
         for (int j = 0;j<6;j++)
         {
@@ -404,10 +405,9 @@
             (scoreTextureData + i * 6 + j)->texCoord =  tile.scoreTexture.textureCoordinates[j];
         }
         
-        
         if (tile.shadowColor->alpha > 0)
         {
-            [mvpMatrixManager translateInX:-20 Y:15 Z:1];
+            [mvpMatrixManager translateInX:-23 Y:15 Z:1];
             [mvpMatrixManager getMVPMatrix:result];
             
             for (int j = 0;j<6;j++)
@@ -433,12 +433,12 @@
     glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), characterTextureData, GL_DYNAMIC_DRAW);
     [characterSpriteSheet.texture bindTexture];
     [self drawTexture:tilesArray.count];
-    /*
+    
     glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
     glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), scoreTextureData, GL_DYNAMIC_DRAW);
     [scoreSpriteSheet.texture bindTexture];
     [self drawTexture:tilesArray.count];
-*/
+ 
 
     [shadowTexture bindTexture];
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);

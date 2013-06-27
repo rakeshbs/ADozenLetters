@@ -11,7 +11,7 @@
 #import "TextureManager.h"
 #import "MVPMatrixManager.h"
 #import "OpenGLESView.h"
-#import "Director.h"
+#import "GLDirector.h"
 #import "UITouch+GLElement.h"
 #import "GLShaderManager.h"
 #import "FontSpriteSheetManager.h"
@@ -28,7 +28,7 @@
     NSMutableArray *touchesInElement;
     NSMutableArray *subElements;
     
-    Director *director;
+    GLDirector *director;
     Animator *animator;
     OpenGLESView *openGLView;
     TextureManager *textureManager;

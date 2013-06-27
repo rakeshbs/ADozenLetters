@@ -5,10 +5,10 @@
 //  Copyright 2009 Qucentis. All rights reserved.
 //
 
-#import "Scene.h"
+#import "GLScene.h"
 #import "OpenGLESView.h"
 
-@implementation Scene
+@implementation GLScene
 
 -(id)init
 {

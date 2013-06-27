@@ -14,8 +14,8 @@
 		1445DC8216F97AD600EBBCCF /* Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC2B16F97AD600EBBCCF /* Animation.m */; };
 		1445DC8316F97AD600EBBCCF /* Animator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC2D16F97AD600EBBCCF /* Animator.m */; };
 		1445DC8416F97AD600EBBCCF /* EasingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC2F16F97AD600EBBCCF /* EasingFunctions.m */; };
-		1445DC8516F97AD600EBBCCF /* Director.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC3216F97AD600EBBCCF /* Director.m */; };
-		1445DC8616F97AD600EBBCCF /* Scene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC3616F97AD600EBBCCF /* Scene.m */; };
+		1445DC8516F97AD600EBBCCF /* GLDirector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC3216F97AD600EBBCCF /* GLDirector.m */; };
+		1445DC8616F97AD600EBBCCF /* GLScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC3616F97AD600EBBCCF /* GLScene.m */; };
 		1445DC8716F97AD600EBBCCF /* GLButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC3916F97AD600EBBCCF /* GLButton.m */; };
 		1445DC8816F97AD600EBBCCF /* GLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC3B16F97AD600EBBCCF /* GLElement.m */; };
 		1445DC8916F97AD600EBBCCF /* OpenGLESView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC3F16F97AD600EBBCCF /* OpenGLESView.m */; };
@@ -84,11 +84,11 @@
 		1445DC2D16F97AD600EBBCCF /* Animator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Animator.m; sourceTree = "<group>"; };
 		1445DC2E16F97AD600EBBCCF /* EasingFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EasingFunctions.h; sourceTree = "<group>"; };
 		1445DC2F16F97AD600EBBCCF /* EasingFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EasingFunctions.m; sourceTree = "<group>"; };
-		1445DC3116F97AD600EBBCCF /* Director.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Director.h; sourceTree = "<group>"; };
-		1445DC3216F97AD600EBBCCF /* Director.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Director.m; sourceTree = "<group>"; };
+		1445DC3116F97AD600EBBCCF /* GLDirector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLDirector.h; sourceTree = "<group>"; };
+		1445DC3216F97AD600EBBCCF /* GLDirector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLDirector.m; sourceTree = "<group>"; };
 		1445DC3316F97AD600EBBCCF /* GLCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLCommon.h; sourceTree = "<group>"; };
-		1445DC3516F97AD600EBBCCF /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
-		1445DC3616F97AD600EBBCCF /* Scene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Scene.m; sourceTree = "<group>"; };
+		1445DC3516F97AD600EBBCCF /* GLScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLScene.h; sourceTree = "<group>"; };
+		1445DC3616F97AD600EBBCCF /* GLScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLScene.m; sourceTree = "<group>"; };
 		1445DC3816F97AD600EBBCCF /* GLButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLButton.h; sourceTree = "<group>"; };
 		1445DC3916F97AD600EBBCCF /* GLButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLButton.m; sourceTree = "<group>"; };
 		1445DC3A16F97AD600EBBCCF /* GLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLElement.h; sourceTree = "<group>"; };
@@ -253,11 +253,11 @@
 		1445DC3016F97AD600EBBCCF /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				1445DC3116F97AD600EBBCCF /* Director.h */,
-				1445DC3216F97AD600EBBCCF /* Director.m */,
+				1445DC3116F97AD600EBBCCF /* GLDirector.h */,
+				1445DC3216F97AD600EBBCCF /* GLDirector.m */,
 				1445DC3316F97AD600EBBCCF /* GLCommon.h */,
-				1445DC3516F97AD600EBBCCF /* Scene.h */,
-				1445DC3616F97AD600EBBCCF /* Scene.m */,
+				1445DC3516F97AD600EBBCCF /* GLScene.h */,
+				1445DC3616F97AD600EBBCCF /* GLScene.m */,
 				149D383A175883440067A122 /* UITouch+GLElement.h */,
 				149D383B175883440067A122 /* UITouch+GLElement.m */,
 			);
@@ -559,10 +559,10 @@
 				1445DC8216F97AD600EBBCCF /* Animation.m in Sources */,
 				1445DC8316F97AD600EBBCCF /* Animator.m in Sources */,
 				1445DC8416F97AD600EBBCCF /* EasingFunctions.m in Sources */,
-				1445DC8516F97AD600EBBCCF /* Director.m in Sources */,
+				1445DC8516F97AD600EBBCCF /* GLDirector.m in Sources */,
 				1445DCB516F97B8900EBBCCF /* AppDelegate.m in Sources */,
 				1445DCB416F97B8300EBBCCF /* main.m in Sources */,
-				1445DC8616F97AD600EBBCCF /* Scene.m in Sources */,
+				1445DC8616F97AD600EBBCCF /* GLScene.m in Sources */,
 				1445DC8716F97AD600EBBCCF /* GLButton.m in Sources */,
 				1445DC9D16F97AD600EBBCCF /* FontSpriteSheet.m in Sources */,
 				141E4AB11738B22700A5F515 /* GCHelper.m in Sources */,

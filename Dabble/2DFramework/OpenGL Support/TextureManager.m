@@ -82,28 +82,6 @@
 	return nil;
 }
 
--(Texture2D *)getLayeredStringTexture:(NSMutableArray *)strings :(NSString *)_key
-{
-    NSString *key = [NSString stringWithFormat:@"combined%@f",_key];
-    
-	if ([texture_dictionary objectForKey:key] != nil)
-	{
-		return (Texture2D *)[texture_dictionary objectForKey:key];
-	}
-	else
-	{
-		Texture2D *tex = [[Texture2D alloc]initWithTextureStrings:strings];
-		
-		if (tex != nil)
-		{
-			[texture_dictionary setObject:tex forKey:key];
-            [tex release];
-			return tex;
-		}
-	}
-	return nil;
-}
-
 
 -(Texture2D *)getStringTexture:(NSString *)texture_name
 {

@@ -322,12 +322,13 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	return self;
 }
 
-- (id) initFontSpriteSheetWith:(NSString *)fontString andFontSprite:(FontSpriteSheet *)fontSpriteSheet
+- (id)initFontSpriteSheetWith:(NSString *)fontString andFontSprite:(FontSpriteSheet *)fontSpriteSheet
 {
     int nsquare = 1;
     
+    NSArray *characterArray = [fontString componentsSeparatedByString:@","];
     
-    while (nsquare * nsquare < fontString.length)
+    while (nsquare * nsquare < characterArray.count)
     {
         nsquare++;
     }
@@ -338,12 +339,9 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     int row = 0;
     CGFloat lineHeight = 0,lineWidth = 0,totalHeight = 0,totalWidth = 0;
     
-    NSArray *characterArray = [fontString componentsSeparatedByString:@","];
-    
+     
 	for (int i = 0;i<characterArray.count;i++)
     {
-    //    NSRange subStrRange = NSMakeRange(i, 1);
-        
         CGSize dimensions = [characterArray[i] sizeWithFont:font];
         
         lineWidth += dimensions.width;
@@ -409,6 +407,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     {
         CGSize dimensions = [characterArray[i] sizeWithFont:font];
         
+                
         CGContextTranslateCTM(context, lineWidth, totalHeight);
         [characterArray[i] drawInRect:CGRectMake(0, 0, dimensions.width, dimensions.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:NSTextAlignmentCenter];
         CGContextTranslateCTM(context, -lineWidth, -totalHeight);

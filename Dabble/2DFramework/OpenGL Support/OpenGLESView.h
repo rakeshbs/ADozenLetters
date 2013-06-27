@@ -15,7 +15,7 @@
 #import "GLCommon.h"
 #import "Animator.h"
 
-@class Scene;
+@class GLScene;
 
 @interface OpenGLESView : UIView {
 
@@ -25,7 +25,7 @@
 	GLint backingWidth, backingHeight;
 	NSTimer *animationTimer;
 
-	Scene *view_delegate;
+	GLScene *view_delegate;
 	BOOL isLoopRunning;
 	CFTimeInterval refreshTimeInterval;
 	CFTimeInterval currentTime;
@@ -39,12 +39,12 @@
 @property (nonatomic) GLuint viewRenderbuffer;
 @property (nonatomic) GLuint  viewFramebuffer;
 @property (nonatomic,retain) EAGLContext *context;
-@property (nonatomic,retain) Scene *view_delegate;
+@property (nonatomic,retain) GLScene *view_delegate;
 @property (nonatomic) BOOL isActive;
 @property (nonatomic,retain) NSTimer *animationTimer;
 @property (nonatomic,retain) CADisplayLink *displayLink;
 -(void)bindBuffers;
--(void)setScene:(Scene *)scene;
+-(void)setScene:(GLScene *)scene;
 -(void)resumeTimer;
 -(void)pauseTimer;
 -(void)drawView;

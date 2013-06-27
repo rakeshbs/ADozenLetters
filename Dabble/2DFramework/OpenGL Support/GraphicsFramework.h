@@ -1,6 +1,6 @@
-#import "Director.h"
+#import "GLDirector.h"
 #import "GLButton.h"
 #import "TextureManager.h"
-#import "Scene.h"
+#import "GLScene.h"
 #import "FontSpriteSheet.h"
 #import "GLCommon.h"

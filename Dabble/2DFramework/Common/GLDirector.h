@@ -17,9 +17,9 @@
 #define deviceiPadNonRetina 4;
 #define deviceiPadRetina 5;
 
-@class Scene;
+@class GLScene;
 
-@interface Director : NSObject {
+@interface GLDirector : NSObject {
 	NSObject *current_scene;
 	UIWindow *window;
 	OpenGLViewController *openGLViewController;

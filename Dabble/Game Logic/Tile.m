@@ -9,7 +9,7 @@
 #import "Tile.h"
 #import "GLCommon.h"
 #import "EasingFunctions.h"
-#import "Scene.h"
+#import "GLScene.h"
 #import "SoundManager.h"
 #import "TileControl.h"
 
@@ -41,7 +41,7 @@
 
 SoundManager *soundManager;
 
-int letterScores[NUMBEROFSCORES] = {1,2,3,4,5,8,10};
+int letterScores[NUMBEROFSCORES] = {1,2,3,4,5,7,9};
 NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY",@"K",@"JX",@"QZ"};
 
 -(CGRect)frame
@@ -482,11 +482,8 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)animateShowColorInDuration:(CGFloat)duration
 {
-    //if (isBonded == NO)
-    // {
     isBonded = YES;
     NSMutableArray *hideAnimations = [animator getRunningAnimationsForObject:self ofType:ANIMATION_HIDE_COLOR];
-    
     
     if (hideAnimations.count>0)
     {
@@ -500,8 +497,6 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     
     [animator addAnimationFor:self ofType:ANIMATION_SHOW_COLOR ofDuration:duration afterDelayInSeconds:0];
     [hideAnimations release];
-    
-    //}
 }
 
 -(void)animateHideColorInDuration:(CGFloat)duration
@@ -539,7 +534,6 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     free(currentCharacterColor);
     free(currentTileColor);
     free(startTileColors);
-    //free(startAlphas);
     self.tilesArray = nil;
 }
 

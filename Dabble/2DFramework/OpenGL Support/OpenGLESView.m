@@ -7,7 +7,7 @@
 //
 
 #import "OpenGLESView.h"
-#import "Scene.h"
+#import "GLScene.h"
 #import "MVPMatrixManager.h"
 
 @interface OpenGLESView (Private)
@@ -122,10 +122,12 @@
     glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
     
    // while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.002, TRUE) == kCFRunLoopRunHandledSource){};
-    [[MVPMatrixManager sharedMVPMatrixManager]resetModelViewMatrixStack];
+   // [[MVPMatrixManager sharedMVPMatrixManager]resetModelViewMatrixStack];
+   // [view_delegate drawElement];
+    //[animator update];
+    
     glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
-    [view_delegate drawElement];
-    [animator update];
+    
     
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, viewFramebuffer);
     glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
@@ -134,13 +136,14 @@
     const GLenum discards[]  = {GL_COLOR_ATTACHMENT0,GL_DEPTH_ATTACHMENT};
     glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE,2,discards);
     
+    
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
     [context presentRenderbuffer:GL_RENDERBUFFER_OES];
     
 }
 
 
--(void)setScene:(Scene *)scene
+-(void)setScene:(GLScene *)scene
 {
 	if (view_delegate != nil)
 		[view_delegate sceneMadeInActive];

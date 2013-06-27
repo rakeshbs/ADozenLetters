@@ -6,26 +6,26 @@
 //  Copyright 2009 Qucentis. All rights reserved.
 //
 
-#import "Director.h"
-#import "Scene.h"
+#import "GLDirector.h"
+#import "GLScene.h"
 
-@interface Director (Private)
+@interface GLDirector (Private)
 
 @end
 
 
-@implementation Director
+@implementation GLDirector
 
 @synthesize window,openGLview,openGLViewController;
 
 +(id)getSharedDirector
 {
-	static Director *dir;
+	static GLDirector *dir;
 	@synchronized(self)
 	{
 		if (dir == nil)
 		{
-			dir = [[Director alloc]init];
+			dir = [[GLDirector alloc]init];
         }
 	}
 	return dir;
@@ -43,7 +43,7 @@
 
 -(void)presentScene:(NSObject *)scene
 {
-	if ([scene isKindOfClass:[Scene class]])
+	if ([scene isKindOfClass:[GLScene class]])
 	{
 		if (openGLview == nil)
 		{
@@ -59,8 +59,8 @@
 				[window bringSubviewToFront:openGLview];
 				openGLview.isActive = YES;
 			}
-			[(Scene *)scene setOpenGLView:openGLview];
-			[openGLview setScene:(Scene *)scene];
+			[(GLScene *)scene setOpenGLView:openGLview];
+			[openGLview setScene:(GLScene *)scene];
 			[openGLview resumeTimer];
 		}
 	}
@@ -69,7 +69,7 @@
 -(void)clearScene:(Color4B)_clear_color
 {
 	glClearColor(_clear_color.red/255.0f, _clear_color.blue/255.0f, _clear_color.green/255.0f, _clear_color.alpha/255.0f);
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+//	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 }
 
 -(void)setInterfaceOrientation:(UIInterfaceOrientation)orientation

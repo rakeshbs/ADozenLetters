@@ -7,7 +7,7 @@
 //
 
 #import "GLElement.h"
-#import "Scene.h"
+#import "GLScene.h"
 
 @interface GLElement (Private)
 -(void)touchBeganInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event;
@@ -29,7 +29,7 @@
     if (self = [super init])
     {
         parent = nil;
-        director = [Director getSharedDirector];
+        director = [GLDirector getSharedDirector];
         animator = [Animator getSharedAnimator];
         textureManager = [TextureManager getSharedTextureManager];
         touchesInElement = [[NSMutableArray alloc]init];

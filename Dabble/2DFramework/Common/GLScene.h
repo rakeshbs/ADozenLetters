@@ -14,7 +14,7 @@
 #import "GLElement.h"
 
 
-@interface Scene : GLElement {
+@interface GLScene : GLElement {
 
 }
 

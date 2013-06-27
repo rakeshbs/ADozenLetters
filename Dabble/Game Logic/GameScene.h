@@ -6,14 +6,14 @@
 //  Copyright (c) 2013 Rakesh. All rights reserved.
 //
 
-#import "Scene.h"
+#import "GLScene.h"
 #import "Tile.h"
 #import "NSArray+Additions.h"
 #import "GCHelper.h"
 #import "TileControl.h"
 
 
-@interface GameScene : Scene
+@interface GameScene : GLScene
 {
     BOOL isServer;
     int currentRandomNumber;
