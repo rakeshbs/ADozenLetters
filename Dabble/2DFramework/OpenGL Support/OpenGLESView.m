@@ -49,7 +49,7 @@
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, backingWidth, backingHeight);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
     
-    
+    /*
     
     //Multisampling
     
@@ -69,7 +69,7 @@
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         NSLog(@"Failed to make complete framebuffer object %x", glCheckFramebufferStatus(GL_FRAMEBUFFER));
     
-    
+    */
 	
 	return YES;
 }
@@ -119,23 +119,24 @@
 
 -(void)drawView
 {    
-    glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
+   // glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
     
    // while(CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.002, TRUE) == kCFRunLoopRunHandledSource){};
-   // [[MVPMatrixManager sharedMVPMatrixManager]resetModelViewMatrixStack];
-   // [view_delegate drawElement];
-    //[animator update];
     
     glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
+    [[MVPMatrixManager sharedMVPMatrixManager]resetModelViewMatrixStack];
+    [view_delegate drawElement];
+    [animator update];
     
-    
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, viewFramebuffer);
-    glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
-    glResolveMultisampleFramebufferAPPLE();
+   // glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, viewFramebuffer);
+    //glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
+    //glResolveMultisampleFramebufferAPPLE();
     
     const GLenum discards[]  = {GL_COLOR_ATTACHMENT0,GL_DEPTH_ATTACHMENT};
-    glDiscardFramebufferEXT(GL_READ_FRAMEBUFFER_APPLE,2,discards);
+    glDiscardFramebufferEXT(GL_FRAMEBUFFER,2,discards);
     
+//    const GLenum attachments[] = { GL_DEPTH_ATTACHMENT};
+   // glDiscardFramebufferEXT(GL_FRAMEBUFFER, 1, attachments);
     
     glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
     [context presentRenderbuffer:GL_RENDERBUFFER_OES];

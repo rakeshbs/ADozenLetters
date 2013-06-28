@@ -22,13 +22,16 @@
     InstancedTextureVertexColorData *shadowTextureData;
     InstancedTextureVertexColorData *characterTextureData;
     InstancedTextureVertexColorData *scoreTextureData;
+    InstancedTextureVertexColorData *tileTextureData;
     
     
     FontSpriteSheet *characterSpriteSheet;
     FontSpriteSheet *scoreSpriteSheet;
     Texture2D *shadowTexture;
+    Texture2D *tileTexture;
     
     TextureCoord *shadowTexCoordinates;
+    TextureCoord *tileTexCoordinates;
     
     Vector3D tileVertices[6];
     Vector3D shadowVertices[6];

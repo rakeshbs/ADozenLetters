@@ -65,18 +65,24 @@
                                                                withFont:@"Lato" andSize:12];
     
     shadowTexture = [textureManager getTexture:@"shadow" OfType:@"png"];
+    tileTexture = [textureManager getTexture:@"tile" OfType:@"png"];
     
     shadowTexCoordinates = [shadowTexture getTextureCoordinates];
+    tileTexCoordinates = [tileTexture getTextureCoordinates];
+    
+
     
     CGFloat t = 1.0f;
     
-    tileVertices[0] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 0.0f, .t = t};
-    tileVertices[1] = (Vector3D)  {.x = tileSquareSize/(2), .y = - tileSquareSize/(2), .z = 0.0f, .t = t};
-    tileVertices[2] = (Vector3D)  {.x = tileSquareSize/(2), .y =  tileSquareSize/(2), .z = 0.0f, .t = t};
+    #define tileTextureSizeWithBorder 62.0f
     
-    tileVertices[3] =  (Vector3D) {.x = -tileSquareSize/(2), .y = -tileSquareSize/(2), .z = 0.0f, .t = t};
-    tileVertices[4] = (Vector3D)  {.x = -tileSquareSize/(2), .y = tileSquareSize/(2), .z = 0.0f, .t = t};
-    tileVertices[5] =  (Vector3D) {.x = tileSquareSize/(2), .y = tileSquareSize/(2), .z = 0.0f, .t = t};
+    tileVertices[0] =  (Vector3D) {.x = -tileTextureSizeWithBorder/(2), .y = -tileTextureSizeWithBorder/(2), .z = 0.0f, .t = t};
+    tileVertices[1] = (Vector3D)  {.x = tileTextureSizeWithBorder/(2), .y = - tileTextureSizeWithBorder/(2), .z = 0.0f, .t = t};
+    tileVertices[2] = (Vector3D)  {.x = tileTextureSizeWithBorder/(2), .y =  tileTextureSizeWithBorder/(2), .z = 0.0f, .t = t};
+    
+    tileVertices[3] =  (Vector3D) {.x = -tileTextureSizeWithBorder/(2), .y = -tileTextureSizeWithBorder/(2), .z = 0.0f, .t = t};
+    tileVertices[4] = (Vector3D)  {.x = -tileTextureSizeWithBorder/(2), .y = tileTextureSizeWithBorder/(2), .z = 0.0f, .t = t};
+    tileVertices[5] =  (Vector3D) {.x = tileTextureSizeWithBorder/(2), .y = tileTextureSizeWithBorder/(2), .z = 0.0f, .t = t};
     
     shadowVertices[0] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 0.0f, .t = t};
     shadowVertices[1] = (Vector3D)  {.x = shadowSize/(2), .y = - shadowSize/(2), .z = 0.0f, .t = t};
@@ -123,6 +129,7 @@
     }
     
     tileColorData = malloc(sizeof(InstancedVertexColorData)* 6 * (dataStr.length-dataArray.count+1));
+    tileTextureData = malloc(sizeof(InstancedTextureVertexColorData)* 6 * (dataStr.length-dataArray.count+1));
     shadowTextureData = malloc(sizeof(InstancedTextureVertexColorData)* 6 * (dataStr.length-dataArray.count+1));
     characterTextureData = malloc(sizeof(InstancedTextureVertexColorData)* 6 * (dataStr.length-dataArray.count+1));
     scoreTextureData = malloc(sizeof(InstancedTextureVertexColorData)* 6 * (dataStr.length-dataArray.count+1));
@@ -368,21 +375,29 @@
     {
         Tile *tile = subElements[i];
         [mvpMatrixManager pushModelViewMatrix];
-        [mvpMatrixManager rotateByAngleInDegrees:tile.wiggleAngle InX:0 Y:0 Z:1];
         [mvpMatrixManager translateInX:tile.centerPoint.x Y:tile.centerPoint.y Z:tile.indexOfElement *
          6 + 1];
-
+        [mvpMatrixManager rotateByAngleInDegrees:tile.wiggleAngle InX:0 Y:0 Z:1];
         
         
         Matrix3D result;
         [mvpMatrixManager getMVPMatrix:result];
         
-        for (int j = 0;j<6;j++)
+      /*  for (int j = 0;j<6;j++)
         {
             memcpy(&((tileColorData + i * 6 + j)->mvpMatrix), result, sizeof(Matrix3D));
             (tileColorData + i * 6 + j)->vertex = tileVertices[j];
             (tileColorData + i * 6 + j)->color = *(tile.currentTileColor + tile.colorIndex);
             
+        }*/
+        
+        
+        for (int j = 0;j<6;j++)
+        {
+            memcpy(&((tileTextureData + i * 6 + j)->mvpMatrix), result, sizeof(Matrix3D));
+            (tileTextureData + i * 6 + j)->vertex = tileVertices[j];
+            (tileTextureData + i * 6 + j)->color = *(tile.currentTileColor + tile.colorIndex);
+            (tileTextureData + i * 6 + j)->texCoord = tileTexCoordinates[j];
         }
         
         [mvpMatrixManager translateInX:0 Y:0 Z:1];
@@ -395,7 +410,7 @@
             (characterTextureData + i * 6 + j)->texCoord =  tile.characterFontSprite.textureCoordinates[j];
         }
         
-        [mvpMatrixManager translateInX:23 Y:-15 Z:1];
+        [mvpMatrixManager translateInX:21 Y:-15 Z:1];
         [mvpMatrixManager getMVPMatrix:result];
         for (int j = 0;j<6;j++)
         {
@@ -407,7 +422,7 @@
         
         if (tile.shadowColor->alpha > 0)
         {
-            [mvpMatrixManager translateInX:-23 Y:15 Z:1];
+            [mvpMatrixManager translateInX:-21 Y:15 Z:1];
             [mvpMatrixManager getMVPMatrix:result];
             
             for (int j = 0;j<6;j++)
@@ -423,12 +438,17 @@
         
     }
     
-    [self drawColor];
+ //   [self drawColor];
     
     [textureShaderProgram use];
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
+    glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
+    glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), tileTextureData, GL_DYNAMIC_DRAW);
+    [tileTexture bindTexture];
+    [self drawTexture:tilesArray.count];
     
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);    
     glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
     glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), characterTextureData, GL_DYNAMIC_DRAW);
     [characterSpriteSheet.texture bindTexture];

@@ -96,7 +96,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(MVPMatrixManager);
     Matrix3D resultMatrix;
     
     Matrix3DSetRotationByDegrees(rotationMatrix, degrees, vector);
-    Matrix3DMultiply(rotationMatrix, modelViewStack[currentModelViewMatrixIndex], resultMatrix);
+    Matrix3DMultiply(modelViewStack[currentModelViewMatrixIndex],rotationMatrix, resultMatrix);
     Matrix3DCopyS(resultMatrix, modelViewStack[currentModelViewMatrixIndex]);
 }
 
@@ -106,7 +106,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(MVPMatrixManager);
     Matrix3D resultMatrix;
     
     Matrix3DSetTranslation(translationMatrix,x,y,z);
-    Matrix3DMultiply(translationMatrix, modelViewStack[currentModelViewMatrixIndex], resultMatrix);
+    Matrix3DMultiply(modelViewStack[currentModelViewMatrixIndex],translationMatrix, resultMatrix);
     Matrix3DCopyS(resultMatrix, modelViewStack[currentModelViewMatrixIndex]);
 
 }
