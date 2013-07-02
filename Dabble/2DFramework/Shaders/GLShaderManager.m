@@ -43,6 +43,10 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(GLShaderManager)
     {
         return ShaderAttributeMatrixVertexColor;
     }
+    else if ([vertexShaderName isEqualToString:@"PointSpritesShader"])
+    {
+        return ShaderAttributeVertexColorPointSize;
+    }
     
     return ShaderAttributeVertexColor;
 }
@@ -75,6 +79,12 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(GLShaderManager)
         [program addAttribute:@"textureColor"];
         [program addAttribute:@"textureCoordinate"];
            [program addAttribute:@"mvpmatrix"];
+    }
+    else if (attType == ShaderAttributeVertexColorPointSize)
+    {
+        [program addAttribute:@"vertex"];
+        [program addAttribute:@"color"];
+        [program addAttribute:@"size"];
     }
 }
 

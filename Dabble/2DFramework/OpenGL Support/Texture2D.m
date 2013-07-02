@@ -313,6 +313,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
     [string drawInRect:CGRectMake(0, offsetY, dimensions.width, fsize.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:alignment];
 	UIGraphicsPopContext();
+    
 	
 	self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:width pixelsHigh:height contentSize:dimensions];
 	
@@ -380,6 +381,8 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
             i *= 2;
 		height = i;
 	}
+    
+    NSLog(@"%d %d",width,height);
 
     colorSpace = CGColorSpaceCreateDeviceRGB();
 	data = calloc(height, width*4 );
@@ -388,9 +391,9 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     CGContextClearRect(context, CGRectMake(0, 0, width, height));
 	CGColorSpaceRelease(colorSpace);
     
-    CGContextSetFillColorWithColor(context, [[UIColor whiteColor]CGColor]);
+//    CGContextSetFillColorWithColor(context, [[UIColor clearColor]CGColor]);
    // CGContextFillRect(context,  CGRectMake(0, 0, width, height));
-    //CGContextSetFillColorWithColor(context, [[UIColor blackColor]CGColor]);
+    CGContextSetFillColorWithColor(context, [[UIColor whiteColor]CGColor]);
     CGContextSetAlpha(context, 1.0);
     
     CGContextTranslateCTM(context, 0.0, height);
@@ -436,6 +439,14 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         
 
     }
+    
+    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    UIImage* image = [[UIImage alloc] initWithCGImage:imageRef];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
+    NSString *filePath = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%d.png",fontSpriteSheet.hash]]; //Add the file name
+    [UIImagePNGRepresentation(image) writeToFile:filePath atomically:YES]; //Write the file
     
     self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:width pixelsHigh:height contentSize:CGSizeMake(totalWidth, totalHeight)];
 	

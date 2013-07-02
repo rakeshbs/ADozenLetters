@@ -28,7 +28,7 @@
 @property (nonatomic) NSTimeInterval startDelay;
 @property (nonatomic) NSTimeInterval duration;
 @property (nonatomic) int type;
-@property (nonatomic) CGFloat (*easingFunction)(CGFloat,CGFloat,CGFloat);
+@property (nonatomic,retain) NSObject *animationData;
 
 
 -(CGFloat)getAnimatedRatio;

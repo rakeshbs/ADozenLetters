@@ -324,7 +324,6 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)checkCollissionAndMove
 {
-    
     for (Tile *sq in _tilesArray)
     {
         if (sq == self)

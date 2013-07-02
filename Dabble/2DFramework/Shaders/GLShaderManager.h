@@ -14,7 +14,9 @@ typedef enum
     ShaderAttributeVertexColor = 1,
     ShaderAttributeVertexColorTexture = 2,
     ShaderAttributeMatrixVertexColor = 3,
-    ShaderAttributeMatrixVertexColorTexture = 4
+    ShaderAttributeMatrixVertexColorTexture = 4,
+    ShaderAttributeVertexColorPointSize = 5
+    
 }ShaderAttributeTypes;
 
 @interface GLShaderManager : NSObject

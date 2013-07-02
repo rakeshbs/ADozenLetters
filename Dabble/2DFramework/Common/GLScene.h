@@ -12,12 +12,15 @@
 #import <OpenGLES/ES1/glext.h>
 #import <OpenGLES/EAGLDrawable.h>
 #import "GLElement.h"
-
+#import "GLActivityIndicator.h"
 
 @interface GLScene : GLElement {
-
+    
 }
 
 -(void)sceneMadeActive;
 -(void)sceneMadeInActive;
+-(void)showActivityIndicator;
+-(void)hideActivityIndicator;
+
 @end

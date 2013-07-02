@@ -19,7 +19,7 @@
 
 +(Animator *)getSharedAnimator;
 -(void)update;
--(void)addAnimationFor:(NSObject<AnimationDelegate> *)obj ofType:(int)type ofDuration:(CGFloat)duration afterDelayInSeconds:(CGFloat)delay;
+-(Animation *)addAnimationFor:(NSObject<AnimationDelegate> *)obj ofType:(int)type ofDuration:(CGFloat)duration afterDelayInSeconds:(CGFloat)delay;
 -(int)removeRunningAnimationsForObject:(NSObject<AnimationDelegate> *)obj;
 -(int)removeQueuedAnimationsForObject:(NSObject<AnimationDelegate> *)obj;
 -(int)removeRunningAnimationsForObject:(NSObject<AnimationDelegate> *)obj ofType:(int)type;

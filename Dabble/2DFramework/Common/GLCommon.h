@@ -4,9 +4,6 @@
 #import "NEONMatrix.h"
 
 
-
-
-
 typedef Vertex3D Vector3D;
 
 static inline GLfloat Vertex3DDistanceBetweenVertices 
@@ -361,3 +358,9 @@ typedef struct
     Color4B color;
 } InstancedTextureVertexColorData;
 
+typedef struct
+{
+    Vertex3D vertex;
+    Color4B color;
+    float size;
+} PointVertexColorSize;

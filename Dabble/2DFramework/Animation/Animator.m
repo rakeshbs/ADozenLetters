@@ -169,7 +169,7 @@
     return arr;
 }
 
--(void)addAnimationFor:(NSObject<AnimationDelegate> *)obj ofType:(int)type ofDuration:(CGFloat)duration afterDelayInSeconds:(CGFloat)delay
+-(Animation *)addAnimationFor:(NSObject<AnimationDelegate> *)obj ofType:(int)type ofDuration:(CGFloat)duration afterDelayInSeconds:(CGFloat)delay
 {
     if (currentAnimations == nil)
     {
@@ -182,7 +182,7 @@
     
     for (Animation *anim in currentAnimations)
     {
-        if (anim.animatedObject == obj && anim.type == type)
+        if (anim.animatedObject == obj && anim.type == type && anim.animationData == nil)
         {
             chk = YES;
             animation = anim;
@@ -192,7 +192,7 @@
     
     for (Animation *anim in queuedAnimations)
     {
-        if (anim.animatedObject == obj && anim.type == type)
+        if (anim.animatedObject == obj && anim.type == type && anim.animationData == nil)
         {
             chk = YES;
             animation = anim;
@@ -211,6 +211,8 @@
         [queuedAnimations addObject:animation];
         [animation release];
     }
+    
+    return animation;
 }
 
 @end

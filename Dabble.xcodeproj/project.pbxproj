@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1402C30F1782E2A400A5E054 /* GLActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1402C30E1782E2A400A5E054 /* GLActivityIndicator.m */; };
+		1402C313178307FC00A5E054 /* PointSpritesShader.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 1402C311178307FC00A5E054 /* PointSpritesShader.fsh */; };
+		1402C314178307FC00A5E054 /* PointSpritesShader.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 1402C312178307FC00A5E054 /* PointSpritesShader.vsh */; };
+		1402C31517832EBA00A5E054 /* PointSpritesShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1402C311178307FC00A5E054 /* PointSpritesShader.fsh */; };
+		1402C31617832EBA00A5E054 /* PointSpritesShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1402C312178307FC00A5E054 /* PointSpritesShader.vsh */; };
 		1408EBCF1754429900462F62 /* Match.m in Sources */ = {isa = PBXBuildFile; fileRef = 1408EBCC1754429900462F62 /* Match.m */; };
 		1408EBD01754429900462F62 /* Round.m in Sources */ = {isa = PBXBuildFile; fileRef = 1408EBCE1754429900462F62 /* Round.m */; };
 		141E4AB11738B22700A5F515 /* GCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 141E4AB01738B22700A5F515 /* GCHelper.m */; };
@@ -72,6 +77,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1402C30D1782E2A400A5E054 /* GLActivityIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLActivityIndicator.h; sourceTree = "<group>"; };
+		1402C30E1782E2A400A5E054 /* GLActivityIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLActivityIndicator.m; sourceTree = "<group>"; };
+		1402C311178307FC00A5E054 /* PointSpritesShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = PointSpritesShader.fsh; sourceTree = "<group>"; };
+		1402C312178307FC00A5E054 /* PointSpritesShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = PointSpritesShader.vsh; sourceTree = "<group>"; };
 		1408EBCB1754429900462F62 /* Match.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Match.h; sourceTree = "<group>"; };
 		1408EBCC1754429900462F62 /* Match.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Match.m; sourceTree = "<group>"; };
 		1408EBCD1754429900462F62 /* Round.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Round.h; sourceTree = "<group>"; };
@@ -194,6 +203,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1402C3101782E2B700A5E054 /* ActivityIndicator */ = {
+			isa = PBXGroup;
+			children = (
+				1402C30D1782E2A400A5E054 /* GLActivityIndicator.h */,
+				1402C30E1782E2A400A5E054 /* GLActivityIndicator.m */,
+			);
+			name = ActivityIndicator;
+			sourceTree = "<group>";
+		};
 		1408EBCA1754429900462F62 /* GameStates */ = {
 			isa = PBXGroup;
 			children = (
@@ -313,6 +331,8 @@
 		1445DC4716F97AD600EBBCCF /* ColorShader */ = {
 			isa = PBXGroup;
 			children = (
+				1402C311178307FC00A5E054 /* PointSpritesShader.fsh */,
+				1402C312178307FC00A5E054 /* PointSpritesShader.vsh */,
 				1445DC4816F97AD600EBBCCF /* ColorShader.fsh */,
 				1445DC4B16F97AD600EBBCCF /* InstancedColorShader.vsh */,
 			);
@@ -345,6 +365,7 @@
 		1445DC6B16F97AD600EBBCCF /* Game Logic */ = {
 			isa = PBXGroup;
 			children = (
+				1402C3101782E2B700A5E054 /* ActivityIndicator */,
 				146646FA175602BE0029B8C2 /* Tile */,
 				1408EBCA1754429900462F62 /* GameStates */,
 				141E4AAF1738B22700A5F515 /* GCHelper.h */,
@@ -535,6 +556,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1402C31517832EBA00A5E054 /* PointSpritesShader.fsh in Resources */,
+				1402C31617832EBA00A5E054 /* PointSpritesShader.vsh in Resources */,
 				1445DCA516F97AD700EBBCCF /* Default-568h@2x.png in Resources */,
 				1445DCA616F97AD700EBBCCF /* Default.png in Resources */,
 				1445DCBC16F97C1700EBBCCF /* InstancedColorShader.vsh in Resources */,
@@ -597,6 +620,9 @@
 				1408EBD01754429900462F62 /* Round.m in Sources */,
 				146646F91756029B0029B8C2 /* TileControl.m in Sources */,
 				149D383C175883440067A122 /* UITouch+GLElement.m in Sources */,
+				1402C30F1782E2A400A5E054 /* GLActivityIndicator.m in Sources */,
+				1402C313178307FC00A5E054 /* PointSpritesShader.fsh in Sources */,
+				1402C314178307FC00A5E054 /* PointSpritesShader.vsh in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -59,13 +59,13 @@ Dictionary *dictionary;
         [self loadDictionary];
         
         tileControl = [[TileControl alloc]init];
-        [self addElement:tileControl];
+        //[self addElement:tileControl];
         [tileControl addTarget:self andSelector:@selector(tileRearranged)];
         
         [self performSelector:@selector(loadData) withObject:nil afterDelay:0.1];
 
         
-        
+        [self performSelector:@selector(showActivityIndicator) withObject:nil afterDelay:1.0];
     }
     return  self;
 }
@@ -89,8 +89,6 @@ Dictionary *dictionary;
     
     
     [tileControl createTiles:[dictionary generateDozenLetters]];
-    
-    //[tileControl createTiles:@"XYZ"];
     
     remainingTime = totalTimePerGame;
     lastUpdate = CFAbsoluteTimeGetCurrent();

@@ -42,9 +42,9 @@ typedef void (*GLLogFunction) (GLuint program,
         if (![self compileShader:&vertShader 
                             type:GL_VERTEX_SHADER 
                             file:vertShaderPathname])
-            NSLog(@"Failed to compile vertex shader");
+            NSLog(@"Failed to compile vertex shader %@",vShaderFilename);
         else
-            NSLog(@"Vertex Shader compile Successful");
+            NSLog(@"Vertex Shader compile Successful %@",fShaderFilename);
         
         fragShaderPathname = [[NSBundle mainBundle] 
                               pathForResource:fShaderFilename 
@@ -78,7 +78,7 @@ typedef void (*GLLogFunction) (GLuint program,
    // NSLog(@"shader file : %@",file);
     if (!source)
     {
-        NSLog(@"Failed to load vertex shader");
+        NSLog(@"Failed to load vertex shader %@",file);
         return NO;
     }
     
