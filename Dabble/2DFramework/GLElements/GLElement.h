@@ -30,7 +30,6 @@
     
     GLDirector *director;
     Animator *animator;
-    OpenGLESView *openGLView;
     TextureManager *textureManager;
     MVPMatrixManager *mvpMatrixManager;
     GLShaderManager *shaderManager;
@@ -42,9 +41,11 @@
 @property (nonatomic) int indexOfElement;
 @property (nonatomic)   CGRect frame;
 
+
 @property (nonatomic,readonly) CGRect absoluteFrame;
 @property (nonatomic,readonly) int numberOfLayers;
 @property (nonatomic,readonly) BOOL touchable;
+@property (nonatomic) BOOL hidden;
 
 @property (nonatomic,retain) GLElement *parent;
 @property (nonatomic,retain) OpenGLESView *openGLView;
@@ -59,7 +60,7 @@
 -(void)update;
 
 
-
+-(id)initWithFrame:(CGRect)_frame;
 -(void)addElement:(GLElement *)e;
 -(void)moveElementToFront:(GLElement *)e;
 -(void)moveElementToBack:(GLElement *)e;
@@ -69,6 +70,4 @@
 -(void)moveToFront;
 -(void)moveToBack;
 -(void)moveToIndex:(int)index;
--(void)copyMVPMatrixToDestination:(Matrix3D *)destination;
-
 @end

@@ -37,41 +37,57 @@
 
 @synthesize usedWordsPerTurn,wordsPerMove,concatenatedWords;
 @synthesize newWordsPerMove;
+
+-(id)initWithFrame:(CGRect)_frame
+{
+    if (self = [super initWithFrame:_frame])
+    {
+        [self initialize];
+    }
+    return self;
+}
+
 -(id)init
 {
     if (self = [super init])
     {
-        relativePosition = TOP_HIDDEN_POSITION;
-        self.hidden = YES;
-        colorShaderProgram = [shaderManager getShaderByVertexShaderFileName:@"InstancedColorShader" andFragmentShaderFileName:@"ColorShader"];
-        
-        textureShaderProgram = [shaderManager getShaderByVertexShaderFileName:@"InstancedTextureShader" andFragmentShaderFileName:@"TextureShader"];
-        
-        glGenBuffers(1, &colorBuffer);
-        glGenBuffers(1, &textureBuffer);
-        
-        ATTRIB_COLOR_MVPMATRIX = [colorShaderProgram attributeIndex:@"mvpmatrix"];
-        ATTRIB_COLOR_VERTEX = [colorShaderProgram attributeIndex:@"vertex"];
-        ATTRIB_COLOR_COLOR = [colorShaderProgram attributeIndex:@"color"];
-        
-        
-        ATTRIB_TEXTURE_MVPMATRIX = [textureShaderProgram attributeIndex:@"mvpmatrix"];
-        ATTRIB_TEXTURE_VERTEX = [textureShaderProgram attributeIndex:@"vertex"];
-        ATTRIB_TEXTURE_COLOR = [textureShaderProgram attributeIndex:@"textureColor"];
-        ATTRIB_TEXTURE_TEXCOORDS = [textureShaderProgram attributeIndex:@"textureCoordinate"];
-        
-        
-        generatedWords = [[NSMutableArray alloc]init];
-        newWordsPerMove = [[NSMutableArray alloc]init];
-        usedWordsPerTurn = [[NSMutableArray alloc]init];
-        wordsPerMove = [[NSMutableArray alloc]init];
-        
-        [self performSelector:@selector(loadDictionary) withObject:nil];
-        [self setupColors];
-        [self setupGraphics];
-        [self enableNotification];
+        [self initialize];
     }
     return self;
+}
+
+
+-(void)initialize
+{
+    relativePosition = TOP_HIDDEN_POSITION;
+    self.hidden = YES;
+    colorShaderProgram = [shaderManager getShaderByVertexShaderFileName:@"InstancedColorShader" andFragmentShaderFileName:@"ColorShader"];
+    
+    textureShaderProgram = [shaderManager getShaderByVertexShaderFileName:@"InstancedTextureShader" andFragmentShaderFileName:@"TextureShader"];
+    
+    glGenBuffers(1, &colorBuffer);
+    glGenBuffers(1, &textureBuffer);
+    
+    ATTRIB_COLOR_MVPMATRIX = [colorShaderProgram attributeIndex:@"mvpmatrix"];
+    ATTRIB_COLOR_VERTEX = [colorShaderProgram attributeIndex:@"vertex"];
+    ATTRIB_COLOR_COLOR = [colorShaderProgram attributeIndex:@"color"];
+    
+    
+    ATTRIB_TEXTURE_MVPMATRIX = [textureShaderProgram attributeIndex:@"mvpmatrix"];
+    ATTRIB_TEXTURE_VERTEX = [textureShaderProgram attributeIndex:@"vertex"];
+    ATTRIB_TEXTURE_COLOR = [textureShaderProgram attributeIndex:@"textureColor"];
+    ATTRIB_TEXTURE_TEXCOORDS = [textureShaderProgram attributeIndex:@"textureCoordinate"];
+    
+    
+    generatedWords = [[NSMutableArray alloc]init];
+    newWordsPerMove = [[NSMutableArray alloc]init];
+    usedWordsPerTurn = [[NSMutableArray alloc]init];
+    wordsPerMove = [[NSMutableArray alloc]init];
+    
+    [self performSelector:@selector(loadDictionary) withObject:nil];
+    [self setupColors];
+    [self setupGraphics];
+    [self enableNotification];
 }
 
 -(BOOL)touchable
@@ -84,7 +100,7 @@
     characterSpriteSheet = [fontSpriteSheetManager getFontSpriteSheetOfType:FontSpriteTypeAlphabetsUppercase withFont:@"Lato" andSize:40];
     
     scoreSpriteSheet = [fontSpriteSheetManager getFontSpriteSheetOfType:FontSpriteTypeNumbers
-                                                               withFont:@"Lato" andSize:12];
+                                                               withFont:@"Lato" andSize:13];
     
     shadowTexture = [textureManager getTexture:@"shadow" OfType:@"png"];
     tileTexture = [textureManager getTexture:@"tile" OfType:@"png"];
@@ -541,7 +557,7 @@
             (characterTextureData + i * 6 + j)->texCoord =  tile.characterFontSprite.textureCoordinates[j];
         }
         
-        [mvpMatrixManager translateInX:21 Y:-15 Z:1];
+        [mvpMatrixManager translateInX:22 Y:-19 Z:1];
         [mvpMatrixManager getMVPMatrix:result];
         for (int j = 0;j<6;j++)
         {
@@ -553,7 +569,7 @@
         
         if (tile.shadowColor->alpha > 0)
         {
-            [mvpMatrixManager translateInX:-21 Y:15 Z:1];
+            [mvpMatrixManager translateInX:-22 Y:19 Z:1];
             [mvpMatrixManager getMVPMatrix:result];
             
             for (int j = 0;j<6;j++)

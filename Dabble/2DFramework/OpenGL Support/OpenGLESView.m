@@ -109,6 +109,9 @@
 		
         glClearColor(1, 1, 1, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
         glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
 		[context presentRenderbuffer:GL_RENDERBUFFER_OES];
 	}
@@ -149,7 +152,6 @@
 	if (view_delegate != nil)
 		[view_delegate sceneMadeInActive];
 	self.view_delegate = scene;
-	scene.openGLView = self;
 	refreshTimeInterval = CFAbsoluteTimeGetCurrent();
 }
 

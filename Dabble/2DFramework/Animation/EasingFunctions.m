@@ -92,3 +92,25 @@ CGFloat getEaseInOutBack(CGFloat start,CGFloat end,CGFloat ratio)
     return val * diff + start;
 }
 
+CGFloat getEaseOutElastic(CGFloat start,CGFloat end,CGFloat ratio,CGFloat duration)
+{
+    BoundsCheck(ratio, start, end)
+    
+    CGFloat c = end - start;
+    CGFloat p = 0.3 * duration;
+    CGFloat a = 0;
+    CGFloat s = 0;
+    
+    if (!a || a < fabs(c))
+    {
+        a = c/10;
+        s = p /4;
+    }
+    else
+    {
+        s = p / (2 * PI) * asinf(c / a);
+    }
+    
+    return a * powf(2, -10 * ratio) * sinf((ratio * duration - s) * (2 * PI) / p) + c + start;
+}
+

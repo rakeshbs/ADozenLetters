@@ -14,6 +14,10 @@
 
 #define totalTimePerGame 122
 
+#define SCORE_PER_WORD 10
+#define SCORE_PER_TRIPLET 100
+
+
 @interface GameScene (Private)
 @end
 
@@ -29,46 +33,36 @@ Dictionary *dictionary;
     if (self = [super init])
     {
         
-        
-        currentRandomNumber =  arc4random()+1;
-        
         numberOfTripletsMade = 0;
         numberOfDoublesMade = 0;
         numberOfWordsMade = 0;
-        for (int i = 0;i<3;i++)
-            numberOfWordsPerLetter[i] = 0;
-        
-        analyticsTexture = [[Texture2D alloc]
-                            initWithString:@"W : 0 (0,0,0) D : 0 T : 0"                                                 dimensions:CGSizeMake(320, 30)
-                            horizontalAlignment:UITextAlignmentLeft
-                            verticalAlignment:UITextAlignmentMiddle
-                            fontName:@"Lato" fontSize:30];
-        
     
-        
-        resString[0] = [[NSMutableString alloc]initWithString:@"#####"];
-        resString[1] = [[NSMutableString alloc]initWithString:@"####"];
-        resString[2] = [[NSMutableString alloc]initWithString:@"###"];
         madeWords = [[NSMutableArray alloc]init];
-        onBoardWords = [[NSMutableArray alloc]init];
         madeTriples = [[NSMutableArray alloc]init];
         madeDoubles = [[NSMutableArray alloc]init];
         
         
         remainingTime = totalTimePerGame;
         [self loadDictionary];
-        
-        tileControl = [[TileControl alloc]init];
+
+        tileControl = [[TileControl alloc]initWithFrame:CGRectMake(0,0,self.frame.size.width,self.frame.size.height)];
         [self addElement:tileControl];
-        [tileControl addTarget:self andSelector:@selector(tileRearranged)];
+        [tileControl addTarget:self andSelector:@selector(tileRearranged:)];
+        
+        [self performSelector:@selector(showActivityIndicator) withObject:nil afterDelay:0.1];
+        [self performSelector:@selector(showTiles) withObject:nil afterDelay:5];
         
         [self performSelector:@selector(loadData) withObject:nil afterDelay:0.1];
 
-        //[self performSelector:@selector(showActivityIndicator) withObject:nil afterDelay:5.0];
-       // [self performSelector:@selector(hideActivityIndicator) withObject:nil afterDelay:15.0];
        
     }
     return  self;
+}
+
+-(void)showTiles
+{
+    [self hideActivityIndicator];
+    [tileControl showTiles];
 }
 
 -(void)loadDictionary
@@ -76,9 +70,19 @@ Dictionary *dictionary;
     dictionary = [Dictionary getSharedDictionary];
 }
 
--(void)tileRearranged
+-(void)tileRearranged:(TileControlEventData *)eventData
 {
-    NSLog(@"%@",tileControl.concatenatedWords);
+    if (eventData.scorePerMove == -1)
+    {
+        [self loadData];
+        [self performSelector:@selector(showTiles) withObject:nil afterDelay:5];
+        return;
+    }
+    
+    currentRoundScore += eventData.scorePerMove * SCORE_PER_WORD;
+    
+    if (eventData.concatenatedString.length == 12)
+        currentRoundScore += SCORE_PER_TRIPLET;
     
 }
 
@@ -86,11 +90,10 @@ Dictionary *dictionary;
 
 -(void)loadData
 {
-    tileControl.frame = CGRectMake(0,0,self.frame.size.width,self.frame.size.height);
-    
-    
+   
+    currentRoundScore = 0;
     [tileControl createTiles:[dictionary generateDozenLetters]];
-    
+
     remainingTime = totalTimePerGame;
     lastUpdate = CFAbsoluteTimeGetCurrent();
     prevTimeLeft=totalTimePerGame;
@@ -106,19 +109,6 @@ Dictionary *dictionary;
 	color.green = 15;
 	color.alpha = 255;
     [director clearScene:color];
-}
-
--(void)tileBreakBond:(NSNotification *)notification
-{
-    Tile *tile = notification.object;
-    CGFloat anchorY = tile.anchorPoint.y;
-    for (Tile *t in tilesArray)
-    {
-        if (t.anchorPoint.y == anchorY)
-        {
-            [t animateHideColorInDuration:0.2];
-        }
-    }
 }
 
 -(void)update
@@ -137,8 +127,6 @@ NSMutableArray *tilesArray;
 
 -(void)sceneMadeActive
 {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
 };
 
@@ -152,7 +140,7 @@ NSMutableArray *tilesArray;
 {
     if (touch.tapCount == 2)
     {
-        [self loadData];
+        [tileControl hideTiles];
     }
     return YES;
 }

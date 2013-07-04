@@ -22,7 +22,25 @@
 
 @synthesize touchesInElement;
 
-@synthesize frame,numberOfLayers,tag,openGLView,parent;
+@synthesize frame,numberOfLayers,tag,parent;
+
+-(id)initWithFrame:(CGRect)_frame
+{
+    if (self = [super init])
+    {
+        parent = nil;
+        director = [GLDirector getSharedDirector];
+        self.openGLView = director.openGLview;
+        animator = [Animator getSharedAnimator];
+        textureManager = [TextureManager getSharedTextureManager];
+        touchesInElement = [[NSMutableArray alloc]init];
+        mvpMatrixManager = [MVPMatrixManager sharedMVPMatrixManager];
+        shaderManager = [GLShaderManager sharedGLShaderManager];
+        fontSpriteSheetManager = [FontSpriteSheetManager getSharedFontSpriteSheetManager];
+        self.frame = _frame;
+    }
+    return self;
+}
 
 -(id)init
 {
@@ -30,6 +48,7 @@
     {
         parent = nil;
         director = [GLDirector getSharedDirector];
+        self.openGLView = director.openGLview;
         animator = [Animator getSharedAnimator];
         textureManager = [TextureManager getSharedTextureManager];
         touchesInElement = [[NSMutableArray alloc]init];
@@ -66,37 +85,20 @@
     
 }
 
--(void)setOpenGLView:(OpenGLESView *)_openGLView
-{
-    if (openGLView != nil)
-    {
-        [openGLView release];
-        openGLView = nil;
-    }
-    
-    openGLView = [_openGLView retain];
-    for (GLElement *element in subElements)
-    {
-        [element setOpenGLView:_openGLView];
-    }
-    
-    
-}
-
 -(void)drawElement
 {
     [self update];
 
-    [mvpMatrixManager pushModelViewMatrix];
     [mvpMatrixManager translateInX:self.frame.origin.x Y:self.frame.origin.y Z:0];
     [self draw];
     [mvpMatrixManager translateInX:0 Y:0 Z:self.numberOfLayers];
     
     for (GLElement *element in subElements)
     {
-        [element drawElement];
+        if (!element.hidden)
+            [element drawElement];
     }
-    [mvpMatrixManager popModelViewMatrix];
+    [mvpMatrixManager translateInX:-self.frame.origin.x Y:-self.frame.origin.y Z:0];
 }
  
 -(void)update
@@ -110,7 +112,6 @@
     if (subElements == nil)
         subElements = [[NSMutableArray alloc]init];
     e.indexOfElement = subElements.count;
-    e.openGLView = self.openGLView;
     e.parent = self;
     [subElements addObject:e];
 }
@@ -257,13 +258,11 @@
 }
 
 
-
 -(void)dealloc
 {
     [super dealloc];
     NSLog(@"deallocating element");
     self.parent = nil;
-    self.openGLView = nil;
     self.touchesInElement = nil;
 }
 @end

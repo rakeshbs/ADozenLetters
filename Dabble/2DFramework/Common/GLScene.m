@@ -30,12 +30,13 @@ static GLActivityIndicator *activityIndicator;
 
 -(CGRect)frame
 {
-    return CGRectMake(0, 0, self.openGLView.frame.size.width, self.openGLView.frame.size.height);
+    return CGRectMake(0, 0, director.openGLview.frame.size.width, director.openGLview.frame.size.height);
 }
 
 -(void)showActivityIndicator
 {
     activityIndicator.frame = CGRectMake(self.frame.size.width/2, self.frame.size.height/2, 0, 0);
+    [activityIndicator moveToFront];
     [activityIndicator show];
 }
 

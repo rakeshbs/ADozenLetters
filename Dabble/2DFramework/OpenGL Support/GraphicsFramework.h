@@ -1,5 +1,4 @@
 #import "GLDirector.h"
-#import "GLButton.h"
 #import "TextureManager.h"
 #import "GLScene.h"
 #import "FontSpriteSheet.h"
