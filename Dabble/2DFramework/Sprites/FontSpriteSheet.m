@@ -39,6 +39,8 @@ static NSString *fontCharactersNumbers = @"1,2,3,4,5,6,7,8,9,0";
     _textureCoordinates[5] = (TextureCoord)
         {.s = ( (_offSetX+_width)/totalWidth), .t = (_offSetY/totalHeight)};
     
+    self.textureCGRect = CGRectMake(_offSetX/totalWidth, _offSetY/totalHeight, _width/totalWidth, _height/totalHeight);
+    
     
     CGFloat scale = [[UIScreen mainScreen]scale]*2;
     
@@ -49,6 +51,8 @@ static NSString *fontCharactersNumbers = @"1,2,3,4,5,6,7,8,9,0";
     _textureRect[3] = (Vector3D) { .x = -_width/scale, .y =   -_height/scale, .z = 0.0};
     _textureRect[4] = (Vector3D) { .x = -_width/scale, .y = _height/scale, .z = 0.0};
     _textureRect[5] = (Vector3D) { .x = _width/scale, .y = _height/scale, .z = 0.0};
+    
+    self.textureCoordinatesCGRect = CGRectMake(-_width/scale, -_height/scale, 2*_width/scale , 2 * _height/scale);
     
 }
 

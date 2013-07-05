@@ -525,7 +525,7 @@
         [mvpMatrixManager translateInX:tile.centerPoint.x Y:tile.centerPoint.y+relativePosition Z:tile.indexOfElement *
          6 + 1];
         [mvpMatrixManager rotateByAngleInDegrees:tile.wiggleAngle InX:0 Y:0 Z:1];
-        
+//        [mvpMatrixManager scaleByXScale:1+fabs(tile.wiggleAngle/30) YScale:1+fabs(tile.wiggleAngle/30) ZScale:1];
         
         Matrix3D result;
         [mvpMatrixManager getMVPMatrix:result];

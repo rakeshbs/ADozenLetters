@@ -128,7 +128,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(MVPMatrixManager);
     Matrix3D resultMatrix;
     
     Matrix3DSetScaling(scaleMatrix,xScale,yScale,zScale);
-    Matrix3DMultiply(scaleMatrix,  modelViewStack[currentModelViewMatrixIndex], resultMatrix);
+    Matrix3DMultiply(modelViewStack[currentModelViewMatrixIndex],scaleMatrix, resultMatrix);
     Matrix3DCopyS(resultMatrix,  modelViewStack[currentModelViewMatrixIndex]);
 }
 

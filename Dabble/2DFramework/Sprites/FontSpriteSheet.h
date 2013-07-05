@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GLCommon.h"_textureRect
+#import "GLCommon.h"
 
 typedef enum
 {
@@ -30,6 +30,8 @@ typedef enum
 @property (nonatomic,retain) FontSpriteSheet *fontSpriteSheet;
 @property (nonatomic) TextureCoord *textureCoordinates;
 @property (nonatomic) Vector3D *textureRect;
+@property (nonatomic) CGRect textureCGRect;
+@property (nonatomic) CGRect textureCoordinatesCGRect;
 
 
 -(void)calculateCoordinates;

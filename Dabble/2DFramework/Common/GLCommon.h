@@ -308,6 +308,20 @@ static inline void Matrix3DSetPerspectiveProjectionWithFieldOfView
 
 }
 
+static inline  void CGRectToVertex3D(CGRect _rect,Vertex3D* vertices)
+{
+    vertices[0] = (Vertex3D){.x = _rect.origin.x, .y = _rect.origin.y, .z = 0};
+    vertices[1] = (Vertex3D){.x = _rect.origin.x + _rect.size.width , .y = _rect.origin.y, .z = 0};
+    vertices[2] = (Vertex3D){.x = _rect.origin.x + _rect.size.width , .y = _rect.origin.y + _rect.size.height, .z = 0};
+    
+    vertices[3] = (Vertex3D){.x = _rect.origin.x, .y = _rect.origin.y, .z = 0};
+    vertices[4] = (Vertex3D){.x = _rect.origin.x, .y = _rect.origin.y + _rect.size.height, .z = 0};
+    vertices[5] = (Vertex3D){.x = _rect.origin.x + _rect.size.width, .y = _rect.origin.y + _rect.size.height, .z = 0};
+}
+
+
+
+
 typedef struct
 {
     GLfloat	s;
@@ -326,6 +340,17 @@ static inline void TextureCoordCopyS(TextureCoord source,TextureCoord *destinati
 {
     destination->s = source.s;
     destination->t = source.t;
+}
+
+static inline  void CGRectToTextureCoord(CGRect _rect,TextureCoord *texCoord)
+{
+    texCoord[0] = (TextureCoord){.s = _rect.origin.x, .t = _rect.origin.y};
+    texCoord[1] = (TextureCoord){.s = _rect.origin.x + _rect.size.width , .t = _rect.origin.y};
+    texCoord[2] = (TextureCoord){.s = _rect.origin.x + _rect.size.width , .t = _rect.origin.y + _rect.size.height};
+    
+    texCoord[3] = (TextureCoord){.s = _rect.origin.x, .t = _rect.origin.y};
+    texCoord[4] = (TextureCoord){.s = _rect.origin.x, .t = _rect.origin.y + _rect.size.height};
+    texCoord[5] = (TextureCoord){.s = _rect.origin.x + _rect.size.width, .t = _rect.origin.y + _rect.size.height};
 }
 
 typedef struct

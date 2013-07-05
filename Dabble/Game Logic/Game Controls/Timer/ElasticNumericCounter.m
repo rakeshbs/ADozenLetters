@@ -34,15 +34,21 @@
 -(void)draw
 {
     int currentIndex = verticalOffset/frame.size.height;
-    CGFloat offsetY = verticalOffset - currentIndex * frame.size.height;
-    
+
+
 }
 
 -(CGRect)getPreviousRect:(int)currentIndex
 {
     int index = (currentIndex - 1 + sequence.count)%sequence.count;
-    previousFontSprite = [fontSpriteSheet getFontSprite:sequence[currentIndex]];
-
+    CGFloat offsetY = verticalOffset - currentIndex * frame.size.height;
+    
+    previousFontSprite = [fontSpriteSheet getFontSprite:sequence[index]];
+    
+    CGRect offsetFrame = CGRectOffset(self.frame, 0, offsetY);
+    CGRect offsetFontSpriteFrame = CGRectOffset(previousFontSprite.textureCGRect, 0, -self.frame.size.height);
+    
+    CGRect fontSpriteInterSection = CGRectIntersection(offsetFontSpriteFrame,offsetFrame);
     
 }
 
