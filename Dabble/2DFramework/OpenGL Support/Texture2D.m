@@ -325,23 +325,26 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 - (id)initFontSpriteSheetWith:(NSString *)fontString andFontSprite:(FontSpriteSheet *)fontSpriteSheet
 {
-    int nsquare = 1;
-    
     NSArray *characterArray = [fontString componentsSeparatedByString:@","];
     
-    while (nsquare * nsquare < characterArray.count)
+    UIFont *font = [UIFont fontWithName:fontSpriteSheet.fontName size:fontSpriteSheet.fontSize*[[UIScreen mainScreen]scale]];
+    
+
+    CGFloat area = 0;
+    
+    for (int i = 0;i<characterArray.count;i++)
     {
-        nsquare++;
+        CGSize dimensions = [characterArray[i] sizeWithFont:font];
+        area += dimensions.height * dimensions.width;
     }
     
-    UIFont *font = [UIFont fontWithName:fontSpriteSheet.fontName size:fontSpriteSheet.fontSize*[[UIScreen mainScreen]scale]];
+    CGFloat squareSide = ceilf(sqrtf(area));
     
     int col = 0;
     int row = 0;
     CGFloat lineHeight = 0,lineWidth = 0,totalHeight = 0,totalWidth = 0;
     
-     
-	for (int i = 0;i<characterArray.count;i++)
+    for (int i = 0;i<characterArray.count;i++)
     {
         CGSize dimensions = [characterArray[i] sizeWithFont:font];
         
@@ -349,7 +352,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         lineHeight = (lineHeight < dimensions.height) ? dimensions.height:lineHeight;
         
         col++;
-        if (col >=nsquare)
+        if (lineWidth >= squareSide || i == characterArray.count - 1)
         {
             
             totalWidth = (totalWidth < lineWidth) ? lineWidth:totalWidth;
@@ -382,8 +385,6 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 		height = i;
 	}
     
-    NSLog(@"%d %d",width,height);
-
     colorSpace = CGColorSpaceCreateDeviceRGB();
 	data = calloc(height, width*4 );
 	context = CGBitmapContextCreateWithData(data, width, height, 8, width * 4 ,
@@ -391,10 +392,11 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     CGContextClearRect(context, CGRectMake(0, 0, width, height));
 	CGColorSpaceRelease(colorSpace);
     
-//    CGContextSetFillColorWithColor(context, [[UIColor clearColor]CGColor]);
+   // CGContextSetFillColorWithColor(context, [[UIColor whiteColor]CGColor]);
    // CGContextFillRect(context,  CGRectMake(0, 0, width, height));
     CGContextSetFillColorWithColor(context, [[UIColor whiteColor]CGColor]);
     CGContextSetAlpha(context, 1.0);
+    
     
     CGContextTranslateCTM(context, 0.0, height);
     
@@ -428,7 +430,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         lineHeight = (lineHeight < dimensions.height) ? dimensions.height:lineHeight;
         
         col++;
-        if (col >=nsquare)
+        if (lineWidth >= squareSide || i == characterArray.count - 1)
         {
             totalWidth = (totalWidth < lineWidth) ? lineWidth:totalWidth;
             totalHeight += lineHeight;
@@ -447,6 +449,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
     NSString *filePath = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%d.png",fontSpriteSheet.hash]]; //Add the file name
     [UIImagePNGRepresentation(image) writeToFile:filePath atomically:YES]; //Write the file
+    
     
     self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:width pixelsHigh:height contentSize:CGSizeMake(totalWidth, totalHeight)];
 	

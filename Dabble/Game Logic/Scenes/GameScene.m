@@ -9,6 +9,7 @@
 #import "GameScene.h"
 #import "Dictionary.h"
 #import "NSArray+Additions.h"
+#import "ElasticNumericCounter.h"
 
 #define yOffset 75
 
@@ -44,20 +45,33 @@ Dictionary *dictionary;
         
         remainingTime = totalTimePerGame;
         [self loadDictionary];
-
-        tileControl = [[TileControl alloc]initWithFrame:CGRectMake(0,0,self.frame.size.width,self.frame.size.height)];
+        
+        ElasticNumericCounter *counter = [[ElasticNumericCounter alloc]
+                                          initWithFrame:CGRectMake(135, 200, 50, 50)];
+        [counter setFont:@"Lato" withSize:50];
+        [counter setSequence:[NSMutableArray arrayWithObjects:@"0",@"1",@"2",@"3",@"4",@"5",@"6",
+                              @"7",@"8",@"9",nil]];
+        [self addElement:counter];
+        
+        [counter setValue:1];
+        
+        
+        
+    /*    tileControl = [[TileControl alloc]initWithFrame:CGRectMake(0,0,self.frame.size.width,self.frame.size.height)];
         [self addElement:tileControl];
         [tileControl addTarget:self andSelector:@selector(tileRearranged:)];
         
         [self performSelector:@selector(showActivityIndicator) withObject:nil afterDelay:0.1];
         [self performSelector:@selector(showTiles) withObject:nil afterDelay:5];
         
-        [self performSelector:@selector(loadData) withObject:nil afterDelay:0.1];
+        [self performSelector:@selector(loadData) withObject:nil afterDelay:0.1];*/
 
        
     }
     return  self;
 }
+
+
 
 -(void)showTiles
 {

@@ -485,7 +485,7 @@
 
 -(void)drawTexture:(int)count
 {
-    
+    glEnable(GL_TEXTURE_2D);
     glEnableVertexAttribArray(ATTRIB_TEXTURE_MVPMATRIX + 0);
     glEnableVertexAttribArray(ATTRIB_TEXTURE_MVPMATRIX + 1);
     glEnableVertexAttribArray(ATTRIB_TEXTURE_MVPMATRIX + 2);
@@ -512,7 +512,7 @@
     
     
     glDrawArrays(GL_TRIANGLES, 0, count * 6);
-    
+    glDisable(GL_TEXTURE_2D);
 }
 
 -(void)draw
@@ -594,7 +594,7 @@
     [tileTexture bindTexture];
     [self drawTexture:tilesArray.count];
     
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);    
+    glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
     glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
     glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), characterTextureData, GL_DYNAMIC_DRAW);
     [characterSpriteSheet.texture bindTexture];

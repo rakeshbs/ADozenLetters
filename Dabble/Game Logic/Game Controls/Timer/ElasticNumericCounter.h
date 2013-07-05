@@ -8,24 +8,39 @@
 
 #import "GLElement.h"
 
-@interface ElasticNumericCounter : GLElement
+@interface ElasticNumericCounter : GLElement <AnimationDelegate>
 {
+      GLShaderProgram *textureShaderProgram;
+    
     FontSpriteSheet *fontSpriteSheet;
     NSMutableArray *sequence;
     
     int currentValue;
     
     CGFloat verticalOffset;
+    CGFloat previousVerticalOffset;
+    CGFloat destinationVerticalOffset;
     
-    FontSprite *previousFontSprite;
-    FontSprite *currentFontSprite;
-    FontSprite *nextFontSprite;
+    InstancedTextureVertexColorData *vertexData;
+    int vertexDataCount;
+    
+    Vertex3D *maskedVertices;
+    TextureCoord *maskedTextureCoords;
+    
+    GLuint textureBuffer;
+    
+    
+    GLuint ATTRIB_TEXTURE_MVPMATRIX;
+    GLuint ATTRIB_TEXTURE_VERTEX;
+    GLuint ATTRIB_TEXTURE_COLOR;
+    GLuint ATTRIB_TEXTURE_TEXCOORDS;
     
 }
 
-@property (nonatomic,retain) NSMutableArray *sequence;
+@property (nonatomic,readonly) NSMutableArray *sequence;
 
 -(void)setValue:(int)value;
 -(void)setFont:(NSString *)font withSize:(CGFloat)size;
+-(void)setSequence:(NSMutableArray *)sequence;
 
 @end

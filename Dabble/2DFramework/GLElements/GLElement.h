@@ -15,7 +15,7 @@
 #import "UITouch+GLElement.h"
 #import "GLShaderManager.h"
 #import "FontSpriteSheetManager.h"
-
+#import "EasingFunctions.h"
 
 @interface GLElement : NSObject
 {

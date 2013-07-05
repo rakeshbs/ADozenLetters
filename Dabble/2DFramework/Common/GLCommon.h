@@ -344,13 +344,13 @@ static inline void TextureCoordCopyS(TextureCoord source,TextureCoord *destinati
 
 static inline  void CGRectToTextureCoord(CGRect _rect,TextureCoord *texCoord)
 {
-    texCoord[0] = (TextureCoord){.s = _rect.origin.x, .t = _rect.origin.y};
-    texCoord[1] = (TextureCoord){.s = _rect.origin.x + _rect.size.width , .t = _rect.origin.y};
-    texCoord[2] = (TextureCoord){.s = _rect.origin.x + _rect.size.width , .t = _rect.origin.y + _rect.size.height};
+    texCoord[0] = (TextureCoord){.s = _rect.origin.x, .t = _rect.origin.y +_rect.size.height};
+    texCoord[1] = (TextureCoord){.s = _rect.origin.x + _rect.size.width , .t = _rect.origin.y+_rect.size.height};
+    texCoord[2] = (TextureCoord){.s = _rect.origin.x + _rect.size.width , .t = _rect.origin.y};
     
-    texCoord[3] = (TextureCoord){.s = _rect.origin.x, .t = _rect.origin.y};
-    texCoord[4] = (TextureCoord){.s = _rect.origin.x, .t = _rect.origin.y + _rect.size.height};
-    texCoord[5] = (TextureCoord){.s = _rect.origin.x + _rect.size.width, .t = _rect.origin.y + _rect.size.height};
+    texCoord[3] = (TextureCoord){.s = _rect.origin.x, .t = _rect.origin.y +_rect.size.height};
+    texCoord[4] = (TextureCoord){.s = _rect.origin.x, .t = _rect.origin.y};
+    texCoord[5] = (TextureCoord){.s = _rect.origin.x + _rect.size.width, .t = _rect.origin.y};
 }
 
 typedef struct

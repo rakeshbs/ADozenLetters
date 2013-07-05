@@ -11,7 +11,7 @@
 
 static NSString *fontCharactersUpper = @"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
 static NSString *fontCharactersLower = @"a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,v,z";
-static NSString *fontCharactersNumbers = @"1,2,3,4,5,6,7,8,9,0";
+static NSString *fontCharactersNumbers = @"0,1,2,3,4,5,6,7,8,9";
 
 @implementation FontSprite
 
@@ -39,7 +39,7 @@ static NSString *fontCharactersNumbers = @"1,2,3,4,5,6,7,8,9,0";
     _textureCoordinates[5] = (TextureCoord)
         {.s = ( (_offSetX+_width)/totalWidth), .t = (_offSetY/totalHeight)};
     
-    self.textureCGRect = CGRectMake(_offSetX/totalWidth, _offSetY/totalHeight, _width/totalWidth, _height/totalHeight);
+    self.textureCoordinatesCGRect = CGRectMake(_offSetX/totalWidth, _offSetY/totalHeight, _width/totalWidth, _height/totalHeight);
     
     
     CGFloat scale = [[UIScreen mainScreen]scale]*2;
@@ -52,7 +52,7 @@ static NSString *fontCharactersNumbers = @"1,2,3,4,5,6,7,8,9,0";
     _textureRect[4] = (Vector3D) { .x = -_width/scale, .y = _height/scale, .z = 0.0};
     _textureRect[5] = (Vector3D) { .x = _width/scale, .y = _height/scale, .z = 0.0};
     
-    self.textureCoordinatesCGRect = CGRectMake(-_width/scale, -_height/scale, 2*_width/scale , 2 * _height/scale);
+    self.textureCGRect = CGRectMake(-_width/scale, -_height/scale, 2*_width/scale , 2 * _height/scale);
     
 }
 
