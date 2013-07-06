@@ -37,6 +37,7 @@
         mvpMatrixManager = [MVPMatrixManager sharedMVPMatrixManager];
         shaderManager = [GLShaderManager sharedGLShaderManager];
         fontSpriteSheetManager = [FontSpriteSheetManager getSharedFontSpriteSheetManager];
+        rendererManager = [GLRendererManager sharedGLRendererManager];
         self.frame = _frame;
     }
     return self;
@@ -57,6 +58,11 @@
         fontSpriteSheetManager = [FontSpriteSheetManager getSharedFontSpriteSheetManager];
     }
     return self;
+}
+
+-(BOOL)drawable
+{
+    return YES;
 }
 
 -(BOOL)touchable
@@ -90,7 +96,8 @@
     [self update];
 
     [mvpMatrixManager translateInX:self.frame.origin.x Y:self.frame.origin.y Z:0];
-    [self draw];
+    if (self.drawable)
+        [self draw];
     [mvpMatrixManager translateInX:0 Y:0 Z:self.numberOfLayers];
     
     for (GLElement *element in subElements)

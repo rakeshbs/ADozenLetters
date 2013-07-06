@@ -48,7 +48,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(GLShaderManager)
         return ShaderAttributeVertexColorPointSize;
     }
     
-    return ShaderAttributeVertexColor;
+    return -1;
 }
 
 -(void)addAttributesOfType:(ShaderAttributeTypes)attType toShader:(GLShaderProgram *)program
@@ -97,6 +97,8 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(GLShaderManager)
     shader = shaders[key];
     
     ShaderAttributeTypes type = [self getAttributeType:vertexShaderFilename];
+    
+    shader.shaderType = type;
     
     if (shader == nil)
     {

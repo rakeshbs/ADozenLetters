@@ -13,6 +13,17 @@
     CGFloat timeLeft;
     CGFloat *numberSizes;
     
+    GLShaderProgram *textureShaderProgram;
+    FontSpriteSheet *fontSpriteSheet;
+    GLuint textureBuffer;
+    
+    GLuint ATTRIB_TEXTURE_MVPMATRIX;
+    GLuint ATTRIB_TEXTURE_VERTEX;
+    GLuint ATTRIB_TEXTURE_COLOR;
+    GLuint ATTRIB_TEXTURE_TEXCOORDS;
+    
+    InstancedTextureVertexColorData *vertexData;
+    int vertexDataCount;
 }
 
 -(void)setFontSize:(CGFloat)size;

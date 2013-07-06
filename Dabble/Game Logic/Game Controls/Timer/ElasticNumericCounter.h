@@ -10,9 +10,7 @@
 
 @interface ElasticNumericCounter : GLElement <AnimationDelegate>
 {
-      GLShaderProgram *textureShaderProgram;
-    
-    FontSpriteSheet *fontSpriteSheet;
+      
     NSMutableArray *sequence;
     
     int currentValue;
@@ -27,19 +25,15 @@
     Vertex3D *maskedVertices;
     TextureCoord *maskedTextureCoords;
     
-    GLuint textureBuffer;
-    
-    
-    GLuint ATTRIB_TEXTURE_MVPMATRIX;
-    GLuint ATTRIB_TEXTURE_VERTEX;
-    GLuint ATTRIB_TEXTURE_COLOR;
-    GLuint ATTRIB_TEXTURE_TEXCOORDS;
-    
+    FontSpriteSheet *fontSpriteSheet;
 }
 
 @property (nonatomic,readonly) NSMutableArray *sequence;
+@property (nonatomic) InstancedTextureVertexColorData *vertexData;
+@property (nonatomic,readonly) int vertexDataCount;
+@property (nonatomic,retain) FontSpriteSheet *fontSpriteSheet;
 
--(void)setValue:(int)value;
+-(void)setValueCountUp:(int)value;
 -(void)setFont:(NSString *)font withSize:(CGFloat)size;
 -(void)setSequence:(NSMutableArray *)sequence;
 

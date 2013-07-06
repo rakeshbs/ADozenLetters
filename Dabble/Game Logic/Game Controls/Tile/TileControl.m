@@ -585,7 +585,6 @@
         
     }
     
-    
     [textureShaderProgram use];
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
@@ -611,6 +610,7 @@
     glBufferData(GL_ARRAY_BUFFER, shadowCount * 6 * sizeof(InstancedTextureVertexColorData), shadowTextureData, GL_DYNAMIC_DRAW);
 
     [self drawTexture:shadowCount];
+    
     
 }
 

@@ -5,6 +5,9 @@
 @interface GLShaderProgram : NSObject 
 {
 }
+
+@property (nonatomic) int shaderType;
+
 - (id)initWithVertexShaderFilename:(NSString *)vShaderFilename 
             fragmentShaderFilename:(NSString *)fShaderFilename;
 - (void)addAttribute:(NSString *)attributeName;

@@ -53,7 +53,7 @@ Dictionary *dictionary;
                               @"7",@"8",@"9",nil]];
         [self addElement:counter];
         
-        [counter setValue:1];
+        [counter setValueCountUp:1];
         
         
         

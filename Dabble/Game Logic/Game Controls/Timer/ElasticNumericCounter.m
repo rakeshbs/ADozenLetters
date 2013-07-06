@@ -13,31 +13,33 @@
 
 @implementation ElasticNumericCounter
 
-@synthesize sequence;
+@synthesize sequence,vertexData,vertexDataCount,fontSpriteSheet;
 
 -(id)initWithFrame:(CGRect)_frame
 {
     if (self = [super initWithFrame:_frame])
     {
-        textureShaderProgram = [shaderManager getShaderByVertexShaderFileName:@"InstancedTextureShader" andFragmentShaderFileName:@"TextureShader"];
-        
-        
-        ATTRIB_TEXTURE_MVPMATRIX = [textureShaderProgram attributeIndex:@"mvpmatrix"];
-        ATTRIB_TEXTURE_VERTEX = [textureShaderProgram attributeIndex:@"vertex"];
-        ATTRIB_TEXTURE_COLOR = [textureShaderProgram attributeIndex:@"textureColor"];
-        ATTRIB_TEXTURE_TEXCOORDS = [textureShaderProgram attributeIndex:@"textureCoordinate"];
         
         
         currentValue = 0;
-        vertexData = malloc(sizeof(InstancedTextureVertexColorData) * 6 * 6);
+        
         maskedVertices = malloc(sizeof(Vertex3D) * 6);
         maskedTextureCoords = malloc(sizeof(TextureCoord) * 6);
         
-        glGenBuffers(1, &textureBuffer);
         
         verticalOffset = 0;
     }
     return self;
+}
+
+-(BOOL)drawable
+{
+    return NO;
+}
+
+-(BOOL)touchable
+{
+    return NO;
 }
 
 -(void)setFont:(NSString *)font withSize:(CGFloat)size
@@ -45,7 +47,7 @@
     fontSpriteSheet = [fontSpriteSheetManager getFontSpriteSheetOfType:FontSpriteTypeNumbers withFont:font andSize:size];
 }
 
--(void)setValue:(int)value
+-(void)setValueCountUp:(int)value
 {
     int vIndex = [sequence indexOfString:[NSString stringWithFormat:@"%d",value]];
     destinationVerticalOffset = frame.size.height * vIndex;
@@ -57,7 +59,7 @@
     
     [animator removeQueuedAnimationsForObject:self];
     [animator removeRunningAnimationsForObject:self];
-    [animator addAnimationFor:self ofType:ANIMATION_COUNTUP ofDuration:2 afterDelayInSeconds:0];
+    [animator addAnimationFor:self ofType:ANIMATION_COUNTUP ofDuration:0.5 afterDelayInSeconds:1];
 }
 
 -(void)setSequence:(NSMutableArray *)_sequence
@@ -77,7 +79,7 @@
     
     if (animation.type == ANIMATION_COUNTUP)
     {
-        verticalOffset = getEaseOutElastic(previousVerticalOffset, destinationVerticalOffset, animationRatio,animation.duration);
+        verticalOffset = getEaseOutBack(previousVerticalOffset, destinationVerticalOffset, animationRatio);
     }
     
     if (animationRatio >= 1.0)
@@ -92,12 +94,8 @@
 {
      if (animation.type == ANIMATION_COUNTUP)
      {
-         if (currentValue == 9)
-         {
-             [self setValue:5];
-         }
-         else
-             [self setValue:9];
+         
+             [self setValueCountUp:currentValue+1];
      }
 }
 
@@ -120,46 +118,6 @@
     [self addSpriteAtIndex:0];
     [self addSpriteAtIndex:1];
     
-    glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_TEXTURE_2D);
-    [textureShaderProgram use];
-    
-    glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
-    glBufferData(GL_ARRAY_BUFFER, vertexDataCount * sizeof(InstancedTextureVertexColorData), vertexData, GL_DYNAMIC_DRAW);
-    [fontSpriteSheet.texture bindTexture];
-    
-    glEnableVertexAttribArray(ATTRIB_TEXTURE_MVPMATRIX + 0);
-    glEnableVertexAttribArray(ATTRIB_TEXTURE_MVPMATRIX + 1);
-    glEnableVertexAttribArray(ATTRIB_TEXTURE_MVPMATRIX + 2);
-    glEnableVertexAttribArray(ATTRIB_TEXTURE_MVPMATRIX + 3);
-    
-    glVertexAttribPointer(ATTRIB_TEXTURE_MVPMATRIX + 0, 4, GL_FLOAT, 0,  sizeof(InstancedTextureVertexColorData), (GLvoid*)0);
-    glVertexAttribPointer(ATTRIB_TEXTURE_MVPMATRIX + 1, 4, GL_FLOAT, 0,  sizeof(InstancedTextureVertexColorData), (GLvoid*)16);
-    glVertexAttribPointer(ATTRIB_TEXTURE_MVPMATRIX + 2, 4, GL_FLOAT, 0,  sizeof(InstancedTextureVertexColorData), (GLvoid*)32);
-    glVertexAttribPointer(ATTRIB_TEXTURE_MVPMATRIX + 3, 4, GL_FLOAT, 0,  sizeof(InstancedTextureVertexColorData), (GLvoid*)48);
-    
-    
-    glEnableVertexAttribArray(ATTRIB_TEXTURE_TEXCOORDS);
-    glVertexAttribPointer(ATTRIB_TEXTURE_TEXCOORDS, 2, GL_FLOAT, GL_TRUE,  sizeof(InstancedTextureVertexColorData),
-                          (GLvoid*)sizeof(Matrix3D));
-    
-    
-    glEnableVertexAttribArray(ATTRIB_TEXTURE_VERTEX);
-    glVertexAttribPointer(ATTRIB_TEXTURE_VERTEX, 3, GL_FLOAT, 0,  sizeof(InstancedTextureVertexColorData),
-                          (GLvoid*)sizeof(Matrix3D)+sizeof(TextureCoord));
-    
-    glEnableVertexAttribArray(ATTRIB_TEXTURE_COLOR);
-    glVertexAttribPointer(ATTRIB_TEXTURE_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(InstancedTextureVertexColorData),
-                          (GLvoid*)sizeof(Matrix3D)+sizeof(Vertex3D)+sizeof(TextureCoord));
-    
-    
-    glDrawArrays(GL_TRIANGLES, 0, vertexDataCount);
-    
-    [mvpMatrixManager popModelViewMatrix];
-    
-    //verticalOffset++;
-    
-    glDisable(GL_TEXTURE_2D);
 
 }
 

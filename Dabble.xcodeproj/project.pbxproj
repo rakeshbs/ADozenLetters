@@ -13,6 +13,7 @@
 		1402C31617832EBA00A5E054 /* PointSpritesShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1402C312178307FC00A5E054 /* PointSpritesShader.vsh */; };
 		1408EBCF1754429900462F62 /* Match.m in Sources */ = {isa = PBXBuildFile; fileRef = 1408EBCC1754429900462F62 /* Match.m */; };
 		1408EBD01754429900462F62 /* Round.m in Sources */ = {isa = PBXBuildFile; fileRef = 1408EBCE1754429900462F62 /* Round.m */; };
+		141CA13717889A1C005C1D59 /* GLRendererManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 141CA13617889A1C005C1D59 /* GLRendererManager.m */; };
 		141E4AB11738B22700A5F515 /* GCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 141E4AB01738B22700A5F515 /* GCHelper.m */; };
 		142916CA1783AB9100B128EA /* GLActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916C91783AB9100B128EA /* GLActivityIndicator.m */; };
 		142916CE1784724C00B128EA /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916CD1784724C00B128EA /* GameScene.m */; };
@@ -63,6 +64,7 @@
 		146472D016D278B5000C8FB4 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472CA16D278B5000C8FB4 /* OpenGLES.framework */; };
 		146472D116D278B5000C8FB4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472CB16D278B5000C8FB4 /* QuartzCore.framework */; };
 		146472D616D278F0000C8FB4 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472D516D278F0000C8FB4 /* GameKit.framework */; };
+		14668F7317887DA800C67D32 /* GLRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 14668F7217887DA800C67D32 /* GLRenderer.m */; };
 		14817044171F0A510058FE43 /* TextureShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1481703E171F0A2B0058FE43 /* TextureShader.fsh */; };
 		14817045171F0A540058FE43 /* InstancedTextureShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1481703F171F0A2B0058FE43 /* InstancedTextureShader.vsh */; };
 		149D383C175883440067A122 /* UITouch+GLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 149D383B175883440067A122 /* UITouch+GLElement.m */; };
@@ -85,6 +87,8 @@
 		1408EBCC1754429900462F62 /* Match.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Match.m; sourceTree = "<group>"; };
 		1408EBCD1754429900462F62 /* Round.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Round.h; sourceTree = "<group>"; };
 		1408EBCE1754429900462F62 /* Round.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Round.m; sourceTree = "<group>"; };
+		141CA13517889A1C005C1D59 /* GLRendererManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLRendererManager.h; sourceTree = "<group>"; };
+		141CA13617889A1C005C1D59 /* GLRendererManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLRendererManager.m; sourceTree = "<group>"; };
 		141E4AAF1738B22700A5F515 /* GCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCHelper.h; sourceTree = "<group>"; };
 		141E4AB01738B22700A5F515 /* GCHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCHelper.m; sourceTree = "<group>"; };
 		142916C81783AB9100B128EA /* GLActivityIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLActivityIndicator.h; sourceTree = "<group>"; };
@@ -168,6 +172,8 @@
 		146472CA16D278B5000C8FB4 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		146472CB16D278B5000C8FB4 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		146472D516D278F0000C8FB4 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		14668F7117887DA800C67D32 /* GLRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLRenderer.h; sourceTree = "<group>"; };
+		14668F7217887DA800C67D32 /* GLRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLRenderer.m; sourceTree = "<group>"; };
 		1481703E171F0A2B0058FE43 /* TextureShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = TextureShader.fsh; sourceTree = "<group>"; };
 		1481703F171F0A2B0058FE43 /* InstancedTextureShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = InstancedTextureShader.vsh; sourceTree = "<group>"; };
 		149D383A175883440067A122 /* UITouch+GLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITouch+GLElement.h"; sourceTree = "<group>"; };
@@ -227,6 +233,17 @@
 				1408EBCE1754429900462F62 /* Round.m */,
 			);
 			path = GameStates;
+			sourceTree = "<group>";
+		};
+		141CA13417888878005C1D59 /* Renderer */ = {
+			isa = PBXGroup;
+			children = (
+				14668F7117887DA800C67D32 /* GLRenderer.h */,
+				14668F7217887DA800C67D32 /* GLRenderer.m */,
+				141CA13517889A1C005C1D59 /* GLRendererManager.h */,
+				141CA13617889A1C005C1D59 /* GLRendererManager.m */,
+			);
+			name = Renderer;
 			sourceTree = "<group>";
 		};
 		142916C71783AB9100B128EA /* GLActivityIndicator */ = {
@@ -372,6 +389,7 @@
 		1445DC4616F97AD600EBBCCF /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				141CA13417888878005C1D59 /* Renderer */,
 				14817039171F0A2B0058FE43 /* TextureShader */,
 				1445DC4716F97AD600EBBCCF /* ColorShader */,
 				1445DC4E16F97AD600EBBCCF /* GLShaderManager.h */,
@@ -663,8 +681,10 @@
 				142916CA1783AB9100B128EA /* GLActivityIndicator.m in Sources */,
 				142916CE1784724C00B128EA /* GameScene.m in Sources */,
 				142916D11784727200B128EA /* MainMenuScene.m in Sources */,
+				14668F7317887DA800C67D32 /* GLRenderer.m in Sources */,
 				142916DA17848B6D00B128EA /* Tile.m in Sources */,
 				142916DB17848B6D00B128EA /* TileControl.m in Sources */,
+				141CA13717889A1C005C1D59 /* GLRendererManager.m in Sources */,
 				142916DE17848BC200B128EA /* TimerControl.m in Sources */,
 				142916E117858A9F00B128EA /* ElasticNumericCounter.m in Sources */,
 			);

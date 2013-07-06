@@ -15,6 +15,7 @@
 #import "UITouch+GLElement.h"
 #import "GLShaderManager.h"
 #import "FontSpriteSheetManager.h"
+#import "GLRendererManager.h"
 #import "EasingFunctions.h"
 
 @interface GLElement : NSObject
@@ -34,6 +35,7 @@
     MVPMatrixManager *mvpMatrixManager;
     GLShaderManager *shaderManager;
     FontSpriteSheetManager *fontSpriteSheetManager;
+    GLRendererManager *rendererManager;
     
 }
 
@@ -45,6 +47,7 @@
 @property (nonatomic,readonly) CGRect absoluteFrame;
 @property (nonatomic,readonly) int numberOfLayers;
 @property (nonatomic,readonly) BOOL touchable;
+@property (nonatomic,readonly) BOOL drawable;
 @property (nonatomic) BOOL hidden;
 
 @property (nonatomic,retain) GLElement *parent;
@@ -56,9 +59,8 @@
 -(BOOL)touchBegan:(UITouch *)touch withEvent:(UIEvent *)event;
 -(BOOL)touchMoved:(UITouch *)touch withEvent:(UIEvent *)event;
 -(BOOL)touchEnded:(UITouch *)touch withEvent:(UIEvent *)event;
-
 -(void)update;
-
+-(void)draw;
 
 -(id)initWithFrame:(CGRect)_frame;
 -(void)addElement:(GLElement *)e;
