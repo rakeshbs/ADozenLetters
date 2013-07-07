@@ -19,8 +19,6 @@
         mvpMatrixManager = [MVPMatrixManager sharedMVPMatrixManager];
         program = [shaderManager getShaderByVertexShaderFileName:vertexShaderName andFragmentShaderFileName:fragmentShaderName];
         shaderType = program.shaderType;        
-        glGenBuffers(1, &vbo);
-        glGenVertexArraysOES(1, &vao);
         primitive = GL_TRIANGLES;
         
         switch (shaderType) {
@@ -53,7 +51,17 @@
     ATTRIB_COLOR = [program attributeIndex:@"color"];
     primitive = GL_TRIANGLES;
     
-    glBindVertexArrayOES(vao);
+    fnDrawVBO  = (void (*)(id, SEL))[self methodForSelector:@selector(drawMatrixVertexColorRendererWithVBO)];
+    selDrawVBO = @selector(drawMatrixVertexColorRendererWithVBO);
+    
+    fnDrawArray  = (void (*)(id, SEL))[self methodForSelector:@selector(drawMatrixVertexColorRendererWithArray)];
+    selDrawArray = @selector(drawMatrixVertexColorRendererWithArray);
+    
+}
+
+-(void)drawMatrixVertexColorRendererWithVBO
+{
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
     
     glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 0);
     glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 1);
@@ -75,8 +83,40 @@
                           (GLvoid*)sizeof(Matrix3D)+sizeof(Vertex3D));
     
     
-    glBindVertexArrayOES(0);
+    glDrawArrays(primitive, 0, dataCount);
 }
+
+-(void)drawMatrixVertexColorRendererWithArray
+{
+    InstancedVertexColorData *data = (InstancedVertexColorData *)vertexData;
+
+    glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 0);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 1);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 2);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 3);
+    
+    glVertexAttribPointer(ATTRIB_MVPMATRIX + 0, 4, GL_FLOAT, 0,
+                          sizeof(InstancedVertexColorData), &data[0].mvpMatrix[0]);
+    glVertexAttribPointer(ATTRIB_MVPMATRIX + 1, 4, GL_FLOAT, 0,
+                          sizeof(InstancedVertexColorData), &data[0].mvpMatrix[4]);
+    glVertexAttribPointer(ATTRIB_MVPMATRIX + 2, 4, GL_FLOAT, 0,
+                          sizeof(InstancedVertexColorData), &data[0].mvpMatrix[8]);
+    glVertexAttribPointer(ATTRIB_MVPMATRIX + 3, 4, GL_FLOAT, 0,
+                          sizeof(InstancedVertexColorData), &data[0].mvpMatrix[12]);
+    
+    
+    glEnableVertexAttribArray(ATTRIB_VERTEX);
+    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(InstancedVertexColorData),
+                          &data[0].vertex);
+    
+    glEnableVertexAttribArray(ATTRIB_COLOR);
+    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(InstancedVertexColorData),
+                          &data[0].color);
+    
+    
+    glDrawArrays(primitive, 0, dataCount);
+}
+
 
 -(void)setupMatrixVertexColorTextureRenderer
 {
@@ -85,8 +125,20 @@
     ATTRIB_COLOR = [program attributeIndex:@"textureColor"];
     ATTRIB_TEXTURECOORD = [program attributeIndex:@"textureCoordinate"];
     primitive = GL_TRIANGLES;
+    isTexture = YES;
     
-    glBindVertexArrayOES(vao);
+    fnDrawVBO  = (void (*)(id, SEL))[self
+                                     methodForSelector:@selector(drawMatrixVertexColorTextureRendererWithVBO)];
+    selDrawVBO = @selector(drawMatrixVertexColorTextureRendererWithVBO);
+    
+    fnDrawArray  = (void (*)(id, SEL))[self methodForSelector:@selector(drawMatrixVertexColorTextureRendererWithArray)];
+    selDrawArray = @selector(drawMatrixVertexColorTextureRendererWithArray);
+}
+
+-(void)drawMatrixVertexColorTextureRendererWithVBO
+{
+    glEnable(GL_TEXTURE_2D);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
     
     glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 0);
     glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 1);
@@ -112,9 +164,50 @@
     glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(InstancedTextureVertexColorData),
                           (GLvoid*)sizeof(Matrix3D)+sizeof(Vertex3D)+sizeof(TextureCoord));
     
-    glBindVertexArrayOES(0);
+    glDrawArrays(primitive, 0, dataCount);
+    glDisable(GL_TEXTURE_2D);
 
 }
+
+-(void)drawMatrixVertexColorTextureRendererWithArray
+{
+    glEnable(GL_TEXTURE_2D);
+    
+    InstancedTextureVertexColorData *data = (InstancedTextureVertexColorData *)vertexData;
+    
+    glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 0);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 1);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 2);
+    glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 3);
+    
+    glVertexAttribPointer(ATTRIB_MVPMATRIX + 0, 4, GL_FLOAT, 0,
+                          sizeof(InstancedTextureVertexColorData), &data[0].mvpMatrix[0]);
+    glVertexAttribPointer(ATTRIB_MVPMATRIX + 1, 4, GL_FLOAT, 0,
+                          sizeof(InstancedTextureVertexColorData), &data[0].mvpMatrix[4]);
+    glVertexAttribPointer(ATTRIB_MVPMATRIX + 2, 4, GL_FLOAT, 0,
+                          sizeof(InstancedTextureVertexColorData), &data[0].mvpMatrix[8]);
+    glVertexAttribPointer(ATTRIB_MVPMATRIX + 3, 4, GL_FLOAT, 0,
+                          sizeof(InstancedTextureVertexColorData), &data[0].mvpMatrix[12]);
+    
+    
+    glEnableVertexAttribArray(ATTRIB_TEXTURECOORD);
+    glVertexAttribPointer(ATTRIB_TEXTURECOORD, 2, GL_FLOAT, GL_TRUE,  sizeof(InstancedTextureVertexColorData),
+                          &data[0].texCoord);
+    
+    
+    glEnableVertexAttribArray(ATTRIB_VERTEX);
+    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(InstancedTextureVertexColorData),
+                          &data[0].vertex);
+    
+    glEnableVertexAttribArray(ATTRIB_COLOR);
+    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(InstancedTextureVertexColorData),
+                          &data[0].color);
+    
+    glDrawArrays(primitive, 0, dataCount);
+    glDisable(GL_TEXTURE_2D);
+    
+}
+
 
 -(void)setupVertexColorRenderer
 {
@@ -123,8 +216,22 @@
     UNIFORM_MVPMATRIX = [program uniformIndex:@"mvpmatrix"];
     primitive = GL_TRIANGLES;
     
-    glBindVertexArrayOES(vao);
+    fnDrawVBO  = (void (*)(id, SEL))[self
+                                     methodForSelector:@selector(drawVertexColorRendererWithVBO)];
+    selDrawVBO = @selector(drawVertexColorRendererWithVBO);
     
+    fnDrawArray  = (void (*)(id, SEL))[self methodForSelector:@selector(drawVertexColorRendererWithArray)];
+    selDrawArray = @selector(drawVertexColorRendererWithArray);
+
+}
+
+-(void)drawVertexColorRendererWithVBO
+{
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    
+    Matrix3D result;
+    [mvpMatrixManager getMVPMatrix:result];
+    glUniformMatrix4fv(UNIFORM_MVPMATRIX, 1, GL_FALSE, result);
     
     glEnableVertexAttribArray(ATTRIB_VERTEX);
     glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(VertexColorData),0);
@@ -132,9 +239,26 @@
     glEnableVertexAttribArray(ATTRIB_COLOR);
     glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(VertexColorData),
                           (GLvoid*)sizeof(Vertex3D));
-
     
-    glBindVertexArrayOES(0);
+    glDrawArrays(primitive, 0, dataCount);
+}
+
+-(void)drawVertexColorRendererWithArray
+{
+    VertexColorData *data = (VertexColorData *)vertexData;
+    
+    Matrix3D result;
+    [mvpMatrixManager getMVPMatrix:result];
+    glUniformMatrix4fv(UNIFORM_MVPMATRIX, 1, GL_FALSE, result);
+    
+    glEnableVertexAttribArray(ATTRIB_VERTEX);
+    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(VertexColorData),&data[0].vertex);
+    
+    glEnableVertexAttribArray(ATTRIB_COLOR);
+    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(VertexColorData),
+                          &data[0].color);
+    
+    glDrawArrays(primitive, 0, dataCount);
 }
 
 -(void)setupVertexColorTextureRenderer
@@ -143,9 +267,27 @@
     ATTRIB_COLOR = [program attributeIndex:@"textureColor"];
     ATTRIB_TEXTURECOORD = [program attributeIndex:@"textureCoordinate"];
     UNIFORM_MVPMATRIX = [program uniformIndex:@"mvpmatrix"];
+        isTexture = YES;
     primitive = GL_TRIANGLES;
     
-    glBindVertexArrayOES(vao);
+    fnDrawVBO  = (void (*)(id, SEL))[self
+                                     methodForSelector:@selector(drawVertexColorTextureRendererWithVBO)];
+    selDrawVBO = @selector(drawVertexColorTextureRendererWithVBO);
+    
+    fnDrawArray  = (void (*)(id, SEL))[self methodForSelector:@selector(drawVertexColorRendererWithArray)];
+    selDrawArray = @selector(drawVertexColorRendererWithArray);
+    
+}
+
+-(void)drawVertexColorTextureRendererWithVBO
+{
+    glEnable(GL_TEXTURE_2D);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    
+    Matrix3D result;
+    [mvpMatrixManager getMVPMatrix:result];
+    glUniformMatrix4fv(UNIFORM_MVPMATRIX, 1, GL_FALSE, result);
+    
     
     glEnableVertexAttribArray(ATTRIB_TEXTURECOORD);
     glVertexAttribPointer(ATTRIB_TEXTURECOORD, 2, GL_FLOAT, GL_TRUE,  sizeof(TextureVertexColorData),
@@ -160,8 +302,40 @@
     glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(TextureVertexColorData),
                           (GLvoid*)sizeof(Vertex3D)+sizeof(TextureCoord));
     
-     glBindVertexArrayOES(0);
+    glDrawArrays(primitive, 0, dataCount);
+    
+    glDisable(GL_TEXTURE_2D);
 
+}
+
+-(void)drawVertexColorTextureRendererWithArray
+{
+    glEnable(GL_TEXTURE_2D);
+    
+    TextureVertexColorData *data = (TextureVertexColorData *)vertexData;
+    
+    Matrix3D result;
+    [mvpMatrixManager getMVPMatrix:result];
+    glUniformMatrix4fv(UNIFORM_MVPMATRIX, 1, GL_FALSE, result);
+    
+    
+    glEnableVertexAttribArray(ATTRIB_TEXTURECOORD);
+    glVertexAttribPointer(ATTRIB_TEXTURECOORD, 2, GL_FLOAT, GL_TRUE,  sizeof(TextureVertexColorData),
+                          &data[0].texCoord);
+    
+    
+    glEnableVertexAttribArray(ATTRIB_VERTEX);
+    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(TextureVertexColorData),
+                           &data[0].vertex);
+    
+    glEnableVertexAttribArray(ATTRIB_COLOR);
+    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(TextureVertexColorData),
+                                &data[0].color);
+    
+    glDrawArrays(primitive, 0, dataCount);
+    
+    glDisable(GL_TEXTURE_2D);
+    
 }
 
 -(void)setupVertexColorPointSizeRenderer
@@ -172,7 +346,23 @@
     ATTRIB_POINTSIZE = [program attributeIndex:@"size"];
     primitive = GL_POINTS;
     
-    glBindVertexArrayOES(vao);
+    
+    fnDrawVBO  = (void (*)(id, SEL))[self
+                                     methodForSelector:@selector(drawVertexColorPointSizeRendererWithVBO)];
+    selDrawVBO = @selector(drawVertexColorPointSizeRendererWithVBO);
+    
+    fnDrawArray  = (void (*)(id, SEL))[self
+                                       methodForSelector:@selector(drawVertexColorPointSizeRendererWithArray)];
+    selDrawArray = @selector(drawVertexColorPointSizeRendererWithArray);
+}
+
+-(void)drawVertexColorPointSizeRendererWithVBO
+{
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    
+    Matrix3D result;
+    [mvpMatrixManager getMVPMatrix:result];
+    glUniformMatrix4fv(UNIFORM_MVPMATRIX, 1, GL_FALSE, result);
     
     glEnableVertexAttribArray(ATTRIB_VERTEX);
     glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(PointVertexColorSize),0);
@@ -185,32 +375,49 @@
     glVertexAttribPointer(ATTRIB_POINTSIZE, 1, GL_FLOAT, 0,  sizeof(PointVertexColorSize),
                           (GLvoid*)(sizeof(Vertex3D)+sizeof(Color4B)));
     
-    glBindVertexArrayOES(0);
+    glDrawArrays(primitive, 0, dataCount);
     
 }
 
--(void)draw
+-(void)drawVertexColorPointSizeRendererWithArray
 {
-    if (UNIFORM_MVPMATRIX >= 0)
-    {
-        Matrix3D result;
-        [mvpMatrixManager getMVPMatrix:result];
-        glUniformMatrix4fv(UNIFORM_MVPMATRIX, 1, GL_FALSE, result);
-    }
-    if (isTexture)
-    {
-        glEnable(GL_TEXTURE_2D);
-        glBindVertexArrayOES(vao);
-        glDrawArrays(primitive, 0, dataCount);
-        glDisable(GL_TEXTURE_2D);
-    }
-    else
-    {
-        glBindVertexArrayOES(vao);
-        glDrawArrays(primitive, 0, dataCount);
-    }
+    PointVertexColorSize *data = (PointVertexColorSize *)vertexData;
+    
+    Matrix3D result;
+    [mvpMatrixManager getMVPMatrix:result];
+    glUniformMatrix4fv(UNIFORM_MVPMATRIX, 1, GL_FALSE, result);
+    
+    glEnableVertexAttribArray(ATTRIB_VERTEX);
+    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(PointVertexColorSize),
+                          &data[0].vertex);
+    
+    glEnableVertexAttribArray(ATTRIB_COLOR);
+    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(PointVertexColorSize),
+                          &data[0].color);
+    
+    glEnableVertexAttribArray(ATTRIB_POINTSIZE);
+    glVertexAttribPointer(ATTRIB_POINTSIZE, 1, GL_FLOAT, 0,  sizeof(PointVertexColorSize),
+                          &data[0].size);
+    
+    glDrawArrays(primitive, 0, dataCount);
+    
 }
 
+-(void)drawWithArray:(void *)data andCount:(int)count
+{
+    vertexData = data;
+    dataCount = count;
+    
+    fnDrawArray(self,selDrawArray);
+}
+
+-(void)drawWithVBO:(GLuint)_vbo andCount:(int)count
+{
+    vbo = _vbo;
+    dataCount = count;
+    
+    fnDrawVBO(self,selDrawVBO);
+}
 
 
 @end

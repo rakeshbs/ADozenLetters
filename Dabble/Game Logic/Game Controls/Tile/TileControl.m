@@ -61,22 +61,11 @@
 {
     relativePosition = TOP_HIDDEN_POSITION;
     self.hidden = YES;
-    colorShaderProgram = [shaderManager getShaderByVertexShaderFileName:@"InstancedColorShader" andFragmentShaderFileName:@"ColorShader"];
     
-    textureShaderProgram = [shaderManager getShaderByVertexShaderFileName:@"InstancedTextureShader" andFragmentShaderFileName:@"TextureShader"];
+    textureRenderer = [rendererManager getRendererWithVertexShaderName:@"InstancedTextureShader" andFragmentShaderName:@"TextureShader"];
     
     glGenBuffers(1, &colorBuffer);
     glGenBuffers(1, &textureBuffer);
-    
-    ATTRIB_COLOR_MVPMATRIX = [colorShaderProgram attributeIndex:@"mvpmatrix"];
-    ATTRIB_COLOR_VERTEX = [colorShaderProgram attributeIndex:@"vertex"];
-    ATTRIB_COLOR_COLOR = [colorShaderProgram attributeIndex:@"color"];
-    
-    
-    ATTRIB_TEXTURE_MVPMATRIX = [textureShaderProgram attributeIndex:@"mvpmatrix"];
-    ATTRIB_TEXTURE_VERTEX = [textureShaderProgram attributeIndex:@"vertex"];
-    ATTRIB_TEXTURE_COLOR = [textureShaderProgram attributeIndex:@"textureColor"];
-    ATTRIB_TEXTURE_TEXCOORDS = [textureShaderProgram attributeIndex:@"textureCoordinate"];
     
     
     generatedWords = [[NSMutableArray alloc]init];
@@ -448,72 +437,6 @@
 }
 
 
-//Drawing Code
-
-
--(void)drawColor
-{
-    [colorShaderProgram use];
-    
-    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-    glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedVertexColorData), tileColorData, GL_DYNAMIC_DRAW);
-    
-    glEnableVertexAttribArray(ATTRIB_COLOR_MVPMATRIX + 0);
-    glEnableVertexAttribArray(ATTRIB_COLOR_MVPMATRIX + 1);
-    glEnableVertexAttribArray(ATTRIB_COLOR_MVPMATRIX + 2);
-    glEnableVertexAttribArray(ATTRIB_COLOR_MVPMATRIX + 3);
-    
-    glVertexAttribPointer(ATTRIB_COLOR_MVPMATRIX + 0, 4, GL_FLOAT, 0,  sizeof(InstancedVertexColorData), (GLvoid*)0);
-    glVertexAttribPointer(ATTRIB_COLOR_MVPMATRIX + 1, 4, GL_FLOAT, 0,  sizeof(InstancedVertexColorData), (GLvoid*)16);
-    glVertexAttribPointer(ATTRIB_COLOR_MVPMATRIX + 2, 4, GL_FLOAT, 0,  sizeof(InstancedVertexColorData), (GLvoid*)32);
-    glVertexAttribPointer(ATTRIB_COLOR_MVPMATRIX + 3, 4, GL_FLOAT, 0,  sizeof(InstancedVertexColorData), (GLvoid*)48);
-    
-    
-    glEnableVertexAttribArray(ATTRIB_COLOR_VERTEX);
-    glVertexAttribPointer(ATTRIB_COLOR_VERTEX, 3, GL_FLOAT, 0,  sizeof(InstancedVertexColorData),
-                          (GLvoid*)sizeof(Matrix3D));
-    
-    glEnableVertexAttribArray(ATTRIB_COLOR_COLOR);
-    glVertexAttribPointer(ATTRIB_COLOR_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(InstancedVertexColorData),
-                          (GLvoid*)sizeof(Matrix3D)+sizeof(Vertex3D));
-    
-    glDrawArrays(GL_TRIANGLES, 0, tilesArray.count * 6);
-    
-    
-}
-
-
--(void)drawTexture:(int)count
-{
-    glEnable(GL_TEXTURE_2D);
-    glEnableVertexAttribArray(ATTRIB_TEXTURE_MVPMATRIX + 0);
-    glEnableVertexAttribArray(ATTRIB_TEXTURE_MVPMATRIX + 1);
-    glEnableVertexAttribArray(ATTRIB_TEXTURE_MVPMATRIX + 2);
-    glEnableVertexAttribArray(ATTRIB_TEXTURE_MVPMATRIX + 3);
-    
-    glVertexAttribPointer(ATTRIB_TEXTURE_MVPMATRIX + 0, 4, GL_FLOAT, 0,  sizeof(InstancedTextureVertexColorData), (GLvoid*)0);
-    glVertexAttribPointer(ATTRIB_TEXTURE_MVPMATRIX + 1, 4, GL_FLOAT, 0,  sizeof(InstancedTextureVertexColorData), (GLvoid*)16);
-    glVertexAttribPointer(ATTRIB_TEXTURE_MVPMATRIX + 2, 4, GL_FLOAT, 0,  sizeof(InstancedTextureVertexColorData), (GLvoid*)32);
-    glVertexAttribPointer(ATTRIB_TEXTURE_MVPMATRIX + 3, 4, GL_FLOAT, 0,  sizeof(InstancedTextureVertexColorData), (GLvoid*)48);
-    
-    
-    glEnableVertexAttribArray(ATTRIB_TEXTURE_TEXCOORDS);
-    glVertexAttribPointer(ATTRIB_TEXTURE_TEXCOORDS, 2, GL_FLOAT, GL_TRUE,  sizeof(InstancedTextureVertexColorData),
-                          (GLvoid*)sizeof(Matrix3D));
-    
-    
-    glEnableVertexAttribArray(ATTRIB_TEXTURE_VERTEX);
-    glVertexAttribPointer(ATTRIB_TEXTURE_VERTEX, 3, GL_FLOAT, 0,  sizeof(InstancedTextureVertexColorData),
-                          (GLvoid*)sizeof(Matrix3D)+sizeof(TextureCoord));
-    
-    glEnableVertexAttribArray(ATTRIB_TEXTURE_COLOR);
-    glVertexAttribPointer(ATTRIB_TEXTURE_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(InstancedTextureVertexColorData),
-                          (GLvoid*)sizeof(Matrix3D)+sizeof(Vertex3D)+sizeof(TextureCoord));
-    
-    
-    glDrawArrays(GL_TRIANGLES, 0, count * 6);
-    glDisable(GL_TEXTURE_2D);
-}
 
 -(void)draw
 {
@@ -525,20 +448,10 @@
         [mvpMatrixManager translateInX:tile.centerPoint.x Y:tile.centerPoint.y+relativePosition Z:tile.indexOfElement *
          6 + 1];
         [mvpMatrixManager rotateByAngleInDegrees:tile.wiggleAngle InX:0 Y:0 Z:1];
-//        [mvpMatrixManager scaleByXScale:1+fabs(tile.wiggleAngle/30) YScale:1+fabs(tile.wiggleAngle/30) ZScale:1];
         
         Matrix3D result;
         [mvpMatrixManager getMVPMatrix:result];
-        
-      /*  for (int j = 0;j<6;j++)
-        {
-            memcpy(&((tileColorData + i * 6 + j)->mvpMatrix), result, sizeof(Matrix3D));
-            (tileColorData + i * 6 + j)->vertex = tileVertices[j];
-            (tileColorData + i * 6 + j)->color = *(tile.currentTileColor + tile.colorIndex);
-            
-        }*/
-        
-        
+
         for (int j = 0;j<6;j++)
         {
             memcpy(&((tileTextureData + i * 6 + j)->mvpMatrix), result, sizeof(Matrix3D));
@@ -584,33 +497,33 @@
         [mvpMatrixManager popModelViewMatrix];
         
     }
-    
-    [textureShaderProgram use];
+
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
     glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
     glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), tileTextureData, GL_DYNAMIC_DRAW);
     [tileTexture bindTexture];
-    [self drawTexture:tilesArray.count];
-    
+    [textureRenderer drawWithArray:tileTextureData andCount:tilesArray.count * 6];
+        /*
     glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
     glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
     glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), characterTextureData, GL_DYNAMIC_DRAW);
     [characterSpriteSheet.texture bindTexture];
-    [self drawTexture:tilesArray.count];
+    [textureRenderer draw:tilesArray.count * 6];
     
     glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
     glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), scoreTextureData, GL_DYNAMIC_DRAW);
     [scoreSpriteSheet.texture bindTexture];
-    [self drawTexture:tilesArray.count];
+    [textureRenderer draw:tilesArray.count * 6];
  
 
     [shadowTexture bindTexture];
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     glBufferData(GL_ARRAY_BUFFER, shadowCount * 6 * sizeof(InstancedTextureVertexColorData), shadowTextureData, GL_DYNAMIC_DRAW);
 
-    [self drawTexture:shadowCount];
-    
+    [textureRenderer draw:shadowCount];
+     */
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     
 }
 

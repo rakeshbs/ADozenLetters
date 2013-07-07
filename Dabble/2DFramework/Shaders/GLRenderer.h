@@ -26,14 +26,24 @@
     
     ShaderAttributeTypes shaderType;
     
-    int dataCount;
-    
-    GLuint vbo,vao;
-    
     GLenum primitive;
     
     bool isTexture;
+    
+    int dataCount;
+    GLuint vbo;
+    
+    void *vertexData;
+    
+    
+    void (*fnDrawVBO)(id, SEL);
+    void (*fnDrawArray)(id, SEL);
+    
+    SEL selDrawVBO;
+    SEL selDrawArray;
 }
 
 -(id)initWithVertexShader:(NSString *)vertexShaderName andFragmentShader:(NSString *)fragmentShaderName;
+-(void)drawWithArray:(void *)data andCount:(int)count;
+-(void)drawWithVBO:(GLuint)_vbo andCount:(int)count;
 @end

@@ -15,4 +15,6 @@
     NSMutableDictionary *sharedData;
 }
 +(id)sharedGLRendererManager;
+-(GLRenderer *)getRendererWithVertexShaderName:(NSString *)vertexShaderName
+                         andFragmentShaderName:(NSString *)fragmentShaderName;
 @end

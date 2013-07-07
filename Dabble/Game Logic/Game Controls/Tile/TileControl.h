@@ -24,8 +24,6 @@
 @interface TileControl : GLElement <AnimationDelegate>
 {
     NSMutableArray *tilesArray;
-    GLShaderProgram *colorShaderProgram;
-    GLShaderProgram *textureShaderProgram;
     
     
     InstancedVertexColorData *tileColorData;
@@ -51,14 +49,7 @@
     GLuint colorBuffer;
     GLuint textureBuffer;
     
-    GLuint ATTRIB_COLOR_MVPMATRIX;
-    GLuint ATTRIB_COLOR_VERTEX;
-    GLuint ATTRIB_COLOR_COLOR;
-    
-    GLuint ATTRIB_TEXTURE_MVPMATRIX;
-    GLuint ATTRIB_TEXTURE_VERTEX;
-    GLuint ATTRIB_TEXTURE_COLOR;
-    GLuint ATTRIB_TEXTURE_TEXCOORDS;
+    GLRenderer *textureRenderer;
     
     float *xMargins;
     float yMargin;

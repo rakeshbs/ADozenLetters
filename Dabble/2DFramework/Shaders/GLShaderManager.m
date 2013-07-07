@@ -98,8 +98,6 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(GLShaderManager)
     
     ShaderAttributeTypes type = [self getAttributeType:vertexShaderFilename];
     
-    shader.shaderType = type;
-    
     if (shader == nil)
     {
         shader = [[GLShaderProgram alloc]initWithVertexShaderFilename:vertexShaderFilename
@@ -113,6 +111,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(GLShaderManager)
     if (![shader link])
         NSLog(@"Link unsuccessful");
     
+    shader.shaderType = type;
     return shader;
 }
 

@@ -57,14 +57,14 @@ Dictionary *dictionary;
         
         
         
-    /*    tileControl = [[TileControl alloc]initWithFrame:CGRectMake(0,0,self.frame.size.width,self.frame.size.height)];
+        tileControl = [[TileControl alloc]initWithFrame:CGRectMake(0,0,self.frame.size.width,self.frame.size.height)];
         [self addElement:tileControl];
         [tileControl addTarget:self andSelector:@selector(tileRearranged:)];
         
         [self performSelector:@selector(showActivityIndicator) withObject:nil afterDelay:0.1];
         [self performSelector:@selector(showTiles) withObject:nil afterDelay:5];
         
-        [self performSelector:@selector(loadData) withObject:nil afterDelay:0.1];*/
+        [self performSelector:@selector(loadData) withObject:nil afterDelay:0.1];
 
        
     }
