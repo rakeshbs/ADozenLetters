@@ -503,26 +503,28 @@
     glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
     glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), tileTextureData, GL_DYNAMIC_DRAW);
     [tileTexture bindTexture];
-    [textureRenderer drawWithArray:tileTextureData andCount:tilesArray.count * 6];
-        /*
+    [textureRenderer drawWithVBO:textureBuffer andCount:tilesArray.count * 6];
+        
     glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
     glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
     glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), characterTextureData, GL_DYNAMIC_DRAW);
     [characterSpriteSheet.texture bindTexture];
-    [textureRenderer draw:tilesArray.count * 6];
+    [textureRenderer drawWithVBO:textureBuffer andCount:tilesArray.count * 6];
+  //  [textureRenderer draw:tilesArray.count * 6];
     
     glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
     glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), scoreTextureData, GL_DYNAMIC_DRAW);
     [scoreSpriteSheet.texture bindTexture];
-    [textureRenderer draw:tilesArray.count * 6];
+    [textureRenderer drawWithVBO:textureBuffer andCount:tilesArray.count * 6];
+    //[textureRenderer draw:tilesArray.count * 6];
  
 
     [shadowTexture bindTexture];
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     glBufferData(GL_ARRAY_BUFFER, shadowCount * 6 * sizeof(InstancedTextureVertexColorData), shadowTextureData, GL_DYNAMIC_DRAW);
-
-    [textureRenderer draw:shadowCount];
-     */
+    [textureRenderer drawWithVBO:textureBuffer andCount:shadowCount];
+    //[textureRenderer draw:shadowCount];
+     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
 }
