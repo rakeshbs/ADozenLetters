@@ -14,8 +14,8 @@
 #define verticalOffset 20
 #define horizontalOffset 0
 
-#define TOP_HIDDEN_POSITION 1000
-#define BOTTOM_HIDDEN_POSITION -1000
+#define TOP_HIDDEN_POSITION 100
+#define BOTTOM_HIDDEN_POSITION -0
 
 #define SCORE_PER_WORD 10
 #define SCORE_PER_DOUBLE 100
@@ -64,14 +64,12 @@
     
     textureRenderer = [rendererManager getRendererWithVertexShaderName:@"InstancedTextureShader" andFragmentShaderName:@"TextureShader"];
     
-    glGenBuffers(1, &colorBuffer);
-    glGenBuffers(1, &textureBuffer);
-    
     
     generatedWords = [[NSMutableArray alloc]init];
     newWordsPerMove = [[NSMutableArray alloc]init];
     usedWordsPerTurn = [[NSMutableArray alloc]init];
     wordsPerMove = [[NSMutableArray alloc]init];
+    
     
     [self performSelector:@selector(loadDictionary) withObject:nil];
     [self setupColors];
@@ -385,7 +383,7 @@
     
     if (animation.type == ANIMATION_SHOW_CONTROL)
     {
-        relativePosition = getEaseOutElastic(TOP_HIDDEN_POSITION,0,animationRatio,animation.duration);
+        relativePosition = getEaseOut(TOP_HIDDEN_POSITION,0,animationRatio);
     }
     else if (animation.type == ANIMATION_HIDE_CONTROL)
     {
@@ -445,8 +443,12 @@
     {
         Tile *tile = subElements[i];
         [mvpMatrixManager pushModelViewMatrix];
+      //  [mvpMatrixManager translateInX:self.frame.size.width/2 Y:self.frame.size.height/2 Z:0];
+       // [mvpMatrixManager scaleByXScale:0.3 YScale:0.3 ZScale:1];
+        //[mvpMatrixManager translateInX:-self.frame.size.width/2 Y:-self.frame.size.height/2 Z:0];
         [mvpMatrixManager translateInX:tile.centerPoint.x Y:tile.centerPoint.y+relativePosition Z:tile.indexOfElement *
          6 + 1];
+         
         [mvpMatrixManager rotateByAngleInDegrees:tile.wiggleAngle InX:0 Y:0 Z:1];
         
         Matrix3D result;
@@ -497,33 +499,24 @@
         [mvpMatrixManager popModelViewMatrix];
         
     }
-
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
-    glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
-    glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), tileTextureData, GL_DYNAMIC_DRAW);
-    [tileTexture bindTexture];
-    [textureRenderer drawWithVBO:textureBuffer andCount:tilesArray.count * 6];
+    textureRenderer.texture = tileTexture;
+    [textureRenderer drawWithArray:tileTextureData andCount:tilesArray.count * 6];
         
     glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
-    glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
-    glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), characterTextureData, GL_DYNAMIC_DRAW);
-    [characterSpriteSheet.texture bindTexture];
-    [textureRenderer drawWithVBO:textureBuffer andCount:tilesArray.count * 6];
-  //  [textureRenderer draw:tilesArray.count * 6];
+  
+    textureRenderer.texture = characterSpriteSheet.texture;
+    [textureRenderer drawWithArray:characterTextureData andCount:tilesArray.count * 6];
     
-    glBindBuffer(GL_ARRAY_BUFFER, textureBuffer);
-    glBufferData(GL_ARRAY_BUFFER, tilesArray.count * 6 * sizeof(InstancedTextureVertexColorData), scoreTextureData, GL_DYNAMIC_DRAW);
-    [scoreSpriteSheet.texture bindTexture];
-    [textureRenderer drawWithVBO:textureBuffer andCount:tilesArray.count * 6];
-    //[textureRenderer draw:tilesArray.count * 6];
+    //textureRenderer.texture = scoreSpriteSheet.texture;
+    //[textureRenderer drawWithArray:scoreTextureData andCount:tilesArray.count * 6];
  
 
-    [shadowTexture bindTexture];
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-    glBufferData(GL_ARRAY_BUFFER, shadowCount * 6 * sizeof(InstancedTextureVertexColorData), shadowTextureData, GL_DYNAMIC_DRAW);
-    [textureRenderer drawWithVBO:textureBuffer andCount:shadowCount];
-    //[textureRenderer draw:shadowCount];
+    textureRenderer.texture = shadowTexture;
+    [textureRenderer drawWithArray:shadowTextureData andCount:shadowCount * 6];
      
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     

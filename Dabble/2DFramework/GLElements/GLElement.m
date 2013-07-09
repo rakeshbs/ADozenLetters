@@ -23,6 +23,7 @@
 @synthesize touchesInElement;
 
 @synthesize frame,numberOfLayers,tag,parent;
+@synthesize scaleInsideElement,originInsideElement;
 
 -(id)initWithFrame:(CGRect)_frame
 {
@@ -39,6 +40,8 @@
         fontSpriteSheetManager = [FontSpriteSheetManager getSharedFontSpriteSheetManager];
         rendererManager = [GLRendererManager sharedGLRendererManager];
         self.frame = _frame;
+        self.scaleInsideElement = 1;
+        self.originInsideElement = CGPointMake(0,0);
     }
     return self;
 }
@@ -56,6 +59,8 @@
         mvpMatrixManager = [MVPMatrixManager sharedMVPMatrixManager];
         shaderManager = [GLShaderManager sharedGLShaderManager];
         fontSpriteSheetManager = [FontSpriteSheetManager getSharedFontSpriteSheetManager];
+        self.scaleInsideElement = 1;
+        self.originInsideElement = CGPointMake(0,0);
     }
     return self;
 }
@@ -94,17 +99,32 @@
 -(void)drawElement
 {
     [self update];
+    
+    [mvpMatrixManager translateInX:self.frame.origin.x
+                                 Y:self.frame.origin.y  Z:0];
 
-    [mvpMatrixManager translateInX:self.frame.origin.x Y:self.frame.origin.y Z:0];
     if (self.drawable)
         [self draw];
     [mvpMatrixManager translateInX:0 Y:0 Z:self.numberOfLayers];
+
+    [mvpMatrixManager pushModelViewMatrix];
+    
+    [mvpMatrixManager translateInX:self.frame.size.width/2 Y:self.frame.size.height/2 Z:0];
+    
+    [mvpMatrixManager scaleByXScale:scaleInsideElement YScale:scaleInsideElement ZScale:1];
+   
+     [mvpMatrixManager translateInX:-self.frame.size.width/2 Y:-self.frame.size.height/2 Z:0];
+    
+    [mvpMatrixManager translateInX:originInsideElement.x
+                                   Y:originInsideElement.y Z:0];
     
     for (GLElement *element in subElements)
     {
         if (!element.hidden)
             [element drawElement];
     }
+    [mvpMatrixManager popModelViewMatrix];
+    
     [mvpMatrixManager translateInX:-self.frame.origin.x Y:-self.frame.origin.y Z:0];
 }
  

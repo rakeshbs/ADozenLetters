@@ -113,7 +113,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     Color4B characterColors = (Color4B) { .red = 0, .green = 0 , .blue = 0, .alpha = 255};
     
     shadowColor = malloc(sizeof(Color4B));
-    *shadowColor = (Color4B) {.red = 255, .green = 0, .blue = 0, .alpha = 0};
+    *shadowColor = (Color4B) {.red = 255, .green = 255, .blue = 255, .alpha = 0};
     
     currentTileColor = malloc(sizeof(Color4B)*2);
     currentCharacterColor = malloc(sizeof(Color4B));

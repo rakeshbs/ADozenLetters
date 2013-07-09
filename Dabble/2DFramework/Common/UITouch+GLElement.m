@@ -14,8 +14,8 @@
 -(CGPoint)locationInGLElement:(GLElement *)element
 {
     CGPoint locationInView = [self locationInView:element.openGLView];
-    CGPoint locationInOpenGLView = CGPointMake(locationInView.x,
-                                               element.openGLView.frame.size.height - locationInView.y);
+    CGPoint locationInOpenGLView = CGPointMake(locationInView.x * element.scaleInsideElement,
+                                               element.openGLView.frame.size.height * element.scaleInsideElement - locationInView.y * element.scaleInsideElement);
     
     CGRect frame = element.absoluteFrame;
     

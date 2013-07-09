@@ -9,6 +9,7 @@
 #import "GLShaderManager.h"
 #import "GLCommon.h"
 #import "MVPMatrixManager.h"
+#import "Texture2D.h"
 
 @interface GLRenderer : NSObject
 {
@@ -42,7 +43,7 @@
     SEL selDrawVBO;
     SEL selDrawArray;
 }
-
+@property (nonatomic,assign) Texture2D *texture;
 -(id)initWithVertexShader:(NSString *)vertexShaderName andFragmentShader:(NSString *)fragmentShaderName;
 -(void)drawWithArray:(void *)data andCount:(int)count;
 -(void)drawWithVBO:(GLuint)_vbo andCount:(int)count;

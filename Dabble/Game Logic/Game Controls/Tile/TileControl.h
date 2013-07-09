@@ -46,9 +46,6 @@
     
     Color4B tileColors[2][2];
     
-    GLuint colorBuffer;
-    GLuint textureBuffer;
-    
     GLRenderer *textureRenderer;
     
     float *xMargins;
@@ -76,6 +73,8 @@
     SEL selector;
     
     int relativePosition;
+    
+    CGFloat scale;
 }
 
 @property (nonatomic,readonly, getter=theNewWordsPerMove) NSMutableArray *newWordsPerMove;

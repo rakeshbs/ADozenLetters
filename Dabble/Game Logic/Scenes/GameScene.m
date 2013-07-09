@@ -55,7 +55,7 @@ Dictionary *dictionary;
         
         [counter setValueCountUp:1];
         
-        
+        self.scaleInsideElement = 0.5;
         
         tileControl = [[TileControl alloc]initWithFrame:CGRectMake(0,0,self.frame.size.width,self.frame.size.height)];
         [self addElement:tileControl];

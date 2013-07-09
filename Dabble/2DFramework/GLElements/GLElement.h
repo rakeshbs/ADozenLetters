@@ -37,8 +37,13 @@
     FontSpriteSheetManager *fontSpriteSheetManager;
     GLRendererManager *rendererManager;
     
+    CGFloat scaleInsideElement;
+    CGPoint originInsideElement;
+    
 }
 
+@property (nonatomic) CGFloat scaleInsideElement;
+@property (nonatomic) CGPoint originInsideElement;
 @property (nonatomic) int tag;
 @property (nonatomic) int indexOfElement;
 @property (nonatomic)   CGRect frame;

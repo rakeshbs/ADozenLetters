@@ -138,6 +138,7 @@
 -(void)drawMatrixVertexColorTextureRendererWithVBO
 {
     glEnable(GL_TEXTURE_2D);
+        [self.texture bindTexture];
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     
     glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 0);
@@ -172,7 +173,7 @@
 -(void)drawMatrixVertexColorTextureRendererWithArray
 {
     glEnable(GL_TEXTURE_2D);
-    
+    [self.texture bindTexture];
     InstancedTextureVertexColorData *data = (InstancedTextureVertexColorData *)vertexData;
     
     glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 0);
@@ -282,6 +283,7 @@
 -(void)drawVertexColorTextureRendererWithVBO
 {
     glEnable(GL_TEXTURE_2D);
+        [self.texture bindTexture];
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     
     Matrix3D result;
@@ -311,7 +313,7 @@
 -(void)drawVertexColorTextureRendererWithArray
 {
     glEnable(GL_TEXTURE_2D);
-    
+        [self.texture bindTexture];
     TextureVertexColorData *data = (TextureVertexColorData *)vertexData;
     
     Matrix3D result;
@@ -407,7 +409,7 @@
 {
     vertexData = data;
     dataCount = count;
-    
+    [program use];    
     fnDrawArray(self,selDrawArray);
 }
 
@@ -415,7 +417,7 @@
 {
     vbo = _vbo;
     dataCount = count;
-    
+    [program use];
     fnDrawVBO(self,selDrawVBO);
 }
 
