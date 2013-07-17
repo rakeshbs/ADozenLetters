@@ -10,6 +10,17 @@
 
 @implementation Animation
 
+-(id)init
+{
+    if (self = [super init])
+    {
+        startValue = NULL;
+        endValue = NULL;
+
+    }
+    return self;
+}
+
 
 -(BOOL)canAnimationBeStarted
 {
@@ -26,8 +37,37 @@
     return (CFAbsoluteTimeGetCurrent() - _startTime)*1.0f/(_duration);
 }
 
+-(void *)getStartValue
+{
+    return startValue;
+}
+-(void *)getEndValue
+{
+    return endValue;
+}
+
+
+-(void)setStartValue:(void *)_startValue OfSize:(size_t)size;
+{
+    if (startValue == NULL)
+        startValue = malloc(size);
+    memcpy(startValue, _startValue, size);
+}
+
+-(void)setEndValue:(void *)_endValue OfSize:(size_t)size;
+{
+    if (endValue == NULL)
+        endValue = malloc(size);
+    memcpy(endValue, _endValue, size);
+}
+
 -(void)dealloc
 {
+    if (startValue != NULL)
+        free(startValue);
+    if (endValue != NULL)
+        free(endValue);
+
     [super dealloc];
 }
 

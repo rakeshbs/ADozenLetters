@@ -56,7 +56,7 @@
         ATTRIB_COLOR = [pointSpritesShader attributeIndex:@"color"];
         ATTRIB_POINTSIZE = [pointSpritesShader attributeIndex:@"size"];
         
-        pointsData = calloc(ACTIVITY_POINTS_COUNT,sizeof(PointVertexColorSize));
+        pointsData = calloc(ACTIVITY_POINTS_COUNT,sizeof(PointVertexColorSizeData));
         activityPoints = [[NSMutableArray alloc]init];
         
         for (int i = 0;i < ACTIVITY_POINTS_COUNT;i++)
@@ -84,7 +84,7 @@
     [pointSpritesShader use];
     
     glBindBuffer(GL_ARRAY_BUFFER, pointsVertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, ACTIVITY_POINTS_COUNT * sizeof(PointVertexColorSize), pointsData, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, ACTIVITY_POINTS_COUNT * sizeof(PointVertexColorSizeData), pointsData, GL_DYNAMIC_DRAW);
     
     Matrix3D mvpMatrix;
     [mvpMatrixManager getMVPMatrix:mvpMatrix];
@@ -92,14 +92,14 @@
     glUniformMatrix4fv(UNIFORM_MVPMATRIX, 1, GL_FALSE, mvpMatrix);
     
     glEnableVertexAttribArray(ATTRIB_VERTEX);
-    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(PointVertexColorSize),0);
+    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(PointVertexColorSizeData),0);
     
     glEnableVertexAttribArray(ATTRIB_COLOR);
-    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(PointVertexColorSize),
+    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(PointVertexColorSizeData),
                           (GLvoid*)sizeof(Vertex3D));
     
     glEnableVertexAttribArray(ATTRIB_POINTSIZE);
-    glVertexAttribPointer(ATTRIB_POINTSIZE, 1, GL_FLOAT, 0,  sizeof(PointVertexColorSize),
+    glVertexAttribPointer(ATTRIB_POINTSIZE, 1, GL_FLOAT, 0,  sizeof(PointVertexColorSizeData),
                           (GLvoid*)(sizeof(Vertex3D)+sizeof(Color4B)));
 
     glDrawArrays(GL_POINTS, 0, ACTIVITY_POINTS_COUNT);

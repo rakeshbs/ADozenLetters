@@ -388,4 +388,4 @@ typedef struct
     Vertex3D vertex;
     Color4B color;
     float size;
-} PointVertexColorSize;
+} PointVertexColorSizeData;

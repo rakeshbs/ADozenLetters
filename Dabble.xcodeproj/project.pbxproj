@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1402C313178307FC00A5E054 /* PointSpritesShader.fsh in Sources */ = {isa = PBXBuildFile; fileRef = 1402C311178307FC00A5E054 /* PointSpritesShader.fsh */; };
-		1402C314178307FC00A5E054 /* PointSpritesShader.vsh in Sources */ = {isa = PBXBuildFile; fileRef = 1402C312178307FC00A5E054 /* PointSpritesShader.vsh */; };
 		1402C31517832EBA00A5E054 /* PointSpritesShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1402C311178307FC00A5E054 /* PointSpritesShader.fsh */; };
 		1402C31617832EBA00A5E054 /* PointSpritesShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1402C312178307FC00A5E054 /* PointSpritesShader.vsh */; };
 		1408EBCF1754429900462F62 /* Match.m in Sources */ = {isa = PBXBuildFile; fileRef = 1408EBCC1754429900462F62 /* Match.m */; };
@@ -20,8 +18,8 @@
 		142916D11784727200B128EA /* MainMenuScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916D01784727200B128EA /* MainMenuScene.m */; };
 		142916DA17848B6D00B128EA /* Tile.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916D617848B6D00B128EA /* Tile.m */; };
 		142916DB17848B6D00B128EA /* TileControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916D817848B6D00B128EA /* TileControl.m */; };
-		142916DE17848BC200B128EA /* TimerControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916DD17848BC200B128EA /* TimerControl.m */; };
-		142916E117858A9F00B128EA /* ElasticNumericCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916E017858A9F00B128EA /* ElasticNumericCounter.m */; };
+		142916DE17848BC200B128EA /* ScoreControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916DD17848BC200B128EA /* ScoreControl.m */; };
+		142916E117858A9F00B128EA /* ElasticCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916E017858A9F00B128EA /* ElasticCounter.m */; };
 		14362C75172F4A2F00277C93 /* NEONMatrix.c in Sources */ = {isa = PBXBuildFile; fileRef = 14362C73172F4A2F00277C93 /* NEONMatrix.c */; };
 		1445DC8216F97AD600EBBCCF /* Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC2B16F97AD600EBBCCF /* Animation.m */; };
 		1445DC8316F97AD600EBBCCF /* Animator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1445DC2D16F97AD600EBBCCF /* Animator.m */; };
@@ -65,11 +63,14 @@
 		146472D116D278B5000C8FB4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472CB16D278B5000C8FB4 /* QuartzCore.framework */; };
 		146472D616D278F0000C8FB4 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472D516D278F0000C8FB4 /* GameKit.framework */; };
 		14668F7317887DA800C67D32 /* GLRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 14668F7217887DA800C67D32 /* GLRenderer.m */; };
+		1470B0941791C13A0009D5A4 /* icon@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 1470B08E1791B5F40009D5A4 /* icon@2X.png */; };
+		1470B0951791C13F0009D5A4 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1470B08D1791B5F40009D5A4 /* icon.png */; };
 		14817044171F0A510058FE43 /* TextureShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1481703E171F0A2B0058FE43 /* TextureShader.fsh */; };
 		14817045171F0A540058FE43 /* InstancedTextureShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1481703F171F0A2B0058FE43 /* InstancedTextureShader.vsh */; };
 		149D383C175883440067A122 /* UITouch+GLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 149D383B175883440067A122 /* UITouch+GLElement.m */; };
 		149E94E4177C945E00953092 /* tile.png in Resources */ = {isa = PBXBuildFile; fileRef = 149E94E2177C945E00953092 /* tile.png */; };
 		149E94E5177C945E00953092 /* tile@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 149E94E3177C945E00953092 /* tile@2X.png */; };
+		14BAF91017907E0200FF8407 /* StringTextureShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 14BAF90E17907D0200FF8407 /* StringTextureShader.fsh */; };
 		14C0F4051703311100F6D422 /* NSArray+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 14C0F4041703311100F6D422 /* NSArray+Additions.m */; };
 		14D4248E1700255C0010657A /* sprite.png in Resources */ = {isa = PBXBuildFile; fileRef = 14D4248D1700255C0010657A /* sprite.png */; };
 		14F1197A170297E400721BEE /* w3 in Resources */ = {isa = PBXBuildFile; fileRef = 14F11977170297E400721BEE /* w3 */; };
@@ -101,10 +102,10 @@
 		142916D617848B6D00B128EA /* Tile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tile.m; sourceTree = "<group>"; };
 		142916D717848B6D00B128EA /* TileControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TileControl.h; sourceTree = "<group>"; };
 		142916D817848B6D00B128EA /* TileControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TileControl.m; sourceTree = "<group>"; };
-		142916DC17848BC200B128EA /* TimerControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerControl.h; sourceTree = "<group>"; };
-		142916DD17848BC200B128EA /* TimerControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimerControl.m; sourceTree = "<group>"; };
-		142916DF17858A9F00B128EA /* ElasticNumericCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElasticNumericCounter.h; sourceTree = "<group>"; };
-		142916E017858A9F00B128EA /* ElasticNumericCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElasticNumericCounter.m; sourceTree = "<group>"; };
+		142916DC17848BC200B128EA /* ScoreControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScoreControl.h; sourceTree = "<group>"; };
+		142916DD17848BC200B128EA /* ScoreControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScoreControl.m; sourceTree = "<group>"; };
+		142916DF17858A9F00B128EA /* ElasticCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ElasticCounter.h; sourceTree = "<group>"; };
+		142916E017858A9F00B128EA /* ElasticCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ElasticCounter.m; sourceTree = "<group>"; };
 		14362C73172F4A2F00277C93 /* NEONMatrix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = NEONMatrix.c; sourceTree = "<group>"; };
 		14362C74172F4A2F00277C93 /* NEONMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NEONMatrix.h; sourceTree = "<group>"; };
 		1445DC2A16F97AD600EBBCCF /* Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Animation.h; sourceTree = "<group>"; };
@@ -174,12 +175,16 @@
 		146472D516D278F0000C8FB4 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		14668F7117887DA800C67D32 /* GLRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLRenderer.h; sourceTree = "<group>"; };
 		14668F7217887DA800C67D32 /* GLRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLRenderer.m; sourceTree = "<group>"; };
+		1470B08D1791B5F40009D5A4 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		1470B08E1791B5F40009D5A4 /* icon@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2X.png"; sourceTree = "<group>"; };
+		1470B08F1791B5F40009D5A4 /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
 		1481703E171F0A2B0058FE43 /* TextureShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = TextureShader.fsh; sourceTree = "<group>"; };
 		1481703F171F0A2B0058FE43 /* InstancedTextureShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = InstancedTextureShader.vsh; sourceTree = "<group>"; };
 		149D383A175883440067A122 /* UITouch+GLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITouch+GLElement.h"; sourceTree = "<group>"; };
 		149D383B175883440067A122 /* UITouch+GLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITouch+GLElement.m"; sourceTree = "<group>"; };
 		149E94E2177C945E00953092 /* tile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tile.png; sourceTree = "<group>"; };
 		149E94E3177C945E00953092 /* tile@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tile@2X.png"; sourceTree = "<group>"; };
+		14BAF90E17907D0200FF8407 /* StringTextureShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = StringTextureShader.fsh; sourceTree = "<group>"; };
 		14C0F4031703311100F6D422 /* NSArray+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Additions.h"; sourceTree = "<group>"; };
 		14C0F4041703311100F6D422 /* NSArray+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Additions.m"; sourceTree = "<group>"; };
 		14D4248D1700255C0010657A /* sprite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sprite.png; sourceTree = "<group>"; };
@@ -289,10 +294,10 @@
 		142916D917848B6D00B128EA /* Timer */ = {
 			isa = PBXGroup;
 			children = (
-				142916DC17848BC200B128EA /* TimerControl.h */,
-				142916DD17848BC200B128EA /* TimerControl.m */,
-				142916DF17858A9F00B128EA /* ElasticNumericCounter.h */,
-				142916E017858A9F00B128EA /* ElasticNumericCounter.m */,
+				142916DC17848BC200B128EA /* ScoreControl.h */,
+				142916DD17848BC200B128EA /* ScoreControl.m */,
+				142916DF17858A9F00B128EA /* ElasticCounter.h */,
+				142916E017858A9F00B128EA /* ElasticCounter.m */,
 			);
 			path = Timer;
 			sourceTree = "<group>";
@@ -453,6 +458,9 @@
 		1445DC7716F97AD600EBBCCF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1470B08D1791B5F40009D5A4 /* icon.png */,
+				1470B08E1791B5F40009D5A4 /* icon@2X.png */,
+				1470B08F1791B5F40009D5A4 /* iTunesArtwork */,
 				144D9CE717042AF400F6EE15 /* Lato-Bol.ttf */,
 				14F11976170297E400721BEE /* Wordslist */,
 				14D4248D1700255C0010657A /* sprite.png */,
@@ -527,6 +535,7 @@
 		14817039171F0A2B0058FE43 /* TextureShader */ = {
 			isa = PBXGroup;
 			children = (
+				14BAF90E17907D0200FF8407 /* StringTextureShader.fsh */,
 				1481703E171F0A2B0058FE43 /* TextureShader.fsh */,
 				1481703F171F0A2B0058FE43 /* InstancedTextureShader.vsh */,
 			);
@@ -617,6 +626,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1402C31517832EBA00A5E054 /* PointSpritesShader.fsh in Resources */,
+				14BAF91017907E0200FF8407 /* StringTextureShader.fsh in Resources */,
 				1402C31617832EBA00A5E054 /* PointSpritesShader.vsh in Resources */,
 				1445DCA516F97AD700EBBCCF /* Default-568h@2x.png in Resources */,
 				1445DCA616F97AD700EBBCCF /* Default.png in Resources */,
@@ -637,6 +647,8 @@
 				14F1197C170297E400721BEE /* w5 in Resources */,
 				149E94E4177C945E00953092 /* tile.png in Resources */,
 				149E94E5177C945E00953092 /* tile@2X.png in Resources */,
+				1470B0941791C13A0009D5A4 /* icon@2X.png in Resources */,
+				1470B0951791C13F0009D5A4 /* icon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -658,6 +670,7 @@
 				141E4AB11738B22700A5F515 /* GCHelper.m in Sources */,
 				1445DC8816F97AD600EBBCCF /* GLElement.m in Sources */,
 				1445DC8916F97AD600EBBCCF /* OpenGLESView.m in Sources */,
+				141CA13717889A1C005C1D59 /* GLRendererManager.m in Sources */,
 				1445DC8A16F97AD600EBBCCF /* OpenGLViewController.m in Sources */,
 				1445DC8B16F97AD600EBBCCF /* Texture2D.m in Sources */,
 				1445DC8C16F97AD600EBBCCF /* TextureManager.m in Sources */,
@@ -676,17 +689,14 @@
 				1408EBCF1754429900462F62 /* Match.m in Sources */,
 				1408EBD01754429900462F62 /* Round.m in Sources */,
 				149D383C175883440067A122 /* UITouch+GLElement.m in Sources */,
-				1402C313178307FC00A5E054 /* PointSpritesShader.fsh in Sources */,
-				1402C314178307FC00A5E054 /* PointSpritesShader.vsh in Sources */,
 				142916CA1783AB9100B128EA /* GLActivityIndicator.m in Sources */,
 				142916CE1784724C00B128EA /* GameScene.m in Sources */,
 				142916D11784727200B128EA /* MainMenuScene.m in Sources */,
+				142916DE17848BC200B128EA /* ScoreControl.m in Sources */,
+				142916E117858A9F00B128EA /* ElasticCounter.m in Sources */,
 				14668F7317887DA800C67D32 /* GLRenderer.m in Sources */,
 				142916DA17848B6D00B128EA /* Tile.m in Sources */,
 				142916DB17848B6D00B128EA /* TileControl.m in Sources */,
-				141CA13717889A1C005C1D59 /* GLRendererManager.m in Sources */,
-				142916DE17848BC200B128EA /* TimerControl.m in Sources */,
-				142916E117858A9F00B128EA /* ElasticNumericCounter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -28,12 +28,35 @@ CGFloat getEaseOut(CGFloat start,CGFloat end,CGFloat ratio)
     return start - diff * (ratio) * (ratio - 2.0);
 }
 
+CGFloat getEaseInOut(CGFloat start,CGFloat end,CGFloat ratio,CGFloat duration)
+{
+    /*
+    function(t:Number, b:Number, c:Number, d:Number):Number {
+        var ts:Number=(t/=d)*t;
+        var tc:Number=ts*t;
+        return b+c*(-2*tc + 3*ts);
+    }
+     */
+    
+    CGFloat ts = ratio * ratio;
+    CGFloat tc = ts * ratio;
+    return start + (end - start) * (6*tc*ts + -15*ts*ts + 10*tc);
+}
+
 CGFloat getSineEaseOut(CGFloat start,CGFloat ratio,CGFloat maxAmplitude)
 {
     if (ratio >= 1.0 || ratio <=0.0)
         return start;
     CGFloat s = powf(2,-5*ratio) * sinf(2*PI*3*ratio);
    return  start + maxAmplitude * s;
+}
+
+CGFloat getSineEaseOutDamping(CGFloat start,CGFloat ratio,CGFloat maxAmplitude,CGFloat damping)
+{
+    if (ratio >= 1.0 || ratio <=0.0)
+        return start;
+    CGFloat s = powf(2,-damping*ratio) * sinf(2*PI*3*ratio);
+    return  start + maxAmplitude * s;
 }
 
 CGFloat getEaseOutBack(CGFloat start,CGFloat end,CGFloat ratio)

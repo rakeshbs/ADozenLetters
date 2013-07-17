@@ -23,18 +23,23 @@
         
         switch (shaderType) {
             case ShaderAttributeMatrixVertexColor:
+                _vertexDataSize = sizeof(InstancedVertexColorData);
                 [self setupMatrixVertexColorRenderer];
                 break;
             case ShaderAttributeMatrixVertexColorTexture:
+                _vertexDataSize = sizeof(InstancedTextureVertexColorData);
                 [self setupMatrixVertexColorTextureRenderer];
                 break;
             case ShaderAttributeVertexColor:
+                _vertexDataSize = sizeof(VertexColorData);
                 [self setupVertexColorRenderer];
                 break;
             case ShaderAttributeVertexColorTexture:
+                _vertexDataSize = sizeof(TextureVertexColorData);
                 [self setupVertexColorTextureRenderer];
                 break;
             case ShaderAttributeVertexColorPointSize:
+                _vertexDataSize = sizeof(PointVertexColorSizeData);
                 [self setupVertexColorPointSizeRenderer];
                 break;
             default:
@@ -138,7 +143,8 @@
 -(void)drawMatrixVertexColorTextureRendererWithVBO
 {
     glEnable(GL_TEXTURE_2D);
-        [self.texture bindTexture];
+    [self.texture bindTexture];
+    
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     
     glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 0);
@@ -174,6 +180,7 @@
 {
     glEnable(GL_TEXTURE_2D);
     [self.texture bindTexture];
+    
     InstancedTextureVertexColorData *data = (InstancedTextureVertexColorData *)vertexData;
     
     glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 0);
@@ -182,27 +189,27 @@
     glEnableVertexAttribArray(ATTRIB_MVPMATRIX + 3);
     
     glVertexAttribPointer(ATTRIB_MVPMATRIX + 0, 4, GL_FLOAT, 0,
-                          sizeof(InstancedTextureVertexColorData), &data[0].mvpMatrix[0]);
+                          sizeof(InstancedTextureVertexColorData), &data->mvpMatrix[0]);
     glVertexAttribPointer(ATTRIB_MVPMATRIX + 1, 4, GL_FLOAT, 0,
-                          sizeof(InstancedTextureVertexColorData), &data[0].mvpMatrix[4]);
+                          sizeof(InstancedTextureVertexColorData), &data->mvpMatrix[4]);
     glVertexAttribPointer(ATTRIB_MVPMATRIX + 2, 4, GL_FLOAT, 0,
-                          sizeof(InstancedTextureVertexColorData), &data[0].mvpMatrix[8]);
+                          sizeof(InstancedTextureVertexColorData), &data->mvpMatrix[8]);
     glVertexAttribPointer(ATTRIB_MVPMATRIX + 3, 4, GL_FLOAT, 0,
-                          sizeof(InstancedTextureVertexColorData), &data[0].mvpMatrix[12]);
+                          sizeof(InstancedTextureVertexColorData), &data->mvpMatrix[12]);
     
     
     glEnableVertexAttribArray(ATTRIB_TEXTURECOORD);
     glVertexAttribPointer(ATTRIB_TEXTURECOORD, 2, GL_FLOAT, GL_TRUE,  sizeof(InstancedTextureVertexColorData),
-                          &data[0].texCoord);
+                          &data->texCoord);
     
     
     glEnableVertexAttribArray(ATTRIB_VERTEX);
     glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(InstancedTextureVertexColorData),
-                          &data[0].vertex);
+                          &data->vertex);
     
     glEnableVertexAttribArray(ATTRIB_COLOR);
     glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(InstancedTextureVertexColorData),
-                          &data[0].color);
+                          &data->color);
     
     glDrawArrays(primitive, 0, dataCount);
     glDisable(GL_TEXTURE_2D);
@@ -283,7 +290,7 @@
 -(void)drawVertexColorTextureRendererWithVBO
 {
     glEnable(GL_TEXTURE_2D);
-        [self.texture bindTexture];
+    [self.texture bindTexture];
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     
     Matrix3D result;
@@ -313,7 +320,9 @@
 -(void)drawVertexColorTextureRendererWithArray
 {
     glEnable(GL_TEXTURE_2D);
-        [self.texture bindTexture];
+    
+    [self.texture bindTexture];
+
     TextureVertexColorData *data = (TextureVertexColorData *)vertexData;
     
     Matrix3D result;
@@ -367,14 +376,14 @@
     glUniformMatrix4fv(UNIFORM_MVPMATRIX, 1, GL_FALSE, result);
     
     glEnableVertexAttribArray(ATTRIB_VERTEX);
-    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(PointVertexColorSize),0);
+    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(PointVertexColorSizeData),0);
     
     glEnableVertexAttribArray(ATTRIB_COLOR);
-    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(PointVertexColorSize),
+    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(PointVertexColorSizeData),
                           (GLvoid*)sizeof(Vertex3D));
     
     glEnableVertexAttribArray(ATTRIB_POINTSIZE);
-    glVertexAttribPointer(ATTRIB_POINTSIZE, 1, GL_FLOAT, 0,  sizeof(PointVertexColorSize),
+    glVertexAttribPointer(ATTRIB_POINTSIZE, 1, GL_FLOAT, 0,  sizeof(PointVertexColorSizeData),
                           (GLvoid*)(sizeof(Vertex3D)+sizeof(Color4B)));
     
     glDrawArrays(primitive, 0, dataCount);
@@ -383,22 +392,22 @@
 
 -(void)drawVertexColorPointSizeRendererWithArray
 {
-    PointVertexColorSize *data = (PointVertexColorSize *)vertexData;
+    PointVertexColorSizeData *data = (PointVertexColorSizeData *)vertexData;
     
     Matrix3D result;
     [mvpMatrixManager getMVPMatrix:result];
     glUniformMatrix4fv(UNIFORM_MVPMATRIX, 1, GL_FALSE, result);
     
     glEnableVertexAttribArray(ATTRIB_VERTEX);
-    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(PointVertexColorSize),
+    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(PointVertexColorSizeData),
                           &data[0].vertex);
     
     glEnableVertexAttribArray(ATTRIB_COLOR);
-    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(PointVertexColorSize),
+    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(PointVertexColorSizeData),
                           &data[0].color);
     
     glEnableVertexAttribArray(ATTRIB_POINTSIZE);
-    glVertexAttribPointer(ATTRIB_POINTSIZE, 1, GL_FLOAT, 0,  sizeof(PointVertexColorSize),
+    glVertexAttribPointer(ATTRIB_POINTSIZE, 1, GL_FLOAT, 0,  sizeof(PointVertexColorSizeData),
                           &data[0].size);
     
     glDrawArrays(primitive, 0, dataCount);
@@ -409,7 +418,7 @@
 {
     vertexData = data;
     dataCount = count;
-    [program use];    
+    [program use];
     fnDrawArray(self,selDrawArray);
 }
 

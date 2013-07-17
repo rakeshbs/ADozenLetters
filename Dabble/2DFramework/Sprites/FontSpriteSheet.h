@@ -44,6 +44,7 @@ typedef enum
     
 
 }
+@property (nonatomic,readonly)  NSDictionary *fontSpriteDictionary;
 @property (nonatomic,retain) Texture2D *texture;
 @property (nonatomic,retain) NSString *fontName;
 @property (nonatomic) CGFloat fontSize;

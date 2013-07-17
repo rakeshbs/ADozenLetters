@@ -109,7 +109,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 			
 		}
 		glBindTexture(GL_TEXTURE_2D, saveName);
-	
+
 		_size = size;
 		_width = width;
 		_height = height;
@@ -118,6 +118,14 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 		_maxT = size.height / (float)height;
 	}					
 	return self;
+}
+
+-(void)generateMipMap
+{
+    [self bindTexture];
+    glGenerateMipmapOES(GL_TEXTURE_2D);
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
 - (void) dealloc
@@ -289,19 +297,12 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 		i *= 2;
 		height = i;
 	}
-    
-	colorSpace = CGColorSpaceCreateDeviceRGB();
-	data = calloc(height, width*4 );
-	context = CGBitmapContextCreateWithData(data, width, height, 8, width * 4 ,
-                                            colorSpace, kCGImageAlphaPremultipliedLast,nil,nil);
+	colorSpace = CGColorSpaceCreateDeviceGray();
+	data = calloc(height, width );
+	context = CGBitmapContextCreateWithData(data, width, height, 8, width ,
+                                            colorSpace, kCGImageAlphaNone,nil,nil);
 	CGColorSpaceRelease(colorSpace);
-	
-	
-	CGContextSetGrayFillColor(context, 1.0, 1.0);
-    CGContextTranslateCTM(context, 0.0, height);
-    CGContextScaleCTM(context, 1.0, -1.0); //NOTE: NSString draws in UIKit referential i.e. renders upside-down compared to CGBitmapContext referential
-	UIGraphicsPushContext(context);
-    
+	CGContextSetGrayFillColor(context, 1.0, 1.0);    
     
     CGSize fsize = [string sizeWithFont:font];
     CGFloat offsetY = 0;
@@ -315,7 +316,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	UIGraphicsPopContext();
     
 	
-	self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:width pixelsHigh:height contentSize:dimensions];
+	self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_A8 pixelsWide:width pixelsHigh:height contentSize:dimensions];
 	
 	CGContextRelease(context);
 	free(data);
@@ -385,17 +386,13 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 		height = i;
 	}
     
-    colorSpace = CGColorSpaceCreateDeviceRGB();
-	data = calloc(height, width*4 );
-	context = CGBitmapContextCreateWithData(data, width, height, 8, width * 4 ,
-                                            colorSpace, kCGImageAlphaPremultipliedLast,nil,nil);
-    CGContextClearRect(context, CGRectMake(0, 0, width, height));
-	CGColorSpaceRelease(colorSpace);
     
-   // CGContextSetFillColorWithColor(context, [[UIColor whiteColor]CGColor]);
-   // CGContextFillRect(context,  CGRectMake(0, 0, width, height));
-    CGContextSetFillColorWithColor(context, [[UIColor whiteColor]CGColor]);
-    CGContextSetAlpha(context, 1.0);
+	colorSpace = CGColorSpaceCreateDeviceGray();
+	data = calloc(height, width );
+	context = CGBitmapContextCreateWithData(data, width, height, 8, width ,
+                                            colorSpace, kCGImageAlphaNone,nil,nil);
+	CGColorSpaceRelease(colorSpace);
+	CGContextSetGrayFillColor(context, 1.0, 1.0);
     
     
     CGContextTranslateCTM(context, 0.0, height);
@@ -441,7 +438,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         
 
     }
-    
+   /*
     CGImageRef imageRef = CGBitmapContextCreateImage(context);
     UIImage* image = [[UIImage alloc] initWithCGImage:imageRef];
     
@@ -449,9 +446,9 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
     NSString *filePath = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%d.png",fontSpriteSheet.hash]]; //Add the file name
     [UIImagePNGRepresentation(image) writeToFile:filePath atomically:YES]; //Write the file
+    */
     
-    
-    self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_RGBA8888 pixelsWide:width pixelsHigh:height contentSize:CGSizeMake(totalWidth, totalHeight)];
+    self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_A8 pixelsWide:width pixelsHigh:height contentSize:CGSizeMake(totalWidth, totalHeight)];
 	
 	CGContextRelease(context);
 	free(data);

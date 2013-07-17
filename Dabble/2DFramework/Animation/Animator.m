@@ -33,6 +33,16 @@
         Animation *animation = queuedAnimations[i];
         if ([animation canAnimationBeStarted])
         {
+            for (int j = 0;j<currentAnimations.count;j++)
+            {
+                Animation *anim = currentAnimations[j];
+                if (anim.animatedObject == animation.animatedObject
+                    && anim.type == animation.type)
+                {
+                    [currentAnimations removeObject:anim];
+                    j--;
+                }
+            }
             [currentAnimations addObject:animation];
             [queuedAnimations removeObject:animation];
             
@@ -47,7 +57,7 @@
     for (int i =0;i<currentAnimations.count;i++)
     {
         Animation *animation = currentAnimations[i];
-        if ([animation.animatedObject animationUpdate:animation])
+        if ([animation.animatedObject animationUpdate:animation] || [animation getAnimatedRatio] >= 1.0)
         {
             [animation retain];
             [currentAnimations removeObject:animation];
@@ -177,40 +187,39 @@
         queuedAnimations = [[NSMutableArray alloc]init];
     }
     
-    Animation *animation = nil;
-    BOOL chk = NO;
+ //   Animation *animation = nil;
+   // BOOL chk = NO;
     
-    for (Animation *anim in currentAnimations)
+   /* if (delay == 0)
+    {
+        for (Animation *anim in currentAnimations)
+        {
+            if (anim.animatedObject == obj && anim.type == type && anim.animationData == nil)
+            {
+                chk = YES;
+                animation = anim;
+                anim.startTime = CFAbsoluteTimeGetCurrent();
+            }
+        }
+    }*/
+    
+ /*   for (Animation *anim in queuedAnimations)
     {
         if (anim.animatedObject == obj && anim.type == type && anim.animationData == nil)
         {
             chk = YES;
             animation = anim;
-            anim.startTime = CFAbsoluteTimeGetCurrent();
         }
-    }
+    }*/
     
-    for (Animation *anim in queuedAnimations)
-    {
-        if (anim.animatedObject == obj && anim.type == type && anim.animationData == nil)
-        {
-            chk = YES;
-            animation = anim;
-        }
-    }
-    
-    if (animation == nil)
-        animation = [[Animation alloc]init];
+    Animation *animation = [[Animation alloc]init];
     animation.animatedObject = obj;
     animation.type = type;
     animation.duration = duration;
     animation.queuedTime = CFAbsoluteTimeGetCurrent();
     animation.startDelay = delay;
-    if (!chk)
-    {
-        [queuedAnimations addObject:animation];
-        [animation release];
-    }
+    [queuedAnimations addObject:animation];
+    [animation release];
     
     return animation;
 }

@@ -42,8 +42,10 @@
     
     SEL selDrawVBO;
     SEL selDrawArray;
+    
 }
-@property (nonatomic,assign) Texture2D *texture;
+@property (nonatomic)  size_t vertexDataSize;
+@property (nonatomic,retain) Texture2D *texture;
 -(id)initWithVertexShader:(NSString *)vertexShaderName andFragmentShader:(NSString *)fragmentShaderName;
 -(void)drawWithArray:(void *)data andCount:(int)count;
 -(void)drawWithVBO:(GLuint)_vbo andCount:(int)count;

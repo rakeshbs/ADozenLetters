@@ -70,7 +70,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(GLShaderManager)
 
         [program addAttribute:@"vertex"];
         [program addAttribute:@"color"];
-                [program addAttribute:@"mvpmatrix"];
+        [program addAttribute:@"mvpmatrix"];
     }
     else if (attType == ShaderAttributeMatrixVertexColorTexture)
     {
@@ -78,7 +78,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(GLShaderManager)
         [program addAttribute:@"vertex"];
         [program addAttribute:@"textureColor"];
         [program addAttribute:@"textureCoordinate"];
-           [program addAttribute:@"mvpmatrix"];
+        [program addAttribute:@"mvpmatrix"];
     }
     else if (attType == ShaderAttributeVertexColorPointSize)
     {

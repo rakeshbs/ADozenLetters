@@ -113,6 +113,7 @@ These functions require GL_TEXTURE_2D and both GL_VERTEX_ARRAY and GL_TEXTURE_CO
 -(Vector3D *)getTextureVertices;
 -(TextureCoord *)getTextureCoordinates;
 -(void)bindTexture;
+-(void)generateMipMap;
 @end
 
 /*

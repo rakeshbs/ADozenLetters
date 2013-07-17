@@ -107,9 +107,10 @@
 
 -(void)dealloc
 {
-	[super dealloc];
+
 	[openGLViewController release];
 	[window release];
+    	[super dealloc];
 }
 
 

@@ -11,6 +11,7 @@
 #import "Dictionary.h"
 #import "GLShaderManager.h"
 
+
 #define TileControlStateHide 1
 #define TileControlStateShow 2
 
@@ -25,38 +26,34 @@
 {
     NSMutableArray *tilesArray;
     
-    
     InstancedVertexColorData *tileColorData;
     InstancedTextureVertexColorData *shadowTextureData;
     InstancedTextureVertexColorData *characterTextureData;
     InstancedTextureVertexColorData *scoreTextureData;
     InstancedTextureVertexColorData *tileTextureData;
     
-    
     FontSpriteSheet *characterSpriteSheet;
+    FontSpriteSheet *scaledCharacterSpriteSheet;
     FontSpriteSheet *scoreSpriteSheet;
     Texture2D *shadowTexture;
     Texture2D *tileTexture;
     
+    Vector3D tileVertices[6];
+    Vector3D transparentVertices[6];
+    Vector3D shadowVertices[6];
+    
     TextureCoord *shadowTexCoordinates;
     TextureCoord *tileTexCoordinates;
     
-    Vector3D tileVertices[6];
-    Vector3D shadowVertices[6];
-    
     Color4B tileColors[2][2];
     
+    GLRenderer *colorRenderer;
     GLRenderer *textureRenderer;
+    GLRenderer *stringTextureRenderer;
     
-    float *xMargins;
-    float yMargin;
     int shadowCount;
-    
-    int *scorePerRow;
-    char *rearrangedCharacters;
-    int numberOfRows;
-    int *numberOfLettersPerRow;
-    int lengthOfCharRow;
+    int characterDataCount;
+    int tileColorVerticesCount;
     
     NSMutableArray *generatedWords;
     
@@ -73,19 +70,19 @@
     SEL selector;
     
     int relativePosition;
-    
-    CGFloat scale;
+
+    CGPoint *thirteenLayout;
+    CGPoint *twelveLayout;
 }
 
 @property (nonatomic,readonly, getter=theNewWordsPerMove) NSMutableArray *newWordsPerMove;
 @property (nonatomic,readonly) NSMutableArray *usedWordsPerTurn;
 @property (nonatomic,readonly) NSMutableArray *wordsPerMove;
 @property (nonatomic,readonly)  NSMutableString *concatenatedWords;
-@property (nonatomic,readonly)     NSMutableArray *allowedWords;
+@property (nonatomic,retain)     NSMutableArray *allowedWords;
 
 -(Color4B)getColorForState:(int)state andColorIndex:(int)index;
--(void)createTiles:(NSString *)dataStr;
 -(void)addTarget:(NSObject *)_target andSelector:(SEL)_selector;
 -(void)showTiles;
--(void)hideTiles;
+-(void)rearrangeToTwelveLetters;
 @end

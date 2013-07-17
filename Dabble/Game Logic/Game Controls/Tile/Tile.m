@@ -21,6 +21,7 @@
 #define ANIMATION_SHOW_COLOR 6
 #define ANIMATION_HIDE_COLOR 7
 #define ANIMATION_THROW 8
+#define ANIMATION_MAKE_SHADOW_VISIBLE 9
 
 
 #define SHADOW_ALPHA_MAX 255
@@ -31,18 +32,18 @@
 
 #define NUMBEROFSCORES 7
 
-
-
 @implementation Tile
 
-@synthesize character,anchorPoint,colorIndex,isBonded,characterFontSprite,scoreTexture,shadowTexture;
+@synthesize character,anchorPoint,colorIndex,isBonded;//characterFontSprite,scoreTexture,shadowTexture;
 
-@synthesize currentTileColor,currentCharacterColor,shadowColor,wiggleAngle,score;
+@synthesize currentTileColor,currentCharacterColor,shadowColor,wiggleAngle,score,characterCounter;
 
 SoundManager *soundManager;
 
 int letterScores[NUMBEROFSCORES] = {1,2,3,4,5,7,9};
 NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY",@"K",@"JX",@"QZ"};
+NSString *fontStr =  @"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z";
+NSArray *charactersArray;
 
 -(CGRect)frame
 {
@@ -66,7 +67,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 }
 
 
--(id)initWithCharacter:(NSString *)_character
+-(id)init
 {
     if (self = [super init])
     {
@@ -74,29 +75,22 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         startAngle = 0;
         wiggleAngle = 0;
         shadowAlpha = 0;
-        self.character = _character;
-        shadowAnimationCount = 0;
         isBonded = 0;
         shadowVisible = NO;
+        charactersArray = [[fontStr componentsSeparatedByString:@","]retain];
+        characterCounter = [[ElasticCounter alloc]initWithFrame:CGRectMake(0, 0, tileSquareSize, tileSquareSize)];
+        [characterCounter setSequence:charactersArray];
         isBondedColor = NO;
-        
-        for (int i = 0;i<NUMBEROFSCORES;i++)
-        {
-            if ([lettersPerScore[i] rangeOfString:_character].location != NSNotFound)
-            {
-                
-                score = letterScores[i];
-                break;
-            }
-        }
-        
-        // [self setupSounds];
-        
     }
     
     return self;
 }
 
+-(void)setTileCharacter:(NSString *)_character
+{
+    self.character = _character;
+    [characterCounter setStringValueToCount:character inDuration:2];
+}
 
 -(void)setupSounds
 {
@@ -127,7 +121,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     }
     
     Color4fCopy(&characterColors , currentCharacterColor);
-    
+    characterCounter.color = *currentCharacterColor;
 }
 
 -(BOOL)animationUpdate:(Animation *)animation;
@@ -135,14 +129,21 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     CGFloat animationRatio = [animation getAnimatedRatio];
     if (animation.type == ANIMATION_MOVE)
     {
-        CGFloat newX = getEaseOut(startPoint.x, endPoint.x, animationRatio);
-        CGFloat newY = getEaseOut(startPoint.y, endPoint.y, animationRatio);
+        CGPoint *startValue = ((CGPoint *)[animation getStartValue]);
+        CGPoint *endValue = ((CGPoint *)[animation getEndValue]);
+        
+        CGFloat newX = getEaseOutBack(startValue->x, endValue->x, animationRatio);
+        CGFloat newY = getEaseOutBack(startValue->y, endValue->y, animationRatio);
+        
         _centerPoint = CGPointMake(newX, newY);
     }
     else if (animation.type == ANIMATION_THROW)
     {
-        CGFloat newX = getEaseInOutBack(startPoint.x, endPoint.x, animationRatio);
-        CGFloat newY = getEaseInOutBack(startPoint.y, endPoint.y, animationRatio);
+        CGPoint *startValue = ((CGPoint *)[animation getStartValue]);
+        CGPoint *endValue = ((CGPoint *)[animation getEndValue]);
+        
+        CGFloat newX = getEaseInOutBack(startValue->x, endValue->x, animationRatio);
+        CGFloat newY = getEaseInOutBack(startValue->y, endValue->y, animationRatio);
         _centerPoint = CGPointMake(newX, newY);
     }
     else if (animation.type == ANIMATION_SHOW_SHADOW)
@@ -185,6 +186,8 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         currentCharacterColor->blue = getEaseIn(startCharacterColor.blue, charColor.blue, animationRatio);
         currentCharacterColor->alpha = getEaseIn(startCharacterColor.alpha, charColor.alpha, animationRatio);
         
+        characterCounter.color = *currentCharacterColor;
+        
     }
     else if (animation.type == ANIMATION_HIDE_COLOR)
     {
@@ -207,6 +210,8 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         currentCharacterColor->blue = getEaseIn(startCharacterColor.blue, charColor.blue, animationRatio);
         currentCharacterColor->alpha = getEaseIn(startCharacterColor.alpha, charColor.alpha, animationRatio);
         
+                characterCounter.color = *currentCharacterColor;
+        
     }
     if (animationRatio >= 1.0)
         return YES;
@@ -221,8 +226,9 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         int countMove = [animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_MOVE];
         int countWiggle = [animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_WIGGLE];
         int countThrow = [animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_THROW];
+        int countShadow = [animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_MAKE_SHADOW_VISIBLE];
         
-        int totatCount = countMove+countWiggle+countThrow;
+        int totatCount = countMove+countWiggle+countThrow+countShadow;
         
         if (totatCount > 0 || touchesInElement.count > 0)
         {
@@ -234,8 +240,9 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         int countMove = [animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_MOVE];
         int countWiggle = [animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_WIGGLE];
         int countThrow = [animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_THROW];
+        int countShadow = [animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_MAKE_SHADOW_VISIBLE];
         
-        int totatCount = countMove+countWiggle+countThrow;
+        int totatCount = countMove+countWiggle+countThrow+countShadow;
         
         if (totatCount == 0 && touchesInElement.count == 0)
         {
@@ -310,11 +317,11 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         
         if (touch.tapCount >= 1)
         {
-            [self moveToPoint:CGPointMake(self.anchorPoint.x ,  self.anchorPoint.y) inDuration:0.2];
+            [self moveToPoint:CGPointMake(self.anchorPoint.x ,  self.anchorPoint.y) inDuration:0.3];
         }
         else
         {
-            [self moveToPoint:CGPointMake(self.anchorPoint.x ,  self.anchorPoint.y) inDuration:0.2];
+            [self moveToPoint:CGPointMake(self.anchorPoint.x ,  self.anchorPoint.y) inDuration:0.3];
         }
         [self updateShadow];
     }
@@ -353,7 +360,7 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
             {
                 [sq moveToFront];
                 [self moveToFront];
-                [sq moveToPoint:sq.anchorPoint inDuration:0.2];
+                [sq moveToPoint:sq.anchorPoint inDuration:0.3];
                 
             }
         }
@@ -365,15 +372,19 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 {
     if (!CGPointEqualToPoint(self.centerPoint, self.anchorPoint))
     {
-        [self moveToPoint:self.anchorPoint inDuration:0.2];
+        [self moveToPoint:self.anchorPoint inDuration:0.3];
     }
 }
 
 -(void)animationStarted:(Animation *)animation
 {
-    if (animation.type == ANIMATION_MOVE || animation.type == ANIMATION_WIGGLE || animation.type == ANIMATION_THROW)
+    if (animation.type == ANIMATION_MOVE || animation.type == ANIMATION_WIGGLE
+        || animation.type == ANIMATION_THROW ||animation.type == ANIMATION_MAKE_SHADOW_VISIBLE)
     {
-        shadowAnimationCount++;
+        if (animation.type == ANIMATION_THROW || animation.type == ANIMATION_MOVE)
+        {
+            [animation setStartValue:&_centerPoint OfSize:sizeof(CGPoint)];
+        }
         [self updateShadow];
     }
     else if (animation.type == ANIMATION_QUEUE_MOVE)
@@ -410,14 +421,15 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)animationEnded:(Animation *)animation
 {
-    if (animation.type == ANIMATION_MOVE || animation.type == ANIMATION_WIGGLE || animation.type == ANIMATION_THROW)
+    if (animation.type == ANIMATION_MOVE || animation.type == ANIMATION_WIGGLE ||
+        animation.type == ANIMATION_THROW ||animation.type == ANIMATION_MAKE_SHADOW_VISIBLE)
     {
         if (animation.type == ANIMATION_MOVE)
         {
             [[NSNotificationCenter defaultCenter]postNotificationName:@"TileFinishedMoving" object:nil];
             
         }
-        shadowAnimationCount--;
+        
         [self updateShadow];
     }
     else if (animation.type == ANIMATION_SHOW_COLOR)
@@ -432,6 +444,11 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
     }
 }
 
+-(void)showShadowFor:(CGFloat)duration afterDelay:(CGFloat)delay
+{
+    [animator addAnimationFor:self ofType:ANIMATION_MAKE_SHADOW_VISIBLE ofDuration:duration afterDelayInSeconds:delay];
+}
+
 -(void)wiggleFor:(CGFloat)duration
 {
     [animator addAnimationFor:self ofType:ANIMATION_WIGGLE ofDuration:duration afterDelayInSeconds:0];
@@ -444,9 +461,9 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         [[NSNotificationCenter defaultCenter]postNotificationName:@"TileBreakBond" object:self];
     }
     
-    startPoint = self.centerPoint;
-    endPoint = newPoint;
-    [animator addAnimationFor:self ofType:ANIMATION_MOVE ofDuration:duration afterDelayInSeconds:0];
+    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_MOVE ofDuration:duration afterDelayInSeconds:0];
+    [animation setStartValue:&_centerPoint OfSize:sizeof(CGPoint)];
+    [animation setEndValue:&newPoint OfSize:sizeof(CGPoint)];
 }
 
 -(void)moveToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay
@@ -457,25 +474,27 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
         [[NSNotificationCenter defaultCenter]postNotificationName:@"TileBreakBond" object:self];
     }
     
-    startPoint = self.centerPoint;
-    endPoint = newPoint;
-    [animator addAnimationFor:self ofType:ANIMATION_MOVE ofDuration:duration afterDelayInSeconds:delay];
+    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_MOVE ofDuration:duration afterDelayInSeconds:delay];
+    [animation setStartValue:&_centerPoint OfSize:sizeof(CGPoint)];
+    [animation setEndValue:&newPoint OfSize:sizeof(CGPoint)];
 }
 
 -(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration
 {
-    
-    startPoint = self.centerPoint;
-    endPoint = newPoint;
-    [animator addAnimationFor:self ofType:ANIMATION_THROW ofDuration:duration afterDelayInSeconds:0];
+ //   startPoint = self.centerPoint;
+   // endPoint = newPoint;
+    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_THROW
+                                          ofDuration:duration afterDelayInSeconds:0];
+    [animation setStartValue:&_centerPoint OfSize:sizeof(CGPoint)];
+    [animation setEndValue:&newPoint OfSize:sizeof(CGPoint)];
 }
 
 -(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration afterDelay:(CGFloat)delay
 {
-    startPoint = self.centerPoint;
-    endPoint = newPoint;
-    [animator addAnimationFor:self ofType:ANIMATION_THROW ofDuration:duration afterDelayInSeconds:delay];
-}
+    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_THROW
+                                          ofDuration:duration afterDelayInSeconds:delay];
+    [animation setStartValue:&_centerPoint OfSize:sizeof(CGPoint)];
+    [animation setEndValue:&newPoint OfSize:sizeof(CGPoint)];}
 
 -(void)animateShowColorInDuration:(CGFloat)duration
 {
@@ -526,12 +545,12 @@ NSString *lettersPerScore[NUMBEROFSCORES]= {@"AEIOULNRST",@"DG",@"BCMP",@"FHVWY"
 
 -(void)dealloc
 {
-    [super dealloc];
     free(shadowColor);
     free(currentCharacterColor);
     free(currentTileColor);
     free(startTileColors);
     self.tilesArray = nil;
+       [super dealloc];
 }
 
 @end

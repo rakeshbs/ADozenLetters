@@ -20,28 +20,27 @@
 
 @implementation GLElement
 
-@synthesize touchesInElement;
+@synthesize touchesInElement,originInsideElement,scaleInsideElement;
 
 @synthesize frame,numberOfLayers,tag,parent;
-@synthesize scaleInsideElement,originInsideElement;
 
 -(id)initWithFrame:(CGRect)_frame
 {
     if (self = [super init])
     {
-        parent = nil;
+        self.parent = nil;
+        scaleInsideElement = CGPointMake(1.0, 1.0);
+        originInsideElement = CGPointMake(0, 0);
         director = [GLDirector getSharedDirector];
         self.openGLView = director.openGLview;
         animator = [Animator getSharedAnimator];
         textureManager = [TextureManager getSharedTextureManager];
-        touchesInElement = [[NSMutableArray alloc]init];
         mvpMatrixManager = [MVPMatrixManager sharedMVPMatrixManager];
         shaderManager = [GLShaderManager sharedGLShaderManager];
         fontSpriteSheetManager = [FontSpriteSheetManager getSharedFontSpriteSheetManager];
         rendererManager = [GLRendererManager sharedGLRendererManager];
         self.frame = _frame;
-        self.scaleInsideElement = 1;
-        self.originInsideElement = CGPointMake(0,0);
+        touchesInElement = [[NSMutableArray alloc]init];
     }
     return self;
 }
@@ -50,7 +49,10 @@
 {
     if (self = [super init])
     {
-        parent = nil;
+        self.parent = nil;
+        scaleInsideElement = CGPointMake(1.0, 1.0);
+        originInsideElement = CGPointMake(0, 0);
+        
         director = [GLDirector getSharedDirector];
         self.openGLView = director.openGLview;
         animator = [Animator getSharedAnimator];
@@ -59,8 +61,6 @@
         mvpMatrixManager = [MVPMatrixManager sharedMVPMatrixManager];
         shaderManager = [GLShaderManager sharedGLShaderManager];
         fontSpriteSheetManager = [FontSpriteSheetManager getSharedFontSpriteSheetManager];
-        self.scaleInsideElement = 1;
-        self.originInsideElement = CGPointMake(0,0);
     }
     return self;
 }
@@ -75,13 +75,28 @@
     return YES;
 }
 
+-(CGPoint)absoluteScale
+{
+    if (self.parent == nil)
+        return CGPointMake(1.0, 1.0);
+    if (self.parent.parent == nil)
+        return self.parent.scaleInsideElement;
+    
+    CGPoint parentAbsoluteScale = parent.scaleInsideElement;
+    
+    CGPoint parentParentAbsoluteScale = parent.parent.absoluteScale;
+    
+    return CGPointMake(parentAbsoluteScale.x * parentParentAbsoluteScale.x,
+                       parentAbsoluteScale.y * parentParentAbsoluteScale.y);
+}
+
 -(CGRect)absoluteFrame
 {
     if (parent == nil)
         return self.frame;
     CGRect parentFrame = self.parent.absoluteFrame;
     CGRect eFrame = self.frame;
-    CGRect absFrame = CGRectMake(parentFrame.origin.x+eFrame.origin.x, parentFrame.origin.y+eFrame.origin.y, eFrame.size.width, eFrame.size.height);
+    CGRect absFrame = CGRectMake(parentFrame.origin.x+eFrame.origin.x+self.originInsideElement.x, parentFrame.origin.y+eFrame.origin.y + parent.originInsideElement.y, eFrame.size.width, eFrame.size.height);
     return absFrame;
 }
 
@@ -89,7 +104,6 @@
 {
     return 1;
 }
-
 
 -(void)draw{
     
@@ -99,32 +113,29 @@
 -(void)drawElement
 {
     [self update];
-    
-    [mvpMatrixManager translateInX:self.frame.origin.x
-                                 Y:self.frame.origin.y  Z:0];
 
+    [mvpMatrixManager translateInX:self.frame.origin.x Y:self.frame.origin.y Z:0];
     if (self.drawable)
         [self draw];
     [mvpMatrixManager translateInX:0 Y:0 Z:self.numberOfLayers];
-
-    [mvpMatrixManager pushModelViewMatrix];
     
+    [mvpMatrixManager pushModelViewMatrix];
     [mvpMatrixManager translateInX:self.frame.size.width/2 Y:self.frame.size.height/2 Z:0];
     
-    [mvpMatrixManager scaleByXScale:scaleInsideElement YScale:scaleInsideElement ZScale:1];
-   
-     [mvpMatrixManager translateInX:-self.frame.size.width/2 Y:-self.frame.size.height/2 Z:0];
+    [mvpMatrixManager scaleByXScale:scaleInsideElement.x  YScale:scaleInsideElement.y ZScale:1];
     
-    [mvpMatrixManager translateInX:originInsideElement.x
-                                   Y:originInsideElement.y Z:0];
+    [mvpMatrixManager translateInX:-self.frame.size.width/2 Y:-self.frame.size.height/2 Z:0];
     
+
+    [mvpMatrixManager translateInX:self.originInsideElement.x/scaleInsideElement.x
+                                 Y:self.originInsideElement.y/scaleInsideElement.y Z:0];
+
     for (GLElement *element in subElements)
     {
         if (!element.hidden)
             [element drawElement];
     }
     [mvpMatrixManager popModelViewMatrix];
-    
     [mvpMatrixManager translateInX:-self.frame.origin.x Y:-self.frame.origin.y Z:0];
 }
  
@@ -134,6 +145,7 @@
 }
 
 
+
 -(void)addElement:(GLElement *)e
 {
     if (subElements == nil)
@@ -141,6 +153,7 @@
     e.indexOfElement = subElements.count;
     e.parent = self;
     [subElements addObject:e];
+    [e addedToParent];
 }
 
 -(void)moveElementToFront:(GLElement *)e
@@ -174,6 +187,7 @@
 
 -(void)removeElement:(GLElement *)e
 {
+    [e willRemoveFromParent];
     [subElements removeObject:e];
     [self reindexSubElements];
 }
@@ -210,6 +224,27 @@
         index++;
     }
 }
+
+-(void)addedToParent
+{
+    
+}
+
+-(void)willRemoveFromParent
+{
+    
+}
+
+-(GLElement *)getElementByTag:(int)etag
+{
+    for (GLElement *e in subElements)
+    {
+        if (e.tag == etag)
+            return e;
+    }
+    return nil;
+}
+
 
 -(BOOL)touchBegan:(UITouch *)touch withEvent:(UIEvent *)event
 {
@@ -287,9 +322,11 @@
 
 -(void)dealloc
 {
-    [super dealloc];
     NSLog(@"deallocating element");
+    [subElements release];
+    [touchesInElement release];
     self.parent = nil;
     self.touchesInElement = nil;
+    [super dealloc];
 }
 @end

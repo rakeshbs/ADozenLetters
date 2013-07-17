@@ -19,7 +19,8 @@
 
 @interface Animation : NSObject
 {
-  
+    void *startValue;
+    void *endValue;
 }
 @property (nonatomic,retain) NSObject <AnimationDelegate> *animatedObject;
 
@@ -33,4 +34,11 @@
 
 -(CGFloat)getAnimatedRatio;
 -(BOOL)canAnimationBeStarted;
+
+-(void)setEndValue:(void *)startValue OfSize:(size_t)size;
+-(void)setStartValue:(void *)startValue OfSize:(size_t)size;
+
+-(void *)getStartValue;
+-(void *)getEndValue;
+
 @end

@@ -37,27 +37,30 @@
     FontSpriteSheetManager *fontSpriteSheetManager;
     GLRendererManager *rendererManager;
     
-    CGFloat scaleInsideElement;
+    CGPoint scaleInsideElement;
     CGPoint originInsideElement;
     
 }
 
-@property (nonatomic) CGFloat scaleInsideElement;
-@property (nonatomic) CGPoint originInsideElement;
+@property (nonatomic) BOOL hidden;
 @property (nonatomic) int tag;
 @property (nonatomic) int indexOfElement;
-@property (nonatomic)   CGRect frame;
 
+@property (nonatomic) CGRect frame;
+@property (nonatomic) CGPoint scaleInsideElement;
+@property (nonatomic) CGPoint originInsideElement;
 
+@property (nonatomic,readonly) CGPoint absoluteScale;
 @property (nonatomic,readonly) CGRect absoluteFrame;
 @property (nonatomic,readonly) int numberOfLayers;
 @property (nonatomic,readonly) BOOL touchable;
 @property (nonatomic,readonly) BOOL drawable;
-@property (nonatomic) BOOL hidden;
+
 
 @property (nonatomic,retain) GLElement *parent;
 @property (nonatomic,retain) OpenGLESView *openGLView;
 @property (nonatomic,retain) NSMutableArray *touchesInElement;
+
 
 
 -(void)drawElement;
@@ -77,4 +80,10 @@
 -(void)moveToFront;
 -(void)moveToBack;
 -(void)moveToIndex:(int)index;
+-(GLElement *)getElementByTag:(int)etag;
+
+-(void)addedToParent;
+-(void)willRemoveFromParent;
+
+
 @end

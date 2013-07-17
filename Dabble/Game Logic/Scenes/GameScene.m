@@ -9,7 +9,7 @@
 #import "GameScene.h"
 #import "Dictionary.h"
 #import "NSArray+Additions.h"
-#import "ElasticNumericCounter.h"
+#import "ElasticCounter.h"
 
 #define yOffset 75
 
@@ -18,6 +18,8 @@
 #define SCORE_PER_WORD 10
 #define SCORE_PER_TRIPLET 100
 
+#define ANIMATION_ZOOM_TILES 1
+#define ANIMATION_CENTER_TILES 2
 
 @interface GameScene (Private)
 @end
@@ -27,13 +29,14 @@
 Color4B whiteColor4B = (Color4B){.red = 255, .green = 255, .blue = 255, .alpha=255};
 Color4B blackColor4B = (Color4B){.red = 0, .green = 0, .blue = 0, .alpha=255};
 
-
+ScoreControl *scoreControl;
 Dictionary *dictionary;
 -(id)init
 {
     if (self = [super init])
     {
-        
+        self.scaleInsideElement = CGPointMake(0.4,0.4);
+        self.originInsideElement = CGPointMake(0,180);
         numberOfTripletsMade = 0;
         numberOfDoublesMade = 0;
         numberOfWordsMade = 0;
@@ -46,36 +49,61 @@ Dictionary *dictionary;
         remainingTime = totalTimePerGame;
         [self loadDictionary];
         
-        ElasticNumericCounter *counter = [[ElasticNumericCounter alloc]
-                                          initWithFrame:CGRectMake(135, 200, 50, 50)];
-        [counter setFont:@"Lato" withSize:50];
-        [counter setSequence:[NSMutableArray arrayWithObjects:@"0",@"1",@"2",@"3",@"4",@"5",@"6",
-                              @"7",@"8",@"9",nil]];
-        [self addElement:counter];
+        scoreControl = [[ScoreControl alloc]initWithFrame:CGRectMake(180, 400, 150, 60)];
+        [scoreControl setFont:@"Lato" withSize:40];
+        [self addElement:scoreControl];
+       
         
-        [counter setValueCountUp:1];
+     //   [self performSelector:@selector(set) withObject:nil afterDelay:2];
+    //    [scoreControl performSelector:@selector(stop) withObject:nil afterDelay:6];
+//               [self performSelector:@selector(set1) withObject:nil afterDelay:4.0];
+     
         
-        self.scaleInsideElement = 0.5;
-        
-        tileControl = [[TileControl alloc]initWithFrame:CGRectMake(0,0,self.frame.size.width,self.frame.size.height)];
+       tileControl = [[TileControl alloc]initWithFrame:CGRectMake(0,0,self.frame.size.width,self.frame.size.height)];
         [self addElement:tileControl];
         [tileControl addTarget:self andSelector:@selector(tileRearranged:)];
-        
-        [self performSelector:@selector(showActivityIndicator) withObject:nil afterDelay:0.1];
-        [self performSelector:@selector(showTiles) withObject:nil afterDelay:5];
-        
         [self performSelector:@selector(loadData) withObject:nil afterDelay:0.1];
 
-       
     }
     return  self;
 }
 
 
+-(BOOL)animationUpdate:(Animation *)animation
+{
+    CGFloat animationRatio = [animation getAnimatedRatio];
+    
+    if (animation.type == ANIMATION_ZOOM_TILES)
+    {
+        CGFloat s = getEaseInOut(0.3, 1, animationRatio,animation.duration);
+        self.scaleInsideElement = CGPointMake(s,s);
+        
+    }
+    else if (animation.type == ANIMATION_CENTER_TILES)
+    {
+        CGFloat y = getEaseInOut(startOriginPoint.y,0,animationRatio,animation.duration);
+        CGFloat x = getEaseInOut(startOriginPoint.x,0,animationRatio,animation.duration);
+        self.originInsideElement = CGPointMake(x, y);
+        
+    }
+    
+    if (animationRatio > 1.0)
+        return YES;
+    return NO;
+}
+
+-(void)animationStarted:(Animation *)animation
+{
+    startOriginPoint = self.originInsideElement;
+}
+
+-(void)animationEnded:(Animation *)animation
+{
+    
+}
 
 -(void)showTiles
 {
-    [self hideActivityIndicator];
     [tileControl showTiles];
 }
 
@@ -89,30 +117,63 @@ Dictionary *dictionary;
     if (eventData.scorePerMove == -1)
     {
         [self loadData];
-        [self performSelector:@selector(showTiles) withObject:nil afterDelay:5];
         return;
     }
     
-    currentRoundScore += eventData.scorePerMove * SCORE_PER_WORD;
+    for (NSString *data in tileControl.newWordsPerMove)
+    {
+        int score = 0;
+        switch (data.length) {
+            case 3:
+                score = 5;
+                break;
+            case 4:
+                score = 10;
+            default:
+            case 5:
+                score = 15;
+                break;
+        }
+        
+        currentRoundScore += score;
+    }
     
     if (eventData.concatenatedString.length == 12)
-        currentRoundScore += SCORE_PER_TRIPLET;
+    {
+         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(setScore) object:nil];
+        [tileControl performSelector:@selector(hideTiles) withObject:nil afterDelay:1.0];
+    }
     
+    [scoreControl setValue:currentRoundScore inDuration:0.3];
 }
 
 
 
 -(void)loadData
 {
-   
     currentRoundScore = 0;
-    [tileControl createTiles:[dictionary generateDozenLetters]];
-
+    //[tileControl createTiles:[dictionary generateDozenLetters]];
+   [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(setScore) object:nil];
     remainingTime = totalTimePerGame;
     lastUpdate = CFAbsoluteTimeGetCurrent();
     prevTimeLeft=totalTimePerGame;
     isTimerRunning = YES;
-    [self update];
+    currentRoundScore = 100;
+    [scoreControl setValue:currentRoundScore inDuration:0.3];
+    [self performSelector:@selector(setScore) withObject:nil afterDelay:1.0];
+    [self showTiles];
+}
+
+-(void)setScore
+{
+    currentRoundScore --;
+    [scoreControl setValue:currentRoundScore inDuration:0.3];
+    if (currentRoundScore <=0)
+    {
+        [tileControl rearrangeToTwelveLetters];
+        return;
+    }
+    [self performSelector:@selector(setScore) withObject:nil afterDelay:1.0];
 }
 
 
@@ -154,15 +215,20 @@ NSMutableArray *tilesArray;
 {
     if (touch.tapCount == 2)
     {
-        [tileControl hideTiles];
+        [tileControl rearrangeToTwelveLetters];
+        self.originInsideElement = CGPointMake(0,200);
+        [animator addAnimationFor:self ofType:ANIMATION_ZOOM_TILES ofDuration:0.9 afterDelayInSeconds:0];
+        [animator addAnimationFor:self ofType:ANIMATION_CENTER_TILES ofDuration:0.9 afterDelayInSeconds:0];
+
     }
     return YES;
 }
 
 -(void)dealloc
 {
-    [super dealloc];
+
     [tilesArray release];
+    [super dealloc];
 }
 
 

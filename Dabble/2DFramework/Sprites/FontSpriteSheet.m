@@ -58,19 +58,20 @@ static NSString *fontCharactersNumbers = @"0,1,2,3,4,5,6,7,8,9";
 
 -(void)dealloc
 {
-    [super dealloc];
+
     self.fontSpriteSheet = nil;
     self.key = nil;
     free(_textureRect);
     
     free(_textureCoordinates);
+    [super dealloc];
 }
 
 @end
 
 @implementation FontSpriteSheet
 
-@synthesize texture;
+@synthesize texture,fontSpriteDictionary;
 
 -(id)initWithType:(FontSpriteType)type andFontName:(NSString *)fontName andFontSize:(CGFloat)fontSize
 {
@@ -128,11 +129,11 @@ static NSString *fontCharactersNumbers = @"0,1,2,3,4,5,6,7,8,9";
 
 -(void)dealloc
 {
-    [super dealloc];
+
     [texture release];
     self.fontName = nil;
     self.fontColor = nil;
-
+    [super dealloc];
 }
 
 

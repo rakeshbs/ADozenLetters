@@ -11,9 +11,9 @@
 #import "NSArray+Additions.h"
 #import "GCHelper.h"
 #import "TileControl.h"
+#import "ScoreControl.h"
 
-
-@interface GameScene : GLScene
+@interface GameScene : GLScene <AnimationDelegate>
 {
     int numberOfWordsMade;
     int numberOfTripletsMade;
@@ -23,9 +23,9 @@
     NSMutableArray *madeDoubles;
     NSMutableArray *madeTriples;
 
-
     
     CGFloat remainingTime;
+    CGPoint startOriginPoint;
     int prevTimeLeft;
     CFTimeInterval lastUpdate;
     BOOL isTimerRunning;
@@ -33,7 +33,6 @@
     TileControl *tileControl;
     
     int currentRoundScore;
-    
     
 }
 @end

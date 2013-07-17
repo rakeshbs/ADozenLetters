@@ -26,7 +26,7 @@
     
     
     NSMutableArray *activityPoints;
-    PointVertexColorSize *pointsData;
+    PointVertexColorSizeData *pointsData;
     
     GLuint pointsVertexBuffer;
     
