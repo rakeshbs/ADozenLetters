@@ -89,6 +89,7 @@
     
     
     glDrawArrays(primitive, 0, dataCount);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 -(void)drawMatrixVertexColorRendererWithArray
@@ -249,6 +250,7 @@
                           (GLvoid*)sizeof(Vertex3D));
     
     glDrawArrays(primitive, 0, dataCount);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 -(void)drawVertexColorRendererWithArray
@@ -267,6 +269,7 @@
                           &data[0].color);
     
     glDrawArrays(primitive, 0, dataCount);
+    
 }
 
 -(void)setupVertexColorTextureRenderer
@@ -282,7 +285,7 @@
                                      methodForSelector:@selector(drawVertexColorTextureRendererWithVBO)];
     selDrawVBO = @selector(drawVertexColorTextureRendererWithVBO);
     
-    fnDrawArray  = (void (*)(id, SEL))[self methodForSelector:@selector(drawVertexColorRendererWithArray)];
+    fnDrawArray  = (void (*)(id, SEL))[self methodForSelector:@selector(drawVertexColorTextureRendererWithArray)];
     selDrawArray = @selector(drawVertexColorRendererWithArray);
     
 }
@@ -312,7 +315,7 @@
                           (GLvoid*)sizeof(Vertex3D)+sizeof(TextureCoord));
     
     glDrawArrays(primitive, 0, dataCount);
-    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glDisable(GL_TEXTURE_2D);
 
 }
@@ -332,16 +335,16 @@
     
     glEnableVertexAttribArray(ATTRIB_TEXTURECOORD);
     glVertexAttribPointer(ATTRIB_TEXTURECOORD, 2, GL_FLOAT, GL_TRUE,  sizeof(TextureVertexColorData),
-                          &data[0].texCoord);
+                          &data->texCoord);
     
     
     glEnableVertexAttribArray(ATTRIB_VERTEX);
     glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(TextureVertexColorData),
-                           &data[0].vertex);
+                           &data->vertex);
     
     glEnableVertexAttribArray(ATTRIB_COLOR);
     glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(TextureVertexColorData),
-                                &data[0].color);
+                                &data->color);
     
     glDrawArrays(primitive, 0, dataCount);
     
@@ -387,7 +390,7 @@
                           (GLvoid*)(sizeof(Vertex3D)+sizeof(Color4B)));
     
     glDrawArrays(primitive, 0, dataCount);
-    
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 -(void)drawVertexColorPointSizeRendererWithArray

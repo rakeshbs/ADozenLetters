@@ -21,6 +21,8 @@
     InstancedTextureVertexColorData *vertexData;
     int vertexDataCount;
     
+    VertexColorData *vertexColorData;
+    
     GLRenderer *textureRenderer;
     
     GLRenderer *colorRenderer;
@@ -33,8 +35,9 @@
     
 }
 
+
+-(void)setBackgroundColor:(Color4B)color;
 -(void)setFont:(NSString *)font withSize:(CGFloat)size;
--(void)setValue:(int)value;
 -(void)stop;
 -(void)setValue:(int)value inDuration:(CGFloat)time;
 

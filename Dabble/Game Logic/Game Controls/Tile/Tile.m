@@ -89,7 +89,7 @@ NSArray *charactersArray;
 -(void)setTileCharacter:(NSString *)_character
 {
     self.character = _character;
-    [characterCounter setStringValueToCount:character inDuration:2];
+    [characterCounter setStringValueToCount:character inDuration:1.5];
 }
 
 -(void)setupSounds

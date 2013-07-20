@@ -15,11 +15,17 @@
 
 #define totalTimePerGame 122
 
+#define TOP_BUTTONS_SIZE 75
+
 #define SCORE_PER_WORD 10
 #define SCORE_PER_TRIPLET 100
 
-#define ANIMATION_ZOOM_TILES 1
-#define ANIMATION_CENTER_TILES 2
+#define ANIMATION_ZOOM_IN 1
+#define ANIMATION_ZOOM_OUT 2
+
+#define SCENE_SCALE 0.4f
+#define SCENE_VERTICAL_OFFSET 180
+
 
 @interface GameScene (Private)
 @end
@@ -35,12 +41,13 @@ Dictionary *dictionary;
 {
     if (self = [super init])
     {
-        self.scaleInsideElement = CGPointMake(0.4,0.4);
-        self.originInsideElement = CGPointMake(0,180);
+                playButton.touchable = NO;
+        self.scaleInsideElement = CGPointMake(SCENE_SCALE,SCENE_SCALE);
+        self.originInsideElement = CGPointMake(0,SCENE_VERTICAL_OFFSET);
         numberOfTripletsMade = 0;
         numberOfDoublesMade = 0;
         numberOfWordsMade = 0;
-    
+        
         madeWords = [[NSMutableArray alloc]init];
         madeTriples = [[NSMutableArray alloc]init];
         madeDoubles = [[NSMutableArray alloc]init];
@@ -49,21 +56,28 @@ Dictionary *dictionary;
         remainingTime = totalTimePerGame;
         [self loadDictionary];
         
-        scoreControl = [[ScoreControl alloc]initWithFrame:CGRectMake(180, 400, 150, 60)];
-        [scoreControl setFont:@"Lato" withSize:40];
+        scoreControl = [[ScoreControl alloc]initWithFrame:CGRectMake(800, 480-TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE)];
+        [scoreControl setFont:@"Lato" withSize:30];
+        [scoreControl setBackgroundColor:(Color4B){.red = 255,.green = 255, .blue =255,.alpha = 85}];
         [self addElement:scoreControl];
-       
         
-     //   [self performSelector:@selector(set) withObject:nil afterDelay:2];
-    //    [scoreControl performSelector:@selector(stop) withObject:nil afterDelay:6];
-//               [self performSelector:@selector(set1) withObject:nil afterDelay:4.0];
-     
         
-       tileControl = [[TileControl alloc]initWithFrame:CGRectMake(0,0,self.frame.size.width,self.frame.size.height)];
+        tileControl = [[TileControl alloc]initWithFrame:CGRectMake(-120,0,self.frame.size.width+240,self.frame.size.height)];
         [self addElement:tileControl];
         [tileControl addTarget:self andSelector:@selector(tileRearranged:)];
-        [self performSelector:@selector(loadData) withObject:nil afterDelay:0.1];
-
+        [self performSelector:@selector(loadData) withObject:nil afterDelay:0];
+        [tileControl release];
+        
+        playButton = [[GLButton alloc]initWithFrame:CGRectMake(-200, -750, 720, 300)];
+        [playButton setText:@"play" withFont:@"Lato" andSize:120];
+        [playButton addTarget:self andSelector:@selector(playButtonClicked)];
+        [self addElement:playButton];
+        [playButton release];
+        
+        closeButton = [[CloseButton alloc]initWithFrame:CGRectMake(-800, 480-TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE)];
+        [self addElement:closeButton];
+        [closeButton release];
+        closeButton.delegate = self;
     }
     return  self;
 }
@@ -73,16 +87,37 @@ Dictionary *dictionary;
 {
     CGFloat animationRatio = [animation getAnimatedRatio];
     
-    if (animation.type == ANIMATION_ZOOM_TILES)
+    if (animation.type == ANIMATION_ZOOM_IN)
     {
-        CGFloat s = getEaseInOut(0.3, 1, animationRatio,animation.duration);
+        CGFloat s = getEaseInOut(SCENE_SCALE, 1, animationRatio,animation.duration);
         self.scaleInsideElement = CGPointMake(s,s);
+        CGFloat pos =  getEaseInOut(800, 320 - scoreControl.frame.size.width, animationRatio,animation.duration);
+        scoreControl.frame = CGRectMake(pos,scoreControl.frame.origin.y,
+                                        scoreControl.frame.size.width,scoreControl.frame.size.height);
+        
+        CGFloat pos1 =  getEaseInOut(-800,0, animationRatio,animation.duration);
+        closeButton.frame = CGRectMake(pos1,closeButton.frame.origin.y,
+                                        closeButton.frame.size.width,closeButton.frame.size.height);
+        
+        CGFloat y = getEaseInOut(SCENE_VERTICAL_OFFSET,0,animationRatio,animation.duration);
+        CGFloat x = self.originInsideElement.x;
+        self.originInsideElement = CGPointMake(x, y);
         
     }
-    else if (animation.type == ANIMATION_CENTER_TILES)
+    else if (animation.type == ANIMATION_ZOOM_OUT)
     {
-        CGFloat y = getEaseInOut(startOriginPoint.y,0,animationRatio,animation.duration);
-        CGFloat x = getEaseInOut(startOriginPoint.x,0,animationRatio,animation.duration);
+        CGFloat s = getEaseInOut(1, 0.4, animationRatio,animation.duration);
+        self.scaleInsideElement = CGPointMake(s,s);
+        CGFloat pos =  getEaseInOut(320 - scoreControl.frame.size.width, 800, animationRatio,animation.duration);
+        scoreControl.frame = CGRectMake(pos,scoreControl.frame.origin.y,
+                                        scoreControl.frame.size.width,scoreControl.frame.size.height);
+        
+        CGFloat pos1 =  getEaseInOut(0,-800, animationRatio,animation.duration);
+        closeButton.frame = CGRectMake(pos1,closeButton.frame.origin.y,
+                                       closeButton.frame.size.width,closeButton.frame.size.height);
+        
+        CGFloat y = getEaseInOut(0,SCENE_VERTICAL_OFFSET,animationRatio,animation.duration);
+        CGFloat x = self.originInsideElement.x;
         self.originInsideElement = CGPointMake(x, y);
         
     }
@@ -99,12 +134,16 @@ Dictionary *dictionary;
 
 -(void)animationEnded:(Animation *)animation
 {
-    
+    if (animation.type == ANIMATION_ZOOM_OUT)
+    {
+        [self showTiles];
+    }
 }
 
 -(void)showTiles
 {
     [tileControl showTiles];
+    [self performSelector:@selector(enablePlayButton) withObject:nil afterDelay:1.5];
 }
 
 -(void)loadDictionary
@@ -140,7 +179,7 @@ Dictionary *dictionary;
     
     if (eventData.concatenatedString.length == 12)
     {
-         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(setScore) object:nil];
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(setScore) object:nil];
         [tileControl performSelector:@selector(hideTiles) withObject:nil afterDelay:1.0];
     }
     
@@ -153,12 +192,12 @@ Dictionary *dictionary;
 {
     currentRoundScore = 0;
     //[tileControl createTiles:[dictionary generateDozenLetters]];
-   [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(setScore) object:nil];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(setScore) object:nil];
     remainingTime = totalTimePerGame;
     lastUpdate = CFAbsoluteTimeGetCurrent();
     prevTimeLeft=totalTimePerGame;
     isTimerRunning = YES;
-    currentRoundScore = 100;
+    currentRoundScore = 120;
     [scoreControl setValue:currentRoundScore inDuration:0.3];
     [self performSelector:@selector(setScore) withObject:nil afterDelay:1.0];
     [self showTiles];
@@ -170,7 +209,6 @@ Dictionary *dictionary;
     [scoreControl setValue:currentRoundScore inDuration:0.3];
     if (currentRoundScore <=0)
     {
-        [tileControl rearrangeToTwelveLetters];
         return;
     }
     [self performSelector:@selector(setScore) withObject:nil afterDelay:1.0];
@@ -195,7 +233,7 @@ Dictionary *dictionary;
 -(void)updateAnalytics
 {
     
-  
+    
 }
 
 NSMutableArray *tilesArray;
@@ -211,22 +249,40 @@ NSMutableArray *tilesArray;
     
 }
 
--(BOOL)touchBeganInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
+-(void)closeButtonClick:(int)event
 {
-    if (touch.tapCount == 2)
+    if (event == CLOSEBUTTON_CLICK_STARTED)
     {
-        [tileControl rearrangeToTwelveLetters];
-        self.originInsideElement = CGPointMake(0,200);
-        [animator addAnimationFor:self ofType:ANIMATION_ZOOM_TILES ofDuration:0.9 afterDelayInSeconds:0];
-        [animator addAnimationFor:self ofType:ANIMATION_CENTER_TILES ofDuration:0.9 afterDelayInSeconds:0];
-
+        [tileControl startHidingTiles];
     }
-    return YES;
+    else if (event == CLOSEBUTTON_CLICK_CANCELLED)
+    {
+        [tileControl cancelHidingTiles];
+    }
+    else if (event == CLOSEBUTTON_CLICK_FINISHED)
+    {
+        playButton.touchable = NO;
+        [tileControl hideTiles];
+         [animator addAnimationFor:self ofType:ANIMATION_ZOOM_OUT ofDuration:0.7 afterDelayInSeconds:0.0];
+    }
+}
+
+-(void)enablePlayButton
+{
+    playButton.touchable = YES;
+}
+
+-(void)playButtonClicked
+{
+    [tileControl rearrangeToTwelveLetters];
+    self.originInsideElement = CGPointMake(0,180);
+    [animator addAnimationFor:self ofType:ANIMATION_ZOOM_IN ofDuration:0.7 afterDelayInSeconds:0];
+    currentRoundScore = 121;
 }
 
 -(void)dealloc
 {
-
+    
     [tilesArray release];
     [super dealloc];
 }

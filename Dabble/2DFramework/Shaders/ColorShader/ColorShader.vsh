@@ -1,6 +1,8 @@
-attribute  mat4 mvpmatrix;
+
 attribute  vec4 vertex;
 attribute  vec4 color;
+
+uniform  mat4 mvpmatrix;
 
 varying lowp vec4 frag_color;
 

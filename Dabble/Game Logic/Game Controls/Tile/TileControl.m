@@ -17,12 +17,17 @@
 #define TOP_HIDDEN_POSITION 1000
 #define BOTTOM_HIDDEN_POSITION -1000
 
+#define MAX_VERTICAL_OFFSET -30
+
 #define SCORE_PER_WORD 10
 #define SCORE_PER_DOUBLE 100
 #define SCORE_PER_TRIPLET 500
 
 #define ANIMATION_HIDE_CONTROL 1
 #define ANIMATION_SHOW_CONTROL 2
+
+#define ANIMATION_MOVE_BACK 3
+#define ANIMATION_BOUNCE_BACK 4
 
 #define tileTextureSizeWithBorder 62.0f
 
@@ -80,12 +85,14 @@ static Texture2D *tileTextureImage = nil;
     [self setupGraphics];
     [self enableNotification];
     
+    
     _allowedWords = [[NSMutableArray alloc]init];
     [self calculateThirteenLayout];
     [self calculateTwelveLayout];
     
     [self createTiles];
     
+//   [animator addAnimationFor:self ofType:ANIMATION_SHOW_CONTROL ofDuration:4 afterDelayInSeconds:4];
 }
 
 -(BOOL)touchable
@@ -121,9 +128,10 @@ static Texture2D *tileTextureImage = nil;
     [characterSpriteSheet.texture generateMipMap];
     
     shadowTexture = [textureManager getTexture:@"shadow" OfType:@"png"];
+    [shadowTexture generateMipMap];
     
     tileTextureImage = [textureManager getTexture:@"tile" OfType:@"png"];
-    
+    [tileTextureImage generateMipMap];    
     
     shadowTexCoordinates = [shadowTexture getTextureCoordinates];
     tileTexCoordinates = [tileTextureImage getTextureCoordinates];
@@ -244,18 +252,13 @@ static Texture2D *tileTextureImage = nil;
         
         Tile *tile = [[Tile alloc]init];
         
-        CGPoint anchorPoint = thirteenLayout[j];
-        
-        tile.centerPoint = CGPointMake(anchorPoint.x, 1000);
-        tile.anchorPoint = anchorPoint;
         tile.tag = j;
-        
         tile.colorIndex = j%2;
         tile.characterCounter.fontSpriteSheet = characterSpriteSheet;
         [tile setTileCharacter:character];
         [tilesArray addObject:tile];
         [self addElement:tile];
-        tile.tilesArray = tilesArray;
+        //tile.tilesArray = tilesArray;
         
         [tile setupColors];
         [tile release];
@@ -266,20 +269,37 @@ static Texture2D *tileTextureImage = nil;
 -(void)showTiles
 {
     CGFloat delay = 0.0;
+    self.originInsideElement = CGPointMake(0,0);
+    
     for (Tile *tile in [tilesArray reverseObjectEnumerator])
     {
+        CGPoint anchorPoint = thirteenLayout[tile.tag];
+        tile.centerPoint = CGPointMake(anchorPoint.x, 1000);
+        tile.anchorPoint = anchorPoint;
+        
         if (tile.tag == 0)
         {
-            tile.centerPoint = CGPointMake(tile.centerPoint.x, 1000);
-            [tile moveToPoint:tile.anchorPoint inDuration:0.3 afterDelay:2.5];
+            [tile moveToPoint:tile.anchorPoint inDuration:0.3 afterDelay:1.7];
             continue;
         }
         [tile throwToPoint:tile.anchorPoint inDuration:0.3 afterDelay:delay];
         [tile moveToBack];
-        delay += 0.1;
+        delay += 0.08;
     }
 }
 
+-(void)hideTiles
+{
+    CGFloat delay = 0.0;
+    for (Tile *tile in [tilesArray reverseObjectEnumerator])
+    {
+        tile.anchorPoint = CGPointMake(tile.anchorPoint.x, 1000);
+        [tile moveToPoint:tile.anchorPoint inDuration:0.8 afterDelay:delay];
+        [tile moveToBack];
+        delay += 0.05;
+    }
+
+}
 
 -(void)rearrangeToTwelveLetters
 {
@@ -292,23 +312,27 @@ static Texture2D *tileTextureImage = nil;
     Tile *n = (Tile *)[self getElementByTag:5];
     
     Tile *l = (Tile *)[self getElementByTag:6];
+    Tile *e2 = (Tile *)[self getElementByTag:7];
+    Tile *t2 = (Tile *)[self getElementByTag:8];
     Tile *t = (Tile *)[self getElementByTag:9];
+    Tile *e3 = (Tile *)[self getElementByTag:10];
+    Tile *r = (Tile *)[self getElementByTag:11];
     Tile *s = (Tile *)[self getElementByTag:12];
     
     
-    t.anchorPoint = thirteenLayout[9];
+    t.anchorPoint = thirteenLayout[3];
     z.anchorPoint = twelveLayout[2];
     a.anchorPoint = twelveLayout[0];
-    [t throwToPoint:z.anchorPoint inDuration:0.3 afterDelay:0];
+    [t throwToPoint:t.anchorPoint inDuration:0.3 afterDelay:0];
     [z throwToPoint:z.anchorPoint inDuration:0.3 afterDelay:0.05];
-    [a moveToPoint:a.anchorPoint inDuration:3 afterDelay:0.1];
+    [a throwToPoint:a.anchorPoint inDuration:0.3 afterDelay:0.1];
     
+    t.anchorPoint = thirteenLayout[9];
     [t throwToPoint:t.anchorPoint inDuration:0.3 afterDelay:0.2];
     
     
-    [l throwToPoint:d.anchorPoint inDuration:0.3 afterDelay:0.1];
-    [l wiggleFor:10];
-    [s throwToPoint:n.anchorPoint inDuration:0.3 afterDelay:0.1];
+    [l throwToPoint:thirteenLayout[1] inDuration:0.3 afterDelay:0.1];
+    [s throwToPoint:thirteenLayout[5] inDuration:0.3 afterDelay:0.1];
     
     d.anchorPoint = twelveLayout[1];
     n.anchorPoint = twelveLayout[3];
@@ -319,10 +343,22 @@ static Texture2D *tileTextureImage = nil;
     s.anchorPoint = twelveLayout[7];
     o.anchorPoint = twelveLayout[5];
     e.anchorPoint = twelveLayout[6];
+    
     [l throwToPoint:l.anchorPoint inDuration:0.3 afterDelay:0.3];
     [s throwToPoint:s.anchorPoint inDuration:0.3 afterDelay:0.3];
     [o throwToPoint:o.anchorPoint inDuration:0.3 afterDelay:0.3];
     [e throwToPoint:e.anchorPoint inDuration:0.3 afterDelay:0.3];
+    
+    e2.anchorPoint = thirteenLayout[7];
+    e3.anchorPoint = thirteenLayout[8];
+    t2.anchorPoint = thirteenLayout[10];
+    r.anchorPoint = thirteenLayout[11];
+    
+    [e2 throwToPoint:e2.anchorPoint inDuration:0.3 afterDelay:0.3];
+    [e3 throwToPoint:e3.anchorPoint inDuration:0.3 afterDelay:0.3];
+    [t2 throwToPoint:t2.anchorPoint inDuration:0.3 afterDelay:0.3];
+    [r throwToPoint:r.anchorPoint inDuration:0.3 afterDelay:0.3];
+    
     
   //  for (Tile *t in tilesArray)
     //    [t showShadowFor:10 afterDelay:0];
@@ -470,11 +506,22 @@ static Texture2D *tileTextureImage = nil;
     
     if (animation.type == ANIMATION_SHOW_CONTROL)
     {
-        
+        CGFloat s = getEaseOut(1.0, 2.0, animationRatio);
+        self.scaleInsideElement = CGPointMake(s,s);
     }
     else if (animation.type == ANIMATION_HIDE_CONTROL)
     {
         
+    }
+    else if (animation.type == ANIMATION_MOVE_BACK)
+    {
+        CGFloat *val = [animation getStartValue];
+        self.originInsideElement = CGPointMake(0,getEaseIn(*val, MAX_VERTICAL_OFFSET, animationRatio));
+    }
+    else if (animation.type == ANIMATION_BOUNCE_BACK)
+    {
+        CGFloat *val = [animation getStartValue];
+        self.originInsideElement = CGPointMake(0,getEaseOutElastic(*val,0, animationRatio,animation.duration));
     }
     
     
@@ -511,9 +558,26 @@ static Texture2D *tileTextureImage = nil;
     }
 }
 
+-(void)startHidingTiles
+{
+    [animator removeRunningAnimationsForObject:self ofType:ANIMATION_BOUNCE_BACK];
+    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_MOVE_BACK ofDuration:1.0 afterDelayInSeconds:0];
+    [animation setStartValue:&originInsideElement.y OfSize:sizeof(CGFloat)];
+    
+}
+
+-(void)cancelHidingTiles
+{
+    [animator removeRunningAnimationsForObject:self ofType:ANIMATION_MOVE_BACK];
+    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_BOUNCE_BACK ofDuration:1.0 afterDelayInSeconds:0];
+    [animation setStartValue:&originInsideElement.y OfSize:sizeof(CGFloat)];
+    
+}
 
 
--(void)draw
+
+
+-(void)drawBatchedElements
 {
     characterDataCount = 0;
     shadowCount = 0;
@@ -596,6 +660,8 @@ static Texture2D *tileTextureImage = nil;
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     
 }
+
+
 
 -(void)dealloc
 {

@@ -7,13 +7,15 @@
 //
 
 #import "GLScene.h"
+#import "GLButton.h"
 #import "Tile.h"
 #import "NSArray+Additions.h"
 #import "GCHelper.h"
 #import "TileControl.h"
+#import "CloseButton.h"
 #import "ScoreControl.h"
 
-@interface GameScene : GLScene <AnimationDelegate>
+@interface GameScene : GLScene <AnimationDelegate,CloseButtonDelegate>
 {
     int numberOfWordsMade;
     int numberOfTripletsMade;
@@ -32,7 +34,10 @@
     
     TileControl *tileControl;
     
+    GLButton *playButton;
+    
     int currentRoundScore;
+    CloseButton *closeButton;
     
 }
 @end

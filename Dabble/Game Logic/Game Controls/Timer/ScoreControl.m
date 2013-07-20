@@ -8,7 +8,7 @@
 
 #import "ScoreControl.h"
 
-#define marginX 0
+#define marginX 9
 #define marginY 0
 
 
@@ -22,7 +22,7 @@
         
         textureRenderer = [rendererManager getRendererWithVertexShaderName:@"InstancedTextureShader" andFragmentShaderName:@"StringTextureShader"];
         
-        colorRenderer = [rendererManager getRendererWithVertexShaderName:@"InstancedColorShader" andFragmentShaderName:@"ColorShader"];
+        colorRenderer = [rendererManager getRendererWithVertexShaderName:@"ColorShader" andFragmentShaderName:@"ColorShader"];
         
         glGenBuffers(1, &colorBuffer);
         
@@ -32,6 +32,20 @@
         numberArray = [[fontStr componentsSeparatedByString:@","]retain];
         _color = (Color4B){.red = 255,.green = 255,.blue = 255, .alpha = 255};
         
+        vertexColorData = malloc(sizeof(VertexColorData) * 6);
+        vertexColorData[0].vertex = (Vertex3D){.x = 0, .y = 0, .z = 0};
+        vertexColorData[1].vertex = (Vertex3D){.x = frame.size.width, .y = 0, .z = 0};
+        vertexColorData[2].vertex = (Vertex3D){.x = frame.size.width, .y = frame.size.height, .z = 0};
+        vertexColorData[3].vertex = (Vertex3D){.x = 0, .y = 0, .z = 0};
+        vertexColorData[4].vertex = (Vertex3D){.x = 0, .y = frame.size.height, .z = 0};
+        vertexColorData[5].vertex = (Vertex3D){.x = frame.size.width, .y = frame.size.height, .z = 0};
+        for (int i = 0;i<6;i++)
+        {
+            vertexColorData[i].color = (Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 0};
+        }
+        
+        glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(VertexColorData) * 6, vertexColorData,GL_STATIC_DRAW);
     }
     return self;
 }
@@ -41,7 +55,18 @@
     timeLeft = time;
 }
 
--(void)setColor:(Color4B)color
+
+-(void)setBackgroundColor:(Color4B)color
+{
+    for (int i = 0;i<6;i++)
+    {
+        vertexColorData[i].color = color;
+    }
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(VertexColorData) * 6, vertexColorData,GL_STATIC_DRAW);
+}
+
+-(void)setTextColor:(Color4B)color
 {
     _color = color;
     for (ElasticCounter *counter in counterControls)
@@ -134,7 +159,7 @@
                     if (i != 0)
                     {
                         if (v == 0 && previousHidden)
-                            [counter hideInDuration:time + offsetTime * ind];
+                            [counter hideInDuration:1];
                         else
                             previousHidden = NO;
                     }
@@ -164,7 +189,7 @@
     for (FontSprite *f in fontSpriteSheet.fontSpriteDictionary.objectEnumerator)
         maxWidth = (maxWidth < f.width)?f.width:maxWidth;
     
-    maxWidth += 2;
+    maxWidth /=2;
     
     int num = floorf(((self.frame.size.width - marginX*2)/maxWidth));
     vertexData = malloc(sizeof(InstancedTextureVertexColorData) * num * 6 * 4);
@@ -172,7 +197,7 @@
     for (int i = 0;i<num;i++)
     {
          counter = [[ElasticCounter alloc]
-                                   initWithFrame:CGRectMake(marginX + (i * maxWidth/2), marginY, maxWidth,
+                                   initWithFrame:CGRectMake(frame.size.width - (marginX + ((num - i) * maxWidth)), marginY, maxWidth,
                                                             self.frame.size.height - 2 * marginY)];
         counter.fontSpriteSheet = fontSpriteSheet;
         [counter setSequence:numberArray];
@@ -186,6 +211,7 @@
 
 -(void)draw
 {  
+    [colorRenderer drawWithVBO:colorBuffer andCount:6];
     int count = 0;
     for (ElasticCounter *counter in counterControls)
     {

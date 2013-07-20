@@ -53,7 +53,7 @@
 @property (nonatomic,readonly) CGPoint absoluteScale;
 @property (nonatomic,readonly) CGRect absoluteFrame;
 @property (nonatomic,readonly) int numberOfLayers;
-@property (nonatomic,readonly) BOOL touchable;
+@property (nonatomic,assign) BOOL touchable;
 @property (nonatomic,readonly) BOOL drawable;
 
 

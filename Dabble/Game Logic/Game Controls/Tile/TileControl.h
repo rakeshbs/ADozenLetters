@@ -16,6 +16,7 @@
 #define TileControlStateShow 2
 
 
+
 @interface TileControlEventData : NSObject
 @property (nonatomic,retain) NSMutableString *concatenatedString;
 @property (nonatomic) int scorePerMove;
@@ -73,6 +74,7 @@
 
     CGPoint *thirteenLayout;
     CGPoint *twelveLayout;
+    
 }
 
 @property (nonatomic,readonly, getter=theNewWordsPerMove) NSMutableArray *newWordsPerMove;
@@ -85,4 +87,7 @@
 -(void)addTarget:(NSObject *)_target andSelector:(SEL)_selector;
 -(void)showTiles;
 -(void)rearrangeToTwelveLetters;
+-(void)startHidingTiles;
+-(void)cancelHidingTiles;
+-(void)hideTiles;
 @end

@@ -44,7 +44,7 @@ typedef void (*GLLogFunction) (GLuint program,
                             file:vertShaderPathname])
             NSLog(@"Failed to compile vertex shader %@",vShaderFilename);
         else
-            NSLog(@"Vertex Shader compile Successful %@",fShaderFilename);
+            NSLog(@"Vertex Shader compile Successful %@",vShaderFilename);
         
         fragShaderPathname = [[NSBundle mainBundle] 
                               pathForResource:fShaderFilename 
@@ -52,9 +52,9 @@ typedef void (*GLLogFunction) (GLuint program,
         if (![self compileShader:&fragShader 
                             type:GL_FRAGMENT_SHADER 
                             file:fragShaderPathname])
-            NSLog(@"Failed to compile fragment shader");
+            NSLog(@"Failed to compile fragment shader %@",fShaderFilename);
         else
-            NSLog(@"Fragment Shader compile Successful");
+            NSLog(@"Fragment Shader compile Successful %@",fShaderFilename);
 
         
         glAttachShader(program, vertShader);

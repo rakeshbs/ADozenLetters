@@ -94,7 +94,7 @@
 
 -(void)hideInDuration:(CGFloat)t
 {
-    [animator addAnimationFor:self ofType:ANIMATION_HIDE ofDuration:0.05 afterDelayInSeconds:t-0.1];
+    [animator addAnimationFor:self ofType:ANIMATION_HIDE ofDuration:t afterDelayInSeconds:0];
 }
 
 -(void)setSequence:(NSMutableArray *)_sequence

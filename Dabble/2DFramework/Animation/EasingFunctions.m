@@ -126,8 +126,8 @@ CGFloat getEaseOutElastic(CGFloat start,CGFloat end,CGFloat ratio,CGFloat durati
     
     if (!a || a < fabs(c))
     {
-        a = c/10;
-        s = p /4;
+        a = c/2;
+        s = p /20;
     }
     else
     {

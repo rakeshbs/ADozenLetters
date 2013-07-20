@@ -16,10 +16,16 @@
     CGPoint locationInView = [self locationInView:element.openGLView];
     CGPoint locationInOpenGLView = CGPointMake(locationInView.x,
                                                element.openGLView.frame.size.height - locationInView.y);
-    
-    CGRect frame = element.absoluteFrame;
-    
-    return CGPointMake(locationInOpenGLView.x - frame.origin.x,
+        CGRect frame = element.absoluteFrame;
+
+    CGPoint loc = CGPointMake(locationInOpenGLView.x - frame.origin.x,
                        locationInOpenGLView.y - frame.origin.y);
+    
+/*NSLog(@"%@",NSStringFromClass(element.class));
+    NSLog(@"frame %@",NSStringFromCGRect(frame));
+    NSLog(@"touch location %@",NSStringFromCGPoint(locationInOpenGLView));
+    NSLog(@"relative location %@",NSStringFromCGPoint(loc));
+  */  
+    return loc;
 }
 @end

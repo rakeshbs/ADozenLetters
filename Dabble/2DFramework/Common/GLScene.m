@@ -23,7 +23,7 @@ static GLActivityIndicator *activityIndicator;
                 activityIndicator = [[GLActivityIndicator alloc]init];
             }
         }
-        [self addElement:activityIndicator];
+//        [self addElement:activityIndicator];
 	}
 	return self;
 }

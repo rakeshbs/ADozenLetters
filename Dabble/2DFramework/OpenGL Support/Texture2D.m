@@ -297,12 +297,20 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 		i *= 2;
 		height = i;
 	}
+    
 	colorSpace = CGColorSpaceCreateDeviceGray();
 	data = calloc(height, width );
 	context = CGBitmapContextCreateWithData(data, width, height, 8, width ,
                                             colorSpace, kCGImageAlphaNone,nil,nil);
 	CGColorSpaceRelease(colorSpace);
 	CGContextSetGrayFillColor(context, 1.0, 1.0);    
+    
+    CGContextTranslateCTM(context, 0.0, height);
+    
+    CGContextScaleCTM(context, 1.0, -1.0);
+
+    
+    UIGraphicsPushContext(context);
     
     CGSize fsize = [string sizeWithFont:font];
     CGFloat offsetY = 0;
@@ -318,6 +326,17 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	
 	self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_A8 pixelsWide:width pixelsHigh:height contentSize:dimensions];
 	
+    
+    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    UIImage* image = [[UIImage alloc] initWithCGImage:imageRef];
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
+    NSString *filePath = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%d.png",self.hash]]; //Add the file name
+    [UIImagePNGRepresentation(image) writeToFile:filePath atomically:YES]; //Write the file
+    
+
+    
 	CGContextRelease(context);
 	free(data);
 	
@@ -397,7 +416,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     
     CGContextTranslateCTM(context, 0.0, height);
     
-    CGContextScaleCTM(context, 1.0, -1.0); 
+    CGContextScaleCTM(context, 1.0, -1.0);
 
     lineHeight = 0,lineWidth = 0,totalHeight = 0,totalWidth = 0,col = 0;
     
@@ -438,7 +457,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         
 
     }
-   /*
+   
     CGImageRef imageRef = CGBitmapContextCreateImage(context);
     UIImage* image = [[UIImage alloc] initWithCGImage:imageRef];
     
@@ -446,8 +465,8 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
     NSString *filePath = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%d.png",fontSpriteSheet.hash]]; //Add the file name
     [UIImagePNGRepresentation(image) writeToFile:filePath atomically:YES]; //Write the file
-    */
     
+
     self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_A8 pixelsWide:width pixelsHigh:height contentSize:CGSizeMake(totalWidth, totalHeight)];
 	
 	CGContextRelease(context);
@@ -502,6 +521,22 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         textureCoordinates[5] = (TextureCoord) { .s = _maxS, .t = 0};
     }
     return textureCoordinates;
+}
+
+-(CGRect)getTextureCGRect
+{
+    
+    GLfloat	width = (GLfloat)_width * _maxS,
+    height = (GLfloat)_height * _maxT;
+    
+    CGFloat scale = [[UIScreen mainScreen]scale];
+    
+    return CGRectMake(-width / (2*scale), -height/(2*scale), width/scale, height/scale);
+}
+
+-(CGRect)getTextureCoordinatesCGRect
+{
+    return CGRectMake(0, 0, _maxS, _maxT);
 }
 
 -(void)bindTexture

@@ -31,6 +31,7 @@
         self.parent = nil;
         scaleInsideElement = CGPointMake(1.0, 1.0);
         originInsideElement = CGPointMake(0, 0);
+                self.touchable = YES;
         director = [GLDirector getSharedDirector];
         self.openGLView = director.openGLview;
         animator = [Animator getSharedAnimator];
@@ -52,7 +53,7 @@
         self.parent = nil;
         scaleInsideElement = CGPointMake(1.0, 1.0);
         originInsideElement = CGPointMake(0, 0);
-        
+        self.touchable = YES;
         director = [GLDirector getSharedDirector];
         self.openGLView = director.openGLview;
         animator = [Animator getSharedAnimator];
@@ -70,34 +71,61 @@
     return YES;
 }
 
--(BOOL)touchable
-{
-    return YES;
-}
 
 -(CGPoint)absoluteScale
 {
-    if (self.parent == nil)
-        return CGPointMake(1.0, 1.0);
-    if (self.parent.parent == nil)
-        return self.parent.scaleInsideElement;
-    
-    CGPoint parentAbsoluteScale = parent.scaleInsideElement;
-    
-    CGPoint parentParentAbsoluteScale = parent.parent.absoluteScale;
-    
-    return CGPointMake(parentAbsoluteScale.x * parentParentAbsoluteScale.x,
-                       parentAbsoluteScale.y * parentParentAbsoluteScale.y);
+    CGPoint _absoluteScale = CGPointMake(1.0,1.0);
+       GLElement *cparent = self.parent;
+    while (cparent != nil)
+    {
+        _absoluteScale = CGPointMake(cparent.scaleInsideElement.x * _absoluteScale.x,
+                                    cparent.scaleInsideElement.y * _absoluteScale.y);
+    }
+    return _absoluteScale;
 }
+
 
 -(CGRect)absoluteFrame
 {
-    if (parent == nil)
+    if (self.parent == nil)
         return self.frame;
-    CGRect parentFrame = self.parent.absoluteFrame;
-    CGRect eFrame = self.frame;
-    CGRect absFrame = CGRectMake(parentFrame.origin.x+eFrame.origin.x+self.originInsideElement.x, parentFrame.origin.y+eFrame.origin.y + parent.originInsideElement.y, eFrame.size.width, eFrame.size.height);
-    return absFrame;
+    
+    
+    CGPoint absoluteScale = CGPointMake(1.0,1.0);
+    CGPoint absoluteOrigin = self.frame.origin;
+    GLElement *cparent = self.parent;
+    
+    while (cparent != nil)
+    {
+        CGPoint scale = cparent.scaleInsideElement;
+        CGPoint origin = cparent.originInsideElement;
+        absoluteScale = CGPointMake(cparent.scaleInsideElement.x * absoluteScale.x,
+                                    cparent.scaleInsideElement.y * absoluteScale.y);
+        
+        CGRect parentFrame = cparent.frame;
+        
+        absoluteOrigin = CGPointMake(1 *(parentFrame.size.width/2) +
+                                  (scale.x * (absoluteOrigin.x - parentFrame.size.width/2)),
+                                  1 *(parentFrame.size.height/2) +
+                                   (scale.y * (absoluteOrigin.y - parentFrame.size.height/2)));
+        
+       
+        absoluteOrigin = CGPointMake(absoluteOrigin.x + parentFrame.origin.x + origin.x   ,
+                                     absoluteOrigin.y + parentFrame.origin.y + origin.y);
+        
+        cparent = cparent.parent;
+    }
+    
+   /* NSLog(@"%@",NSStringFromClass(self.class));
+    NSLog(@"rect %@",NSStringFromCGRect( CGRectMake(absoluteOrigin.x, absoluteOrigin.y,
+                                                     self.frame.size.width * absoluteScale.x,
+                                                     self.frame.size.height * absoluteScale.y)));
+    */
+    
+    
+    return CGRectMake(absoluteOrigin.x, absoluteOrigin.y,
+                      self.frame.size.width * absoluteScale.x,
+                      self.frame.size.height * absoluteScale.y);
 }
 
 -(int)numberOfLayers
@@ -107,6 +135,11 @@
 
 -(void)draw{
     
+    
+}
+
+-(void)drawBatchedElements
+{
     
 }
 
@@ -122,19 +155,26 @@
     [mvpMatrixManager pushModelViewMatrix];
     [mvpMatrixManager translateInX:self.frame.size.width/2 Y:self.frame.size.height/2 Z:0];
     
-    [mvpMatrixManager scaleByXScale:scaleInsideElement.x  YScale:scaleInsideElement.y ZScale:1];
     
-    [mvpMatrixManager translateInX:-self.frame.size.width/2 Y:-self.frame.size.height/2 Z:0];
-    
+    [mvpMatrixManager translateInX:self.originInsideElement.x
+                                 Y:self.originInsideElement.y Z:0];
 
-    [mvpMatrixManager translateInX:self.originInsideElement.x/scaleInsideElement.x
-                                 Y:self.originInsideElement.y/scaleInsideElement.y Z:0];
+    
+    [mvpMatrixManager scaleByXScale:self.scaleInsideElement.x  YScale:self.scaleInsideElement.y ZScale:1];
+    
+    [mvpMatrixManager translateInX:(-self.frame.size.width/2)
+                                 Y:(-self.frame.size.height/2)
+                                 Z:0];
+    
 
     for (GLElement *element in subElements)
     {
         if (!element.hidden)
             [element drawElement];
     }
+    
+    [self drawBatchedElements];
+    
     [mvpMatrixManager popModelViewMatrix];
     [mvpMatrixManager translateInX:-self.frame.origin.x Y:-self.frame.origin.y Z:0];
 }
@@ -249,7 +289,8 @@
 -(BOOL)touchBegan:(UITouch *)touch withEvent:(UIEvent *)event
 {
     CGPoint l = [touch locationInGLElement:self];
-    if (l.x >= 0 && l.y >=0 && l.x <=self.frame.size.width && l.y<=self.frame.size.height)
+    CGRect absframe = self.absoluteFrame;
+    if (l.x >= 0 && l.y >=0 && l.x <=absframe.size.width && l.y<=absframe.size.height)
     {
         for (GLElement *element in subElements.reverseObjectEnumerator)
         {
@@ -299,7 +340,13 @@
     
     if ([touchesInElement containsObject:touch])
     {
-        [self touchEndedInElement:touch withIndex:[touchesInElement indexOfObject:touch] withEvent:event];
+        CGPoint touchPoint = [touch locationInGLElement:self];
+        CGRect absframe = self.absoluteFrame;
+        if (touchPoint.x >= 0 && touchPoint.y >= 0 &&
+            touchPoint.x <= absframe.size.width && touchPoint.y <=absframe.size.height)
+                [self touchEndedInElement:touch withIndex:[touchesInElement indexOfObject:touch] withEvent:event];
+        else
+                [self touchCancelledInElement:touch withIndex:[touchesInElement indexOfObject:touch] withEvent:event];
         [touchesInElement removeObject:touch];
         return YES;
     }
@@ -318,6 +365,13 @@
 {
 	
 }
+
+-(void)touchCancelledInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
+{
+    
+}
+
+
 
 
 -(void)dealloc
