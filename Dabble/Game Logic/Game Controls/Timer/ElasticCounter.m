@@ -17,7 +17,7 @@
 
 @implementation ElasticCounter
 
-@synthesize sequence,vertexData,vertexDataCount,fontSpriteSheet,currentValue,alpha;
+@synthesize sequence,vertexData,vertexDataCount,fontSpriteSheet,currentValue,alpha,visible;
 
 -(id)initWithFrame:(CGRect)_frame
 {

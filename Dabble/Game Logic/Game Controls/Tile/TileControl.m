@@ -733,7 +733,11 @@ static Texture2D *tileTextureImage = nil;
     if (ON)
     {
         for (Tile * t in tilesArray)
+        {
+            if (t.tag == 0)
+                continue;
             t.tilesArray = tilesArray;
+        }
     }
     else
     {

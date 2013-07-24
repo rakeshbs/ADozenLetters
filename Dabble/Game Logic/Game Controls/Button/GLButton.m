@@ -35,7 +35,7 @@
         {
             vertexColorData[i].color = backgroundColor;
         }
-        
+        textureVertexColorData = malloc(sizeof(TextureVertexColorData) * 6);   
     }
     return self;
 }
@@ -51,7 +51,6 @@
                                                 fontName:font fontSize:size];
     [buttonTextTexture generateMipMap];
     
-    textureVertexColorData = malloc(sizeof(TextureVertexColorData) * 6);
     TextureCoord *texCoord = [buttonTextTexture getTextureCoordinates];
     Vertex3D *vertices = [buttonTextTexture getTextureVertices];
     
@@ -180,8 +179,11 @@
 {
     [colorRenderer drawWithArray:vertexColorData andCount:6];
     [mvpMatrixManager translateInX:self.frame.size.width/2 Y:self.frame.size.height/2 Z:1];
-    textureRenderer.texture = buttonTextTexture;
-    [textureRenderer drawWithArray:textureVertexColorData andCount:6];
+    if (buttonTextTexture != nil)
+    {
+        textureRenderer.texture = buttonTextTexture;
+        [textureRenderer drawWithArray:textureVertexColorData andCount:6];
+    }
     [mvpMatrixManager translateInX:-self.frame.size.width/2 Y:-self.frame.size.height/2 Z:0];
 }
 

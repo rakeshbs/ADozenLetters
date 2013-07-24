@@ -22,10 +22,15 @@
 
 #define ANIMATION_ZOOM_IN 1
 #define ANIMATION_ZOOM_OUT 2
+#define ANIMATION_HUE_CHANGE 3
+
+#define STATE_PLAYING 1
+#define STATE_HOME 2
 
 #define SCENE_SCALE 0.5f
 #define SCENE_VERTICAL_OFFSET 160
 #define SCENE_ZOOMEDIN_VERTICAL_OFFSET -20
+
 
 
 @interface GameScene (Private)
@@ -42,6 +47,8 @@ Dictionary *dictionary;
 {
     if (self = [super init])
     {
+        currentHue = 0;
+        currentState = STATE_HOME;
         playButton.touchable = NO;
         self.scaleInsideElement = CGPointMake(SCENE_SCALE,SCENE_SCALE);
         self.originInsideElement = CGPointMake(0,SCENE_VERTICAL_OFFSET);
@@ -63,12 +70,11 @@ Dictionary *dictionary;
         [tileControl release];
         
         scoreButton = [[GLButton alloc]initWithFrame:CGRectMake(-130, -200, 576, 220)];
-        [scoreButton setText:@"" withFont:@"News Gothic Std" andSize:130];
         [scoreButton setTextColor:(Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 45}];
         [scoreButton setBackgroundColor:(Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 45}];
         [self addElement:scoreButton];
         [scoreButton release];
-
+        
         
         playButton = [[GLButton alloc]initWithFrame:CGRectMake(-130, -520, 576, 250)];
         [playButton setText:@"play" withFont:@"News Gothic Std" andSize:120];
@@ -78,8 +84,8 @@ Dictionary *dictionary;
         
         
         totalScoreControl = [[ScoreControl alloc]initWithFrame:
-                             CGRectMake(-120,-100,546,100)];
-        [totalScoreControl setFont:@"Lato" withSize:60];
+                             CGRectMake(-120,-90,546,70)];
+        [totalScoreControl setFont:@"Lato" withSize:70];
         [totalScoreControl setBackgroundColor:(Color4B){.red = 128,.green = 128, .blue =128,.alpha = 0}];
         [totalScoreControl setTextColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 150}];
         
@@ -94,15 +100,23 @@ Dictionary *dictionary;
         closeButton.delegate = self;
         scoreCounter = 0;
         
+        rankingControl = [[RankingControl alloc]initWithFrame:CGRectMake(-130, -150, 576, 30)];
+        
+        [rankingControl setFont:@"Lato" withSize:30];
+        [rankingControl setColor:(Color4B){0,0,0,255}];
+        [self addElement:rankingControl];
+        [rankingControl release];
+        
         [tileControl moveToFront];
         
         gcHelper = [GCHelper getSharedGCHelper];
         gcHelper.delegate = self;
         [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
+        [rankingControl setCurrentRank:gcHelper.currentRank andTotalRanks:gcHelper.totalRanks];
         [gcHelper authenticateUser];
-        [gcHelper loadDefaultLeaderBoard];
-
-            [self showTiles];
+        currentHue = (gcHelper.totalRanks - (gcHelper.currentRank - 1))/gcHelper.totalRanks *  0.55;
+        [self showTiles];
+        
     }
     return  self;
 }
@@ -122,7 +136,7 @@ Dictionary *dictionary;
         
         CGFloat pos2 =  getEaseInOut(-800,-2, animationRatio,animation.duration);
         closeButton.frame = CGRectMake(pos2,closeButton.frame.origin.y,
-                                        closeButton.frame.size.width,closeButton.frame.size.height);
+                                       closeButton.frame.size.width,closeButton.frame.size.height);
         
         CGFloat y = getEaseInOut(SCENE_VERTICAL_OFFSET,SCENE_ZOOMEDIN_VERTICAL_OFFSET,animationRatio,animation.duration);
         CGFloat x = self.originInsideElement.x;
@@ -147,6 +161,12 @@ Dictionary *dictionary;
         self.originInsideElement = CGPointMake(x, y);
         
     }
+    else if (animation.type == ANIMATION_HUE_CHANGE)
+    {
+        CGFloat *start = [animation getStartValue];
+        CGFloat *end = [animation getEndValue];
+        currentHue = getEaseOut(*start, *end, animationRatio);
+    }
     
     if (animationRatio > 1.0)
         return YES;
@@ -156,6 +176,15 @@ Dictionary *dictionary;
 -(void)animationStarted:(Animation *)animation
 {
     startOriginPoint = self.originInsideElement;
+    if (animation.type == ANIMATION_ZOOM_IN)
+    {
+        [NSObject cancelPreviousPerformRequestsWithTarget:gcHelper selector:@selector(downloadRank) object:nil];
+        currentState = STATE_PLAYING;
+    }
+    else if (animation.type == ANIMATION_ZOOM_OUT)
+    {
+        currentState = STATE_HOME;
+    }
 }
 
 -(void)animationEnded:(Animation *)animation
@@ -224,26 +253,40 @@ Dictionary *dictionary;
 
 -(void)draw{
     
-
-    if (scoreCounter - currentRoundScore <=-3)
-        scoreCounter+=3;
-    else if (scoreCounter - currentRoundScore >= 3)
-        scoreCounter-=3;
-    else
-        scoreCounter = currentRoundScore;
+    if (currentState == STATE_HOME)
+    {
+        CGFloat hue = (gcHelper.totalRanks - (gcHelper.currentRank - 1))/gcHelper.totalRanks *  0.55;
+        if (queuedHue != hue)
+        {
+            Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_HUE_CHANGE ofDuration:1 afterDelayInSeconds:0];
+            [animation setStartValue:&currentHue OfSize:sizeof(CGFloat)];
+            [animation setEndValue:&hue OfSize:sizeof(CGFloat)];
+            queuedHue = hue;
+        }
+    }
+    else if (currentState == STATE_PLAYING)
+    {
+        CGFloat hue = (currentRoundScore/360.0) *  0.85;
+        if (hue >= 0.85)
+            hue = 0.85;
+        
+        if (queuedHue != hue)
+        {
+            Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_HUE_CHANGE ofDuration:1 afterDelayInSeconds:0];
+            [animation setStartValue:&currentHue OfSize:sizeof(CGFloat)];
+            [animation setEndValue:&hue OfSize:sizeof(CGFloat)];
+            queuedHue = hue;
+        }
+    }
     
-    CGFloat hue = scoreCounter/360.0;
-    if (hue >= 0.85)
-        hue = 0.85;
-    
-    UIColor *uiColor = [UIColor colorWithHue:hue saturation:0.580551
+    UIColor *uiColor = [UIColor colorWithHue:currentHue saturation:0.580551
                                   brightness:0.725500 alpha:1.0];
     
     CGFloat red,green,blue,alpha;
     [uiColor getRed:&red green:&green blue:&blue alpha:&alpha];
     
     glClearColor(red,green,blue,alpha);
-   
+    
 }
 
 -(void)update
@@ -283,10 +326,11 @@ NSMutableArray *tilesArray;
     }
     else if (event == CLOSEBUTTON_CLICK_FINISHED)
     {
+        currentState = STATE_HOME;
         playButton.touchable = NO;
         [tileControl hideTiles];
         [tileControl togglePlayability:NO];
-         [animator addAnimationFor:self ofType:ANIMATION_ZOOM_OUT ofDuration:0.45 afterDelayInSeconds:0.4];
+        [animator addAnimationFor:self ofType:ANIMATION_ZOOM_OUT ofDuration:0.45 afterDelayInSeconds:0.4];
         [scoreControl setValue:0 inDuration:0.2];
         currentRoundScore = 0;
         [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(setScore) object:nil];
@@ -296,8 +340,10 @@ NSMutableArray *tilesArray;
 -(void)enablePlayButton
 {
     playButton.touchable = YES;
-   
+    
 }
+
+
 
 -(void)playButtonClicked
 {
@@ -305,24 +351,35 @@ NSMutableArray *tilesArray;
     self.originInsideElement = CGPointMake(0,180);
     [animator addAnimationFor:self ofType:ANIMATION_ZOOM_IN ofDuration:0.45 afterDelayInSeconds:0];
     currentRoundScore = 121;
-            [self performSelector:@selector(loadData) withObject:nil afterDelay:0];
+    [self performSelector:@selector(loadData) withObject:nil afterDelay:0];
 }
 
 -(void)userAuthenticated
 {
-
+    [gcHelper loadDefaultLeaderBoard];
 }
 -(void)scoreDownloaded
 {
+    [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
+    [gcHelper downloadRank];
 }
+
+-(void)rankDownloaded
+{
+    [rankingControl setCurrentRank:gcHelper.currentRank andTotalRanks:gcHelper.totalRanks];
+    [gcHelper performSelector:@selector(downloadRank)
+                   withObject:nil afterDelay:30];
+}
+
 -(void)scoreUpdated
 {
-     [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
+    [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
+    [gcHelper downloadRank];
 }
 
 -(void)userAuthenticationFailed
 {
-
+    
 }
 
 -(void)defaultLeaderBoardLoaded

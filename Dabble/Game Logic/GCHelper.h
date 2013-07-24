@@ -15,6 +15,7 @@
 -(void)userAuthenticated;
 -(void)scoreDownloaded;
 -(void)scoreUpdated;
+-(void)rankDownloaded;
 -(void)userAuthenticationFailed;
 -(void)defaultLeaderBoardLoaded;
 @end
@@ -33,7 +34,8 @@
 @property (nonatomic,retain) NSString *leaderBoardID;
 @property (nonatomic,readonly)     int64_t currentScore;
 @property (nonatomic,assign) NSObject<GCHelperDelegate> *delegate;
-
+@property (nonatomic,readonly) int64_t currentRank;
+@property (nonatomic,readonly) int64_t totalRanks;
 
 +(GCHelper *)getSharedGCHelper;
 -(void)loadDefaultLeaderBoard;

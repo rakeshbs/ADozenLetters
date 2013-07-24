@@ -8,7 +8,7 @@
 
 #import "ScoreControl.h"
 
-#define marginX 9
+#define marginX 0
 #define marginY 0
 
 #define ANIMATION_ALIGN 1
@@ -90,7 +90,7 @@
 
 }
 
--(void)setValue:(int)value inDuration:(CGFloat)time
+-(void)setValue:(long long)value inDuration:(CGFloat)time
 {
     int prevvalue = 0;
     CGFloat offsetTime = 0.05;
@@ -110,8 +110,8 @@
             int ind = counterControls.count - i - 1;
             ElasticCounter * counter = counterControls[ind];
             
-            int v = floorf((value/powl(10, i)));
-            int pv = floorf((prevvalue/powl(10, i)));
+            long long v = floorf((value/powl(10, i)));
+            long long pv = floorf((prevvalue/powl(10, i)));
             
             if (v-pv > 0)
             {
@@ -144,8 +144,8 @@
             int ind = counterControls.count - i - 1;
             ElasticCounter * counter = counterControls[ind];
     
-            int v = floorf((value/powl(10, i)));
-            int pv = floorf((prevvalue/powl(10, i)));
+            long long v = floorf((value/powl(10, i)));
+            long long pv = floorf((prevvalue/powl(10, i)));
             
             if (pv - v > 0)
             {
@@ -174,7 +174,7 @@
                         {
                             counter.visible = NO;
                             [self updateOffsets];
-                            [counter hideInDuration:1];
+                            [counter hideInDuration:0.3];
                         }
                         else
                             previousHidden = NO;
@@ -313,6 +313,12 @@
     [textureRenderer drawWithArray:vertexData andCount:count];
     
 }
+
+-(CGFloat)getVisibleWidth
+{
+    return visibleCount * widthPerCounter;
+}
+
 
 -(void)dealloc
 {

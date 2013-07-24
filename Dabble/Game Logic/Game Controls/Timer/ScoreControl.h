@@ -44,8 +44,9 @@
 -(void)setBackgroundColor:(Color4B)color;
 -(void)setFont:(NSString *)font withSize:(CGFloat)size;
 -(void)stop;
--(void)setValue:(int)value inDuration:(CGFloat)time;
+-(void)setValue:(long long)value inDuration:(CGFloat)time;
 -(void)setTextColor:(Color4B)textcolor;
+-(CGFloat)getVisibleWidth;
 
 @property (nonatomic) Color4B color;
 

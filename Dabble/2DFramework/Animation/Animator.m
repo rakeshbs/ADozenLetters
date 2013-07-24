@@ -167,7 +167,7 @@
 
 -(NSMutableArray *)getRunningAnimationsForObject:(NSObject<AnimationDelegate> *) obj ofType:(int)type
 {
-    NSMutableArray *arr = [[NSMutableArray alloc]init];
+    NSMutableArray *arr = [[[NSMutableArray alloc]init]autorelease];
     for (int i =0;i<currentAnimations.count;i++)
     {
         Animation *animation = currentAnimations[i];
@@ -187,30 +187,6 @@
         queuedAnimations = [[NSMutableArray alloc]init];
     }
     
- //   Animation *animation = nil;
-   // BOOL chk = NO;
-    
-   /* if (delay == 0)
-    {
-        for (Animation *anim in currentAnimations)
-        {
-            if (anim.animatedObject == obj && anim.type == type && anim.animationData == nil)
-            {
-                chk = YES;
-                animation = anim;
-                anim.startTime = CFAbsoluteTimeGetCurrent();
-            }
-        }
-    }*/
-    
- /*   for (Animation *anim in queuedAnimations)
-    {
-        if (anim.animatedObject == obj && anim.type == type && anim.animationData == nil)
-        {
-            chk = YES;
-            animation = anim;
-        }
-    }*/
     
     Animation *animation = [[Animation alloc]init];
     animation.animatedObject = obj;

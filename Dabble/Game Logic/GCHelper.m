@@ -10,7 +10,7 @@
 
 @implementation GCHelper
 
-@synthesize currentScore;
+@synthesize currentScore,currentRank,totalRanks;
 
 +(GCHelper *)getSharedGCHelper
 {
@@ -32,8 +32,9 @@
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         lastGameCenterScore = [prefs integerForKey:@"lastGameCenterScore"];
         currentScore = [prefs integerForKey:@"currentScore"];
+        currentRank = [prefs integerForKey:@"currentRank"];
+        totalRanks = [prefs integerForKey:@"totalRanks"];
         
-        NSLog(@"score : synced %lld current %lld",lastGameCenterScore,currentScore);
     }
     return self;
 }
@@ -61,7 +62,7 @@
     else
     {
         NSLog(@"Already authenticated!");
-                    isUserAuthenticated = YES;
+        isUserAuthenticated = YES;
     }
 }
 
@@ -142,7 +143,6 @@
                 {
                     if (error == nil)
                     {
-                        NSLog(@"%lld",highscore);
                         currentScore = (highscore - lastGameCenterScore) + currentScore;
                         lastGameCenterScore = currentScore;
                         [self updatePrefs];
@@ -208,6 +208,7 @@
                 totalRanks = leaderboardRequest.scores.count;
                 currentRank = leaderboardRequest.localPlayerScore.rank;
                 [self updatePrefs];
+                [self.delegate rankDownloaded];
             }
         }];
     }
@@ -227,7 +228,6 @@
 
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     currentScore += score;
-    NSLog(@"round score %lld total %lld",score,currentScore);
     [prefs setInteger:currentScore forKey:@"currentScore"];
 }
 

@@ -540,7 +540,6 @@ NSArray *charactersArray;
     [animator removeRunningAnimationsForObject:self ofType:ANIMATION_SHOW_COLOR];
     
     [animator addAnimationFor:self ofType:ANIMATION_SHOW_COLOR ofDuration:duration afterDelayInSeconds:0];
-    [hideAnimations release];
 }
 
 -(void)animateHideColorInDuration:(CGFloat)duration
@@ -562,7 +561,6 @@ NSArray *charactersArray;
     
     [animator addAnimationFor:self ofType:ANIMATION_HIDE_COLOR ofDuration:duration afterDelayInSeconds:0];
     
-    [showAnimations release];
     
 }
 

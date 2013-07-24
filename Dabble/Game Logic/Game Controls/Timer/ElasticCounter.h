@@ -13,9 +13,9 @@
       
     NSMutableArray *sequence;
     
-    int currentValue;
-    double verticalOffset;
-    double previousVerticalOffset;
+    long long currentValue;
+    long double verticalOffset;
+    long double previousVerticalOffset;
     
     InstancedTextureVertexColorData *vertexData;
     int vertexDataCount;
@@ -25,7 +25,7 @@
     
     FontSpriteSheet *fontSpriteSheet;
     
-    int loopCount;
+    long long loopCount;
     CGFloat maxAngle;
     CGFloat wiggleDistance;
     CGFloat loopRatio;
@@ -35,7 +35,7 @@
 }
 
 @property  (nonatomic) BOOL visible;
-@property (nonatomic,readonly) int currentValue;
+@property (nonatomic,readonly) long long currentValue;
 @property (nonatomic,readonly) NSArray *sequence;
 @property (nonatomic) InstancedTextureVertexColorData *vertexData;
 @property (nonatomic,readonly) int vertexDataCount;

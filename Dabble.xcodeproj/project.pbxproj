@@ -16,6 +16,8 @@
 		141E690A179CD9E000D330A0 /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = 141E6908179CD9E000D330A0 /* close.png */; };
 		141E690B179CD9E000D330A0 /* close@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 141E6909179CD9E000D330A0 /* close@2X.png */; };
 		141E690F179D43FF00D330A0 /* NewsGoth.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 141E690E179D43CC00D330A0 /* NewsGoth.ttf */; };
+		141E6912179FBA6E00D330A0 /* RankingControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 141E6911179FBA6D00D330A0 /* RankingControl.m */; };
+		141E6916179FC9FA00D330A0 /* GLLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 141E6915179FC9FA00D330A0 /* GLLabel.m */; };
 		142916CA1783AB9100B128EA /* GLActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916C91783AB9100B128EA /* GLActivityIndicator.m */; };
 		142916CE1784724C00B128EA /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916CD1784724C00B128EA /* GameScene.m */; };
 		142916D11784727200B128EA /* MainMenuScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916D01784727200B128EA /* MainMenuScene.m */; };
@@ -104,6 +106,10 @@
 		141E6908179CD9E000D330A0 /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
 		141E6909179CD9E000D330A0 /* close@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close@2X.png"; sourceTree = "<group>"; };
 		141E690E179D43CC00D330A0 /* NewsGoth.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewsGoth.ttf; sourceTree = "<group>"; };
+		141E6910179FBA6D00D330A0 /* RankingControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RankingControl.h; sourceTree = "<group>"; };
+		141E6911179FBA6D00D330A0 /* RankingControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RankingControl.m; sourceTree = "<group>"; };
+		141E6914179FC9FA00D330A0 /* GLLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLLabel.h; sourceTree = "<group>"; };
+		141E6915179FC9FA00D330A0 /* GLLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLLabel.m; sourceTree = "<group>"; };
 		142916C81783AB9100B128EA /* GLActivityIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLActivityIndicator.h; sourceTree = "<group>"; };
 		142916C91783AB9100B128EA /* GLActivityIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLActivityIndicator.m; sourceTree = "<group>"; };
 		142916CC1784724C00B128EA /* GameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameScene.h; sourceTree = "<group>"; };
@@ -317,6 +323,10 @@
 				142916DD17848BC200B128EA /* ScoreControl.m */,
 				142916DF17858A9F00B128EA /* ElasticCounter.h */,
 				142916E017858A9F00B128EA /* ElasticCounter.m */,
+				141E6910179FBA6D00D330A0 /* RankingControl.h */,
+				141E6911179FBA6D00D330A0 /* RankingControl.m */,
+				141E6914179FC9FA00D330A0 /* GLLabel.h */,
+				141E6915179FC9FA00D330A0 /* GLLabel.m */,
 			);
 			name = Controls;
 			path = Timer;
@@ -742,6 +752,8 @@
 				148295F5179906D900CEF2B2 /* ColorShader.vsh in Sources */,
 				14BC3F35179963E400EF5386 /* TextureShader.vsh in Sources */,
 				14BC3F3A1799AB8A00EF5386 /* CloseButton.m in Sources */,
+				141E6912179FBA6E00D330A0 /* RankingControl.m in Sources */,
+				141E6916179FC9FA00D330A0 /* GLLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

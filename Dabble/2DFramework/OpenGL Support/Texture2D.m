@@ -298,6 +298,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 		height = i;
 	}
     
+    
 	colorSpace = CGColorSpaceCreateDeviceGray();
 	data = calloc(height, width );
 	context = CGBitmapContextCreateWithData(data, width, height, 8, width ,
@@ -327,15 +328,14 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_A8 pixelsWide:width pixelsHigh:height contentSize:dimensions];
 	
     
-    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    /*CGImageRef imageRef = CGBitmapContextCreateImage(context);
     UIImage* image = [[UIImage alloc] initWithCGImage:imageRef];
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
     NSString *filePath = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%d.png",self.hash]]; //Add the file name
     [UIImagePNGRepresentation(image) writeToFile:filePath atomically:YES]; //Write the file
-    
-
+    */
     
 	CGContextRelease(context);
 	free(data);
@@ -458,19 +458,20 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
     }
    
-    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+  /*  CGImageRef imageRef = CGBitmapContextCreateImage(context);
     UIImage* image = [[UIImage alloc] initWithCGImage:imageRef];
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
     NSString *filePath = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%d.png",fontSpriteSheet.hash]]; //Add the file name
     [UIImagePNGRepresentation(image) writeToFile:filePath atomically:YES]; //Write the file
-    
+    */
 
     self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_A8 pixelsWide:width pixelsHigh:height contentSize:CGSizeMake(totalWidth, totalHeight)];
 	
 	CGContextRelease(context);
 	free(data);
+   
 	
     fontSpriteSheet.height = height;
     fontSpriteSheet.width = width;

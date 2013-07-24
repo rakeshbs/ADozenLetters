@@ -14,6 +14,7 @@
 #import "TileControl.h"
 #import "CloseButton.h"
 #import "ScoreControl.h"
+#import "RankingControl.h"
 
 @interface GameScene : GLScene <AnimationDelegate,CloseButtonDelegate,GCHelperDelegate>
 {
@@ -31,7 +32,10 @@
     CloseButton *closeButton;
     ScoreControl *scoreControl;
     ScoreControl *totalScoreControl;
-
+    RankingControl *rankingControl;
     
+    int currentState;
+    CGFloat currentHue;
+    CGFloat queuedHue;
 }
 @end
