@@ -24,6 +24,8 @@
 #define ANIMATION_MAKE_SHADOW_VISIBLE 9
 
 
+
+
 #define SHADOW_ALPHA_MAX 255
 #define SHADOW_ALPHA_MIN 0
 #define WIGGLE_ANGLE 10.0f
@@ -78,7 +80,7 @@ NSArray *charactersArray;
         isBonded = 0;
         shadowVisible = NO;
         charactersArray = [[fontStr componentsSeparatedByString:@","]retain];
-        characterCounter = [[ElasticCounter alloc]initWithFrame:CGRectMake(0, 0, tileSquareSize, tileSquareSize)];
+        characterCounter = [[ElasticCounter alloc]initWithFrame:CGRectMake(0, 0, tileSquareSize, 49)];
         [characterCounter setSequence:charactersArray];
         isBondedColor = NO;
     }
@@ -89,7 +91,7 @@ NSArray *charactersArray;
 -(void)setTileCharacter:(NSString *)_character
 {
     self.character = _character;
-    [characterCounter setStringValueToCount:character inDuration:1.5];
+    [characterCounter setStringValueToCount:character inDuration:0.8];
 }
 
 -(void)setupSounds
@@ -142,8 +144,8 @@ NSArray *charactersArray;
         CGPoint *startValue = ((CGPoint *)[animation getStartValue]);
         CGPoint *endValue = ((CGPoint *)[animation getEndValue]);
         
-        CGFloat newX = getEaseInOutBack(startValue->x, endValue->x, animationRatio);
-        CGFloat newY = getEaseInOutBack(startValue->y, endValue->y, animationRatio);
+        CGFloat newX = getEaseOutBack(startValue->x, endValue->x, animationRatio);
+        CGFloat newY = getEaseOutBack(startValue->y, endValue->y, animationRatio);
         _centerPoint = CGPointMake(newX, newY);
     }
     else if (animation.type == ANIMATION_SHOW_SHADOW)
@@ -327,6 +329,27 @@ NSArray *charactersArray;
     }
 }
 
+-(void)touchCancelledInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
+{
+ 	if (index == 0)
+    {
+        
+        [animator removeQueuedAnimationsForObject:self ofType:ANIMATION_QUEUE_MOVE];
+        [self checkCollissionAndMove];
+        
+        if (touch.tapCount >= 1)
+        {
+            [self moveToPoint:CGPointMake(self.anchorPoint.x ,  self.anchorPoint.y) inDuration:0.3];
+        }
+        else
+        {
+            [self moveToPoint:CGPointMake(self.anchorPoint.x ,  self.anchorPoint.y) inDuration:0.3];
+        }
+        [self updateShadow];
+    }
+   
+}
+
 -(void)checkCollissionAndMove
 {
     for (Tile *sq in _tilesArray)
@@ -385,6 +408,11 @@ NSArray *charactersArray;
         {
             [animation setStartValue:&_centerPoint OfSize:sizeof(CGPoint)];
         }
+        
+        if (animation.type == ANIMATION_THROW)
+        {
+           // [self moveToBack];
+        }
         [self updateShadow];
     }
     else if (animation.type == ANIMATION_QUEUE_MOVE)
@@ -424,7 +452,7 @@ NSArray *charactersArray;
     if (animation.type == ANIMATION_MOVE || animation.type == ANIMATION_WIGGLE ||
         animation.type == ANIMATION_THROW ||animation.type == ANIMATION_MAKE_SHADOW_VISIBLE)
     {
-        if (animation.type == ANIMATION_MOVE)
+        if (animation.type == ANIMATION_MOVE || animation.type == ANIMATION_THROW)
         {
             [[NSNotificationCenter defaultCenter]postNotificationName:@"TileFinishedMoving" object:nil];
             

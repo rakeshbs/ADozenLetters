@@ -52,7 +52,7 @@
     }
     else
     {
-        [self setValueCountDown:(currentValue - index) withDuration:duration];
+        [self setValueCountUp:(index+sequence.count)-currentValue withDuration:duration];
     }
 }
 

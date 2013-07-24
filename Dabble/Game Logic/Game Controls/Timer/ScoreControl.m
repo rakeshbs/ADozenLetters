@@ -11,6 +11,7 @@
 #define marginX 9
 #define marginY 0
 
+#define ANIMATION_ALIGN 1
 
 @implementation ScoreControl
 
@@ -19,7 +20,8 @@
     if (self = [super initWithFrame:_frame])
     {
         vertexData = NULL;
-        
+        visibleCount = 0;
+        offsetVisibleX = 0;
         textureRenderer = [rendererManager getRendererWithVertexShaderName:@"InstancedTextureShader" andFragmentShaderName:@"StringTextureShader"];
         
         colorRenderer = [rendererManager getRendererWithVertexShaderName:@"ColorShader" andFragmentShaderName:@"ColorShader"];
@@ -46,6 +48,8 @@
         
         glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(VertexColorData) * 6, vertexColorData,GL_STATIC_DRAW);
+        textAlignment = UITextAlignmentCenter;
+        
     }
     return self;
 }
@@ -66,11 +70,11 @@
     glBufferData(GL_ARRAY_BUFFER, sizeof(VertexColorData) * 6, vertexColorData,GL_STATIC_DRAW);
 }
 
--(void)setTextColor:(Color4B)color
+-(void)setTextColor:(Color4B)textcolor
 {
-    _color = color;
+    _color = textcolor;
     for (ElasticCounter *counter in counterControls)
-        counter.color = color;
+        counter.color = textcolor;
 }
 
 -(void)stop
@@ -124,7 +128,11 @@
             }
             
             if (start)
+            {
+                counter.visible = YES;
                 [counter showInDuration:0.05];
+                [self updateOffsets];
+            }
         }
     }
     else if (value < prevvalue)
@@ -148,7 +156,11 @@
                     if (i != 0)
                     {
                         if (v == 0 && previousHidden)
+                        {
+                            counter.visible = NO;
                             [counter hideInDuration:time];
+                            [self updateOffsets];
+                        }
                         else
                             previousHidden = NO;
                     }
@@ -159,7 +171,11 @@
                     if (i != 0)
                     {
                         if (v == 0 && previousHidden)
+                        {
+                            counter.visible = NO;
+                            [self updateOffsets];
                             [counter hideInDuration:1];
+                        }
                         else
                             previousHidden = NO;
                     }
@@ -171,6 +187,68 @@
         }
 
     }
+}
+
+-(BOOL)animationUpdate:(Animation *)animation
+{
+    CGFloat animatedRatio = [animation getAnimatedRatio];
+    
+    if (animation.type == ANIMATION_ALIGN)
+    {
+        CGFloat *start = [animation getStartValue];
+        CGFloat *end = [animation getEndValue];
+        offsetVisibleX = getEaseOut(*start, *end, animatedRatio);
+    }
+    
+    if (animatedRatio >= 1.0)
+        return YES;
+    return NO;
+}
+
+
+-(void)setTextAlignment:(UITextAlignment)_textAlignment
+{
+    textAlignment = _textAlignment;
+    if (textAlignment == UITextAlignmentCenter)
+    {
+        offsetVisibleX = (counterControls.count - visibleCount) * widthPerCounter/2.0;
+    }
+    else if (textAlignment == UITextAlignmentLeft)
+    {
+        offsetVisibleX = (counterControls.count - visibleCount) * widthPerCounter;
+    }
+    else if (textAlignment == UITextAlignmentRight)
+    {
+        offsetVisibleX = 0;
+    }
+}
+
+-(void)updateOffsets
+{
+    visibleCount = 0;
+    for (ElasticCounter *c in counterControls)
+        if (c.visible)
+            visibleCount++;
+   
+    CGFloat offset = 0;
+    
+    if (textAlignment == UITextAlignmentCenter)
+    {
+        offset = (counterControls.count - visibleCount) * widthPerCounter/2.0;
+    }
+    else if (textAlignment == UITextAlignmentLeft)
+    {
+        offset = (counterControls.count - visibleCount) * widthPerCounter;
+    }
+    else if (textAlignment == UITextAlignmentRight)
+    {
+        offset = 0;
+    }
+
+    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_ALIGN ofDuration:0.1
+                                 afterDelayInSeconds:0];
+    [animation setStartValue:&offsetVisibleX OfSize:sizeof(float)];
+    [animation setEndValue:&offset OfSize:sizeof(float)];
 }
 
 
@@ -190,6 +268,7 @@
         maxWidth = (maxWidth < f.width)?f.width:maxWidth;
     
     maxWidth /=2;
+    widthPerCounter = maxWidth;
     
     int num = floorf(((self.frame.size.width - marginX*2)/maxWidth));
     vertexData = malloc(sizeof(InstancedTextureVertexColorData) * num * 6 * 4);
@@ -204,19 +283,26 @@
         counter.color = _color;
         [self addElement:counter];
         counter.alpha = 0;
+        counter.visible = NO;
         [counterControls addObject:counter];
+        
     }
+    counter.visible = YES;
     counter.alpha = 255;
+    visibleCount = 1;
+    [self setTextAlignment:textAlignment];
 }
 
 -(void)draw
 {  
     [colorRenderer drawWithVBO:colorBuffer andCount:6];
     int count = 0;
+     
     for (ElasticCounter *counter in counterControls)
     {
         [mvpMatrixManager pushModelViewMatrix];
-        [mvpMatrixManager translateInX:counter.frame.origin.x + counter.frame.size.width/2
+        [mvpMatrixManager translateInX:counter.frame.origin.x +
+         counter.frame.size.width/2 - offsetVisibleX
                                      Y:counter.frame.origin.y + counter.frame.size.height/2 Z:1];
         counter.vertexData = (vertexData + count);
         [counter draw];

@@ -30,9 +30,11 @@
     CGFloat wiggleDistance;
     CGFloat loopRatio;
     int alpha;
+    
+    BOOL visible;
 }
 
-
+@property  (nonatomic) BOOL visible;
 @property (nonatomic,readonly) int currentValue;
 @property (nonatomic,readonly) NSArray *sequence;
 @property (nonatomic) InstancedTextureVertexColorData *vertexData;

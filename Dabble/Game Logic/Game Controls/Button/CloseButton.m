@@ -18,7 +18,7 @@
     if (self = [super initWithFrame:_frame])
     {
         textColor = (Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 255};
-        backgroundColor = (Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 85};
+        backgroundColor = (Color4B){.red = 128,.green = 128,.blue = 128,.alpha = 85};
         
         colorRenderer = [rendererManager getRendererWithVertexShaderName:@"ColorShader" andFragmentShaderName:@"ColorShader"];
         textureRenderer = [rendererManager getRendererWithVertexShaderName:@"TextureShader" andFragmentShaderName:@"StringTextureShader"];
@@ -34,9 +34,8 @@
         {
             vertexColorData[i].color = backgroundColor;
         }
-        UIFont *font = [UIFont fontWithName:@"Lato" size:40];
-        
-        buttonTextTexture = [textureManager getStringTexture:@"X" dimensions:[@"X" sizeWithFont:font] horizontalAlignment:UITextAlignmentCenter verticalAlignment:UITextAlignmentMiddle fontName:@"Lato" fontSize:40];
+       
+        buttonTextTexture = [textureManager getStringTexture:@"x" dimensions:CGSizeMake(self.frame.size.width, self.frame.size.height) horizontalAlignment:UITextAlignmentCenter verticalAlignment:UITextAlignmentMiddle fontName:@"Lato" fontSize:45];
         
         textureVertexColorData = malloc(sizeof(TextureVertexColorData) * 6);
         
@@ -67,12 +66,17 @@
         Color4B *startColor = [animation getStartValue];
         Color4B *endColor = [animation getEndValue];
         
+        CGFloat red = getEaseOut(startColor->red, endColor->red, animationRatio);
+        CGFloat green = getEaseOut(startColor->green, endColor->green, animationRatio);
+        CGFloat blue = getEaseOut(startColor->blue, endColor->blue, animationRatio);
         CGFloat alpha = getEaseOut(startColor->alpha, endColor->alpha, animationRatio);
         for (int i = 0;i<6;i++)
         {
+            vertexColorData[i].color.red = red;
+            vertexColorData[i].color.green = green;
+            vertexColorData[i].color.blue = blue;
             vertexColorData[i].color.alpha = alpha;
         }
-        
     }
     else if (animation.type == ANIMATION_NORMAL)
     {
@@ -80,9 +84,15 @@
         Color4B *endColor = [animation getEndValue];
         
         
+        CGFloat red = getEaseOut(startColor->red, endColor->red, animationRatio);
+        CGFloat green = getEaseOut(startColor->green, endColor->green, animationRatio);
+        CGFloat blue = getEaseOut(startColor->blue, endColor->blue, animationRatio);
         CGFloat alpha = getEaseOut(startColor->alpha, endColor->alpha, animationRatio);
         for (int i = 0;i<6;i++)
         {
+            vertexColorData[i].color.red = red;
+            vertexColorData[i].color.green = green;
+            vertexColorData[i].color.blue = blue;
             vertexColorData[i].color.alpha = alpha;
         }
     }
@@ -92,12 +102,26 @@
     return NO;
 }
 
+-(void)animationEnded:(Animation *)animation
+{
+    if (animation.type == ANIMATION_HIGHLIGHT)
+    {
+        [self.delegate closeButtonClick:CLOSEBUTTON_CLICK_FINISHED];
+        [self.touchesInElement removeAllObjects];
+        
+        Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_NORMAL ofDuration:0.2 afterDelayInSeconds:0];
+        [animation setStartValue:&vertexColorData[0].color OfSize:sizeof(Color4B)];
+        [animation setEndValue:&backgroundColor OfSize:sizeof(Color4B)];
+        
+    }
+}
+
 
 -(void)touchBeganInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
 {
     [animator removeRunningAnimationsForObject:self];
     
-    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_HIGHLIGHT ofDuration:1 afterDelayInSeconds:0];
+    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_HIGHLIGHT ofDuration:1.3 afterDelayInSeconds:0];
     [animation setStartValue:&vertexColorData[0].color OfSize:sizeof(Color4B)];
     [animation setEndValue:&textColor OfSize:sizeof(Color4B)];
     
@@ -107,22 +131,20 @@
 -(void)touchEndedInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
 {
 
-    int count = [animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_HIGHLIGHT];
     [animator removeRunningAnimationsForObject:self];
     
     Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_NORMAL ofDuration:0.2 afterDelayInSeconds:0];
     [animation setStartValue:&vertexColorData[0].color OfSize:sizeof(Color4B)];
     [animation setEndValue:&backgroundColor OfSize:sizeof(Color4B)];
-    
-    if (count == 0)
-        [self.delegate closeButtonClick:CLOSEBUTTON_CLICK_FINISHED];
-    else
-        [self.delegate closeButtonClick:CLOSEBUTTON_CLICK_CANCELLED];
+   
+    [self.delegate closeButtonClick:CLOSEBUTTON_CLICK_CANCELLED];
 }
 
 -(void)touchCancelledInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
 {
-    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_HIGHLIGHT ofDuration:0.2 afterDelayInSeconds:0];
+    [animator removeRunningAnimationsForObject:self];
+    
+    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_NORMAL ofDuration:0.2 afterDelayInSeconds:0];
     [animation setStartValue:&vertexColorData[0] OfSize:sizeof(Color4B)];
     [animation setEndValue:&backgroundColor OfSize:sizeof(Color4B)];
     

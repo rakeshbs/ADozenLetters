@@ -37,7 +37,7 @@
             {
                 Animation *anim = currentAnimations[j];
                 if (anim.animatedObject == animation.animatedObject
-                    && anim.type == animation.type)
+                    && anim.type == animation.type && anim.animationData == animation.animationData)
                 {
                     [currentAnimations removeObject:anim];
                     j--;

@@ -9,7 +9,7 @@
 #import "GLElement.h"
 #import "ElasticCounter.h"
 
-@interface ScoreControl : GLElement
+@interface ScoreControl : GLElement <AnimationDelegate>
 {
     CGFloat timeLeft;
     CGFloat *numberSizes;
@@ -32,14 +32,20 @@
     NSArray *numberArray;
     
     BOOL *running;
+    int visibleCount;
+    CGFloat widthPerCounter;
     
+    CGFloat offsetVisibleX;
+    
+    UITextAlignment textAlignment;
 }
 
-
+-(void)setTextAlignment:(UITextAlignment)_textAlignment;
 -(void)setBackgroundColor:(Color4B)color;
 -(void)setFont:(NSString *)font withSize:(CGFloat)size;
 -(void)stop;
 -(void)setValue:(int)value inDuration:(CGFloat)time;
+-(void)setTextColor:(Color4B)textcolor;
 
 @property (nonatomic) Color4B color;
 

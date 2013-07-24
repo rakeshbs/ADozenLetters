@@ -121,22 +121,17 @@
         }
     }
     
-    NSString *ret = [[NSString stringWithFormat:@"%@,%@,%@",
-                     [letters substringWithRange:NSMakeRange(0, 5)],
-                      [letters substringWithRange:NSMakeRange(5, 4)],
-                       [letters substringWithRange:NSMakeRange(9, 3)]]uppercaseString];
-    
-    return ret;
-    
+    return [letters uppercaseString];
 }
 
 -(BOOL)checkIfValid:(NSString *)letters
 {
-    if ([self validateWord:[letters substringWithRange:NSMakeRange(0, 5)]])
+    
+    if ([self validateWord:[letters substringWithRange:NSMakeRange(0, 3)]])
         return NO;
-    if ([self validateWord:[letters substringWithRange:NSMakeRange(5, 4)]])
+    if ([self validateWord:[letters substringWithRange:NSMakeRange(3, 4)]])
         return NO;
-    if ([self validateWord:[letters substringWithRange:NSMakeRange(9, 3)]])
+    if ([self validateWord:[letters substringWithRange:NSMakeRange(7, 5)]])
         return NO;
     
     return YES;

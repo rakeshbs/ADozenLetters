@@ -25,6 +25,10 @@
 @property (nonatomic,retain) NSObject *target;
 @property (nonatomic) SEL selector;
 
--(void)setText:(NSString *)text withFont:(NSString *)font andSize:(CGFloat)size;
+
+
+-(void)setTextColor:(Color4B)_color;
+-(void)setBackgroundColor:(Color4B)_color;
 -(void)addTarget:(NSObject *)target andSelector:(SEL)selector;
+-(void)setText:(NSString *)text withFont:(NSString *)font andSize:(CGFloat)size;
 @end

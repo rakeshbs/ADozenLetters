@@ -13,6 +13,9 @@
 		1408EBD01754429900462F62 /* Round.m in Sources */ = {isa = PBXBuildFile; fileRef = 1408EBCE1754429900462F62 /* Round.m */; };
 		141CA13717889A1C005C1D59 /* GLRendererManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 141CA13617889A1C005C1D59 /* GLRendererManager.m */; };
 		141E4AB11738B22700A5F515 /* GCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 141E4AB01738B22700A5F515 /* GCHelper.m */; };
+		141E690A179CD9E000D330A0 /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = 141E6908179CD9E000D330A0 /* close.png */; };
+		141E690B179CD9E000D330A0 /* close@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 141E6909179CD9E000D330A0 /* close@2X.png */; };
+		141E690F179D43FF00D330A0 /* NewsGoth.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 141E690E179D43CC00D330A0 /* NewsGoth.ttf */; };
 		142916CA1783AB9100B128EA /* GLActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916C91783AB9100B128EA /* GLActivityIndicator.m */; };
 		142916CE1784724C00B128EA /* GameScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916CD1784724C00B128EA /* GameScene.m */; };
 		142916D11784727200B128EA /* MainMenuScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916D01784727200B128EA /* MainMenuScene.m */; };
@@ -98,6 +101,9 @@
 		141CA13617889A1C005C1D59 /* GLRendererManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLRendererManager.m; sourceTree = "<group>"; };
 		141E4AAF1738B22700A5F515 /* GCHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCHelper.h; sourceTree = "<group>"; };
 		141E4AB01738B22700A5F515 /* GCHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCHelper.m; sourceTree = "<group>"; };
+		141E6908179CD9E000D330A0 /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
+		141E6909179CD9E000D330A0 /* close@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close@2X.png"; sourceTree = "<group>"; };
+		141E690E179D43CC00D330A0 /* NewsGoth.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewsGoth.ttf; sourceTree = "<group>"; };
 		142916C81783AB9100B128EA /* GLActivityIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLActivityIndicator.h; sourceTree = "<group>"; };
 		142916C91783AB9100B128EA /* GLActivityIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLActivityIndicator.m; sourceTree = "<group>"; };
 		142916CC1784724C00B128EA /* GameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameScene.h; sourceTree = "<group>"; };
@@ -288,7 +294,7 @@
 			children = (
 				148295F01799022A00CEF2B2 /* Button */,
 				142916D417848B6D00B128EA /* Tile */,
-				142916D917848B6D00B128EA /* Timer */,
+				142916D917848B6D00B128EA /* Controls */,
 			);
 			path = "Game Controls";
 			sourceTree = "<group>";
@@ -304,7 +310,7 @@
 			path = Tile;
 			sourceTree = "<group>";
 		};
-		142916D917848B6D00B128EA /* Timer */ = {
+		142916D917848B6D00B128EA /* Controls */ = {
 			isa = PBXGroup;
 			children = (
 				142916DC17848BC200B128EA /* ScoreControl.h */,
@@ -312,6 +318,7 @@
 				142916DF17858A9F00B128EA /* ElasticCounter.h */,
 				142916E017858A9F00B128EA /* ElasticCounter.m */,
 			);
+			name = Controls;
 			path = Timer;
 			sourceTree = "<group>";
 		};
@@ -472,6 +479,9 @@
 		1445DC7716F97AD600EBBCCF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				141E690E179D43CC00D330A0 /* NewsGoth.ttf */,
+				141E6908179CD9E000D330A0 /* close.png */,
+				141E6909179CD9E000D330A0 /* close@2X.png */,
 				1470B08D1791B5F40009D5A4 /* icon.png */,
 				1470B08E1791B5F40009D5A4 /* icon@2X.png */,
 				1470B08F1791B5F40009D5A4 /* iTunesArtwork */,
@@ -661,6 +671,7 @@
 				1445DCA816F97AD700EBBCCF /* shadow.png in Resources */,
 				14817045171F0A540058FE43 /* InstancedTextureShader.vsh in Resources */,
 				14817044171F0A510058FE43 /* TextureShader.fsh in Resources */,
+				141E690F179D43FF00D330A0 /* NewsGoth.ttf in Resources */,
 				1445DCA916F97AD700EBBCCF /* shadow@2X.png in Resources */,
 				14BC3F361799641100EF5386 /* TextureShader.vsh in Resources */,
 				1445DCAA16F97AD700EBBCCF /* bip1.aiff in Resources */,
@@ -677,6 +688,8 @@
 				149E94E5177C945E00953092 /* tile@2X.png in Resources */,
 				1470B0941791C13A0009D5A4 /* icon@2X.png in Resources */,
 				1470B0951791C13F0009D5A4 /* icon.png in Resources */,
+				141E690A179CD9E000D330A0 /* close.png in Resources */,
+				141E690B179CD9E000D330A0 /* close@2X.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

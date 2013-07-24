@@ -32,6 +32,9 @@
 	BOOL isActive;
     
     Animator *animator;
+    
+    NSRunLoop *renderLoop;
+    NSThread *renderThread;
 }
 
 @property (nonatomic) GLuint viewRenderbuffer;

@@ -120,6 +120,7 @@
         {
             filename = [NSString stringWithFormat:@"%@%@",filename,@"@2X"];
         }
+        NSLog(@"%@",filename);
         
         Texture2D *tex = [self loadTexture:[NSString stringWithFormat:@"%@.%@",filename,type]];
         if (tex != nil)

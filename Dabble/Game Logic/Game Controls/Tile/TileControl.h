@@ -18,9 +18,8 @@
 
 
 @interface TileControlEventData : NSObject
-@property (nonatomic,retain) NSMutableString *concatenatedString;
-@property (nonatomic) int scorePerMove;
 @property (nonatomic) int eventState;
+@property (nonatomic) int score;
 @end
 
 @interface TileControl : GLElement <AnimationDelegate>
@@ -56,8 +55,8 @@
     int characterDataCount;
     int tileColorVerticesCount;
     
-    NSMutableArray *generatedWords;
     
+    NSMutableArray *generatedWords;
     NSMutableArray *newWordsPerMove;
     NSMutableArray *usedWordsPerTurn;
     NSMutableArray *wordsPerMove;
@@ -75,6 +74,16 @@
     CGPoint *thirteenLayout;
     CGPoint *twelveLayout;
     
+    CGPoint collapsePoint;
+    
+    NSMutableString *generatedString;
+    
+    BOOL isPlayable;
+    
+    int tileSequence[13];
+    int score;
+    
+    int checkWord3,checkWord4,checkWord5;
 }
 
 @property (nonatomic,readonly, getter=theNewWordsPerMove) NSMutableArray *newWordsPerMove;
@@ -90,4 +99,6 @@
 -(void)startHidingTiles;
 -(void)cancelHidingTiles;
 -(void)hideTiles;
+-(void)loadDozenLetters:(NSString *)letters;
+-(void)togglePlayability:(BOOL)ON;
 @end

@@ -11,23 +11,17 @@
 #import "GLActivityIndicator.h"
 #import "EasingFunctions.h"
 
-#define verticalOffset 20
+#define verticalOffset 25
 #define horizontalOffset 0
 
 #define TOP_HIDDEN_POSITION 1000
 #define BOTTOM_HIDDEN_POSITION -1000
 
-#define MAX_VERTICAL_OFFSET -30
+#define MAX_VERTICAL_OFFSET -80
 
 #define SCORE_PER_WORD 10
 #define SCORE_PER_DOUBLE 100
 #define SCORE_PER_TRIPLET 500
-
-#define ANIMATION_HIDE_CONTROL 1
-#define ANIMATION_SHOW_CONTROL 2
-
-#define ANIMATION_MOVE_BACK 3
-#define ANIMATION_BOUNCE_BACK 4
 
 #define tileTextureSizeWithBorder 62.0f
 
@@ -35,7 +29,6 @@
 
 -(void)dealloc
 {
-    self.concatenatedString = nil;
     [super dealloc];
 }
 @end
@@ -80,6 +73,7 @@ static Texture2D *tileTextureImage = nil;
     usedWordsPerTurn = [[NSMutableArray alloc]init];
     wordsPerMove = [[NSMutableArray alloc]init];
     
+    
     [self performSelector:@selector(loadDictionary) withObject:nil];
     [self setupColors];
     [self setupGraphics];
@@ -92,7 +86,7 @@ static Texture2D *tileTextureImage = nil;
     
     [self createTiles];
     
-//   [animator addAnimationFor:self ofType:ANIMATION_SHOW_CONTROL ofDuration:4 afterDelayInSeconds:4];
+    //   [animator addAnimationFor:self ofType:ANIMATION_SHOW_CONTROL ofDuration:4 afterDelayInSeconds:4];
 }
 
 -(BOOL)touchable
@@ -131,7 +125,7 @@ static Texture2D *tileTextureImage = nil;
     [shadowTexture generateMipMap];
     
     tileTextureImage = [textureManager getTexture:@"tile" OfType:@"png"];
-    [tileTextureImage generateMipMap];    
+    [tileTextureImage generateMipMap];
     
     shadowTexCoordinates = [shadowTexture getTextureCoordinates];
     tileTexCoordinates = [tileTextureImage getTextureCoordinates];
@@ -162,7 +156,6 @@ static Texture2D *tileTextureImage = nil;
     shadowVertices[3] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 0.0f, .t = t};
     shadowVertices[4] = (Vector3D)  {.x = -shadowSize/(2), .y = shadowSize/(2), .z = 0.0f, .t = t};
     shadowVertices[5] =  (Vector3D) {.x = shadowSize/(2), .y = shadowSize/(2), .z = 0.0f, .t = t};
-    
 }
 
 -(void)setupColors
@@ -209,7 +202,7 @@ static Texture2D *tileTextureImage = nil;
     int rows[3]= {3,4,5};
     CGFloat yMargin = (frame.size.height - (tileSquareSize) * 3 - 2 * verticalOffset)/2;
     
-    twelveLayout[0] = CGPointMake(thirteenLayout[0].x, 1000);
+    twelveLayout[0] = CGPointMake(thirteenLayout[0].x, 700);
     int index = 1;
     for (int i = 0;i<3;i++)
     {
@@ -222,23 +215,13 @@ static Texture2D *tileTextureImage = nil;
             index++;
         }
     }
-    
+    collapsePoint = CGPointMake((twelveLayout[5].x+twelveLayout[6].x)/2, twelveLayout[4].y);
     
 }
 
 
 -(void)createTiles
 {
-    NSString *dataStr = @"ADOZENLETTERS";
-    
-    if (tilesArray != nil)
-    {
-        free(tileColorData);
-        //        free(tileTextureData);
-        free(shadowTextureData);
-        free(characterTextureData);
-    }
-    
     tileColorData = malloc(sizeof(InstancedVertexColorData)* 6 * 13 * 2);
     tileTextureData = malloc(sizeof(InstancedTextureVertexColorData)* 6 * 13);
     shadowTextureData = malloc(sizeof(InstancedTextureVertexColorData)* 6 * 13);
@@ -246,59 +229,22 @@ static Texture2D *tileTextureImage = nil;
     
     tilesArray = [[NSMutableArray alloc]init];
     
-    for (int j = 0; j < dataStr.length; j++)
+    for (int j = 0; j < 13; j++)
     {
-        NSString *character = [dataStr substringWithRange:NSMakeRange(j, 1)];
-        
         Tile *tile = [[Tile alloc]init];
         
         tile.tag = j;
         tile.colorIndex = j%2;
         tile.characterCounter.fontSpriteSheet = characterSpriteSheet;
-        [tile setTileCharacter:character];
+        CGPoint anchorPoint = thirteenLayout[tile.tag];
+        tile.centerPoint = CGPointMake(anchorPoint.x, 1000);
         [tilesArray addObject:tile];
         [self addElement:tile];
-        //tile.tilesArray = tilesArray;
         
         [tile setupColors];
         [tile release];
     }
     
-}
-
--(void)showTiles
-{
-    CGFloat delay = 0.0;
-    self.originInsideElement = CGPointMake(0,0);
-    
-    for (Tile *tile in [tilesArray reverseObjectEnumerator])
-    {
-        CGPoint anchorPoint = thirteenLayout[tile.tag];
-        tile.centerPoint = CGPointMake(anchorPoint.x, 1000);
-        tile.anchorPoint = anchorPoint;
-        
-        if (tile.tag == 0)
-        {
-            [tile moveToPoint:tile.anchorPoint inDuration:0.3 afterDelay:1.7];
-            continue;
-        }
-        [tile throwToPoint:tile.anchorPoint inDuration:0.3 afterDelay:delay];
-        [tile moveToBack];
-        delay += 0.08;
-    }
-}
-
--(void)hideTiles
-{
-    CGFloat delay = 0.0;
-    for (Tile *tile in [tilesArray reverseObjectEnumerator])
-    {
-        tile.anchorPoint = CGPointMake(tile.anchorPoint.x, 1000);
-        [tile moveToPoint:tile.anchorPoint inDuration:0.8 afterDelay:delay];
-        [tile moveToBack];
-        delay += 0.05;
-    }
-
 }
 
 -(void)rearrangeToTwelveLetters
@@ -359,9 +305,39 @@ static Texture2D *tileTextureImage = nil;
     [t2 throwToPoint:t2.anchorPoint inDuration:0.3 afterDelay:0.3];
     [r throwToPoint:r.anchorPoint inDuration:0.3 afterDelay:0.3];
     
+    [self performSelector:@selector(recolorTilesTwelveLayout) withObject:nil afterDelay:0.3 ];
     
-  //  for (Tile *t in tilesArray)
-    //    [t showShadowFor:10 afterDelay:0];
+    
+}
+
+-(void)recolorTilesTwelveLayout
+{
+    [self retagTilesWithTwelveLayout];
+    
+    for (Tile *t in tilesArray)
+    {
+        if (t.tag == 0)
+            continue;
+        else if (t.tag <= 3)
+            t.colorIndex = (t.tag - 1)%2;
+         else if (t.tag <= 7)
+             t.colorIndex = (t.tag - 4)%2;
+        else if (t.tag <= 12)
+             t.colorIndex = (t.tag - 8)%2;
+    }
+}
+
+-(void)recolorTilesThirteenLayout
+{
+    for (Tile *t in tilesArray)
+    {
+        if (t.tag == 0)
+            t.colorIndex = 0;
+        else if (t.tag <= 5)
+            t.colorIndex = (t.tag - 1)%2;
+         else if (t.tag <= 12)
+            t.colorIndex = (t.tag - 6)%2;
+    }
 }
 
 -(void)enableNotification
@@ -376,95 +352,121 @@ static Texture2D *tileTextureImage = nil;
     dictionary = [Dictionary getSharedDictionary];
 }
 
+-(void)enableIsPlayable
+{
+    isPlayable = YES;
+        [self performSelectorInBackground:@selector(checkArrangementForWords) withObject:nil];
+}
+
 
 -(void)tileFinishedMoving:(NSNotification *)notification
 {
-    /*
-     [newWordsPerMove removeAllObjects];
-     [usedWordsPerTurn removeAllObjects];
-     [wordsPerMove removeAllObjects];
-     
-     if (concatenatedWords != nil)
-     [concatenatedWords release];
-     concatenatedWords = [[NSMutableString alloc]init];
-     
-     memset(rearrangedCharacters, '\0', sizeof(char)*lengthOfCharRow*numberOfRows+1);
-     memset(scorePerRow, 0, sizeof(int)*numberOfRows);
-     scorePerMove = 0;
-     
-     for (Tile *tile in tilesArray)
-     {
-     int row = (tile.anchorPoint.y - yMargin)/(verticalOffset + tileSquareSize);
-     int col = (tile.anchorPoint.x - xMargins[row] - tileSquareSize/2.0)/tileSquareSize;
-     
-     const char *characterAt = [tile.character cStringUsingEncoding:NSUTF8StringEncoding];
-     
-     if(tile.touchesInElement.count > 0)
-     *(rearrangedCharacters + row * lengthOfCharRow + col) = '#';
-     else
-     {
-     *(rearrangedCharacters + row * lengthOfCharRow + col) = *characterAt;
-     scorePerRow[row] += tile.score;
-     }
-     
-     }
-     
-     for (int i = numberOfRows;i>=0;i--)
-     {
-     NSString *string = [NSString stringWithUTF8String:(rearrangedCharacters + i * lengthOfCharRow)];
-     int ind = -1;
-     if (self.allowedWords == nil)
-     {
-     ind = [dictionary checkIfWordExists:string];
-     }
-     else
-     {
-     if ([self.allowedWords indexOfString:string]>=0)
-     {
-     ind = 0;
-     }
-     }
-     
-     if (ind >= 0)
-     {
-     for (Tile *tile in tilesArray)
-     {
-     int row = (tile.anchorPoint.y - yMargin)/(verticalOffset + tileSquareSize);
-     if (row == i)
-     {
-     [tile wiggleFor:1.0];
-     [tile animateShowColorInDuration:0.2];
-     }
-     }
-     scorePerMove += scorePerRow[i];
-     [newWordsPerMove addObject:string];
-     [generatedWords addObject:string];
-     [wordsPerMove addObject:string];
-     [concatenatedWords appendFormat:@"%@",string];
-     }
-     else if (ind == -2)
-     {
-     [usedWordsPerTurn addObject:string];
-     [wordsPerMove addObject:string];
-     [concatenatedWords appendFormat:@"%@",string];
-     for (Tile *tile in tilesArray)
-     {
-     int row = (tile.anchorPoint.y - yMargin)/(verticalOffset + tileSquareSize);
-     if (row == i)
-     [tile animateShowColorInDuration:0.2];
-     }
-     }
-     }
-     
-     if (target)
-     {
-     TileControlEventData *eventData = [[TileControlEventData alloc]init];
-     eventData.concatenatedString = self.concatenatedWords;
-     eventData.scorePerMove = scorePerMove;
-     
-     [target performSelector:selector withObject:eventData];
-     [eventData release];
-     }*/
+    if (!isPlayable)
+        return;
+    [self checkArrangementForWords];
+   
+}
+
+-(void)checkArrangementForWords
+{
+    if (generatedString != nil)
+        [generatedString release];
+    
+    generatedString = [[NSMutableString alloc]initWithString:@"#############"];
+    int count = 0;
+    
+    for (Tile *tile in tilesArray)
+    {
+        for (int i = 1;i<13;i++)
+        {
+            if (twelveLayout[i].x == tile.centerPoint.x && twelveLayout[i].y == tile.centerPoint.y)
+            {
+                tileSequence[i] = count;
+                [generatedString replaceCharactersInRange:NSMakeRange(i, 1) withString:tile.character];
+            }
+        }
+        count++;
+    }
+    
+    if (concatenatedWords != nil)
+        [concatenatedWords release];
+    concatenatedWords = [[NSMutableString alloc]init];
+    
+    
+    checkWord3 = [dictionary checkIfWordExists:[generatedString substringWithRange:NSMakeRange(1, 3)]];
+    checkWord4 = [dictionary checkIfWordExists:[generatedString substringWithRange:NSMakeRange(4, 4)]];
+    checkWord5 = [dictionary checkIfWordExists:[generatedString substringWithRange:NSMakeRange(8, 5)]];
+    
+    [self animateForArrangement];
+}
+
+-(void)animateForArrangement
+{
+    score = 0;
+    
+    if (checkWord3 != -1)
+    {
+        for (int i = 1;i<4;i++)
+        {
+            Tile *t = tilesArray[tileSequence[i]];
+            if (checkWord3 >= 0)
+                [t wiggleFor:1.0];
+            [t animateShowColorInDuration:0.2];
+        }
+    }
+    
+    if (checkWord3 >= 0)
+        score += 3;
+    
+    if (checkWord4 != -1)
+    {
+        for (int i = 4;i<8;i++)
+        {
+            Tile *t = tilesArray[tileSequence[i]];
+            if (checkWord4 >= 0)
+                [t wiggleFor:1.0];
+            [t animateShowColorInDuration:0.2];
+        }
+    }
+    
+    if (checkWord4 >= 0)
+        score += 4;
+    
+    
+    if (checkWord5 != -1)
+    {
+        for (int i = 8;i<13;i++)
+        {
+            Tile *t = tilesArray[tileSequence[i]];
+            if (checkWord5 >= 0)
+                [t wiggleFor:1.0];
+            [t animateShowColorInDuration:0.2];
+        }
+    }
+    
+    if (checkWord5 >= 0)
+        score += 5;
+    
+    if (checkWord3 != -1 && checkWord4 != -1 && checkWord5 != -1)
+    {
+        [self togglePlayability:NO];
+        if (target)
+        {
+            TileControlEventData *eventData = [[TileControlEventData alloc]init];
+            eventData.eventState  = 1;
+            [target performSelector:selector withObject:eventData];
+            
+        }
+        return;
+    }
+    if (target)
+    {
+        TileControlEventData *eventData = [[TileControlEventData alloc]init];
+        eventData.eventState  = 0;
+        eventData.score = score;
+        [target performSelector:selector withObject:eventData];
+        
+    }
 }
 
 -(void)tileBreakBond:(NSNotification *)notification
@@ -504,27 +506,6 @@ static Texture2D *tileTextureImage = nil;
 {
     CGFloat animationRatio = [animation getAnimatedRatio];
     
-    if (animation.type == ANIMATION_SHOW_CONTROL)
-    {
-        CGFloat s = getEaseOut(1.0, 2.0, animationRatio);
-        self.scaleInsideElement = CGPointMake(s,s);
-    }
-    else if (animation.type == ANIMATION_HIDE_CONTROL)
-    {
-        
-    }
-    else if (animation.type == ANIMATION_MOVE_BACK)
-    {
-        CGFloat *val = [animation getStartValue];
-        self.originInsideElement = CGPointMake(0,getEaseIn(*val, MAX_VERTICAL_OFFSET, animationRatio));
-    }
-    else if (animation.type == ANIMATION_BOUNCE_BACK)
-    {
-        CGFloat *val = [animation getStartValue];
-        self.originInsideElement = CGPointMake(0,getEaseOutElastic(*val,0, animationRatio,animation.duration));
-    }
-    
-    
     if (animationRatio>=1.0)
         return YES;
     return NO;
@@ -532,49 +513,235 @@ static Texture2D *tileTextureImage = nil;
 
 -(void)animationStarted:(Animation *)animation
 {
-    if (animation.type == ANIMATION_HIDE_CONTROL)
-    {
-        
-    }
+    
 }
 -(void)animationEnded:(Animation *)animation
 {
-    if (animation.type == ANIMATION_SHOW_CONTROL)
+    
+}
+
+-(void)showTiles
+{
+    CGFloat delay = 0.0;
+    int count = 0;
+    self.originInsideElement = CGPointMake(0,0);
+    
+    for (Tile *tile in [tilesArray reverseObjectEnumerator])
     {
+        CGPoint anchorPoint = thirteenLayout[tile.tag];
+        tile.centerPoint = CGPointMake(anchorPoint.x, 1000);
+        tile.anchorPoint = anchorPoint;
+        [animator removeRunningAnimationsForObject:tile];
+        [animator removeQueuedAnimationsForObject:tile];
+        [tile setTileCharacter:[self getThirteenCharacterFromTag:tile.tag]];
         
-    }
-    else if (animation.type == ANIMATION_HIDE_CONTROL)
-    {
-        if (target)
+        if (tile.tag == 0)
         {
-            TileControlEventData *eventData = [[TileControlEventData alloc]init];
-            eventData.concatenatedString = nil;
-            eventData.scorePerMove = -1;
-            
-            [target performSelector:selector withObject:eventData];
-            [eventData release];
+            [tile moveToPoint:tile.anchorPoint inDuration:0.3 afterDelay:1.3];
+            continue;
         }
+        [tile throwToPoint:tile.anchorPoint inDuration:0.3 afterDelay:0.05 * count];
+        [tile moveToBack];
+        delay += 0.08;
+        count ++;
         
+        [self recolorTilesThirteenLayout];
+    }
+}
+
+
+
+-(void)hideTiles
+{
+    CGFloat delay = 0.00;
+    for (Tile *tile in [subElements reverseObjectEnumerator])
+    {
+        [tile moveToPoint:CGPointMake(thirteenLayout[tile.tag].x, 700) inDuration:1 afterDelay:delay];
+        delay += 0.05;
     }
 }
 
 -(void)startHidingTiles
 {
-    [animator removeRunningAnimationsForObject:self ofType:ANIMATION_BOUNCE_BACK];
-    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_MOVE_BACK ofDuration:1.0 afterDelayInSeconds:0];
-    [animation setStartValue:&originInsideElement.y OfSize:sizeof(CGFloat)];
+    [self retagTilesWithTwelveLayout];
+    isPlayable = NO;
+    CGFloat reduceDelay= 0.0;
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(enableIsPlayable) object:nil];
     
+    for (Tile *t in tilesArray)
+    {
+        [animator removeRunningAnimationsForObject:t];
+        [animator removeQueuedAnimationsForObject:t];
+        
+        CGFloat dist = (t.centerPoint.x - collapsePoint.x) * (t.centerPoint.x - collapsePoint.x) + (t.centerPoint.y - collapsePoint.y) * (t.centerPoint.y - collapsePoint.y) ;
+        
+        if (dist <= 625)
+        {
+            reduceDelay -=0.05;
+            continue;
+        }
+    }
+    
+   
+    
+    for (Tile *t in tilesArray)
+    {
+        if (t.tag == 0)
+            continue;
+        
+         [t animateHideColorInDuration:0.2];
+       
+        CGFloat d = ([self calculateDelayFromTag:t.tag])-reduceDelay;
+        if (d < 0)
+            d = 0;
+       [t throwToPoint:collapsePoint inDuration:0.5 afterDelay:d];
+    }
+}
+
+-(CGFloat)calculateDelayFromTag:(int)etag
+{
+    CGFloat delay = 0.05;
+    CGFloat result = 2;
+    
+    if (etag == 5 || etag == 6)
+        result = 0;
+    else if (etag <= 3)
+        result = delay * etag;
+    else if (etag == 7)
+        result = delay * 4;
+    else if (etag > 7 && etag <= 13)
+        result = delay * ((12 - etag) + 5);
+    else if (etag == 4)
+        result = delay * 10;
+    
+    return result;
 }
 
 -(void)cancelHidingTiles
 {
-    [animator removeRunningAnimationsForObject:self ofType:ANIMATION_MOVE_BACK];
-    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_BOUNCE_BACK ofDuration:1.0 afterDelayInSeconds:0];
-    [animation setStartValue:&originInsideElement.y OfSize:sizeof(CGFloat)];
+    CGFloat delay = 0.0;
+    for (Tile *t in tilesArray)
+    {
+        [animator removeRunningAnimationsForObject:t];
+        [animator removeQueuedAnimationsForObject:t];
+        
+        if (t.tag == 5 || t.tag ==6)
+            continue;
+        
+        if (t.centerPoint.x != t.anchorPoint.x || t.centerPoint.y !=  t.anchorPoint.y)
+            delay += 0.05;
+    }
     
+    
+    for (Tile *t in tilesArray)
+    {
+        if (t.tag == 0)
+            continue;
+        
+        [animator removeRunningAnimationsForObject:t];
+        [animator removeQueuedAnimationsForObject:t];
+        
+        if (t.centerPoint.x != t.anchorPoint.x || t.centerPoint.y !=  t.anchorPoint.y)
+            [t throwToPoint:t.anchorPoint inDuration:0.3 afterDelay:(delay-[self calculateDelayFromTag:t.tag])/5.0];
+        
+    }
+    [self performSelector:@selector(enableIsPlayable) withObject:nil afterDelay:0.2];
 }
 
+-(void)retagTilesWithTwelveLayout
+{
+    for (Tile *t in tilesArray)
+    {
+        for (int i = 1;i<=12;i++)
+        {
+            if (t.anchorPoint.x == twelveLayout[i].x && t.anchorPoint.y == twelveLayout[i].y)
+            {
+                t.tag = i;
+            }
+        }
+    }
+}
 
+-(NSString *)getThirteenCharacterFromTag:(int)ttag
+{
+    switch (ttag) {
+        case 0:
+            return @"A";
+            break;
+        case 1:
+            return @"D";
+            break;
+        case 2:
+            return @"O";
+            break;
+        case 3:
+            return @"Z";
+            break;
+        case 4:
+            return @"E";
+            break;
+        case 5:
+            return @"N";
+            break;
+        case 6:
+            return @"L";
+            break;
+        case 7:
+            return @"E";
+            break;
+        case 8:
+            return @"T";
+            break;
+        case 9:
+            return @"T";
+            break;
+        case 10:
+            return @"E";
+            break;
+        case 11:
+            return @"R";
+            break;
+        case 12:
+            return @"S";
+            break;
+            
+        default:
+            break;
+    }
+    return @"";
+}
+
+-(void)loadDozenLetters:(NSString *)letters
+{
+    [self retagTilesWithTwelveLayout];
+    
+    for (Tile *t in tilesArray)
+    {
+        if (t.tag == 0)
+            continue;
+        
+        NSString *character = [letters substringWithRange:NSMakeRange((t.tag - 1), 1)];
+        [t setTileCharacter:character];
+        [t animateHideColorInDuration:0.2];
+        
+    }
+    [self togglePlayability:YES];
+}
+
+-(void)togglePlayability:(BOOL)ON
+{
+    if (ON)
+    {
+        for (Tile * t in tilesArray)
+            t.tilesArray = tilesArray;
+    }
+    else
+    {
+        for (Tile * t in tilesArray)
+            t.tilesArray = nil;
+    }
+    isPlayable = ON;
+}
 
 
 -(void)drawBatchedElements
@@ -593,34 +760,14 @@ static Texture2D *tileTextureImage = nil;
         Matrix3D result;
         [mvpMatrixManager getMVPMatrix:result];
         
-     /*
         for (int j = 0;j<6;j++)
         {
-            memcpy(&((tileColorData  + tileColorVerticesCount)->mvpMatrix), result, sizeof(Matrix3D));
-            (tileColorData + tileColorVerticesCount)->vertex = tileVertices[j];
-            (tileColorData + tileColorVerticesCount)->color = *(tile.currentTileColor + tile.colorIndex);
-            tileColorVerticesCount ++;
-        }*/
-        
-        /*  for (int j = 0;j<6;j++)
-         {
-         memcpy(&((tileColorData + tileColorVerticesCount)->mvpMatrix), result, sizeof(Matrix3D));
-         (tileColorData + tileColorVerticesCount)->vertex = transparentVertices[j];
-         (tileColorData + tileColorVerticesCount)->color = (Color4B){.red = 0,.green = 0,
-         .blue = 0,.alpha = 0};
-         
-         tileColorVerticesCount++;
-         }*/
-        
-        
-         for (int j = 0;j<6;j++)
-         {
-         memcpy(&((tileTextureData + i * 6 + j)->mvpMatrix), result, sizeof(Matrix3D));
-         (tileTextureData + i * 6 + j)->vertex = transparentVertices[j];
-         (tileTextureData + i * 6 + j)->color = *(tile.currentTileColor + tile.colorIndex);
-         (tileTextureData + i * 6 + j)->texCoord = tileTexCoordinates[j];
-             tileColorVerticesCount++;
-         }
+            memcpy(&((tileTextureData + i * 6 + j)->mvpMatrix), result, sizeof(Matrix3D));
+            (tileTextureData + i * 6 + j)->vertex = transparentVertices[j];
+            (tileTextureData + i * 6 + j)->color = *(tile.currentTileColor + tile.colorIndex);
+            (tileTextureData + i * 6 + j)->texCoord = tileTexCoordinates[j];
+            tileColorVerticesCount++;
+        }
         
         [mvpMatrixManager translateInX:0 Y:0 Z:1];
         
@@ -663,12 +810,14 @@ static Texture2D *tileTextureImage = nil;
 
 
 
+
 -(void)dealloc
 {
     free(tileColorData);
     free(shadowTextureData);
     free(characterTextureData);
     free(scoreTextureData);
+    [tilesArray release];
     [super dealloc];
 }
 

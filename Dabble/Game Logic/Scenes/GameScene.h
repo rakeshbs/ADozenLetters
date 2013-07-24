@@ -15,29 +15,23 @@
 #import "CloseButton.h"
 #import "ScoreControl.h"
 
-@interface GameScene : GLScene <AnimationDelegate,CloseButtonDelegate>
+@interface GameScene : GLScene <AnimationDelegate,CloseButtonDelegate,GCHelperDelegate>
 {
-    int numberOfWordsMade;
-    int numberOfTripletsMade;
-    int numberOfDoublesMade;
-
-    NSMutableArray *madeWords;
-    NSMutableArray *madeDoubles;
-    NSMutableArray *madeTriples;
-
+    GCHelper *gcHelper;
     
-    CGFloat remainingTime;
-    CGPoint startOriginPoint;
-    int prevTimeLeft;
-    CFTimeInterval lastUpdate;
+    int scoreCounter;
+    int currentRoundScore;
+    
     BOOL isTimerRunning;
-    
-    TileControl *tileControl;
+    CGPoint startOriginPoint;
     
     GLButton *playButton;
-    
-    int currentRoundScore;
+    GLButton *scoreButton;
+    TileControl *tileControl;
     CloseButton *closeButton;
+    ScoreControl *scoreControl;
+    ScoreControl *totalScoreControl;
+
     
 }
 @end
