@@ -14,17 +14,11 @@
 {
     if (self = [super initWithFrame:_frame])
     {
+        _textScale = 1.0;
         textureRenderer = [rendererManager getRendererWithVertexShaderName:@"TextureShader" andFragmentShaderName:@"StringTextureShader"];
         
         textureVertexColorData = malloc(sizeof(TextureVertexColorData) * 6);
         self.textColor = (Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 255};
-        
-        textureVertexColorData[0].vertex = (Vertex3D){.x = 0, .y = 0, .z = 0};
-        textureVertexColorData[1].vertex = (Vertex3D){.x = _frame.size.width, .y = 0, .z = 0};
-        textureVertexColorData[2].vertex = (Vertex3D){.x = _frame.size.width, .y = _frame.size.height, .z = 0};
-        textureVertexColorData[3].vertex = (Vertex3D){.x = 0, .y = 0, .z = 0};
-        textureVertexColorData[4].vertex = (Vertex3D){.x = 0, .y = _frame.size.height, .z = 0};
-        textureVertexColorData[5].vertex = (Vertex3D){.x = _frame.size.width, .y = _frame.size.height, .z = 0};
         
         for (int i = 0;i<6;i++)
         {
@@ -57,6 +51,12 @@
     }
 }
 
+-(void)setTextScale:(CGFloat)textScale
+{
+    _textScale = textScale;
+    [texture generateMipMap];
+}
+
 -(void)setupLabel
 {
     if (texture)
@@ -65,20 +65,31 @@
     }
     
     texture = [textureManager getStringTexture:self.text dimensions:self.frame.size horizontalAlignment:self.textAlignment verticalAlignment:UITextAlignmentCenter fontName:self.font.fontName fontSize:self.font.pointSize];
-    
+    if (self.textScale != 1.0)
+    {
+        [texture generateMipMap];
+    }
+
+    Vertex3D *vertices = [texture getTextureVertices];
     TextureCoord *texCoords = [texture getTextureCoordinates];
     for (int i = 0;i<6;i++)
     {
+        
+        textureVertexColorData[i].vertex = vertices[i];
         textureVertexColorData[i].texCoord = texCoords[i];
     }
+    
 }
 
 
 -(void)draw
 {
-    [mvpMatrixManager translateInX:0 Y:0 Z:1];
+    [mvpMatrixManager pushModelViewMatrix];
+    [mvpMatrixManager translateInX:self.frame.size.width/2 Y:self.frame.size.height/2 Z:1];
+    
+    [mvpMatrixManager scaleByXScale:self.textScale YScale:self.textScale ZScale:1];
     [textureRenderer setTexture:texture];
     [textureRenderer drawWithArray:textureVertexColorData andCount:6];
-    [mvpMatrixManager translateInX:0 Y:0 Z:-1];
+    [mvpMatrixManager popModelViewMatrix];
 }
 @end

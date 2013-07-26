@@ -27,13 +27,12 @@
     
     [[GLDirector getSharedDirector]setWindow:self.window];
     [[GLDirector getSharedDirector]setInterfaceOrientation:UIInterfaceOrientationPortrait];
-   
-    //Scene *scene = [[Scene alloc]init];
-    //[[Director getSharedDirector]presentScene:scene];
+    
     
     GameScene *gameScene = [[GameScene alloc]init];
     [[GLDirector getSharedDirector]presentScene:gameScene];
     [gameScene release];
+    [[[GLDirector getSharedDirector] openGLview] resumeTimer];
     return YES;
 }
 
@@ -63,7 +62,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     GLDirector *director = [GLDirector getSharedDirector];
-    [director.openGLview resumeTimer];
+   [director.openGLview resumeTimer];
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 

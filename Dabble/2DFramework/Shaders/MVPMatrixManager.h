@@ -16,8 +16,11 @@
     int currentModelViewMatrixIndex;
     int currentProjectionMatrixIndex;
     
+    CGFloat zCoordinate;
+    CGFloat zCoordinateStack[100];
 }
 
+@property (nonatomic) CGFloat zCoordinate;
 +(id)sharedMVPMatrixManager;
 -(void)pushModelViewMatrix;
 -(void)popModelViewMatrix;

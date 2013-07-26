@@ -457,8 +457,8 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         
 
     }
-   
-  /*  CGImageRef imageRef = CGBitmapContextCreateImage(context);
+   /*
+   CGImageRef imageRef = CGBitmapContextCreateImage(context);
     UIImage* image = [[UIImage alloc] initWithCGImage:imageRef];
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -466,7 +466,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
     NSString *filePath = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%d.png",fontSpriteSheet.hash]]; //Add the file name
     [UIImagePNGRepresentation(image) writeToFile:filePath atomically:YES]; //Write the file
     */
-
+    
     self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_A8 pixelsWide:width pixelsHigh:height contentSize:CGSizeMake(totalWidth, totalHeight)];
 	
 	CGContextRelease(context);

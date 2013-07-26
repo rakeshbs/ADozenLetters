@@ -29,6 +29,7 @@
         maskedTextureCoords = malloc(sizeof(TextureCoord) * 6);
         alpha = 255;
         verticalOffset = 0;
+        uiScale = [[UIScreen mainScreen]scale];
     }
     return self;
 }
@@ -41,6 +42,11 @@
 -(BOOL)touchable
 {
     return NO;
+}
+
+-(int)numberOfLayers
+{
+    return 1;
 }
 
 -(void)setStringValueToCount:(NSString *)str inDuration:(CGFloat)duration
@@ -200,16 +206,10 @@
 {
     vertexDataCount = 0;
     
-    //[mvpMatrixManager pushModelViewMatrix];
-    /*[mvpMatrixManager translateInX:frame.origin.x + frame.size.width/2
-                                 Y:frame.origin.y + frame.size.height/2 Z:1];
-    */
-    
     [self addSpriteAtIndex:-1];
     [self addSpriteAtIndex:0];
     [self addSpriteAtIndex:1];
-    
-    //[mvpMatrixManager popModelViewMatrix];
+
     
 }
 
@@ -264,7 +264,7 @@
     {
         memcpy(&((vertexData + vertexDataCount)->mvpMatrix), result, sizeof(Matrix3D));
         (vertexData + vertexDataCount)->vertex = maskedVertices[j];
-        (vertexData + vertexDataCount)->color = _color;
+        (vertexData + vertexDataCount)->color = _textColor;
         (vertexData + vertexDataCount)->color.alpha = alpha;
         (vertexData + vertexDataCount)->texCoord = maskedTextureCoords[j];
         vertexDataCount++;
@@ -277,8 +277,8 @@
 {
     CGRect texCoordRect = fontSprite.textureCoordinatesCGRect;
     
-    CGFloat textureTop = texCoordRect.origin.y + 2 * topRatio * texCoordRect.size.height;
-    CGFloat textureBottom = texCoordRect.origin.y + (1.0 - 2 * bottomRatio) * texCoordRect.size.height;
+    CGFloat textureTop = texCoordRect.origin.y + uiScale * topRatio * texCoordRect.size.height;
+    CGFloat textureBottom = texCoordRect.origin.y + (1.0 - uiScale * bottomRatio) * texCoordRect.size.height;
     
     return CGRectMake(texCoordRect.origin.x, textureTop,
                       texCoordRect.size.width, textureBottom - textureTop);

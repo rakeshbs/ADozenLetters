@@ -62,7 +62,7 @@
     else
     {
         NSLog(@"Already authenticated!");
-        isUserAuthenticated = YES;
+            isUserAuthenticated = YES;
     }
 }
 
@@ -109,12 +109,15 @@
 
 -(void)loadDefaultLeaderBoard
 {
-    [[GKLocalPlayer localPlayer] loadDefaultLeaderboardCategoryIDWithCompletionHandler:((^(NSString *categoryID, NSError *error)
+/*    [[GKLocalPlayer localPlayer] loadDefaultLeaderboardCategoryIDWithCompletionHandler:((^(NSString *categoryID, NSError *error)
       {
           self.leaderBoardID = categoryID;
+          NSLog(@"%@",self.leaderBoardID);
           [self.delegate defaultLeaderBoardLoaded];
       }))];
-    
+    */
+    self.leaderBoardID = @"HighScore";
+    [self.delegate defaultLeaderBoardLoaded];
 }
 
 - (void)updateScore
@@ -124,8 +127,9 @@
     if (self.leaderBoardID == nil)
         return;
     
+    NSLog(@"starting update score");
     
-    GKLeaderboard *leaderboardRequest = [[GKLeaderboard alloc] initWithPlayerIDs:[NSArray arrayWithObjects:[GKLocalPlayer localPlayer].playerID, nil]];
+    GKLeaderboard *leaderboardRequest = [[[GKLeaderboard alloc] initWithPlayerIDs:[NSArray arrayWithObjects:[GKLocalPlayer localPlayer].playerID, nil]]autorelease];
     leaderboardRequest.category = self.leaderBoardID;
     
     if (leaderboardRequest != nil) {
@@ -135,9 +139,10 @@
             }
             else{
                 int64_t highscore = [leaderboardRequest.localPlayerScore value];
-                GKScore *scoreReporter = [[GKScore alloc] initWithCategory:self.leaderBoardID];
+                GKScore *scoreReporter = [[[GKScore alloc] initWithCategory:self.leaderBoardID]autorelease];
                 scoreReporter.value = (highscore - lastGameCenterScore) + currentScore;
                 scoreReporter.context = 0;
+                    NSLog(@"getting updated score");
                 
                 [scoreReporter reportScoreWithCompletionHandler:^(NSError *error)
                 {
@@ -147,6 +152,7 @@
                         lastGameCenterScore = currentScore;
                         [self updatePrefs];
                         [self.delegate scoreUpdated];
+                        NSLog(@"updated score");
                     }
                     else
                     {
@@ -168,6 +174,8 @@
     if (self.leaderBoardID == nil)
         return;
     
+                        NSLog(@"downloading updated score");
+    
     GKLeaderboard *leaderboardRequest = [[[GKLeaderboard alloc] initWithPlayerIDs:[NSArray arrayWithObjects:[GKLocalPlayer localPlayer].playerID, nil]]autorelease];
     
     if (leaderboardRequest != nil) {
@@ -176,6 +184,8 @@
 
             }
             else{
+                
+                                        NSLog(@"downloaded updated score");
                 int64_t highscore = [leaderboardRequest.localPlayerScore value];
                 currentScore = (highscore - lastGameCenterScore) + currentScore;
                 lastGameCenterScore = highscore;
@@ -193,8 +203,11 @@
     if (self.leaderBoardID == nil)
         return;
     
+     NSLog(@"downloading rank");
+    
     GKLeaderboard *leaderboardRequest = [[[GKLeaderboard alloc] init]autorelease];
-    leaderboardRequest.playerScope = GKLeaderboardTimeScopeAllTime;
+    leaderboardRequest.playerScope = GKLeaderboardPlayerScopeGlobal;
+    leaderboardRequest.timeScope = GKLeaderboardTimeScopeAllTime;
     
     if (leaderboardRequest != nil) {
         [leaderboardRequest loadScoresWithCompletionHandler:^(NSArray *scores, NSError *error){
@@ -202,6 +215,7 @@
                 
             }
             else{
+                 NSLog(@"downloaded updated rank");
                 int64_t highscore = [leaderboardRequest.localPlayerScore value];
                 currentScore = (highscore - lastGameCenterScore) + currentScore;
                 lastGameCenterScore = highscore;

@@ -40,6 +40,10 @@
     CGPoint scaleInsideElement;
     CGPoint originInsideElement;
     
+    VertexColorData *frameColorData;
+    GLRenderer *backgroundColorRenderer;
+    
+    Color4B frameBackgroundColor;
 }
 
 @property (nonatomic) BOOL hidden;
@@ -54,13 +58,12 @@
 @property (nonatomic,readonly) CGRect absoluteFrame;
 @property (nonatomic,readonly) int numberOfLayers;
 @property (nonatomic,assign) BOOL touchable;
-@property (nonatomic,readonly) BOOL drawable;
 
 
 @property (nonatomic,retain) GLElement *parent;
 @property (nonatomic,retain) OpenGLESView *openGLView;
 @property (nonatomic,retain) NSMutableArray *touchesInElement;
-
+@property (nonatomic) Color4B frameBackgroundColor;
 
 
 -(void)drawElement;
@@ -85,5 +88,6 @@
 -(void)addedToParent;
 -(void)willRemoveFromParent;
 
-
+//To be accessed only by OpenGLViewController;
+-(void)resetZCoordinate;
 @end

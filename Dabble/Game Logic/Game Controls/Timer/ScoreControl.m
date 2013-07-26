@@ -24,30 +24,12 @@
         offsetVisibleX = 0;
         textureRenderer = [rendererManager getRendererWithVertexShaderName:@"InstancedTextureShader" andFragmentShaderName:@"StringTextureShader"];
         
-        colorRenderer = [rendererManager getRendererWithVertexShaderName:@"ColorShader" andFragmentShaderName:@"ColorShader"];
-        
-        glGenBuffers(1, &colorBuffer);
-        
         counterControls = [[NSMutableArray alloc]init];
         
         NSString *fontStr =  @"0,1,2,3,4,5,6,7,8,9";;
         numberArray = [[fontStr componentsSeparatedByString:@","]retain];
-        _color = (Color4B){.red = 255,.green = 255,.blue = 255, .alpha = 255};
         
-        vertexColorData = malloc(sizeof(VertexColorData) * 6);
-        vertexColorData[0].vertex = (Vertex3D){.x = 0, .y = 0, .z = 0};
-        vertexColorData[1].vertex = (Vertex3D){.x = frame.size.width, .y = 0, .z = 0};
-        vertexColorData[2].vertex = (Vertex3D){.x = frame.size.width, .y = frame.size.height, .z = 0};
-        vertexColorData[3].vertex = (Vertex3D){.x = 0, .y = 0, .z = 0};
-        vertexColorData[4].vertex = (Vertex3D){.x = 0, .y = frame.size.height, .z = 0};
-        vertexColorData[5].vertex = (Vertex3D){.x = frame.size.width, .y = frame.size.height, .z = 0};
-        for (int i = 0;i<6;i++)
-        {
-            vertexColorData[i].color = (Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 0};
-        }
         
-        glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(VertexColorData) * 6, vertexColorData,GL_STATIC_DRAW);
         textAlignment = UITextAlignmentCenter;
         
     }
@@ -59,22 +41,16 @@
     timeLeft = time;
 }
 
-
--(void)setBackgroundColor:(Color4B)color
+-(int)numberOfLayers
 {
-    for (int i = 0;i<6;i++)
-    {
-        vertexColorData[i].color = color;
-    }
-    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(VertexColorData) * 6, vertexColorData,GL_STATIC_DRAW);
+    return counterControls.count;
 }
 
 -(void)setTextColor:(Color4B)textcolor
 {
-    _color = textcolor;
+    _textColor = textcolor;
     for (ElasticCounter *counter in counterControls)
-        counter.color = textcolor;
+        counter.textColor = textcolor;
 }
 
 -(void)stop
@@ -256,6 +232,8 @@
 {
     fontSpriteSheet = [fontSpriteSheetManager getFontSpriteSheetOfType:FontSpriteTypeNumbers withFont:font andSize:size];
     
+    [fontSpriteSheet.texture generateMipMap];
+    
     if (vertexData != NULL)
         free(vertexData);
     
@@ -267,7 +245,7 @@
     for (FontSprite *f in fontSpriteSheet.fontSpriteDictionary.objectEnumerator)
         maxWidth = (maxWidth < f.width)?f.width:maxWidth;
     
-    maxWidth /=2;
+    maxWidth /=[[UIScreen mainScreen]scale];
     widthPerCounter = maxWidth;
     
     int num = floorf(((self.frame.size.width - marginX*2)/maxWidth));
@@ -280,7 +258,7 @@
                                                             self.frame.size.height - 2 * marginY)];
         counter.fontSpriteSheet = fontSpriteSheet;
         [counter setSequence:numberArray];
-        counter.color = _color;
+        counter.textColor = _textColor;
         [self addElement:counter];
         counter.alpha = 0;
         counter.visible = NO;
@@ -295,8 +273,7 @@
 
 -(void)draw
 {  
-    [colorRenderer drawWithVBO:colorBuffer andCount:6];
-    int count = 0;
+     int count = 0;
      
     for (ElasticCounter *counter in counterControls)
     {

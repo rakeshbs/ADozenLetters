@@ -80,7 +80,7 @@ NSArray *charactersArray;
         isBonded = 0;
         shadowVisible = NO;
         charactersArray = [[fontStr componentsSeparatedByString:@","]retain];
-        characterCounter = [[ElasticCounter alloc]initWithFrame:CGRectMake(0, 0, tileSquareSize, 49)];
+        characterCounter = [[ElasticCounter alloc]initWithFrame:CGRectMake(0, 0, tileSquareSize, 48)];
         [characterCounter setSequence:charactersArray];
         isBondedColor = NO;
     }
@@ -91,7 +91,7 @@ NSArray *charactersArray;
 -(void)setTileCharacter:(NSString *)_character
 {
     self.character = _character;
-    [characterCounter setStringValueToCount:character inDuration:0.8];
+    [characterCounter setStringValueToCount:character inDuration:0.6];
 }
 
 -(void)setupSounds
@@ -123,7 +123,7 @@ NSArray *charactersArray;
     }
     
     Color4fCopy(&characterColors , currentCharacterColor);
-    characterCounter.color = *currentCharacterColor;
+    characterCounter.textColor = *currentCharacterColor;
 }
 
 -(BOOL)animationUpdate:(Animation *)animation;
@@ -188,7 +188,7 @@ NSArray *charactersArray;
         currentCharacterColor->blue = getEaseIn(startCharacterColor.blue, charColor.blue, animationRatio);
         currentCharacterColor->alpha = getEaseIn(startCharacterColor.alpha, charColor.alpha, animationRatio);
         
-        characterCounter.color = *currentCharacterColor;
+        characterCounter.textColor = *currentCharacterColor;
         
     }
     else if (animation.type == ANIMATION_HIDE_COLOR)
@@ -212,7 +212,7 @@ NSArray *charactersArray;
         currentCharacterColor->blue = getEaseIn(startCharacterColor.blue, charColor.blue, animationRatio);
         currentCharacterColor->alpha = getEaseIn(startCharacterColor.alpha, charColor.alpha, animationRatio);
         
-                characterCounter.color = *currentCharacterColor;
+                characterCounter.textColor = *currentCharacterColor;
         
     }
     if (animationRatio >= 1.0)
@@ -264,8 +264,10 @@ NSArray *charactersArray;
         wiggleAngle = 0;
         [self moveToFront];
         
-        [animator removeQueuedAnimationsForObject:self];
-        [animator removeRunningAnimationsForObject:self];
+        [animator removeQueuedAnimationsForObject:self ofType:ANIMATION_WIGGLE];
+        [animator removeRunningAnimationsForObject:self ofType:ANIMATION_WIGGLE];
+        [animator removeQueuedAnimationsForObject:self ofType:ANIMATION_MOVE];
+        [animator removeRunningAnimationsForObject:self ofType:ANIMATION_MOVE];
         
         if (isBonded == 1)
         {

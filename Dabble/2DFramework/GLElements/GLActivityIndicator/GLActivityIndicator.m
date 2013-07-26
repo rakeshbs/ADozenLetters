@@ -11,9 +11,9 @@
 
 #define ACTIVITY_POINTS_COUNT 12
 #define NUMBER_POINTS_PER_SIDE 3
-#define INITIAL_POSITION 1000.0f
+#define INITIAL_POSITION 0
 #define ACTIVITY_INDICATOR_SQUARE_SIZE 20.0f
-#define ACTIVITY_INDICATOR_SIZE 9.0f
+#define ACTIVITY_INDICATOR_SIZE 4.0f
 
 #define ANIMATION_SHOW_ACTIVITY_INDICATOR 1
 #define ANIMATION_HIDE_ACTIVITY_INDICATOR 2
@@ -34,43 +34,34 @@
 
 @implementation GLActivityIndicator
 
+@synthesize iteration;
+
 -(BOOL)touchable
 {
     return NO;
 }
 
--(id)init
+-(id)initWithFrame:(CGRect)_frame
 {
-    if (self = [super init])
+    if (self = [super initWithFrame:_frame])
     {
         self.hidden = YES;
-        [[NSNotificationCenter defaultCenter]addObserver:self
-                                                    selector:@selector(show) name:GLACTIVITYINDICATOR_SHOW_NOTIFY object:nil];
-        [[NSNotificationCenter defaultCenter]addObserver:self
-                                                selector:@selector(hide) name:GLACTIVITYINDICATOR_HIDE_NOTIFY object:nil];
-        
-        pointSpritesShader = [shaderManager getShaderByVertexShaderFileName:@"PointSpritesShader" andFragmentShaderFileName:@"PointSpritesShader"];
-        
-        UNIFORM_MVPMATRIX = [pointSpritesShader uniformIndex:@"mvpmatrix"];
-        ATTRIB_VERTEX = [pointSpritesShader attributeIndex:@"vertex"];
-        ATTRIB_COLOR = [pointSpritesShader attributeIndex:@"color"];
-        ATTRIB_POINTSIZE = [pointSpritesShader attributeIndex:@"size"];
-        
         pointsData = calloc(ACTIVITY_POINTS_COUNT,sizeof(PointVertexColorSizeData));
         activityPoints = [[NSMutableArray alloc]init];
+        
+        pointsRenderer = [rendererManager getRendererWithVertexShaderName:@"PointSpritesShader" andFragmentShaderName:@"PointSpritesShader"];
         
         for (int i = 0;i < ACTIVITY_POINTS_COUNT;i++)
         {
             ActivityPoint *activityPoint = [[ActivityPoint alloc]init];
             activityPoint.startPoint = CGPointMake(0,0);
             activityPoint.index = i;
-            (pointsData + i)->color = (Color4B) {.red = 0 , .green = 0, .blue = 0, .alpha = 150};
-            (pointsData + i)->size = ACTIVITY_INDICATOR_SIZE;
+            (pointsData + i)->color = (Color4B) {.red = 255 , .green = 255, .blue = 255, .alpha = 255};
+            (pointsData + i)->size = ACTIVITY_INDICATOR_SIZE * [[UIScreen mainScreen]scale];
             [activityPoints addObject:activityPoint];
             [activityPoint release];
         }
         relativePosition = INITIAL_POSITION;
-        glGenBuffers(1, &pointsVertexBuffer);
         cycleModeOpen = YES;
     }
     return self;
@@ -79,31 +70,9 @@
 -(void)draw
 {
     [mvpMatrixManager pushModelViewMatrix];
-    [mvpMatrixManager translateInX:0 Y:relativePosition Z:1];
-
-    [pointSpritesShader use];
-    
-    glBindBuffer(GL_ARRAY_BUFFER, pointsVertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, ACTIVITY_POINTS_COUNT * sizeof(PointVertexColorSizeData), pointsData, GL_DYNAMIC_DRAW);
-    
-    Matrix3D mvpMatrix;
-    [mvpMatrixManager getMVPMatrix:mvpMatrix];
-    
-    glUniformMatrix4fv(UNIFORM_MVPMATRIX, 1, GL_FALSE, mvpMatrix);
-    
-    glEnableVertexAttribArray(ATTRIB_VERTEX);
-    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, 0,  sizeof(PointVertexColorSizeData),0);
-    
-    glEnableVertexAttribArray(ATTRIB_COLOR);
-    glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(PointVertexColorSizeData),
-                          (GLvoid*)sizeof(Vertex3D));
-    
-    glEnableVertexAttribArray(ATTRIB_POINTSIZE);
-    glVertexAttribPointer(ATTRIB_POINTSIZE, 1, GL_FLOAT, 0,  sizeof(PointVertexColorSizeData),
-                          (GLvoid*)(sizeof(Vertex3D)+sizeof(Color4B)));
-
-    glDrawArrays(GL_POINTS, 0, ACTIVITY_POINTS_COUNT);
-    
+    [mvpMatrixManager translateInX:frame.size.width/2
+                                 Y:frame.size.height/2 + relativePosition Z:1];
+    [pointsRenderer drawWithArray:pointsData andCount:ACTIVITY_POINTS_COUNT];
     [mvpMatrixManager popModelViewMatrix];
 }
 
@@ -113,7 +82,7 @@
     
     if (animation.type == ANIMATION_SHOW_ACTIVITY_INDICATOR)
     {
-        relativePosition = getEaseOutElastic(INITIAL_POSITION, 0, animationRatio,animation.duration);
+     //   relativePosition = getEaseOutElastic(INITIAL_POSITION, 0, animationRatio,animation.duration);
     }
     if (animation.type == ANIMATION_RUN_ACTIVITY_INDICATOR)
     {
@@ -125,7 +94,7 @@
     }
     else if (animation.type == ANIMATION_HIDE_ACTIVITY_INDICATOR)
     {
-        relativePosition = getEaseOut(0, -INITIAL_POSITION, animationRatio);
+        relativePosition = getEaseOut(0, -1000, animationRatio);
     }
     
     if (animationRatio>=1.0)
@@ -147,10 +116,8 @@
     
     if (animation.type == ANIMATION_SHOW_ACTIVITY_INDICATOR)
     {
-        
         for (int i = 0;i<ACTIVITY_POINTS_COUNT;i++)
         {
-            
            Animation *animation =
             [animator addAnimationFor:self ofType:ANIMATION_RUN_ACTIVITY_INDICATOR ofDuration:0.5 afterDelayInSeconds:0.1*i+0.5];
             ActivityPoint *activityPoint = activityPoints[i];
@@ -187,6 +154,12 @@
             activityPoint.endPoint = CGPointMake(x, y);
             
         }
+        
+        if ([self.delegate respondsToSelector:@selector(activityIndicatorDidAappear:)])
+        {
+            [self.delegate activityIndicatorDidAappear:self];
+        }
+
     }
     else if (animation.type == ANIMATION_RUN_ACTIVITY_INDICATOR)
     {
@@ -194,65 +167,79 @@
         
        if (cycleCount == 0)
         {
-            cycleModeOpen = !cycleModeOpen;
-            
-            for (int i = 0;i<ACTIVITY_POINTS_COUNT;i++)
-            {
-                Animation *animation =
-                [animator addAnimationFor:self ofType:ANIMATION_RUN_ACTIVITY_INDICATOR  ofDuration:0.5 afterDelayInSeconds:0.1*i+0.5];
-                ActivityPoint *activityPoint = activityPoints[i];
-                animation.animationData = activityPoint;
-                activityPoint.startPoint = activityPoint.endPoint;
-                
-                if (!cycleModeOpen)
-                    activityPoint.endPoint = CGPointMake(0, 0);
-                else
-                {
-                    CGFloat x =0;
-                    CGFloat y =0;
-                    
-                    int side = i/NUMBER_POINTS_PER_SIDE;
-                    
-                    if (side == 0)
-                    {
-                        x = -ACTIVITY_INDICATOR_SQUARE_SIZE/2 + divisions * (i%NUMBER_POINTS_PER_SIDE);
-                        y = ACTIVITY_INDICATOR_SQUARE_SIZE/2;
-                    }
-                    else if (side == 1)
-                    {
-                        y = ACTIVITY_INDICATOR_SQUARE_SIZE/2 - divisions * (i%NUMBER_POINTS_PER_SIDE);
-                        x = ACTIVITY_INDICATOR_SQUARE_SIZE/2;
-                    }
-                    else if (side == 2)
-                    {
-                        x = ACTIVITY_INDICATOR_SQUARE_SIZE/2 - divisions * (i%NUMBER_POINTS_PER_SIDE);
-                        y = -ACTIVITY_INDICATOR_SQUARE_SIZE/2;
-                    }
-                    else if (side == 3)
-                    {
-                        y = -ACTIVITY_INDICATOR_SQUARE_SIZE/2 + divisions * (i%NUMBER_POINTS_PER_SIDE);
-                        x = -ACTIVITY_INDICATOR_SQUARE_SIZE/2;
-                    }
-
-                    activityPoint.endPoint = CGPointMake(x, y);
-                }
-                cycleCount++;
-                
-            }
-
+            iteration++;
+            [self.delegate activitiyIndicatorFinishedAnimating:self];
         }
     }
     else if (animation.type == ANIMATION_HIDE_ACTIVITY_INDICATOR)
     {
         self.hidden = YES;
+        if ([self.delegate respondsToSelector:@selector(activityIndicatorDidAappear:)])
+        {
+            [self.delegate activityIndicatorDidDisappear:self];
+        }
     }
 
 }
+
+-(void)animate
+{
+    cycleModeOpen = !cycleModeOpen;
+    CGFloat divisions = ACTIVITY_INDICATOR_SQUARE_SIZE/NUMBER_POINTS_PER_SIDE;
+    
+    for (int i = 0;i<ACTIVITY_POINTS_COUNT;i++)
+    {
+        Animation *animation =
+        [animator addAnimationFor:self ofType:ANIMATION_RUN_ACTIVITY_INDICATOR  ofDuration:0.5 afterDelayInSeconds:0.1*i+0.5];
+        ActivityPoint *activityPoint = activityPoints[i];
+        animation.animationData = activityPoint;
+        activityPoint.startPoint = activityPoint.endPoint;
+        
+        if (!cycleModeOpen)
+            activityPoint.endPoint = CGPointMake(0, 0);
+        else
+        {
+            CGFloat x =0;
+            CGFloat y =0;
+            
+            int side = i/NUMBER_POINTS_PER_SIDE;
+            
+            if (side == 0)
+            {
+                x = -ACTIVITY_INDICATOR_SQUARE_SIZE/2 + divisions * (i%NUMBER_POINTS_PER_SIDE);
+                y = ACTIVITY_INDICATOR_SQUARE_SIZE/2;
+            }
+            else if (side == 1)
+            {
+                y = ACTIVITY_INDICATOR_SQUARE_SIZE/2 - divisions * (i%NUMBER_POINTS_PER_SIDE);
+                x = ACTIVITY_INDICATOR_SQUARE_SIZE/2;
+            }
+            else if (side == 2)
+            {
+                x = ACTIVITY_INDICATOR_SQUARE_SIZE/2 - divisions * (i%NUMBER_POINTS_PER_SIDE);
+                y = -ACTIVITY_INDICATOR_SQUARE_SIZE/2;
+            }
+            else if (side == 3)
+            {
+                y = -ACTIVITY_INDICATOR_SQUARE_SIZE/2 + divisions * (i%NUMBER_POINTS_PER_SIDE);
+                x = -ACTIVITY_INDICATOR_SQUARE_SIZE/2;
+            }
+            
+            activityPoint.endPoint = CGPointMake(x, y);
+        }
+        cycleCount++;
+        
+    }
+
+}
+
 
 -(void)show
 {
     if (!self.hidden)
         return;
+    
+    iteration = 0;
     
     [animator removeQueuedAnimationsForObject:self];
     [animator removeRunningAnimationsForObject:self];
@@ -266,17 +253,28 @@
     }
     cycleCount = 0;
     cycleModeOpen = YES;
-    [animator addAnimationFor:self ofType:ANIMATION_SHOW_ACTIVITY_INDICATOR ofDuration:1.0 afterDelayInSeconds:0];
+    [animator addAnimationFor:self ofType:ANIMATION_SHOW_ACTIVITY_INDICATOR ofDuration:0.0 afterDelayInSeconds:0];
 }
 
 -(void)hide
 {
     if (self.hidden)
         return;
+    iteration = 0;
+    
     
     [animator removeQueuedAnimationsForObject:self];
     [animator removeRunningAnimationsForObject:self];
     [animator addAnimationFor:self ofType:ANIMATION_HIDE_ACTIVITY_INDICATOR ofDuration:1.0 afterDelayInSeconds:0];
+}
+
+-(void)dealloc
+{
+    NSLog(@"deallocating activity indicator");
+    self.delegate = nil;
+    free(pointsData);
+    [activityPoints release];
+    [super dealloc];
 }
 
 @end

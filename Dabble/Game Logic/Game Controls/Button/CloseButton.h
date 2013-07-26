@@ -22,7 +22,6 @@
     GLRenderer *textureRenderer;
     
     TextureVertexColorData *textureVertexColorData;
-    VertexColorData *vertexColorData;
     
     Texture2D *buttonTextTexture;
     

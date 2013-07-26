@@ -14,9 +14,11 @@
     Texture2D *texture;
     TextureVertexColorData *textureVertexColorData;
     GLuint vbo;
+    CGFloat offset;
 }
 
 @property (nonatomic,retain) NSString *text;
+@property (nonatomic) CGFloat  textScale;
 @property (nonatomic,retain) UIFont *font;
 @property (nonatomic) Color4B textColor;
 @property (nonatomic) UITextAlignment textAlignment;

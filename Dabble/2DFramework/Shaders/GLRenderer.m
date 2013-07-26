@@ -268,7 +268,7 @@
     glVertexAttribPointer(ATTRIB_COLOR, 4, GL_UNSIGNED_BYTE, GL_TRUE,  sizeof(VertexColorData),
                           &data[0].color);
     
-    glDrawArrays(primitive, 0, dataCount);
+   glDrawArrays(primitive, 0, dataCount);
     
 }
 

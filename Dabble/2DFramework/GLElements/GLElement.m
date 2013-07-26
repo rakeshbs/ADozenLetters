@@ -22,16 +22,17 @@
 
 @synthesize touchesInElement,originInsideElement,scaleInsideElement;
 
-@synthesize frame,numberOfLayers,tag,parent;
+@synthesize frame,numberOfLayers,tag,parent,frameBackgroundColor;
 
 -(id)initWithFrame:(CGRect)_frame
 {
     if (self = [super init])
     {
+        self.frame = _frame;
         self.parent = nil;
         scaleInsideElement = CGPointMake(1.0, 1.0);
         originInsideElement = CGPointMake(0, 0);
-                self.touchable = YES;
+        self.touchable = YES;
         director = [GLDirector getSharedDirector];
         self.openGLView = director.openGLview;
         animator = [Animator getSharedAnimator];
@@ -40,10 +41,29 @@
         shaderManager = [GLShaderManager sharedGLShaderManager];
         fontSpriteSheetManager = [FontSpriteSheetManager getSharedFontSpriteSheetManager];
         rendererManager = [GLRendererManager sharedGLRendererManager];
-        self.frame = _frame;
         touchesInElement = [[NSMutableArray alloc]init];
+        [self setUpBackgroundColorData];
+        self.frameBackgroundColor = (Color4B){0,0,0,0};
+        
     }
     return self;
+}
+
+-(void)setUpBackgroundColorData
+{
+    backgroundColorRenderer = [rendererManager getRendererWithVertexShaderName:@"ColorShader" andFragmentShaderName:@"ColorShader"];
+
+    frameColorData = malloc(sizeof(VertexColorData) * 6);
+
+   
+    frameColorData[0].vertex = (Vertex3D){.x = 0, .y = 0, .z = 0};
+    frameColorData[1].vertex = (Vertex3D){.x = self.frame.size.width, .y = 0, .z = 0};
+    frameColorData[2].vertex = (Vertex3D){.x = self.frame.size.width, .y = self.frame.size.height, .z = 0};
+    frameColorData[3].vertex = (Vertex3D){.x = 0, .y = 0, .z = 0};
+    frameColorData[4].vertex = (Vertex3D){.x = 0, .y = self.frame.size.height, .z = 0};
+    frameColorData[5].vertex = (Vertex3D){.x = self.frame.size.width, .y = self.frame.size.height, .z = 0};
+
+    
 }
 
 -(id)init
@@ -53,7 +73,7 @@
         self.parent = nil;
         scaleInsideElement = CGPointMake(1.0, 1.0);
         originInsideElement = CGPointMake(0, 0);
-        self.touchable = YES;
+         self.touchable = YES;
         director = [GLDirector getSharedDirector];
         self.openGLView = director.openGLview;
         animator = [Animator getSharedAnimator];
@@ -62,6 +82,10 @@
         mvpMatrixManager = [MVPMatrixManager sharedMVPMatrixManager];
         shaderManager = [GLShaderManager sharedGLShaderManager];
         fontSpriteSheetManager = [FontSpriteSheetManager getSharedFontSpriteSheetManager];
+        rendererManager = [GLRendererManager sharedGLRendererManager];
+        [self setUpBackgroundColorData];
+        self.frameBackgroundColor = (Color4B){0,0,0,0};
+        
     }
     return self;
 }
@@ -116,12 +140,6 @@
         cparent = cparent.parent;
     }
     
-   /* NSLog(@"%@",NSStringFromClass(self.class));
-    NSLog(@"rect %@",NSStringFromCGRect( CGRectMake(absoluteOrigin.x, absoluteOrigin.y,
-                                                     self.frame.size.width * absoluteScale.x,
-                                                     self.frame.size.height * absoluteScale.y)));
-    */
-    
     
     return CGRectMake(absoluteOrigin.x, absoluteOrigin.y,
                       self.frame.size.width * absoluteScale.x,
@@ -131,6 +149,11 @@
 -(int)numberOfLayers
 {
     return 1;
+}
+
+-(BOOL)isDrawable
+{
+    return YES;
 }
 
 -(void)draw{
@@ -143,16 +166,41 @@
     
 }
 
+//To be accessed only by OpenGLViewController;
+
+-(void)resetZCoordinate
+{
+    ZCoordinate = 0;
+}
+
+static CGFloat ZCoordinate;
+
 -(void)drawElement
 {
     [self update];
-
-    [mvpMatrixManager translateInX:self.frame.origin.x Y:self.frame.origin.y Z:0];
-    if (self.drawable)
-        [self draw];
-    [mvpMatrixManager translateInX:0 Y:0 Z:self.numberOfLayers];
     
+    CGFloat startZCoordinate = ZCoordinate;
     [mvpMatrixManager pushModelViewMatrix];
+    [mvpMatrixManager translateInX:self.frame.origin.x Y:self.frame.origin.y Z:0];
+    [mvpMatrixManager pushModelViewMatrix];
+    [mvpMatrixManager translateInX:0 Y:0 Z:ZCoordinate];
+
+    if ([self isDrawable] && !self.hidden)
+    {
+        if (frameBackgroundColor.alpha > 0)
+        {
+            ZCoordinate++;
+            [mvpMatrixManager translateInX:0 Y:0 Z:1];
+            [backgroundColorRenderer drawWithArray:frameColorData andCount:6];
+         }
+        [self draw];
+        
+    }
+    
+    [mvpMatrixManager popModelViewMatrix];
+    
+    ZCoordinate += self.numberOfLayers;
+    
     [mvpMatrixManager translateInX:self.frame.size.width/2 Y:self.frame.size.height/2 Z:0];
     
     
@@ -173,15 +221,28 @@
             [element drawElement];
     }
     
+    [mvpMatrixManager translateInX:0 Y:0 Z:startZCoordinate];
+
     [self drawBatchedElements];
     
+    [mvpMatrixManager translateInX:0 Y:0 Z:-startZCoordinate];
+
     [mvpMatrixManager popModelViewMatrix];
-    [mvpMatrixManager translateInX:-self.frame.origin.x Y:-self.frame.origin.y Z:0];
+    
 }
  
 -(void)update
 {
     
+}
+
+-(void)setFrameBackgroundColor:(Color4B)_backgroundColor
+{
+    frameBackgroundColor = _backgroundColor;
+    for (int i = 0;i<6;i++)
+    { 
+        frameColorData[i].color = frameBackgroundColor;
+    }
 }
 
 
@@ -376,9 +437,8 @@
 
 -(void)dealloc
 {
-    NSLog(@"deallocating element");
+    free(frameColorData);
     [subElements release];
-    [touchesInElement release];
     self.parent = nil;
     self.touchesInElement = nil;
     [super dealloc];

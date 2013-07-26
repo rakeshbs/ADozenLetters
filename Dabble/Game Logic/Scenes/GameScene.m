@@ -23,9 +23,12 @@
 #define ANIMATION_ZOOM_IN 1
 #define ANIMATION_ZOOM_OUT 2
 #define ANIMATION_HUE_CHANGE 3
+#define ANIMATION_START_SCENE 4
 
 #define STATE_PLAYING 1
 #define STATE_HOME 2
+#define STATE_SPLASH 3
+
 
 #define SCENE_SCALE 0.5f
 #define SCENE_VERTICAL_OFFSET 160
@@ -48,10 +51,13 @@ Dictionary *dictionary;
     if (self = [super init])
     {
         currentHue = 0;
-        currentState = STATE_HOME;
+        currentState = STATE_SPLASH;
         playButton.touchable = NO;
-        self.scaleInsideElement = CGPointMake(SCENE_SCALE,SCENE_SCALE);
-        self.originInsideElement = CGPointMake(0,SCENE_VERTICAL_OFFSET);
+        
+ //       self.scaleInsideElement = CGPointMake(SCENE_SCALE,SCENE_SCALE);
+   //     self.originInsideElement = CGPointMake(0,SCENE_VERTICAL_OFFSET);
+//        self.scaleInsideElement = CGPointMake(START_SCENCE_SCALE,START_SCENCE_SCALE);
+  //      self.originInsideElement = CGPointMake(0,START_SCENE_OFFSET);
         
         [self loadDictionary];
         
@@ -59,12 +65,13 @@ Dictionary *dictionary;
         
         scoreControl = [[ScoreControl alloc]initWithFrame:CGRectMake(800, -SCENE_ZOOMEDIN_VERTICAL_OFFSET+screenHeight-TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE
                                                                      , TOP_BUTTONS_SIZE)];
-        [scoreControl setFont:@"Lato" withSize:30];
-        [scoreControl setBackgroundColor:(Color4B){.red = 128,.green = 128, .blue =128,.alpha = 85}];
+        [scoreControl setFont:@"Lato-Black" withSize:30];
+        [scoreControl setTextColor:(Color4B){255,255,255,255}];
+        [scoreControl setFrameBackgroundColor:(Color4B){.red = 128,.green = 128, .blue =128,.alpha = 85}];
         [self addElement:scoreControl];
         [scoreControl release];
         
-        tileControl = [[TileControl alloc]initWithFrame:CGRectMake(-120,0,self.frame.size.width+240,self.frame.size.height)];
+        tileControl = [[TileControl alloc]initWithFrame:CGRectMake(-160, 0,self.frame.size.width+320,self.frame.size.height)];
         [self addElement:tileControl];
         [tileControl addTarget:self andSelector:@selector(tileRearranged:)];
         [tileControl release];
@@ -75,18 +82,19 @@ Dictionary *dictionary;
         [self addElement:scoreButton];
         [scoreButton release];
         
-        
         playButton = [[GLButton alloc]initWithFrame:CGRectMake(-130, -520, 576, 250)];
-        [playButton setText:@"play" withFont:@"News Gothic Std" andSize:120];
+        [playButton setText:@"play" withFont:@"Lato-Bold" andSize:120];
         [playButton addTarget:self andSelector:@selector(playButtonClicked)];
+        [playButton setFrameBackgroundColor:(Color4B){0,0,0,128}];
         [self addElement:playButton];
+        playButton.touchable = NO;
         [playButton release];
         
         
         totalScoreControl = [[ScoreControl alloc]initWithFrame:
-                             CGRectMake(-120,-90,546,70)];
-        [totalScoreControl setFont:@"Lato" withSize:70];
-        [totalScoreControl setBackgroundColor:(Color4B){.red = 128,.green = 128, .blue =128,.alpha = 0}];
+                             CGRectMake(-120,-90,546,72)];
+        [totalScoreControl setFont:@"Lato-Black" withSize:70];
+        [totalScoreControl setFrameBackgroundColor:(Color4B){.red = 128,.green = 128, .blue =128,.alpha = 0}];
         [totalScoreControl setTextColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 150}];
         
         [self addElement:totalScoreControl];
@@ -100,23 +108,36 @@ Dictionary *dictionary;
         closeButton.delegate = self;
         scoreCounter = 0;
         
-        rankingControl = [[RankingControl alloc]initWithFrame:CGRectMake(-130, -150, 576, 30)];
+        rankingControl = [[RankingControl alloc]initWithFrame:CGRectMake(-130, -150, 576, 32)];
         
-        [rankingControl setFont:@"Lato" withSize:30];
+        [rankingControl setFont:@"Lato-Bold" withSize:30];
         [rankingControl setColor:(Color4B){0,0,0,255}];
         [self addElement:rankingControl];
         [rankingControl release];
         
+        
+        fullScreenElement = [[GLElement alloc]initWithFrame:CGRectMake(-2000, -2000, 4000, 4000)];
+        fullScreenElement.touchable = NO;
+        fullScreenElement.frameBackgroundColor = (Color4B){0,0,0,255};
+        [self addElement:fullScreenElement];
+        [fullScreenElement release];
+       
+        
         [tileControl moveToFront];
+        
+
+        activityIndictor = [[GLActivityIndicator alloc]initWithFrame:CGRectMake(0, 0, 320,
+                                                                                screenHeight)];
+        [self addElement:activityIndictor];
+        activityIndictor.delegate = self;
+        [activityIndictor show];
         
         gcHelper = [GCHelper getSharedGCHelper];
         gcHelper.delegate = self;
-        [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
-        [rankingControl setCurrentRank:gcHelper.currentRank andTotalRanks:gcHelper.totalRanks];
-        [gcHelper authenticateUser];
-        currentHue = (gcHelper.totalRanks - (gcHelper.currentRank - 1))/gcHelper.totalRanks *  0.55;
-        [self showTiles];
-        
+        if (gcHelper.totalRanks > 0)
+            currentHue = (gcHelper.totalRanks - (gcHelper.currentRank - 1))/gcHelper.totalRanks *  0.55;
+        else
+            currentHue = 0;
     }
     return  self;
 }
@@ -125,8 +146,13 @@ Dictionary *dictionary;
 -(BOOL)animationUpdate:(Animation *)animation
 {
     CGFloat animationRatio = [animation getAnimatedRatio];
+    if (animation.type == ANIMATION_START_SCENE)
+    {
+        int alpha = getEaseOut(255, 0, animationRatio);
+        fullScreenElement.frameBackgroundColor = (Color4B){0,0,0,alpha};
+    }
     
-    if (animation.type == ANIMATION_ZOOM_IN)
+    else if (animation.type == ANIMATION_ZOOM_IN)
     {
         CGFloat s = getEaseInOut(SCENE_SCALE, 1, animationRatio,animation.duration);
         self.scaleInsideElement = CGPointMake(s,s);
@@ -189,10 +215,17 @@ Dictionary *dictionary;
 
 -(void)animationEnded:(Animation *)animation
 {
+    if (animation.type == ANIMATION_START_SCENE)
+    {
+        [gcHelper loadDefaultLeaderBoard];
+        [self showTiles];
+        [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
+        [rankingControl setCurrentRank:gcHelper.currentRank andTotalRanks:gcHelper.totalRanks];
+    }
     if (animation.type == ANIMATION_ZOOM_OUT)
     {
         [self showTiles];
-        [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
+//        [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
         [gcHelper updateScore];
     }
     else if (animation.type == ANIMATION_ZOOM_IN)
@@ -250,12 +283,14 @@ Dictionary *dictionary;
     [self performSelector:@selector(setScore) withObject:nil afterDelay:1.0];
 }
 
-
 -(void)draw{
     
     if (currentState == STATE_HOME)
     {
-        CGFloat hue = (gcHelper.totalRanks - (gcHelper.currentRank - 1))/gcHelper.totalRanks *  0.55;
+        CGFloat hue = 0;
+        if (gcHelper.totalRanks > 0)
+            hue = (gcHelper.totalRanks - (gcHelper.currentRank - 1))/gcHelper.totalRanks *  0.55;
+        
         if (queuedHue != hue)
         {
             Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_HUE_CHANGE ofDuration:1 afterDelayInSeconds:0];
@@ -356,7 +391,12 @@ NSMutableArray *tilesArray;
 
 -(void)userAuthenticated
 {
-    [gcHelper loadDefaultLeaderBoard];
+    if (currentState == STATE_SPLASH)
+    {
+        currentState = STATE_HOME;
+        [activityIndictor animate];
+    }
+
 }
 -(void)scoreDownloaded
 {
@@ -379,13 +419,42 @@ NSMutableArray *tilesArray;
 
 -(void)userAuthenticationFailed
 {
-    
+    if (currentState == STATE_SPLASH)
+    {
+        currentState = STATE_HOME;
+        [activityIndictor animate];
+    }
+
 }
 
 -(void)defaultLeaderBoardLoaded
 {
     [gcHelper updateScore];
 }
+
+-(void)activitiyIndicatorFinishedAnimating:(GLActivityIndicator *)activityIndicator;
+{
+    if (activityIndictor.iteration == 1)
+    {
+        [gcHelper authenticateUser];
+    }
+    else if (activityIndictor.iteration == 2)
+    {
+        [activityIndictor hide];
+    }
+}
+-(void)activityIndicatorDidAappear:(GLActivityIndicator *)activityIndicator
+{
+    
+}
+-(void)activityIndicatorDidDisappear:(GLActivityIndicator *)activityIndicator
+{
+    self.scaleInsideElement = CGPointMake(SCENE_SCALE,SCENE_SCALE);
+    self.originInsideElement = CGPointMake(0,SCENE_VERTICAL_OFFSET);
+    [animator addAnimationFor:self ofType:ANIMATION_START_SCENE ofDuration:1
+          afterDelayInSeconds:0];
+}
+
 
 -(void)dealloc
 {

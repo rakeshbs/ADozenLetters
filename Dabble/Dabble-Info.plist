@@ -39,7 +39,7 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>NewsGoth.ttf</string>
+		<string>Lato-Bla.ttf</string>
 		<string>Lato-Bol.ttf</string>
 	</array>
 	<key>UIPrerenderedIcon</key>

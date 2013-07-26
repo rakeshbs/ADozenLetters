@@ -14,10 +14,6 @@
 #define verticalOffset 25
 #define horizontalOffset 0
 
-#define TOP_HIDDEN_POSITION 1000
-#define BOTTOM_HIDDEN_POSITION -1000
-
-#define MAX_VERTICAL_OFFSET -80
 
 #define SCORE_PER_WORD 10
 #define SCORE_PER_DOUBLE 100
@@ -86,7 +82,7 @@ static Texture2D *tileTextureImage = nil;
     
     [self createTiles];
     
-    //   [animator addAnimationFor:self ofType:ANIMATION_SHOW_CONTROL ofDuration:4 afterDelayInSeconds:4];
+    
 }
 
 -(BOOL)touchable
@@ -94,6 +90,10 @@ static Texture2D *tileTextureImage = nil;
     return NO;
 }
 
+-(int)numberOfLayers
+{
+    return 100;
+}
 
 
 -(void)createTileTexture
@@ -118,7 +118,7 @@ static Texture2D *tileTextureImage = nil;
 
 -(void)setupGraphics
 {
-    characterSpriteSheet = [fontSpriteSheetManager getFontSpriteSheetOfType:FontSpriteTypeAlphabetsUppercase withFont:@"Lato" andSize:42];
+    characterSpriteSheet = [fontSpriteSheetManager getFontSpriteSheetOfType:FontSpriteTypeAlphabetsUppercase withFont:@"Lato-Bold" andSize:42];
     [characterSpriteSheet.texture generateMipMap];
     
     shadowTexture = [textureManager getTexture:@"shadow" OfType:@"png"];
@@ -141,13 +141,18 @@ static Texture2D *tileTextureImage = nil;
     tileVertices[4] = (Vector3D)  {.x = -tileSquareSize/(2), .y = tileSquareSize/(2), .z = 0.0f, .t = t};
     tileVertices[5] =  (Vector3D) {.x = tileSquareSize/(2), .y = tileSquareSize/(2), .z = 0.0f, .t = t};
     
-    transparentVertices[0] =  (Vector3D) {.x = -tileTextureSizeWithBorder/(2), .y = -tileTextureSizeWithBorder/(2), .z = 0.0f, .t = t};
-    transparentVertices[1] = (Vector3D)  {.x = tileTextureSizeWithBorder/(2), .y = - tileTextureSizeWithBorder/(2), .z = 0.0f, .t = t};
-    transparentVertices[2] = (Vector3D)  {.x = tileTextureSizeWithBorder/(2), .y =  tileTextureSizeWithBorder/(2), .z = 0.0f, .t = t};
+    CGFloat sizeWithBorder = tileTextureSizeWithBorder;
+    //adjustments for non retina
+    if ([UIScreen mainScreen].scale == 1)
+        sizeWithBorder = tileTextureSizeWithBorder + 1;
     
-    transparentVertices[3] =  (Vector3D) {.x = -tileTextureSizeWithBorder/(2), .y = -tileTextureSizeWithBorder/(2), .z = 0.0f, .t = t};
-    transparentVertices[4] = (Vector3D)  {.x = -tileTextureSizeWithBorder/(2), .y = tileTextureSizeWithBorder/(2), .z = 0.0f, .t = t};
-    transparentVertices[5] =  (Vector3D) {.x = tileTextureSizeWithBorder/(2), .y = tileTextureSizeWithBorder/(2), .z = 0.0f, .t = t};
+    transparentVertices[0] =  (Vector3D) {.x = -sizeWithBorder/(2), .y = -sizeWithBorder/(2), .z = 0.0f, .t = t};
+    transparentVertices[1] = (Vector3D)  {.x = sizeWithBorder/(2), .y = - sizeWithBorder/(2), .z = 0.0f, .t = t};
+    transparentVertices[2] = (Vector3D)  {.x = sizeWithBorder/(2), .y =  sizeWithBorder/(2), .z = 0.0f, .t = t};
+    
+    transparentVertices[3] =  (Vector3D) {.x = -sizeWithBorder/(2), .y = -sizeWithBorder/(2), .z = 0.0f, .t = t};
+    transparentVertices[4] = (Vector3D)  {.x = -sizeWithBorder/(2), .y = sizeWithBorder/(2), .z = 0.0f, .t = t};
+    transparentVertices[5] =  (Vector3D) {.x = sizeWithBorder/(2), .y = sizeWithBorder/(2), .z = 0.0f, .t = t};
     
     shadowVertices[0] =  (Vector3D) {.x = -shadowSize/(2), .y = -shadowSize/(2), .z = 0.0f, .t = t};
     shadowVertices[1] = (Vector3D)  {.x = shadowSize/(2), .y = - shadowSize/(2), .z = 0.0f, .t = t};
@@ -180,7 +185,7 @@ static Texture2D *tileTextureImage = nil;
     thirteenLayout = malloc(13 * sizeof(CGPoint));
     int rows[3]= {1,5,7};
     int index = 0;
-    CGFloat yMargin = (frame.size.height - (tileSquareSize) * 3 - 2 * verticalOffset)/2;
+    CGFloat yMargin =   (frame.size.height  - (tileSquareSize) * 3 - 2 * verticalOffset)/2;
     for (int i = 0;i<3;i++)
     {
         CGFloat xMargin = (frame.size.width - tileSquareSize * rows[i])/2;
@@ -200,7 +205,7 @@ static Texture2D *tileTextureImage = nil;
 {
     twelveLayout = malloc(13 * sizeof(CGPoint));
     int rows[3]= {3,4,5};
-    CGFloat yMargin = (frame.size.height - (tileSquareSize) * 3 - 2 * verticalOffset)/2;
+    CGFloat yMargin =   (frame.size.height - (tileSquareSize) * 3 - 2 * verticalOffset)/2;
     
     twelveLayout[0] = CGPointMake(thirteenLayout[0].x, 700);
     int index = 1;
@@ -572,6 +577,7 @@ static Texture2D *tileTextureImage = nil;
     {
         [animator removeRunningAnimationsForObject:t];
         [animator removeQueuedAnimationsForObject:t];
+        t.wiggleAngle = 0;
         
         CGFloat dist = (t.centerPoint.x - collapsePoint.x) * (t.centerPoint.x - collapsePoint.x) + (t.centerPoint.y - collapsePoint.y) * (t.centerPoint.y - collapsePoint.y) ;
         

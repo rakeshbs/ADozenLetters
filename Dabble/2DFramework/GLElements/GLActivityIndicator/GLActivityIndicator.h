@@ -9,34 +9,34 @@
 #import <Foundation/Foundation.h>
 #import "GLElement.h"
 
-#define GLACTIVITYINDICATOR_SHOW_NOTIFY @"GLActivityIndicatorShow"
-#define GLACTIVITYINDICATOR_HIDE_NOTIFY @"GLActivityIndicatorHide"
+@class GLActivityIndicator;
 
-
-
+@protocol GLActivityIndicatorDelegate
+-(void)activitiyIndicatorFinishedAnimating:(GLActivityIndicator *)activityIndicator;
+@optional
+-(void)activityIndicatorDidAappear:(GLActivityIndicator *)activityIndicator;
+-(void)activityIndicatorDidDisappear:(GLActivityIndicator *)activityIndicator;
+@end
 
 @interface GLActivityIndicator : GLElement <AnimationDelegate>
 {
-    GLShaderProgram *pointSpritesShader;
-    
-    GLuint UNIFORM_MVPMATRIX;
-    GLuint ATTRIB_VERTEX;
-    GLuint ATTRIB_COLOR;
-    GLuint ATTRIB_POINTSIZE;
-    
-    
     NSMutableArray *activityPoints;
     PointVertexColorSizeData *pointsData;
     
-    GLuint pointsVertexBuffer;
-    
     float relativePosition;
+    
+    int iteration;
     
     int cycleCount;
     BOOL cycleModeOpen;
+   
+    GLRenderer *pointsRenderer;
 
 }
+@property (nonatomic,readonly)  int iteration;
+@property (nonatomic,retain) NSObject<GLActivityIndicatorDelegate> *delegate;
 
+-(void)animate;
 -(void)show;
 -(void)hide;
 

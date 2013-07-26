@@ -21,20 +21,8 @@
         textColor = (Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 255};
         backgroundColor = (Color4B){.red = 0,.green = 0,.blue = 0,.alpha = 128};
         
-        colorRenderer = [rendererManager getRendererWithVertexShaderName:@"ColorShader" andFragmentShaderName:@"ColorShader"];
         textureRenderer = [rendererManager getRendererWithVertexShaderName:@"TextureShader" andFragmentShaderName:@"StringTextureShader"];
         
-        vertexColorData = malloc(sizeof(VertexColorData) * 6);
-        vertexColorData[0].vertex = (Vertex3D){.x = 0, .y = 0, .z = 0};
-        vertexColorData[1].vertex = (Vertex3D){.x = _frame.size.width, .y = 0, .z = 0};
-        vertexColorData[2].vertex = (Vertex3D){.x = _frame.size.width, .y = _frame.size.height, .z = 0};
-        vertexColorData[3].vertex = (Vertex3D){.x = 0, .y = 0, .z = 0};
-        vertexColorData[4].vertex = (Vertex3D){.x = 0, .y = _frame.size.height, .z = 0};
-        vertexColorData[5].vertex = (Vertex3D){.x = _frame.size.width, .y = _frame.size.height, .z = 0};
-        for (int i = 0;i<6;i++)
-        {
-            vertexColorData[i].color = backgroundColor;
-        }
         textureVertexColorData = malloc(sizeof(TextureVertexColorData) * 6);   
     }
     return self;
@@ -83,42 +71,18 @@
         CGFloat tblue = getEaseOut(startColor->blue, endColor->blue, animationRatio);
         
         
-        Color4B intermediate = (Color4B){.red = red, .green = green, .blue = blue,.alpha = vertexColorData[0].color.alpha};
+        Color4B intermediate = (Color4B){.red = red, .green = green, .blue = blue,.alpha = backgroundColor.alpha};
         Color4B tintermediate = (Color4B){.red = tred, .green = tgreen, .blue = tblue,.alpha = textureVertexColorData[0].color.alpha};
         
         for (int i = 0;i < 6;i++)
         {
             textureVertexColorData[i].color = tintermediate;
-            vertexColorData[i].color = intermediate;
+            
         }
+        [self setFrameBackgroundColor:intermediate];
     }
-    else if (animation.type == ANIMATION_NORMAL)
-    {
-        Color4B *startColor = [animation getStartValue];
-        Color4B *endColor = [animation getEndValue];
-        
-        CGFloat red = getEaseOut(startColor->red, endColor->red, animationRatio);
-        CGFloat green = getEaseOut(startColor->green, endColor->green, animationRatio);
-        CGFloat blue = getEaseOut(startColor->blue, endColor->blue, animationRatio);
-        
-        startColor =[animation getEndValue];
-        endColor = [animation getStartValue];
-        
-        CGFloat tred = getEaseOut(startColor->red, endColor->red, animationRatio);
-        CGFloat tgreen = getEaseOut(startColor->green, endColor->green, animationRatio);
-        CGFloat tblue = getEaseOut(startColor->blue, endColor->blue, animationRatio);
-        
-        
-        Color4B intermediate = (Color4B){.red = red, .green = green, .blue = blue,.alpha = vertexColorData[0].color.alpha};
-        Color4B tintermediate = (Color4B){.red = tred, .green = tgreen, .blue = tblue,.alpha = textureVertexColorData[0].color.alpha};
-        
-        for (int i = 0;i < 6;i++)
-        {
-            textureVertexColorData[i].color = tintermediate;
-            vertexColorData[i].color = intermediate;
-        }
 
-    }
+    
     
     if (animationRatio >= 1.0)
         return YES;
@@ -160,10 +124,7 @@
 -(void)setBackgroundColor:(Color4B)_color
 {
     backgroundColor = _color;
-    for (int i = 0;i < 6;i++)
-    {
-        vertexColorData[i].color = textColor;
-    }
+    self.frameBackgroundColor = _color;
 }
 
 -(void)setTextColor:(Color4B)_color
@@ -171,13 +132,12 @@
     textColor = _color;
     for (int i = 0;i < 6;i++)
     {
-        textureVertexColorData[i].color = backgroundColor;
+        textureVertexColorData[i].color = textColor;
     }
 }
 
 -(void)draw
 {
-    [colorRenderer drawWithArray:vertexColorData andCount:6];
     [mvpMatrixManager translateInX:self.frame.size.width/2 Y:self.frame.size.height/2 Z:1];
     if (buttonTextTexture != nil)
     {
@@ -190,7 +150,6 @@
 -(void)dealloc
 {
     self.target = nil;
-    free(vertexColorData);
     free(textureVertexColorData);
     [super dealloc];
 }

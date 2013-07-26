@@ -16,7 +16,7 @@
 
 @implementation GLDirector
 
-@synthesize window,openGLview,openGLViewController;
+@synthesize window,openGLview,openGLViewController,current_scene;
 
 +(id)getSharedDirector
 {
@@ -61,7 +61,7 @@
 			}
 			[(GLScene *)scene setOpenGLView:openGLview];
 			[openGLview setScene:(GLScene *)scene];
-			[openGLview resumeTimer];
+            current_scene = scene;
 		}
 	}
 }

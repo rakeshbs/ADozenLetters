@@ -32,6 +32,8 @@
     int alpha;
     
     BOOL visible;
+    
+    CGFloat uiScale;
 }
 
 @property  (nonatomic) BOOL visible;
@@ -40,7 +42,7 @@
 @property (nonatomic) InstancedTextureVertexColorData *vertexData;
 @property (nonatomic,readonly) int vertexDataCount;
 @property (nonatomic,retain) FontSpriteSheet *fontSpriteSheet;
-@property (nonatomic) Color4B color;
+@property (nonatomic) Color4B textColor;
 @property (nonatomic) int alpha;
 
 -(void)setStringValueToCount:(NSString *)str inDuration:(CGFloat)duration;

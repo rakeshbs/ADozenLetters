@@ -15,7 +15,6 @@
 		141E4AB11738B22700A5F515 /* GCHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 141E4AB01738B22700A5F515 /* GCHelper.m */; };
 		141E690A179CD9E000D330A0 /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = 141E6908179CD9E000D330A0 /* close.png */; };
 		141E690B179CD9E000D330A0 /* close@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 141E6909179CD9E000D330A0 /* close@2X.png */; };
-		141E690F179D43FF00D330A0 /* NewsGoth.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 141E690E179D43CC00D330A0 /* NewsGoth.ttf */; };
 		141E6912179FBA6E00D330A0 /* RankingControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 141E6911179FBA6D00D330A0 /* RankingControl.m */; };
 		141E6916179FC9FA00D330A0 /* GLLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 141E6915179FC9FA00D330A0 /* GLLabel.m */; };
 		142916CA1783AB9100B128EA /* GLActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 142916C91783AB9100B128EA /* GLActivityIndicator.m */; };
@@ -67,6 +66,7 @@
 		146472D016D278B5000C8FB4 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472CA16D278B5000C8FB4 /* OpenGLES.framework */; };
 		146472D116D278B5000C8FB4 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472CB16D278B5000C8FB4 /* QuartzCore.framework */; };
 		146472D616D278F0000C8FB4 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 146472D516D278F0000C8FB4 /* GameKit.framework */; };
+		146620C117A1265300AE4AB5 /* Lato-Bla.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 146620C017A1237E00AE4AB5 /* Lato-Bla.ttf */; };
 		14668F7317887DA800C67D32 /* GLRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 14668F7217887DA800C67D32 /* GLRenderer.m */; };
 		1470B0941791C13A0009D5A4 /* icon@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 1470B08E1791B5F40009D5A4 /* icon@2X.png */; };
 		1470B0951791C13F0009D5A4 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1470B08D1791B5F40009D5A4 /* icon.png */; };
@@ -105,7 +105,6 @@
 		141E4AB01738B22700A5F515 /* GCHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCHelper.m; sourceTree = "<group>"; };
 		141E6908179CD9E000D330A0 /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
 		141E6909179CD9E000D330A0 /* close@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close@2X.png"; sourceTree = "<group>"; };
-		141E690E179D43CC00D330A0 /* NewsGoth.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewsGoth.ttf; sourceTree = "<group>"; };
 		141E6910179FBA6D00D330A0 /* RankingControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RankingControl.h; sourceTree = "<group>"; };
 		141E6911179FBA6D00D330A0 /* RankingControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RankingControl.m; sourceTree = "<group>"; };
 		141E6914179FC9FA00D330A0 /* GLLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLLabel.h; sourceTree = "<group>"; };
@@ -191,6 +190,7 @@
 		146472CA16D278B5000C8FB4 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		146472CB16D278B5000C8FB4 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		146472D516D278F0000C8FB4 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		146620C017A1237E00AE4AB5 /* Lato-Bla.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Bla.ttf"; sourceTree = "<group>"; };
 		14668F7117887DA800C67D32 /* GLRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLRenderer.h; sourceTree = "<group>"; };
 		14668F7217887DA800C67D32 /* GLRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLRenderer.m; sourceTree = "<group>"; };
 		1470B08D1791B5F40009D5A4 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
@@ -489,7 +489,7 @@
 		1445DC7716F97AD600EBBCCF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				141E690E179D43CC00D330A0 /* NewsGoth.ttf */,
+				146620C017A1237E00AE4AB5 /* Lato-Bla.ttf */,
 				141E6908179CD9E000D330A0 /* close.png */,
 				141E6909179CD9E000D330A0 /* close@2X.png */,
 				1470B08D1791B5F40009D5A4 /* icon.png */,
@@ -679,9 +679,9 @@
 				1445DCBC16F97C1700EBBCCF /* InstancedColorShader.vsh in Resources */,
 				1445DCA716F97AD700EBBCCF /* Default@2x.png in Resources */,
 				1445DCA816F97AD700EBBCCF /* shadow.png in Resources */,
+				146620C117A1265300AE4AB5 /* Lato-Bla.ttf in Resources */,
 				14817045171F0A540058FE43 /* InstancedTextureShader.vsh in Resources */,
 				14817044171F0A510058FE43 /* TextureShader.fsh in Resources */,
-				141E690F179D43FF00D330A0 /* NewsGoth.ttf in Resources */,
 				1445DCA916F97AD700EBBCCF /* shadow@2X.png in Resources */,
 				14BC3F361799641100EF5386 /* TextureShader.vsh in Resources */,
 				1445DCAA16F97AD700EBBCCF /* bip1.aiff in Resources */,

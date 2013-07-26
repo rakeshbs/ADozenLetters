@@ -16,7 +16,7 @@
 #import "ScoreControl.h"
 #import "RankingControl.h"
 
-@interface GameScene : GLScene <AnimationDelegate,CloseButtonDelegate,GCHelperDelegate>
+@interface GameScene : GLScene <AnimationDelegate,CloseButtonDelegate,GCHelperDelegate,GLActivityIndicatorDelegate>
 {
     GCHelper *gcHelper;
     
@@ -33,9 +33,13 @@
     ScoreControl *scoreControl;
     ScoreControl *totalScoreControl;
     RankingControl *rankingControl;
+    GLElement *fullScreenElement;
+    
+    GLActivityIndicator *activityIndictor;
     
     int currentState;
     CGFloat currentHue;
     CGFloat queuedHue;
+
 }
 @end

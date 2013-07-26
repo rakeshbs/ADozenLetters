@@ -35,6 +35,7 @@
 }
 
 @property (nonatomic,retain) UIWindow *window;
+@property (nonatomic,readonly) NSObject *current_scene;
 @property (nonatomic,readonly) OpenGLESView *openGLview;
 @property (nonatomic,readonly) OpenGLViewController *openGLViewController;
 +(id)getSharedDirector;

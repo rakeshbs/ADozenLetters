@@ -22,6 +22,11 @@
     return self;
 }
 
+-(int)numberOfLayers
+{
+    return 1;
+}
+
 -(void)setColor:(Color4B)_textColor
 {
     textColor = _textColor;
@@ -48,13 +53,13 @@
     
     [currentRankCounter setFont:fontName withSize:size];
     [currentRankCounter setTextAlignment:UITextAlignmentRight];
-    [currentRankCounter setColor:textColor];
+    [currentRankCounter setTextColor:textColor];
     
     totalRanksCounter = [[ScoreControl alloc]initWithFrame:
                          CGRectMake(frame.size.width - widthLeft/2, 0,widthLeft/2,frame.size.height)];
     [totalRanksCounter setFont:fontName withSize:size];
     [totalRanksCounter setTextAlignment:UITextAlignmentLeft];
-    [totalRanksCounter setColor:textColor];
+    [totalRanksCounter setTextColor:textColor];
     
     [self addElement:currentRankCounter];
     [self addElement:totalRanksCounter];
@@ -134,11 +139,6 @@
     [animation1 setStartValue:&oldOffset OfSize:sizeof(float)];
     [animation1 setEndValue:&totalWidth OfSize:sizeof(float)];
     
-    
-}
-
--(void)draw
-{
     
 }
 

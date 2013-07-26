@@ -23,18 +23,8 @@
         colorRenderer = [rendererManager getRendererWithVertexShaderName:@"ColorShader" andFragmentShaderName:@"ColorShader"];
         textureRenderer = [rendererManager getRendererWithVertexShaderName:@"TextureShader" andFragmentShaderName:@"StringTextureShader"];
         
-        vertexColorData = malloc(sizeof(VertexColorData) * 6);
-        vertexColorData[0].vertex = (Vertex3D){.x = 0, .y = 0, .z = 0};
-        vertexColorData[1].vertex = (Vertex3D){.x = _frame.size.width, .y = 0, .z = 0};
-        vertexColorData[2].vertex = (Vertex3D){.x = _frame.size.width, .y = _frame.size.height, .z = 0};
-        vertexColorData[3].vertex = (Vertex3D){.x = 0, .y = 0, .z = 0};
-        vertexColorData[4].vertex = (Vertex3D){.x = 0, .y = _frame.size.height, .z = 0};
-        vertexColorData[5].vertex = (Vertex3D){.x = _frame.size.width, .y = _frame.size.height, .z = 0};
-        for (int i = 0;i<6;i++)
-        {
-            vertexColorData[i].color = backgroundColor;
-        }
-       
+        self.frameBackgroundColor = backgroundColor;
+        
         buttonTextTexture = [textureManager getStringTexture:@"x" dimensions:CGSizeMake(self.frame.size.width, self.frame.size.height) horizontalAlignment:UITextAlignmentCenter verticalAlignment:UITextAlignmentMiddle fontName:@"Lato" fontSize:45];
         
         textureVertexColorData = malloc(sizeof(TextureVertexColorData) * 6);
@@ -70,13 +60,8 @@
         CGFloat green = getEaseOut(startColor->green, endColor->green, animationRatio);
         CGFloat blue = getEaseOut(startColor->blue, endColor->blue, animationRatio);
         CGFloat alpha = getEaseOut(startColor->alpha, endColor->alpha, animationRatio);
-        for (int i = 0;i<6;i++)
-        {
-            vertexColorData[i].color.red = red;
-            vertexColorData[i].color.green = green;
-            vertexColorData[i].color.blue = blue;
-            vertexColorData[i].color.alpha = alpha;
-        }
+        
+        self.frameBackgroundColor = (Color4B){red,green,blue,alpha};
     }
     else if (animation.type == ANIMATION_NORMAL)
     {
@@ -88,13 +73,8 @@
         CGFloat green = getEaseOut(startColor->green, endColor->green, animationRatio);
         CGFloat blue = getEaseOut(startColor->blue, endColor->blue, animationRatio);
         CGFloat alpha = getEaseOut(startColor->alpha, endColor->alpha, animationRatio);
-        for (int i = 0;i<6;i++)
-        {
-            vertexColorData[i].color.red = red;
-            vertexColorData[i].color.green = green;
-            vertexColorData[i].color.blue = blue;
-            vertexColorData[i].color.alpha = alpha;
-        }
+        
+        self.frameBackgroundColor = (Color4B){red,green,blue,alpha};
     }
     
     if (animationRatio >= 1.0)
@@ -110,7 +90,7 @@
         [self.touchesInElement removeAllObjects];
         
         Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_NORMAL ofDuration:0.2 afterDelayInSeconds:0];
-        [animation setStartValue:&vertexColorData[0].color OfSize:sizeof(Color4B)];
+        [animation setStartValue:&frameBackgroundColor OfSize:sizeof(Color4B)];
         [animation setEndValue:&backgroundColor OfSize:sizeof(Color4B)];
         
     }
@@ -122,7 +102,7 @@
     [animator removeRunningAnimationsForObject:self];
     
     Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_HIGHLIGHT ofDuration:1.3 afterDelayInSeconds:0];
-    [animation setStartValue:&vertexColorData[0].color OfSize:sizeof(Color4B)];
+    [animation setStartValue:&frameBackgroundColor OfSize:sizeof(Color4B)];
     [animation setEndValue:&textColor OfSize:sizeof(Color4B)];
     
     [self.delegate closeButtonClick:CLOSEBUTTON_CLICK_STARTED];
@@ -134,7 +114,7 @@
     [animator removeRunningAnimationsForObject:self];
     
     Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_NORMAL ofDuration:0.2 afterDelayInSeconds:0];
-    [animation setStartValue:&vertexColorData[0].color OfSize:sizeof(Color4B)];
+    [animation setStartValue:&frameBackgroundColor OfSize:sizeof(Color4B)];
     [animation setEndValue:&backgroundColor OfSize:sizeof(Color4B)];
    
     [self.delegate closeButtonClick:CLOSEBUTTON_CLICK_CANCELLED];
@@ -145,7 +125,7 @@
     [animator removeRunningAnimationsForObject:self];
     
     Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_NORMAL ofDuration:0.2 afterDelayInSeconds:0];
-    [animation setStartValue:&vertexColorData[0] OfSize:sizeof(Color4B)];
+    [animation setStartValue:&frameBackgroundColor OfSize:sizeof(Color4B)];
     [animation setEndValue:&backgroundColor OfSize:sizeof(Color4B)];
     
     [self.delegate closeButtonClick:CLOSEBUTTON_CLICK_CANCELLED];
@@ -154,7 +134,6 @@
 
 -(void)draw
 {
-    [colorRenderer drawWithArray:vertexColorData andCount:6];
     [mvpMatrixManager translateInX:self.frame.size.width/2 Y:self.frame.size.height/2 Z:1];
     textureRenderer.texture = buttonTextTexture;
     [textureRenderer drawWithArray:textureVertexColorData andCount:6];
@@ -164,7 +143,6 @@
 -(void)dealloc
 {
     self.delegate = nil;
-    free(vertexColorData);
     free(textureVertexColorData);
     [super dealloc];
 }

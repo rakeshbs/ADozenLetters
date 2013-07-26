@@ -11,12 +11,15 @@
 
 @implementation MVPMatrixManager
 
+@synthesize zCoordinate;
+
 SYNTHESIZE_SINGLETON_FOR_CLASS(MVPMatrixManager);
 
 -(id)init
 {
     if (self = [super init])
     {
+        zCoordinate = 0;
         currentModelViewMatrixIndex = 0;
         currentProjectionMatrixIndex = 0;
         Matrix3DSetIdentity(modelViewStack[currentModelViewMatrixIndex]);
@@ -38,12 +41,16 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(MVPMatrixManager);
     {
         modelViewStack[currentModelViewMatrixIndex][j]=modelViewStack[currentModelViewMatrixIndex-1][j];
     }
-
+    zCoordinateStack[currentModelViewMatrixIndex] = zCoordinate;
 }
+
+static int Zcoord = 0;
 
 -(void)popModelViewMatrix
 {
     currentModelViewMatrixIndex--;
+    
+    zCoordinate = zCoordinateStack[currentModelViewMatrixIndex];
 }
 
 
@@ -60,6 +67,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(MVPMatrixManager);
         projectionMatrixStack[currentProjectionMatrixIndex][j]=
         projectionMatrixStack[currentProjectionMatrixIndex-1][j];
     }
+    
 }
 
 -(void)popProjectionMatrix
@@ -108,18 +116,22 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(MVPMatrixManager);
     Matrix3DSetTranslation(translationMatrix,x,y,z);
     Matrix3DMultiply(modelViewStack[currentModelViewMatrixIndex],translationMatrix, resultMatrix);
     Matrix3DCopyS(resultMatrix, modelViewStack[currentModelViewMatrixIndex]);
-
+    zCoordinate += z;
 }
+
+
 
 -(void)resetModelViewMatrixStack
 {
     currentModelViewMatrixIndex = 0;
     Matrix3DSetIdentity(modelViewStack[currentModelViewMatrixIndex]);
+    zCoordinate = 0;
 }
 
 -(void)setIdentity
 {
     Matrix3DSetIdentity(modelViewStack[currentModelViewMatrixIndex]);
+    Zcoord = 0;
 }
 
 -(void)scaleByXScale:(CGFloat)xScale YScale:(CGFloat)yScale ZScale:(CGFloat)zScale

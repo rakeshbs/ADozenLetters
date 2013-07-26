@@ -14,7 +14,6 @@
     GLRenderer *textureRenderer;
     
     TextureVertexColorData *textureVertexColorData;
-    VertexColorData *vertexColorData;
     
     Texture2D *buttonTextTexture;
     
@@ -24,7 +23,6 @@
 
 @property (nonatomic,retain) NSObject *target;
 @property (nonatomic) SEL selector;
-
 
 
 -(void)setTextColor:(Color4B)_color;

@@ -107,8 +107,8 @@
                                             :0 :-self.frame.size.height
                                             :0 :-1 :1000];
 		
-        glClearColor(1, 1, 1, 1);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      //  glClearColor(1, 1, 1, 1);
+       // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
@@ -120,6 +120,11 @@
 	return self;
 }
 
+-(void)layoutSubviews
+{
+    
+}
+
 -(void)drawView
 {    
  //   glBindFramebuffer(GL_FRAMEBUFFER, sampleFramebuffer);
@@ -129,8 +134,10 @@
 
     glClear(GL_DEPTH_BUFFER_BIT|GL_COLOR_BUFFER_BIT);
     [[MVPMatrixManager sharedMVPMatrixManager]resetModelViewMatrixStack];
+    [view_delegate resetZCoordinate];
     [view_delegate drawElement];
     [animator update];
+    
 
   //  glBindFramebuffer(GL_DRAW_FRAMEBUFFER_APPLE, viewFramebuffer);
   //  glBindFramebuffer(GL_READ_FRAMEBUFFER_APPLE, sampleFramebuffer);
