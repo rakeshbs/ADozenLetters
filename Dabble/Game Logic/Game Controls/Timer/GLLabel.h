@@ -17,10 +17,10 @@
     CGFloat offset;
 }
 
-@property (nonatomic,retain) NSString *text;
+@property (nonatomic,readonly) NSString *text;
 @property (nonatomic) CGFloat  textScale;
-@property (nonatomic,retain) UIFont *font;
-@property (nonatomic) Color4B textColor;
+@property (nonatomic,readonly) UIFont *font;
+@property (nonatomic,readonly) Color4B textColor;
 @property (nonatomic) UITextAlignment textAlignment;
 
 -(void)setText:(NSString *)text withAlignment:(UITextAlignment)textAlignment;

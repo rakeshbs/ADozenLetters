@@ -28,7 +28,9 @@
     [[GLDirector getSharedDirector]setWindow:self.window];
     [[GLDirector getSharedDirector]setInterfaceOrientation:UIInterfaceOrientationPortrait];
     
-    GLActivityIndicator *activityIndicator = [[GLActivityIndicator alloc]initWithFrame:CGRectMake(0, 0, 320, 480)];
+     CGFloat screenHeight = [[UIScreen mainScreen]bounds].size.height;
+    
+    GLActivityIndicator *activityIndicator = [[GLActivityIndicator alloc]initWithFrame:CGRectMake(0, 0, 320, screenHeight)];
     activityIndicator.hidden = NO;
     GLScene *scene = [[GLScene alloc]init];
     [scene addElement:activityIndicator];

@@ -22,11 +22,13 @@
     CGRect rankedFrame;
     CGRect outOfFrame;
     
-
     Color4B textColor;
+    
+    GLLabel *gameCenterLabel;
 }
 
--(void)setColor:(Color4B)_textColor;
+-(void)setTextColor:(Color4B)_textColor;
 -(void)setFont:(NSString *)fontName withSize:(CGFloat)size;
 -(void)setCurrentRank:(int)rank andTotalRanks:(int)totalRanks;
+-(void)setGameCenterState:(BOOL)status;
 @end

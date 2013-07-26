@@ -156,6 +156,7 @@
 }
 
 
+
 -(void)setScene:(GLScene *)scene
 {
 	if (view_delegate != nil)

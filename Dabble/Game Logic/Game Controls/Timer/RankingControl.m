@@ -10,6 +10,10 @@
 
 #define ANIMATION_ALIGN 1
 #define ANIMATION_CENTER 2
+#define ANIMATION_HIDE_RANK 3
+#define ANIMATION_SHOW_RANK 4
+#define ANIMATION_SHOW_GCLABEL 5
+#define ANIMATION_HIDE_GCLABEL 6
 
 @implementation RankingControl
 
@@ -17,6 +21,7 @@
 {
     if (self = [super initWithFrame:_frame])
     {
+                self.touchable = NO;
         textColor = (Color4B){255,255,255,255};
     }
     return self;
@@ -27,7 +32,7 @@
     return 1;
 }
 
--(void)setColor:(Color4B)_textColor
+-(void)setTextColor:(Color4B)_textColor
 {
     textColor = _textColor;
     [totalRanksCounter setTextColor:_textColor];
@@ -91,8 +96,39 @@
     
     [rankedLabel moveToFront];
     [outOfLabel moveToFront];
+    
+    gameCenterLabel = [[GLLabel alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+    [gameCenterLabel setFont:fontName andSize:size];
+    [gameCenterLabel setText:@"Sign into Game Center" withAlignment:UITextAlignmentCenter];
+    [gameCenterLabel setTextColor:(Color4B){textColor.red,textColor.green,textColor.blue,0}];
+    [self addElement:gameCenterLabel];
+    
 }
 
+-(void)setGameCenterState:(BOOL)status
+{
+    if (status)
+    {
+        CGFloat delay = 0;
+        if (gameCenterLabel.textColor.alpha > 0)
+        {
+            [animator addAnimationFor:self ofType:ANIMATION_HIDE_GCLABEL ofDuration:0.3 afterDelayInSeconds:0];
+            delay = 0.3;
+        }
+        [animator addAnimationFor:self ofType:ANIMATION_SHOW_RANK ofDuration:0.3
+              afterDelayInSeconds:delay];
+    }
+    else
+    {
+        CGFloat delay = 0;
+        if (rankedLabel.textColor.alpha > 0)
+        {
+            [animator addAnimationFor:self ofType:ANIMATION_HIDE_RANK ofDuration:0.3 afterDelayInSeconds:0];
+            delay = 0.3;
+        }
+        [animator addAnimationFor:self ofType:ANIMATION_SHOW_GCLABEL ofDuration:0.3 afterDelayInSeconds:delay];
+    }
+}
 
 -(BOOL)animationUpdate:(Animation *)animation
 {
@@ -111,6 +147,38 @@
         CGFloat *end = [animation getEndValue];
         CGFloat off = getEaseOut(*start, *end, animatedRatio);
         self.originInsideElement = CGPointMake(off,0);
+    }
+    else if (animation.type == ANIMATION_HIDE_RANK)
+    {
+        Color4B rankColor = textColor;
+        rankColor.alpha = getEaseOut(255, 0, animatedRatio);
+        [totalRanksCounter setTextColor:rankColor];
+        [rankedLabel setTextColor:rankColor];
+        [currentRankCounter setTextColor:rankColor];
+        [outOfLabel setTextColor:rankColor];
+    }
+    else if (animation.type == ANIMATION_SHOW_RANK)
+    {
+        Color4B rankColor = textColor;
+        rankColor.alpha = getEaseOut(0, 255, animatedRatio);
+        [totalRanksCounter setTextColor:rankColor];
+        [rankedLabel setTextColor:rankColor];
+        [currentRankCounter setTextColor:rankColor];
+        [outOfLabel setTextColor:rankColor];
+        
+    }
+    else if (animation.type == ANIMATION_SHOW_GCLABEL)
+    {
+        Color4B signColor = textColor;
+        signColor.alpha = getEaseOut(0, 255, animatedRatio);
+        [gameCenterLabel setTextColor:signColor];
+        
+    }
+    else if (animation.type == ANIMATION_HIDE_GCLABEL)
+    {
+        Color4B signColor = textColor;
+        signColor.alpha = getEaseOut(255, 0, animatedRatio);
+        [gameCenterLabel setTextColor:signColor];
     }
     if (animatedRatio >= 1.0)
         return YES;
@@ -138,7 +206,6 @@
     Animation *animation1 = [animator addAnimationFor:self ofType:ANIMATION_CENTER ofDuration:0.3 afterDelayInSeconds:0];
     [animation1 setStartValue:&oldOffset OfSize:sizeof(float)];
     [animation1 setEndValue:&totalWidth OfSize:sizeof(float)];
-    
     
 }
 

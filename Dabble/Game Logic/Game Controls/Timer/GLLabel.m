@@ -31,14 +31,14 @@
 
 -(void)setText:(NSString *)text withAlignment:(UITextAlignment)textAlignment
 {
-    self.text = text;
+    _text = text;
     self.textAlignment = textAlignment;
     [self setupLabel];
 }
 
 -(void)setFont:(NSString *)font andSize:(CGFloat)size
 {
-    self.font = [UIFont fontWithName:font size:size];
+    _font = [UIFont fontWithName:font size:size];
     [self setupLabel];
 }
 

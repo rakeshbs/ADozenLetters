@@ -18,7 +18,7 @@
     if (self = [super initWithFrame:_frame])
     {
         textColor = (Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 255};
-        backgroundColor = (Color4B){.red = 128,.green = 128,.blue = 128,.alpha = 85};
+        backgroundColor = (Color4B){.red = 0,.green = 0,.blue = 0,.alpha = 85};
         
         colorRenderer = [rendererManager getRendererWithVertexShaderName:@"ColorShader" andFragmentShaderName:@"ColorShader"];
         textureRenderer = [rendererManager getRendererWithVertexShaderName:@"TextureShader" andFragmentShaderName:@"StringTextureShader"];
@@ -88,6 +88,8 @@
     {
         [self.delegate closeButtonClick:CLOSEBUTTON_CLICK_FINISHED];
         [self.touchesInElement removeAllObjects];
+        
+        self.touchable = NO;
         
         Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_NORMAL ofDuration:0.2 afterDelayInSeconds:0];
         [animation setStartValue:&frameBackgroundColor OfSize:sizeof(Color4B)];

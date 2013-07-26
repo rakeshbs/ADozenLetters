@@ -19,6 +19,7 @@
 {
     if (self = [super initWithFrame:_frame])
     {
+        self.touchable = NO;
         vertexData = NULL;
         visibleCount = 0;
         offsetVisibleX = 0;
@@ -50,7 +51,11 @@
 {
     _textColor = textcolor;
     for (ElasticCounter *counter in counterControls)
+    {
         counter.textColor = textcolor;
+        if (!counter.visible)
+            counter.alpha = 0;
+    }
 }
 
 -(void)stop
@@ -266,7 +271,7 @@
         
     }
     counter.visible = YES;
-    counter.alpha = 255;
+    counter.alpha = _textColor.alpha;
     visibleCount = 1;
     [self setTextAlignment:textAlignment];
 }

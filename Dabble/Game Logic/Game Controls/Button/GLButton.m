@@ -20,6 +20,8 @@
     {
         textColor = (Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 255};
         backgroundColor = (Color4B){.red = 0,.green = 0,.blue = 0,.alpha = 128};
+        backgroundHightlightColor = textColor;
+        textHighlightColor = backgroundColor;
         
         textureRenderer = [rendererManager getRendererWithVertexShaderName:@"TextureShader" andFragmentShaderName:@"StringTextureShader"];
         
@@ -56,22 +58,20 @@
     
     if (animation.type == ANIMATION_HIGHLIGHT)
     {
-        Color4B *startColor = [animation getStartValue];
-        Color4B *endColor = [animation getEndValue];
-      
-        CGFloat red = getEaseOut(startColor->red, endColor->red, animationRatio);
-        CGFloat green = getEaseOut(startColor->green, endColor->green, animationRatio);
-        CGFloat blue = getEaseOut(startColor->blue, endColor->blue, animationRatio);
         
-        startColor =[animation getEndValue];
-        endColor = [animation getStartValue];
-        
-        CGFloat tred = getEaseOut(startColor->red, endColor->red, animationRatio);
-        CGFloat tgreen = getEaseOut(startColor->green, endColor->green, animationRatio);
-        CGFloat tblue = getEaseOut(startColor->blue, endColor->blue, animationRatio);
+        CGFloat red = getEaseOut(backgroundColor.red, backgroundHightlightColor.red, animationRatio);
+        CGFloat green = getEaseOut(backgroundColor.green, backgroundHightlightColor.green, animationRatio);
+        CGFloat blue = getEaseOut(backgroundColor.blue, backgroundHightlightColor.blue, animationRatio);
+        CGFloat alpha = getEaseOut(backgroundColor.alpha, backgroundHightlightColor.alpha, animationRatio);
         
         
-        Color4B intermediate = (Color4B){.red = red, .green = green, .blue = blue,.alpha = backgroundColor.alpha};
+        
+        CGFloat tred = getEaseOut(textColor.red, textHighlightColor.red, animationRatio);
+        CGFloat tgreen = getEaseOut(textColor.green, textHighlightColor.green, animationRatio);
+        CGFloat tblue = getEaseOut(textColor.blue, textHighlightColor.blue, animationRatio);
+        
+        
+        Color4B intermediate = (Color4B){.red = red, .green = green, .blue = blue,.alpha =  alpha};
         Color4B tintermediate = (Color4B){.red = tred, .green = tgreen, .blue = tblue,.alpha = textureVertexColorData[0].color.alpha};
         
         for (int i = 0;i < 6;i++)
@@ -81,8 +81,33 @@
         }
         [self setFrameBackgroundColor:intermediate];
     }
+    else if (animation.type == ANIMATION_NORMAL)
+    {
+        
+        CGFloat red = getEaseOut(backgroundHightlightColor.red, backgroundColor.red, animationRatio);
+        CGFloat green = getEaseOut(backgroundHightlightColor.green, backgroundColor.green, animationRatio);
+        CGFloat blue = getEaseOut(backgroundHightlightColor.blue, backgroundColor.blue, animationRatio);
+        CGFloat alpha = getEaseOut(backgroundHightlightColor.alpha, backgroundColor.alpha, animationRatio);
+        
+        
+        
+        CGFloat tred = getEaseOut(textHighlightColor.red, textColor.red, animationRatio);
+        CGFloat tgreen = getEaseOut(textHighlightColor.green, textColor.green, animationRatio);
+        CGFloat tblue = getEaseOut(textHighlightColor.blue, textColor.blue, animationRatio);
+        
+        
+        Color4B intermediate = (Color4B){.red = red, .green = green, .blue = blue,.alpha =  alpha};
+        Color4B tintermediate = (Color4B){.red = tred, .green = tgreen, .blue = tblue,.alpha = textureVertexColorData[0].color.alpha};
+        
+        for (int i = 0;i < 6;i++)
+        {
+            textureVertexColorData[i].color = tintermediate;
+            
+        }
+        [self setFrameBackgroundColor:intermediate];
 
-    
+    }
+
     
     if (animationRatio >= 1.0)
         return YES;
@@ -91,27 +116,21 @@
 
 -(void)touchBeganInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
 {
-    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_HIGHLIGHT ofDuration:0.2 afterDelayInSeconds:0];
-    [animation setStartValue:&backgroundColor OfSize:sizeof(Color4B)];
-    [animation setEndValue:&textColor OfSize:sizeof(Color4B)];
-
+    [animator addAnimationFor:self ofType:ANIMATION_HIGHLIGHT ofDuration:0.2 afterDelayInSeconds:0];
+ 
 }
 
 -(void)touchEndedInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
 {
-    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_HIGHLIGHT ofDuration:0.2 afterDelayInSeconds:0];
-    [animation setStartValue:&textColor OfSize:sizeof(Color4B)];
-    [animation setEndValue:&backgroundColor OfSize:sizeof(Color4B)];
-    
+    [animator addAnimationFor:self ofType:ANIMATION_NORMAL ofDuration:0.2 afterDelayInSeconds:0];
+
     [_target performSelector:_selector];
     
 }
 
 -(void)touchCancelledInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
 {
-    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_HIGHLIGHT ofDuration:0.2 afterDelayInSeconds:0];
-    [animation setStartValue:&textColor OfSize:sizeof(Color4B)];
-    [animation setEndValue:&backgroundColor OfSize:sizeof(Color4B)];
+    [animator addAnimationFor:self ofType:ANIMATION_NORMAL ofDuration:0.2 afterDelayInSeconds:0];
     
 }
 
@@ -136,15 +155,24 @@
     }
 }
 
+-(void)setBackgroundHightlightColor:(Color4B)_color
+{
+    backgroundHightlightColor = _color;
+}
+-(void)setTextHighlightColor:(Color4B)_color
+{
+    textHighlightColor = _color;
+}
+
 -(void)draw
 {
-    [mvpMatrixManager translateInX:self.frame.size.width/2 Y:self.frame.size.height/2 Z:1];
+    [mvpMatrixManager translateInX:self.frame.size.width/2+self.originInsideElement.x Y:self.frame.size.height/2+self.originInsideElement.y Z:1];
     if (buttonTextTexture != nil)
     {
         textureRenderer.texture = buttonTextTexture;
         [textureRenderer drawWithArray:textureVertexColorData andCount:6];
     }
-    [mvpMatrixManager translateInX:-self.frame.size.width/2 Y:-self.frame.size.height/2 Z:0];
+    [mvpMatrixManager translateInX:-self.frame.size.width/2-self.originInsideElement.x Y:-self.frame.size.height/2-self.originInsideElement.y Z:0];
 }
 
 -(void)dealloc

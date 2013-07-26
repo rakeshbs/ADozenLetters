@@ -35,6 +35,7 @@
 #define SCENE_ZOOMEDIN_VERTICAL_OFFSET -20
 
 
+#define NUMBER_OF_HUES 9
 
 @interface GameScene (Private)
 @end
@@ -44,14 +45,20 @@
 Color4B whiteColor4B = (Color4B){.red = 255, .green = 255, .blue = 255, .alpha=255};
 Color4B blackColor4B = (Color4B){.red = 0, .green = 0, .blue = 0, .alpha=255};
 
+CGFloat colorHues[NUMBER_OF_HUES] = {0.11944,0.21611111,0.30611111,0.3666661,0.58611111,0.68611111,0.78611111,0.88611111,0.98611111};
 
 Dictionary *dictionary;
 -(id)init
 {
     if (self = [super init])
     {
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        currentHueIndex = [prefs integerForKey:@"currentHueIndex"];
         firstTimeMadeActive = YES;
-        currentHue = 0;
+        currentHue = colorHues[currentHueIndex];
+        
+        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeColorHue) name:@"shake" object:nil];
+        
         currentState = STATE_SPLASH;
         
         [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
@@ -62,7 +69,7 @@ Dictionary *dictionary;
                                                                      , TOP_BUTTONS_SIZE)];
         [scoreControl setFont:@"Lato-Black" withSize:30];
         [scoreControl setTextColor:(Color4B){255,255,255,255}];
-        [scoreControl setFrameBackgroundColor:(Color4B){.red = 128,.green = 128, .blue =128,.alpha = 85}];
+        [scoreControl setFrameBackgroundColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 85}];
         [self addElement:scoreControl];
         [scoreControl release];
          
@@ -72,25 +79,33 @@ Dictionary *dictionary;
         [tileControl release];
         
         scoreButton = [[GLButton alloc]initWithFrame:CGRectMake(-130, -200, 576, 220)];
-        [scoreButton setTextColor:(Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 45}];
         [scoreButton setBackgroundColor:(Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 45}];
+        [scoreButton setBackgroundHightlightColor:(Color4B){255,255,255,180}];
+        [scoreButton addTarget:self andSelector:@selector(redirectToGameCenter)];
         [self addElement:scoreButton];
         [scoreButton release];
         
         playButton = [[GLButton alloc]initWithFrame:CGRectMake(-130, -520, 576, 250)];
-        [playButton setText:@"play" withFont:@"Lato-Bold" andSize:120];
+        [playButton setText:@"play" withFont:@"Lato-Bold" andSize:150];
         [playButton addTarget:self andSelector:@selector(playButtonClicked)];
         [playButton setFrameBackgroundColor:(Color4B){0,0,0,128}];
+        [playButton setTextColor:(Color4B){255,255,255,255}];
+        [playButton setTextHighlightColor:(Color4B){0,0,0,255}];
+        [playButton setBackgroundColor:(Color4B){0,0,0,128}];
+        [playButton setBackgroundHightlightColor:(Color4B){255,255,255,128}];
+        
         [self addElement:playButton];
         playButton.touchable = NO;
+        playButton.originInsideElement = CGPointMake(0,10);
         [playButton release];
+        
         
         
         totalScoreControl = [[ScoreControl alloc]initWithFrame:
                              CGRectMake(-120,-90,546,72)];
         [totalScoreControl setFont:@"Lato-Black" withSize:70];
         [totalScoreControl setFrameBackgroundColor:(Color4B){.red = 128,.green = 128, .blue =128,.alpha = 0}];
-        [totalScoreControl setTextColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 150}];
+        [totalScoreControl setTextColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 255}];
         
         [self addElement:totalScoreControl];
         [totalScoreControl release];
@@ -106,7 +121,7 @@ Dictionary *dictionary;
         rankingControl = [[RankingControl alloc]initWithFrame:CGRectMake(-130, -150, 576, 32)];
         
         [rankingControl setFont:@"Lato-Bold" withSize:30];
-        [rankingControl setColor:(Color4B){0,0,0,255}];
+        [rankingControl setTextColor:(Color4B){0,0,0,0}];
         [self addElement:rankingControl];
         [rankingControl release];
         
@@ -129,11 +144,7 @@ Dictionary *dictionary;
         
         gcHelper = [GCHelper getSharedGCHelper];
         gcHelper.delegate = self;
-        if (gcHelper.totalRanks > 0)
-            currentHue = (gcHelper.totalRanks - (gcHelper.currentRank - 1))/gcHelper.totalRanks *  0.55;
-        else
-            currentHue = 0;
-         
+        
     }
     return  self;
 }
@@ -188,6 +199,7 @@ Dictionary *dictionary;
         CGFloat *start = [animation getStartValue];
         CGFloat *end = [animation getEndValue];
         currentHue = getEaseOut(*start, *end, animationRatio);
+            NSLog(@"%f",currentHue);
     }
     
     if (animationRatio > 1.0)
@@ -227,6 +239,7 @@ Dictionary *dictionary;
     else if (animation.type == ANIMATION_ZOOM_IN)
     {
         [tileControl togglePlayability:YES];
+        closeButton.touchable = YES;
     }
 }
 
@@ -281,37 +294,10 @@ Dictionary *dictionary;
 
 -(void)draw{
     
-    if (currentState == STATE_HOME)
-    {
-        CGFloat hue = 0;
-        if (gcHelper.totalRanks > 0)
-            hue = (gcHelper.totalRanks - (gcHelper.currentRank - 1))/gcHelper.totalRanks *  0.55;
-        
-        if (queuedHue != hue)
-        {
-            Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_HUE_CHANGE ofDuration:1 afterDelayInSeconds:0];
-            [animation setStartValue:&currentHue OfSize:sizeof(CGFloat)];
-            [animation setEndValue:&hue OfSize:sizeof(CGFloat)];
-            queuedHue = hue;
-        }
-    }
-    else if (currentState == STATE_PLAYING)
-    {
-        CGFloat hue = (currentRoundScore/360.0) *  0.85;
-        if (hue >= 0.85)
-            hue = 0.85;
-        
-        if (queuedHue != hue)
-        {
-            Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_HUE_CHANGE ofDuration:1 afterDelayInSeconds:0];
-            [animation setStartValue:&currentHue OfSize:sizeof(CGFloat)];
-            [animation setEndValue:&hue OfSize:sizeof(CGFloat)];
-            queuedHue = hue;
-        }
-    }
-    
-    UIColor *uiColor = [UIColor colorWithHue:currentHue saturation:0.580551
-                                  brightness:0.725500 alpha:1.0];
+    if (currentHue > 0)
+        currentHue -= (int)(floorf(currentHue));
+    UIColor *uiColor = [UIColor colorWithHue:currentHue saturation:0.61
+                                  brightness:0.953 alpha:1.0];
     
     CGFloat red,green,blue,alpha;
     [uiColor getRed:&red green:&green blue:&blue alpha:&alpha];
@@ -339,7 +325,11 @@ NSMutableArray *tilesArray;
     [super sceneMadeActive];
     if (firstTimeMadeActive)
         [activityIndictor show];
-    firstTimeMadeActive = NO;                                                                                                                                                                                                                                                                             
+    else
+        [gcHelper authenticateUser];
+    firstTimeMadeActive = NO;
+    
+    
 };
 
 -(void)sceneMadeInActive
@@ -388,6 +378,11 @@ NSMutableArray *tilesArray;
     [self performSelector:@selector(loadData) withObject:nil afterDelay:0];
 }
 
+-(void)redirectToGameCenter
+{
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"gamecenter:"]];
+}
+
 -(void)userAuthenticated
 {
     NSLog(@"Authenticate approved");
@@ -395,9 +390,28 @@ NSMutableArray *tilesArray;
     {
         currentState = STATE_HOME;
         [activityIndictor animate];
+        
     }
+    [rankingControl setGameCenterState:YES];
+    scoreButton.touchable = NO;
 
 }
+
+-(void)userAuthenticationFailed
+{
+    NSLog(@"Authenticate failed");
+    if (currentState == STATE_SPLASH)
+    {
+        currentState = STATE_HOME;
+        [activityIndictor animate];
+
+    }
+    
+    [rankingControl setGameCenterState:NO];
+    scoreButton.touchable = YES;
+}
+
+
 -(void)scoreDownloaded
 {
     [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
@@ -417,16 +431,6 @@ NSMutableArray *tilesArray;
     [gcHelper downloadRank];
 }
 
--(void)userAuthenticationFailed
-{
-    NSLog(@"Authenticate failed");
-    if (currentState == STATE_SPLASH)
-    {
-        currentState = STATE_HOME;
-        [activityIndictor animate];
-    }
-
-}
 
 -(void)defaultLeaderBoardLoaded
 {
@@ -457,6 +461,29 @@ NSMutableArray *tilesArray;
     [animator addAnimationFor:self ofType:ANIMATION_START_SCENE ofDuration:1
           afterDelayInSeconds:0];
             [self removeElement:activityIndictor];
+}
+
+-(void)changeColorHue
+{
+    
+    if ([animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_HUE_CHANGE] > 0)
+        return;
+    
+        NSLog(@"start %d",currentHueIndex);
+    currentHueIndex++;
+    if (currentHueIndex >= NUMBER_OF_HUES)
+        currentHueIndex = 0;
+    
+    NSLog(@"end %d",currentHueIndex);
+    CGFloat hue = colorHues[currentHueIndex];
+    if (colorHues[currentHueIndex]<currentHue)
+        hue+=1.0;
+    
+    Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_HUE_CHANGE ofDuration:1 afterDelayInSeconds:0];
+    [animation setStartValue:&currentHue OfSize:sizeof(CGFloat)];
+    [animation setEndValue:&hue OfSize:sizeof(CGFloat)];
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setInteger:currentHueIndex forKey:@"currentHueIndex"];
 }
 
 

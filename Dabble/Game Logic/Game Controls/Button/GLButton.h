@@ -19,6 +19,8 @@
     
     Color4B backgroundColor;
     Color4B textColor;
+    Color4B backgroundHightlightColor;
+    Color4B textHighlightColor;
 }
 
 @property (nonatomic,retain) NSObject *target;
@@ -27,6 +29,9 @@
 
 -(void)setTextColor:(Color4B)_color;
 -(void)setBackgroundColor:(Color4B)_color;
+-(void)setBackgroundHightlightColor:(Color4B)_color;
+-(void)setTextHighlightColor:(Color4B)_color;
+
 -(void)addTarget:(NSObject *)target andSelector:(SEL)selector;
 -(void)setText:(NSString *)text withFont:(NSString *)font andSize:(CGFloat)size;
 @end

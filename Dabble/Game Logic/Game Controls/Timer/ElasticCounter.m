@@ -23,6 +23,7 @@
 {
     if (self = [super initWithFrame:_frame])
     {
+                self.touchable = NO;
         previousVerticalOffset = 0;
         currentValue = 0;
         maskedVertices = malloc(sizeof(Vertex3D) * 6);
@@ -48,6 +49,12 @@
 {
     return 1;
 }
+-(void)setTextColor:(Color4B)textColor
+{
+    _textColor = textColor;
+    alpha = textColor.alpha;
+}
+
 
 -(void)setStringValueToCount:(NSString *)str inDuration:(CGFloat)duration
 {
@@ -139,11 +146,11 @@
     }
     else if (animation.type == ANIMATION_SHOW)
     {
-        alpha = getEaseOut(0, 255.0, animationRatio);
+        alpha = getEaseOut(0, self.textColor.alpha, animationRatio);
     }
     else if (animation.type == ANIMATION_HIDE)
     {
-        alpha = getEaseOut(255, 0.0, animationRatio);
+        alpha = getEaseOut(self.textColor.alpha, 0.0, animationRatio);
     }
     
     if (animationRatio >= 1.0)

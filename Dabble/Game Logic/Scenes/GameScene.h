@@ -41,6 +41,7 @@
     CGFloat currentHue;
     CGFloat queuedHue;
     BOOL firstTimeMadeActive;
-
+    
+    int currentHueIndex;
 }
 @end
