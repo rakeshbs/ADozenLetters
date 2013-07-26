@@ -162,6 +162,7 @@
 		[view_delegate sceneMadeInActive];
 	self.view_delegate = scene;
 	refreshTimeInterval = CFAbsoluteTimeGetCurrent();
+    [self.view_delegate sceneMadeActive];
 }
 
 

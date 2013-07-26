@@ -7,9 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GLActivityIndicator.h"
+#import "GameScene.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
-
+@interface AppDelegate : UIResponder <UIApplicationDelegate,GLActivityIndicatorDelegate>
+{
+    GameScene *gameScene;
+}
 @property (strong, nonatomic) UIWindow *window;
 
 @end

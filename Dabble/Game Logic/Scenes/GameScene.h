@@ -40,6 +40,7 @@
     int currentState;
     CGFloat currentHue;
     CGFloat queuedHue;
+    BOOL firstTimeMadeActive;
 
 }
 @end

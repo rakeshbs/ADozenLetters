@@ -50,19 +50,14 @@ Dictionary *dictionary;
 {
     if (self = [super init])
     {
+        firstTimeMadeActive = YES;
         currentHue = 0;
         currentState = STATE_SPLASH;
-        playButton.touchable = NO;
         
- //       self.scaleInsideElement = CGPointMake(SCENE_SCALE,SCENE_SCALE);
-   //     self.originInsideElement = CGPointMake(0,SCENE_VERTICAL_OFFSET);
-//        self.scaleInsideElement = CGPointMake(START_SCENCE_SCALE,START_SCENCE_SCALE);
-  //      self.originInsideElement = CGPointMake(0,START_SCENE_OFFSET);
-        
-        [self loadDictionary];
+        [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
         
         CGFloat screenHeight = [[UIScreen mainScreen]bounds].size.height;
-        
+       
         scoreControl = [[ScoreControl alloc]initWithFrame:CGRectMake(800, -SCENE_ZOOMEDIN_VERTICAL_OFFSET+screenHeight-TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE
                                                                      , TOP_BUTTONS_SIZE)];
         [scoreControl setFont:@"Lato-Black" withSize:30];
@@ -70,7 +65,7 @@ Dictionary *dictionary;
         [scoreControl setFrameBackgroundColor:(Color4B){.red = 128,.green = 128, .blue =128,.alpha = 85}];
         [self addElement:scoreControl];
         [scoreControl release];
-        
+         
         tileControl = [[TileControl alloc]initWithFrame:CGRectMake(-160, 0,self.frame.size.width+320,self.frame.size.height)];
         [self addElement:tileControl];
         [tileControl addTarget:self andSelector:@selector(tileRearranged:)];
@@ -130,7 +125,7 @@ Dictionary *dictionary;
                                                                                 screenHeight)];
         [self addElement:activityIndictor];
         activityIndictor.delegate = self;
-        [activityIndictor show];
+        [activityIndictor release];
         
         gcHelper = [GCHelper getSharedGCHelper];
         gcHelper.delegate = self;
@@ -138,6 +133,7 @@ Dictionary *dictionary;
             currentHue = (gcHelper.totalRanks - (gcHelper.currentRank - 1))/gcHelper.totalRanks *  0.55;
         else
             currentHue = 0;
+         
     }
     return  self;
 }
@@ -221,11 +217,11 @@ Dictionary *dictionary;
         [self showTiles];
         [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
         [rankingControl setCurrentRank:gcHelper.currentRank andTotalRanks:gcHelper.totalRanks];
+        [self removeElement:fullScreenElement];
     }
     if (animation.type == ANIMATION_ZOOM_OUT)
     {
         [self showTiles];
-//        [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
         [gcHelper updateScore];
     }
     else if (animation.type == ANIMATION_ZOOM_IN)
@@ -340,7 +336,10 @@ NSMutableArray *tilesArray;
 
 -(void)sceneMadeActive
 {
-    
+    [super sceneMadeActive];
+    if (firstTimeMadeActive)
+        [activityIndictor show];
+    firstTimeMadeActive = NO;                                                                                                                                                                                                                                                                             
 };
 
 -(void)sceneMadeInActive
@@ -391,6 +390,7 @@ NSMutableArray *tilesArray;
 
 -(void)userAuthenticated
 {
+    NSLog(@"Authenticate approved");
     if (currentState == STATE_SPLASH)
     {
         currentState = STATE_HOME;
@@ -419,6 +419,7 @@ NSMutableArray *tilesArray;
 
 -(void)userAuthenticationFailed
 {
+    NSLog(@"Authenticate failed");
     if (currentState == STATE_SPLASH)
     {
         currentState = STATE_HOME;
@@ -436,10 +437,12 @@ NSMutableArray *tilesArray;
 {
     if (activityIndictor.iteration == 1)
     {
+                NSLog(@"Animation iteration 1 finished");
         [gcHelper authenticateUser];
     }
     else if (activityIndictor.iteration == 2)
     {
+        NSLog(@"Animation iteration 2 finished");
         [activityIndictor hide];
     }
 }
@@ -453,6 +456,7 @@ NSMutableArray *tilesArray;
     self.originInsideElement = CGPointMake(0,SCENE_VERTICAL_OFFSET);
     [animator addAnimationFor:self ofType:ANIMATION_START_SCENE ofDuration:1
           afterDelayInSeconds:0];
+            [self removeElement:activityIndictor];
 }
 
 

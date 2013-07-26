@@ -28,12 +28,33 @@
     [[GLDirector getSharedDirector]setWindow:self.window];
     [[GLDirector getSharedDirector]setInterfaceOrientation:UIInterfaceOrientationPortrait];
     
+    GLActivityIndicator *activityIndicator = [[GLActivityIndicator alloc]initWithFrame:CGRectMake(0, 0, 320, 480)];
+    activityIndicator.hidden = NO;
+    GLScene *scene = [[GLScene alloc]init];
+    [scene addElement:activityIndicator];
     
-    GameScene *gameScene = [[GameScene alloc]init];
-    [[GLDirector getSharedDirector]presentScene:gameScene];
-    [gameScene release];
+
+    [[GLDirector getSharedDirector]presentScene:scene];
+    [[[GLDirector getSharedDirector] openGLview]drawView];
+    [activityIndicator show];
+    activityIndicator.delegate = self;
     [[[GLDirector getSharedDirector] openGLview] resumeTimer];
     return YES;
+}
+
+
+
+-(void)activitiyIndicatorFinishedAnimating:(GLActivityIndicator *)activityIndicator
+{
+    if (activityIndicator.iteration == 1)
+    {
+        gameScene = [[GameScene alloc]init];
+        [activityIndicator animate];
+    }
+    else if (activityIndicator.iteration == 2)
+    {
+        [[GLDirector getSharedDirector]presentScene:gameScene];
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

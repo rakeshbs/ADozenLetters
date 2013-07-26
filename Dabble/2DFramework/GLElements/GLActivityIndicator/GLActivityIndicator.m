@@ -45,7 +45,7 @@
 {
     if (self = [super initWithFrame:_frame])
     {
-        self.hidden = YES;
+        self.hidden = NO;
         pointsData = calloc(ACTIVITY_POINTS_COUNT,sizeof(PointVertexColorSizeData));
         activityPoints = [[NSMutableArray alloc]init];
         
@@ -60,6 +60,14 @@
             (pointsData + i)->size = ACTIVITY_INDICATOR_SIZE * [[UIScreen mainScreen]scale];
             [activityPoints addObject:activityPoint];
             [activityPoint release];
+        }
+        
+        for (int i = 0;i < ACTIVITY_POINTS_COUNT;i++)
+        {
+            ActivityPoint *activityPoint = activityPoints[i];
+            activityPoint.startPoint = CGPointMake(0,0);
+            activityPoint.endPoint = CGPointMake(0,0);
+            (pointsData + i)->vertex = (Vertex3D){.x = 0, .y = 0, .z=0 ,.t = 0};
         }
         relativePosition = INITIAL_POSITION;
         cycleModeOpen = YES;
@@ -82,7 +90,7 @@
     
     if (animation.type == ANIMATION_SHOW_ACTIVITY_INDICATOR)
     {
-     //   relativePosition = getEaseOutElastic(INITIAL_POSITION, 0, animationRatio,animation.duration);
+
     }
     if (animation.type == ANIMATION_RUN_ACTIVITY_INDICATOR)
     {
@@ -106,7 +114,7 @@
 {
     if (animation.type == ANIMATION_SHOW_ACTIVITY_INDICATOR)
     {
-        self.hidden = NO;
+     //   self.hidden = NO;
     }
     
 }
@@ -236,24 +244,27 @@
 
 -(void)show
 {
-    if (!self.hidden)
-        return;
-    
+//    if (!self.hidden)
+  //      return;
+    self.hidden = NO;
     iteration = 0;
     
-    [animator removeQueuedAnimationsForObject:self];
-    [animator removeRunningAnimationsForObject:self];
-    
+//    [animator removeQueuedAnimationsForObject:self];
+  //  [animator removeRunningAnimationsForObject:self];
+    /*
     for (int i = 0;i < ACTIVITY_POINTS_COUNT;i++)
     {
         ActivityPoint *activityPoint = activityPoints[i];
         activityPoint.startPoint = CGPointMake(0,0);
         activityPoint.endPoint = CGPointMake(0,0);
         (pointsData + i)->vertex = (Vertex3D){.x = 0, .y = 0, .z=0 ,.t = 0};
-    }
+    }*/
+    
+    NSLog(@"Show Activity indicator");
     cycleCount = 0;
     cycleModeOpen = YES;
     [animator addAnimationFor:self ofType:ANIMATION_SHOW_ACTIVITY_INDICATOR ofDuration:0.0 afterDelayInSeconds:0];
+    
 }
 
 -(void)hide
@@ -261,7 +272,6 @@
     if (self.hidden)
         return;
     iteration = 0;
-    
     
     [animator removeQueuedAnimationsForObject:self];
     [animator removeRunningAnimationsForObject:self];

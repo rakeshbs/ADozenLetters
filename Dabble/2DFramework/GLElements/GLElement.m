@@ -181,9 +181,7 @@ static CGFloat ZCoordinate;
     
     CGFloat startZCoordinate = ZCoordinate;
     [mvpMatrixManager pushModelViewMatrix];
-    [mvpMatrixManager translateInX:self.frame.origin.x Y:self.frame.origin.y Z:0];
-    [mvpMatrixManager pushModelViewMatrix];
-    [mvpMatrixManager translateInX:0 Y:0 Z:ZCoordinate];
+    [mvpMatrixManager translateInX:self.frame.origin.x Y:self.frame.origin.y Z:ZCoordinate];
 
     if ([self isDrawable] && !self.hidden)
     {
@@ -197,15 +195,12 @@ static CGFloat ZCoordinate;
         
     }
     
-    [mvpMatrixManager popModelViewMatrix];
-    
+    [mvpMatrixManager translateInX:0 Y:0 Z:-startZCoordinate];
+
     ZCoordinate += self.numberOfLayers;
     
-    [mvpMatrixManager translateInX:self.frame.size.width/2 Y:self.frame.size.height/2 Z:0];
-    
-    
-    [mvpMatrixManager translateInX:self.originInsideElement.x
-                                 Y:self.originInsideElement.y Z:0];
+    [mvpMatrixManager translateInX:self.frame.size.width/2+self.originInsideElement.x
+                                 Y:self.frame.size.height/2+self.originInsideElement.y Z:0];
 
     
     [mvpMatrixManager scaleByXScale:self.scaleInsideElement.x  YScale:self.scaleInsideElement.y ZScale:1];
