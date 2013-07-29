@@ -39,7 +39,6 @@
         textureManager = [TextureManager getSharedTextureManager];
         mvpMatrixManager = [MVPMatrixManager sharedMVPMatrixManager];
         shaderManager = [GLShaderManager sharedGLShaderManager];
-        fontSpriteSheetManager = [FontSpriteSheetManager getSharedFontSpriteSheetManager];
         rendererManager = [GLRendererManager sharedGLRendererManager];
         touchesInElement = [[NSMutableArray alloc]init];
         [self setUpBackgroundColorData];
@@ -81,7 +80,6 @@
         touchesInElement = [[NSMutableArray alloc]init];
         mvpMatrixManager = [MVPMatrixManager sharedMVPMatrixManager];
         shaderManager = [GLShaderManager sharedGLShaderManager];
-        fontSpriteSheetManager = [FontSpriteSheetManager getSharedFontSpriteSheetManager];
         rendererManager = [GLRendererManager sharedGLRendererManager];
         [self setUpBackgroundColorData];
         self.frameBackgroundColor = (Color4B){0,0,0,0};

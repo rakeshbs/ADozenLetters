@@ -235,9 +235,9 @@
 
 -(void)setFont:(NSString *)font withSize:(CGFloat)size
 {
-    fontSpriteSheet = [fontSpriteSheetManager getFontSpriteSheetOfType:FontSpriteTypeNumbers withFont:font andSize:size];
+    fontSpriteSheet = [textureManager getFontSpriteSheetOfFontName:font andSize:size andType:FontSpriteTypeNumbers];
     
-    [fontSpriteSheet.texture generateMipMap];
+    [fontSpriteSheet generateMipMap];
     
     if (vertexData != NULL)
         free(vertexData);
@@ -247,7 +247,7 @@
     
     CGFloat maxWidth = 0;
     
-    for (FontSprite *f in fontSpriteSheet.fontSpriteDictionary.objectEnumerator)
+    for (Sprite *f in fontSpriteSheet.spriteDictionary.objectEnumerator)
         maxWidth = (maxWidth < f.width)?f.width:maxWidth;
     
     maxWidth /=[[UIScreen mainScreen]scale];
@@ -291,7 +291,7 @@
         count += counter.vertexDataCount;
         [mvpMatrixManager popModelViewMatrix];
     }
-    [textureRenderer setTexture:fontSpriteSheet.texture];
+    [textureRenderer setTexture:fontSpriteSheet];
     [textureRenderer drawWithArray:vertexData andCount:count];
     
 }

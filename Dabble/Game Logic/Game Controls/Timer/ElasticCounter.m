@@ -226,7 +226,7 @@
     int index = (currentIndex - sindex + sequence.count)%sequence.count;
     CGFloat offsetY = (verticalOffset + wiggleDistance) - currentIndex * frame.size.height;
     
-    FontSprite *fontSprite = [fontSpriteSheet getFontSprite:sequence[index]];
+    Sprite *fontSprite = [fontSpriteSheet getSpriteFromKey:sequence[index]];
     
     CGFloat maxY = self.frame.size.height/2;
     CGFloat minY = -self.frame.size.height/2;
@@ -251,6 +251,7 @@
     }
     else
         return;
+     
     
     CGRect maskedFontRect = CGRectMake(fontSprite.textureCGRect.origin.x, bottomCoordinateFont, fontSprite.textureCGRect.size.width, topCoordinateFont - bottomCoordinateFont);
     CGRectToVertex3D(maskedFontRect, maskedVertices);
@@ -279,7 +280,7 @@
     
 }
 
--(CGRect)getMaskedTexCoordsForFontSprite:(FontSprite *)fontSprite
+-(CGRect)getMaskedTexCoordsForFontSprite:(Sprite *)fontSprite
                           andBottomRatio:(CGFloat)bottomRatio andTopRatio:(CGFloat)topRatio
 {
     CGRect texCoordRect = fontSprite.textureCoordinatesCGRect;

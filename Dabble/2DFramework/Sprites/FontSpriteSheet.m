@@ -13,94 +13,168 @@ static NSString *fontCharactersUpper = @"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T
 static NSString *fontCharactersLower = @"a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,v,z";
 static NSString *fontCharactersNumbers = @"0,1,2,3,4,5,6,7,8,9";
 
-@implementation FontSprite
-
-
-
--(void)calculateCoordinates
-{
-    if (_textureCoordinates !=nil)
-        return;
-    _textureCoordinates = malloc(sizeof(TextureCoord)*6);
-    _textureRect = malloc(sizeof(Vector3D)*6);
-    
-    CGFloat totalWidth = self.fontSpriteSheet.width;
-    CGFloat totalHeight = self.fontSpriteSheet.height;
-    
-    _textureCoordinates[0] = (TextureCoord) { .s = (_offSetX/totalWidth), .t = ((_offSetY+_height)/totalHeight)};
-    _textureCoordinates[1] = (TextureCoord)
-        {.s = ( (_offSetX+_width)/totalWidth), .t = ((_offSetY+_height)/totalHeight)};
-    
-    _textureCoordinates[2] = (TextureCoord)
-        {.s = ( (_offSetX+_width)/totalWidth), .t = (_offSetY/totalHeight)};
-    
-    _textureCoordinates[3] = (TextureCoord) { .s = (_offSetX/totalWidth), .t = ((_offSetY+_height)/totalHeight)};
-    _textureCoordinates[4] = (TextureCoord) { .s = (_offSetX/totalWidth), .t = (_offSetY/totalHeight)};
-    _textureCoordinates[5] = (TextureCoord)
-        {.s = ( (_offSetX+_width)/totalWidth), .t = (_offSetY/totalHeight)};
-    
-    self.textureCoordinatesCGRect = CGRectMake(_offSetX/totalWidth, _offSetY/totalHeight, _width/totalWidth, _height/totalHeight);
-    
-    
-    CGFloat scale = [[UIScreen mainScreen]scale]*2;
-    
-    _textureRect[0] = (Vector3D) { .x = -_width/scale, .y = -_height/scale, .z = 0.0};
-    _textureRect[1] = (Vector3D) { .x = _width/scale, .y = -_height/scale, .z = 0.0};
-    _textureRect[2] = (Vector3D) { .x = _width/scale, .y = _height/scale, .z = 0.0};
-    
-    _textureRect[3] = (Vector3D) { .x = -_width/scale, .y =   -_height/scale, .z = 0.0};
-    _textureRect[4] = (Vector3D) { .x = -_width/scale, .y = _height/scale, .z = 0.0};
-    _textureRect[5] = (Vector3D) { .x = _width/scale, .y = _height/scale, .z = 0.0};
-    
-    self.textureCGRect = CGRectMake(-_width/scale, -_height/scale, 2*_width/scale , 2 * _height/scale);
-    
-}
-
--(void)dealloc
-{
-
-    self.fontSpriteSheet = nil;
-    self.key = nil;
-    free(_textureRect);
-    
-    free(_textureCoordinates);
-    [super dealloc];
-}
-
-@end
 
 @implementation FontSpriteSheet
 
-@synthesize texture,fontSpriteDictionary;
 
--(id)initWithType:(FontSpriteType)type andFontName:(NSString *)fontName andFontSize:(CGFloat)fontSize
+
+-(void)calculateFontSpriteSheetWith:(NSString *)fontString
+{
+    NSArray *characterArray = [fontString componentsSeparatedByString:@","];
+    
+    UIFont *font = [UIFont fontWithName:self.fontName
+                                   size:self.fontSize*[[UIScreen mainScreen]scale]];
+    
+    
+    CGFloat area = 0;
+    
+    for (int i = 0;i<characterArray.count;i++)
+    {
+        CGSize dimensions = [characterArray[i] sizeWithFont:font];
+        area += dimensions.height * dimensions.width;
+    }
+    
+    CGFloat squareSide = ceilf(sqrtf(area));
+    
+    int col = 0;
+    int row = 0;
+    CGFloat lineHeight = 0,lineWidth = 0,totalHeight = 0,totalWidth = 0;
+    
+    for (int i = 0;i<characterArray.count;i++)
+    {
+        CGSize dimensions = [characterArray[i] sizeWithFont:font];
+        
+        lineWidth += (dimensions.width+2);
+        lineHeight = (lineHeight < dimensions.height) ? dimensions.height:lineHeight;
+        
+        col++;
+        if (lineWidth >= squareSide || i == characterArray.count - 1)
+        {
+            
+            totalWidth = (totalWidth < lineWidth) ? lineWidth:totalWidth;
+            totalHeight += lineHeight;
+            col = 0;
+            lineWidth = 0;
+            row++;
+        }
+    }
+    
+    NSUInteger				width,
+    height,
+    i;
+	CGContextRef			context;
+	void*					data;
+	CGColorSpaceRef			colorSpace;
+    
+    width = totalWidth;
+	if((width != 1) && (width & (width - 1))) {
+		i = 1;
+		while(i < width)
+            i *= 2;
+		width = i;
+	}
+	height = totalHeight;
+	if((height != 1) && (height & (height - 1))) {
+		i = 1;
+		while(i < height)
+            i *= 2;
+		height = i;
+	}
+    
+    
+	colorSpace = CGColorSpaceCreateDeviceGray();
+	data = calloc(height, width );
+	context = CGBitmapContextCreateWithData(data, width, height, 8, width ,
+                                            colorSpace, kCGImageAlphaNone,nil,nil);
+	CGColorSpaceRelease(colorSpace);
+	CGContextSetGrayFillColor(context, 1.0, 1.0);
+    
+    
+    CGContextTranslateCTM(context, 0.0, height);
+    
+    CGContextScaleCTM(context, 1.0, -1.0);
+    
+    lineHeight = 0,lineWidth = 0,totalHeight = 0,totalWidth = 0,col = 0;
+    
+    Sprite *fontSprite = nil;
+    UIGraphicsPushContext(context);
+    
+    
+	for (int i = 0;i<characterArray.count;i++)
+    {
+        CGSize dimensions = [characterArray[i] sizeWithFont:font];
+        
+        
+        CGContextTranslateCTM(context, lineWidth, totalHeight);
+        [characterArray[i] drawInRect:CGRectMake(0, 0, dimensions.width, dimensions.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:NSTextAlignmentCenter];
+        CGContextTranslateCTM(context, -lineWidth, -totalHeight);
+        
+        fontSprite = [[Sprite alloc]init];
+        fontSprite.offSetX = lineWidth;
+        fontSprite.offSetY = totalHeight;
+        fontSprite.width = dimensions.width;
+        fontSprite.height = dimensions.height;
+        fontSprite.key = characterArray[i];
+        fontSprite.spriteSheet = self;
+        [self addSprite:fontSprite];
+        [fontSprite release];
+        
+        lineWidth += (dimensions.width+2);
+        lineHeight = (lineHeight < dimensions.height) ? dimensions.height:lineHeight;
+        
+        col++;
+        if (lineWidth >= squareSide || i == characterArray.count - 1)
+        {
+            totalWidth = (totalWidth < lineWidth) ? lineWidth:totalWidth;
+            totalHeight += lineHeight;
+            col = 0;
+            lineWidth = 0;
+            row++;
+        }
+        
+        
+    }
+    
+     /*CGImageRef imageRef = CGBitmapContextCreateImage(context);
+     UIImage* image = [[UIImage alloc] initWithCGImage:imageRef];
+     
+     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+     NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
+     NSString *filePath = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%d.png",self.hash]]; //Add the file name
+     [UIImagePNGRepresentation(image) writeToFile:filePath atomically:YES]; //Write the file
+     */
+    
+    self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_A8 pixelsWide:width pixelsHigh:height contentSize:CGSizeMake(totalWidth, totalHeight)];
+	
+	CGContextRelease(context);
+	free(data);
+    
+	
+    [self calculateCoordinates];
+    
+}
+
+
+-(id)initWithType:(FontSpriteType)fontSpriteType andFontName:(NSString *)fontName andFontSize:(CGFloat)fontSize
 {
     if (self = [super init]) 
     {
-        fontSpriteDictionary = [[NSMutableDictionary alloc]init];
-        self.fontSpriteType = type;
+        self.fontSpriteType = fontSpriteType;
         self.fontName = fontName;
         self.fontSize = fontSize;
         
         
-        if (type == FontSpriteTypeAlphabetsUppercase)
+        if (self.fontSpriteType == FontSpriteTypeAlphabetsUppercase)
         {
-            texture = [[Texture2D alloc]
-                                      initFontSpriteSheetWith:fontCharactersUpper
-                                      andFontSprite:self];
+            [self calculateFontSpriteSheetWith:fontCharactersUpper];
         }
-        else if (type == FontSpriteTypeAlphabetsUppercase)
+        else if (self.fontSpriteType == FontSpriteTypeAlphabetsUppercase)
         {
-            texture = [[Texture2D alloc]
-                              initFontSpriteSheetWith:fontCharactersLower
-                              andFontSprite:self];
+            [self calculateFontSpriteSheetWith:fontCharactersLower];
         }
         else
         {
-            texture = [[Texture2D alloc]
-                           initFontSpriteSheetWith:fontCharactersNumbers
-                           andFontSprite:self];
-
+            [self calculateFontSpriteSheetWith:fontCharactersNumbers];
         }
         
     }
@@ -108,31 +182,10 @@ static NSString *fontCharactersNumbers = @"0,1,2,3,4,5,6,7,8,9";
 
 }
 
--(void)calculateCoordinates
-{
-    for (FontSprite *f in fontSpriteDictionary.objectEnumerator)
-    {
-        [f calculateCoordinates];
-    }
-}
-
--(FontSprite *)getFontSprite:(NSString *)str
-{
-    return fontSpriteDictionary[str];
-}
-
--(void)addFontSprite:(FontSprite *)fontSprite
-{
-    [fontSpriteDictionary setValue:fontSprite forKey:fontSprite.key];
-    fontSprite.fontSpriteSheet = self;
-}
 
 -(void)dealloc
 {
-
-    [texture release];
     self.fontName = nil;
-    self.fontColor = nil;
     [super dealloc];
 }
 

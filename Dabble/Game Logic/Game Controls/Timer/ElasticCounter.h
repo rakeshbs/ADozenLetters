@@ -23,7 +23,6 @@
     Vertex3D *maskedVertices;
     TextureCoord *maskedTextureCoords;
     
-    FontSpriteSheet *fontSpriteSheet;
     
     long long loopCount;
     CGFloat maxAngle;
@@ -41,7 +40,7 @@
 @property (nonatomic,readonly) NSArray *sequence;
 @property (nonatomic) InstancedTextureVertexColorData *vertexData;
 @property (nonatomic,readonly) int vertexDataCount;
-@property (nonatomic,retain) FontSpriteSheet *fontSpriteSheet;
+@property (nonatomic,retain) SpriteSheet *fontSpriteSheet;
 @property (nonatomic) Color4B textColor;
 @property (nonatomic) int alpha;
 

@@ -12,9 +12,10 @@
 #import "MVPMatrixManager.h"
 #import "OpenGLESView.h"
 #import "GLDirector.h"
+#import "SpriteSheet.h"
+#import "FontSpriteSheet.h"
 #import "UITouch+GLElement.h"
 #import "GLShaderManager.h"
-#import "FontSpriteSheetManager.h"
 #import "GLRendererManager.h"
 #import "EasingFunctions.h"
 
@@ -34,7 +35,6 @@
     TextureManager *textureManager;
     MVPMatrixManager *mvpMatrixManager;
     GLShaderManager *shaderManager;
-    FontSpriteSheetManager *fontSpriteSheetManager;
     GLRendererManager *rendererManager;
     
     CGPoint scaleInsideElement;

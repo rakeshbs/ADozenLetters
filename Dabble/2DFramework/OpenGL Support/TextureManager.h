@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "Texture2D.h"
+#import "FontSpriteSheet.h"
+#import "SpriteSheet.h"
 
 @interface TextureManager : NSObject {
 	NSMutableDictionary *texture_dictionary;
@@ -23,5 +25,5 @@
            horizontalAlignment:(UITextAlignment)alignment verticalAlignment:(UITextVerticalAlignment)vAlignment
 					  fontName:(NSString *)font
 					  fontSize:(int)size;
--(Texture2D *)getLayeredStringTexture:(NSMutableArray *)strings :(NSString *)_key;
+-(FontSpriteSheet *)getFontSpriteSheetOfFontName:(NSString *)fontName andSize:(CGFloat)size andType:(int)fontSpriteType;
 @end

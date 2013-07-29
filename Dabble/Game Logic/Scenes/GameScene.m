@@ -86,7 +86,7 @@ Dictionary *dictionary;
         [scoreButton release];
         
         playButton = [[GLButton alloc]initWithFrame:CGRectMake(-130, -520, 576, 250)];
-        [playButton setText:@"play" withFont:@"Lato-Bold" andSize:150];
+        [playButton setText:@"play" withFont:@"Lato-Bold" andSize:120];
         [playButton addTarget:self andSelector:@selector(playButtonClicked)];
         [playButton setFrameBackgroundColor:(Color4B){0,0,0,128}];
         [playButton setTextColor:(Color4B){255,255,255,255}];
@@ -161,7 +161,7 @@ Dictionary *dictionary;
     
     else if (animation.type == ANIMATION_ZOOM_IN)
     {
-        CGFloat s = getEaseInOut(SCENE_SCALE, 1, animationRatio,animation.duration);
+        CGFloat s = getEaseInOut(SCENE_SCALE, 1.0, animationRatio,animation.duration);
         self.scaleInsideElement = CGPointMake(s,s);
         CGFloat pos1 =  getEaseInOut(800, 321 - scoreControl.frame.size.width, animationRatio,animation.duration);
         scoreControl.frame = CGRectMake(pos1,scoreControl.frame.origin.y,
@@ -199,7 +199,6 @@ Dictionary *dictionary;
         CGFloat *start = [animation getStartValue];
         CGFloat *end = [animation getEndValue];
         currentHue = getEaseOut(*start, *end, animationRatio);
-            NSLog(@"%f",currentHue);
     }
     
     if (animationRatio > 1.0)

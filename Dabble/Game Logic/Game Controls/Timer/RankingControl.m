@@ -109,24 +109,28 @@
 {
     if (status)
     {
+        if (rankedLabel.textColor.alpha > 128)
+            return;
         CGFloat delay = 0;
         if (gameCenterLabel.textColor.alpha > 0)
         {
-            [animator addAnimationFor:self ofType:ANIMATION_HIDE_GCLABEL ofDuration:0.3 afterDelayInSeconds:0];
-            delay = 0.3;
+            [animator addAnimationFor:self ofType:ANIMATION_HIDE_GCLABEL ofDuration:0.8 afterDelayInSeconds:0];
+            delay = 0.8;
         }
-        [animator addAnimationFor:self ofType:ANIMATION_SHOW_RANK ofDuration:0.3
+        [animator addAnimationFor:self ofType:ANIMATION_SHOW_RANK ofDuration:0.8
               afterDelayInSeconds:delay];
     }
     else
     {
+        if (gameCenterLabel.textColor.alpha > 128)
+            return;
         CGFloat delay = 0;
         if (rankedLabel.textColor.alpha > 0)
         {
-            [animator addAnimationFor:self ofType:ANIMATION_HIDE_RANK ofDuration:0.3 afterDelayInSeconds:0];
-            delay = 0.3;
+            [animator addAnimationFor:self ofType:ANIMATION_HIDE_RANK ofDuration:0.8 afterDelayInSeconds:0];
+            delay = 0.8;
         }
-        [animator addAnimationFor:self ofType:ANIMATION_SHOW_GCLABEL ofDuration:0.3 afterDelayInSeconds:delay];
+        [animator addAnimationFor:self ofType:ANIMATION_SHOW_GCLABEL ofDuration:0.8 afterDelayInSeconds:delay];
     }
 }
 

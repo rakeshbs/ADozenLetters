@@ -10,6 +10,7 @@
 #import "Tile.h"
 #import "Dictionary.h"
 #import "GLShaderManager.h"
+#import "TileSpriteSheet.h"
 
 
 #define TileControlStateHide 1
@@ -32,8 +33,7 @@
     InstancedTextureVertexColorData *scoreTextureData;
     InstancedTextureVertexColorData *tileTextureData;
     
-    FontSpriteSheet *characterSpriteSheet;
-    FontSpriteSheet *scaledCharacterSpriteSheet;
+   // FontSpriteSheet *characterSpriteSheet;
     FontSpriteSheet *scoreSpriteSheet;
     Texture2D *shadowTexture;
     Texture2D *tileTexture;
@@ -84,6 +84,10 @@
     int score;
     
     int checkWord3,checkWord4,checkWord5;
+    
+    TileSpriteSheet *tileSpriteSheet;
+    
+    Sprite *tileSprite;
 }
 
 @property (nonatomic,readonly, getter=theNewWordsPerMove) NSMutableArray *newWordsPerMove;

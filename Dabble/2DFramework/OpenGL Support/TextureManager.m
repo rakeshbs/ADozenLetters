@@ -120,18 +120,32 @@
         {
             filename = [NSString stringWithFormat:@"%@%@",filename,@"@2X"];
         }
-        NSLog(@"%@",filename);
-        
+
         Texture2D *tex = [self loadTexture:[NSString stringWithFormat:@"%@.%@",filename,type]];
         if (tex != nil)
         {
             [texture_dictionary setObject:tex forKey:texture_name];
+            [tex release];
             return tex;
-			
 		}
 	}
 	return nil;
 }
+
+-(FontSpriteSheet *)getFontSpriteSheetOfFontName:(NSString *)fontName andSize:(CGFloat)size andType:(int)fontSpriteType
+{
+    NSString *key = [NSString stringWithFormat:@"%@%f%d",fontName,size,fontSpriteType];
+    
+    if ([texture_dictionary objectForKey:key] == nil)
+    {
+        FontSpriteSheet *spriteSheet = [[FontSpriteSheet alloc]initWithType:fontSpriteType andFontName:fontName andFontSize:size];
+        [texture_dictionary setObject:spriteSheet forKey:key];
+        [spriteSheet release];
+
+    }
+    return texture_dictionary[key];    
+}
+
 -(void)delete_Texture:(NSString *)texture_name
 {
 	[texture_dictionary removeObjectForKey:texture_name];

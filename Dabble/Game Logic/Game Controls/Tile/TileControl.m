@@ -63,7 +63,6 @@ static Texture2D *tileTextureImage = nil;
     
     stringTextureRenderer = [rendererManager getRendererWithVertexShaderName:@"InstancedTextureShader" andFragmentShaderName:@"StringTextureShader"];
     
-    [self createTileTexture];
     generatedWords = [[NSMutableArray alloc]init];
     newWordsPerMove = [[NSMutableArray alloc]init];
     usedWordsPerTurn = [[NSMutableArray alloc]init];
@@ -96,31 +95,22 @@ static Texture2D *tileTextureImage = nil;
 }
 
 
--(void)createTileTexture
-{
-    
-    if (tileTextureImage == nil)
-    {
-        CGRect imageRrect = CGRectMake(0, 0, tileTextureSizeWithBorder, tileTextureSizeWithBorder);
-        
-        CGFloat diff = (tileTextureSizeWithBorder - tileSquareSize)/2;
-        UIGraphicsBeginImageContext( imageRrect.size );
-        CGContextRef context = UIGraphicsGetCurrentContext();
-        CGContextSetFillColorWithColor(context, [[UIColor whiteColor]CGColor]);
-        CGContextFillRect(context, CGRectMake(diff, diff, tileSquareSize, tileSquareSize));
-        UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        tileTextureImage = [[Texture2D alloc]initWithImage:image];
-    }
-}
-
-
 
 -(void)setupGraphics
 {
-    characterSpriteSheet = [fontSpriteSheetManager getFontSpriteSheetOfType:FontSpriteTypeAlphabetsUppercase withFont:@"Lato-Bold" andSize:42];
-    [characterSpriteSheet.texture generateMipMap];
+    tileSpriteSheet = [[TileSpriteSheet alloc]initWithFont:@"Lato-Bold" andSize:42];
+    //[tileSpriteSheet generateMipMap];
+    [tileSpriteSheet bindTexture];
+    glGenerateMipmapOES(GL_TEXTURE_2D);
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
+    
+    tileSprite = [tileSpriteSheet getSpriteFromKey:@"tile"];
+    
+  /*  characterSpriteSheet = [textureManager getFontSpriteSheetOfFontName:@"Lato-Bold" andSize:42 andType:FontSpriteTypeAlphabetsUppercase];
+    [characterSpriteSheet generateMipMap];
+    */
     shadowTexture = [textureManager getTexture:@"shadow" OfType:@"png"];
     [shadowTexture generateMipMap];
     
@@ -240,7 +230,7 @@ static Texture2D *tileTextureImage = nil;
         
         tile.tag = j;
         tile.colorIndex = j%2;
-        tile.characterCounter.fontSpriteSheet = characterSpriteSheet;
+        tile.characterCounter.fontSpriteSheet = tileSpriteSheet;
         CGPoint anchorPoint = thirteenLayout[tile.tag];
         tile.centerPoint = CGPointMake(anchorPoint.x, 1000);
         [tilesArray addObject:tile];
@@ -770,13 +760,32 @@ static Texture2D *tileTextureImage = nil;
         Matrix3D result;
         [mvpMatrixManager getMVPMatrix:result];
         
+        
+        
+        if (isPlayable)
+        {
+        
         for (int j = 0;j<6;j++)
         {
-            memcpy(&((tileTextureData + i * 6 + j)->mvpMatrix), result, sizeof(Matrix3D));
-            (tileTextureData + i * 6 + j)->vertex = transparentVertices[j];
-            (tileTextureData + i * 6 + j)->color = *(tile.currentTileColor + tile.colorIndex);
-            (tileTextureData + i * 6 + j)->texCoord = tileTexCoordinates[j];
-            tileColorVerticesCount++;
+                memcpy(&((characterTextureData + characterDataCount)->mvpMatrix), result, sizeof(Matrix3D));
+                (characterTextureData + characterDataCount)->vertex = transparentVertices[j];
+                (characterTextureData + characterDataCount)->color = *(tile.currentTileColor + tile.colorIndex);
+                (characterTextureData + characterDataCount)->texCoord = tileSprite.textureCoordinates[j];
+                characterDataCount++;
+            }
+        
+        }
+        else
+        {
+            for (int j = 0;j<6;j++)
+            {
+                memcpy(&((tileTextureData + i * 6 + j)->mvpMatrix), result, sizeof(Matrix3D));
+                (tileTextureData + i * 6 + j)->vertex = transparentVertices[j];
+                (tileTextureData + i * 6 + j)->color = *(tile.currentTileColor + tile.colorIndex);
+                (tileTextureData + i * 6 + j)->texCoord = tileTexCoordinates[j];
+                tileColorVerticesCount++;
+            }
+            
         }
         
         [mvpMatrixManager translateInX:0 Y:0 Z:1];
@@ -803,12 +812,13 @@ static Texture2D *tileTextureImage = nil;
         
     }
     
+    if (!isPlayable)
+    {
+        stringTextureRenderer.texture = tileTextureImage;
+        [stringTextureRenderer drawWithArray:tileTextureData andCount:tileColorVerticesCount];
+    }
     
-    //[colorRenderer drawWithArray:tileColorData andCount:tileColorVerticesCount];
-    stringTextureRenderer.texture = tileTextureImage;
-    [stringTextureRenderer drawWithArray:tileTextureData andCount:tileColorVerticesCount];
-    
-    stringTextureRenderer.texture = characterSpriteSheet.texture;
+    stringTextureRenderer.texture = tileSpriteSheet;
     [stringTextureRenderer drawWithArray:characterTextureData andCount:characterDataCount];
     
     textureRenderer.texture = shadowTexture;
