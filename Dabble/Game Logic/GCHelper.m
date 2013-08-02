@@ -10,7 +10,7 @@
 
 @implementation GCHelper
 
-@synthesize currentScore,currentRank,totalRanks;
+@synthesize currentScore,currentRank,totalRanks,isUserAuthenticated;
 
 +(GCHelper *)getSharedGCHelper
 {
@@ -239,9 +239,8 @@
 
 -(void)addScore:(int64_t)score
 {
-
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     currentScore += score;
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setInteger:currentScore forKey:@"currentScore"];
 }
 

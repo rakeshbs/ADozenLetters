@@ -25,7 +25,12 @@
         
         textureRenderer = [rendererManager getRendererWithVertexShaderName:@"TextureShader" andFragmentShaderName:@"StringTextureShader"];
         
-        textureVertexColorData = malloc(sizeof(TextureVertexColorData) * 6);   
+        textureVertexColorData = malloc(sizeof(TextureVertexColorData) * 6);
+        
+        soundManager = [SoundManager sharedSoundManager];
+        [soundManager loadSoundWithKey:@"button_highlight" soundFile:@"play_button_tap.aiff"];
+        
+        
     }
     return self;
 }
@@ -117,6 +122,7 @@
 -(void)touchBeganInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
 {
     [animator addAnimationFor:self ofType:ANIMATION_HIGHLIGHT ofDuration:0.2 afterDelayInSeconds:0];
+    [soundManager playSoundWithKey:@"button_highlight" gain:1.0 pitch:1.0f location:CGPointZero shouldLoop:NO];
  
 }
 
@@ -125,12 +131,15 @@
     [animator addAnimationFor:self ofType:ANIMATION_NORMAL ofDuration:0.2 afterDelayInSeconds:0];
 
     [_target performSelector:_selector];
+    [soundManager playSoundWithKey:@"button_highlight" gain:1.0 pitch:1.2f location:CGPointZero shouldLoop:NO];
     
 }
 
 -(void)touchCancelledInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
 {
     [animator addAnimationFor:self ofType:ANIMATION_NORMAL ofDuration:0.2 afterDelayInSeconds:0];
+    
+        [soundManager playSoundWithKey:@"button_highlight" gain:1.0 pitch:1.2f location:CGPointZero shouldLoop:NO];
     
 }
 

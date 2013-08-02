@@ -20,7 +20,5 @@
 
 -(void)sceneMadeActive;
 -(void)sceneMadeInActive;
--(void)showActivityIndicator;
--(void)hideActivityIndicator;
 
 @end

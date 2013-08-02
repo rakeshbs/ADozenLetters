@@ -11,7 +11,7 @@
 #import "Dictionary.h"
 #import "GLShaderManager.h"
 #import "TileSpriteSheet.h"
-
+#import "SoundManager.h"
 
 #define TileControlStateHide 1
 #define TileControlStateShow 2
@@ -56,11 +56,12 @@
     int tileColorVerticesCount;
     
     
-    NSMutableArray *generatedWords;
+  /*  NSMutableArray *generatedWords;
     NSMutableArray *newWordsPerMove;
     NSMutableArray *usedWordsPerTurn;
     NSMutableArray *wordsPerMove;
     NSMutableString *concatenatedWords;
+    */
     
     int scorePerMove;
     
@@ -88,6 +89,7 @@
     TileSpriteSheet *tileSpriteSheet;
     
     Sprite *tileSprite;
+    SoundManager *soundManager;
 }
 
 @property (nonatomic,readonly, getter=theNewWordsPerMove) NSMutableArray *newWordsPerMove;

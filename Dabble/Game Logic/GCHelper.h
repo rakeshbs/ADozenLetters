@@ -31,6 +31,8 @@
     int64_t totalRanks;
 }
 
+
+@property (nonatomic,readonly)     BOOL isUserAuthenticated;
 @property (nonatomic,retain) NSString *leaderBoardID;
 @property (nonatomic,readonly)     int64_t currentScore;
 @property (nonatomic,assign) NSObject<GCHelperDelegate> *delegate;

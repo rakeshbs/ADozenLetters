@@ -83,6 +83,7 @@ NSArray *charactersArray;
         characterCounter = [[ElasticCounter alloc]initWithFrame:CGRectMake(0, 0, tileSquareSize, 48)];
         [characterCounter setSequence:charactersArray];
         isBondedColor = NO;
+        soundManager = [SoundManager sharedSoundManager];
     }
     
     return self;
@@ -92,14 +93,6 @@ NSArray *charactersArray;
 {
     self.character = _character;
     [characterCounter setStringValueToCount:character inDuration:0.6];
-}
-
--(void)setupSounds
-{
-    soundManager = [SoundManager sharedSoundManager];
-    [soundManager loadSoundWithKey:@"pick" soundFile:@"bip1.aiff"];
-    [soundManager loadSoundWithKey:@"place" soundFile:@"bip2.aiff"];
-    
 }
 
 
@@ -275,6 +268,11 @@ NSArray *charactersArray;
         }
         
         [self updateShadow];
+          CGFloat p = (rand()%20+1)/20.0;
+         [soundManager playSoundWithKey:@"pick" gain:1.0f
+         pitch:0.0f+p
+         location:CGPointZero
+         shouldLoop:NO];
         
         prevTouchPoint = touchPoint;
     }
@@ -386,6 +384,11 @@ NSArray *charactersArray;
                 [sq moveToFront];
                 [self moveToFront];
                 [sq moveToPoint:sq.anchorPoint inDuration:0.3];
+             /*   CGFloat p = (rand()%20+1)/20.0;
+                [soundManager playSoundWithKey:@"pick" gain:1.0f
+                 pitch:0.0f+p
+                 location:CGPointZero
+                                    shouldLoop:NO];*/
                 
             }
         }
@@ -409,6 +412,15 @@ NSArray *charactersArray;
         if (animation.type == ANIMATION_THROW || animation.type == ANIMATION_MOVE)
         {
             [animation setStartValue:&_centerPoint OfSize:sizeof(CGPoint)];
+            
+            if ( animation.type == ANIMATION_MOVE)
+            {
+                CGFloat p = (rand()%20+1)/20.0;
+                [soundManager playSoundWithKey:@"place" gain:1.0f
+                                     pitch:0.0f+p
+                                  location:CGPointZero
+                                shouldLoop:NO];
+            }
         }
         
         if (animation.type == ANIMATION_THROW)
@@ -423,19 +435,15 @@ NSArray *charactersArray;
     }
     else if (animation.type == ANIMATION_HIDE_SHADOW)
     {
-        /*     [soundManager playSoundWithKey:@"place" gain:10.0f
-         pitch:1.0f
-         location:CGPointZero
-         shouldLoop:NO];*/
+
     }
     else if (animation.type == ANIMATION_SHOW_SHADOW)
     {
-        CGFloat p = (rand()%10 - 5)/20.0;
-        // NSLog(@"%f",p);
-        [soundManager playSoundWithKey:@"pick" gain:10.0f
+     /*   CGFloat p = (rand()%10 - 5)/20.0;
+        [soundManager playSoundWithKey:@"pick" gain:1.0f
                                  pitch:1.0f+p
                               location:CGPointZero
-                            shouldLoop:NO];
+                            shouldLoop:NO];*/
     }
     else if (animation.type == ANIMATION_SHOW_COLOR||animation.type == ANIMATION_HIDE_COLOR)
     {

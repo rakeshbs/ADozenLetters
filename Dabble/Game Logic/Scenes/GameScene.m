@@ -11,10 +11,6 @@
 #import "NSArray+Additions.h"
 #import "ElasticCounter.h"
 
-#define yOffset 75
-
-#define totalTimePerGame 122
-
 #define TOP_BUTTONS_SIZE 75
 
 #define SCORE_PER_WORD 10
@@ -35,7 +31,7 @@
 #define SCENE_ZOOMEDIN_VERTICAL_OFFSET -20
 
 
-#define NUMBER_OF_HUES 9
+#define NUMBER_OF_HUES 5
 
 @interface GameScene (Private)
 @end
@@ -45,7 +41,7 @@
 Color4B whiteColor4B = (Color4B){.red = 255, .green = 255, .blue = 255, .alpha=255};
 Color4B blackColor4B = (Color4B){.red = 0, .green = 0, .blue = 0, .alpha=255};
 
-CGFloat colorHues[NUMBER_OF_HUES] = {0.11944,0.21611111,0.30611111,0.3666661,0.58611111,0.68611111,0.78611111,0.88611111,0.98611111};
+CGFloat colorHues[NUMBER_OF_HUES] = {0,0.09805,0.37,0.616388,0.769444};
 
 Dictionary *dictionary;
 -(id)init
@@ -57,6 +53,11 @@ Dictionary *dictionary;
         firstTimeMadeActive = YES;
         currentHue = colorHues[currentHueIndex];
         
+        soundManager = [SoundManager sharedSoundManager];
+        [soundManager loadSoundWithKey:@"zoomin" soundFile:@"on_board_zoom_in.aiff"];
+        [soundManager loadSoundWithKey:@"zoomout" soundFile:@"on_board_zoom_out.aiff"];
+        [soundManager loadSoundWithKey:@"timertick" soundFile:@"timer_beat.aiff"];
+        
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(changeColorHue) name:@"shake" object:nil];
         
         currentState = STATE_SPLASH;
@@ -65,11 +66,11 @@ Dictionary *dictionary;
         
         CGFloat screenHeight = [[UIScreen mainScreen]bounds].size.height;
        
-        scoreControl = [[ScoreControl alloc]initWithFrame:CGRectMake(800, -SCENE_ZOOMEDIN_VERTICAL_OFFSET+screenHeight-TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE
-                                                                     , TOP_BUTTONS_SIZE)];
+        scoreControl = [[ScoreControl alloc]initWithFrame:CGRectMake(800, -SCENE_ZOOMEDIN_VERTICAL_OFFSET+screenHeight-TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE)];
+        
         [scoreControl setFont:@"Lato-Black" withSize:30];
         [scoreControl setTextColor:(Color4B){255,255,255,255}];
-        [scoreControl setFrameBackgroundColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 85}];
+        [scoreControl setFrameBackgroundColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 64}];
         [self addElement:scoreControl];
         [scoreControl release];
          
@@ -79,8 +80,8 @@ Dictionary *dictionary;
         [tileControl release];
         
         scoreButton = [[GLButton alloc]initWithFrame:CGRectMake(-130, -200, 576, 220)];
-        [scoreButton setBackgroundColor:(Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 45}];
-        [scoreButton setBackgroundHightlightColor:(Color4B){255,255,255,180}];
+        [scoreButton setBackgroundColor:(Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 64}];
+        [scoreButton setBackgroundHightlightColor:(Color4B){0,0,0,64}];
         [scoreButton addTarget:self andSelector:@selector(redirectToGameCenter)];
         [self addElement:scoreButton];
         [scoreButton release];
@@ -88,11 +89,10 @@ Dictionary *dictionary;
         playButton = [[GLButton alloc]initWithFrame:CGRectMake(-130, -520, 576, 250)];
         [playButton setText:@"play" withFont:@"Lato-Bold" andSize:120];
         [playButton addTarget:self andSelector:@selector(playButtonClicked)];
-        [playButton setFrameBackgroundColor:(Color4B){0,0,0,128}];
-        [playButton setTextColor:(Color4B){255,255,255,255}];
+        [playButton setTextColor:(Color4B){0,0,0,255}];
         [playButton setTextHighlightColor:(Color4B){0,0,0,255}];
-        [playButton setBackgroundColor:(Color4B){0,0,0,128}];
-        [playButton setBackgroundHightlightColor:(Color4B){255,255,255,128}];
+        [playButton setBackgroundColor:(Color4B){0,0,0,64}];
+        [playButton setBackgroundHightlightColor:(Color4B){255,255,255,64}];
         
         [self addElement:playButton];
         playButton.touchable = NO;
@@ -136,11 +136,11 @@ Dictionary *dictionary;
         [tileControl moveToFront];
         
 
-        activityIndictor = [[GLActivityIndicator alloc]initWithFrame:CGRectMake(0, 0, 320,
+        activityIndicator = [[GLActivityIndicator alloc]initWithFrame:CGRectMake(0, 0, 320,
                                                                                 screenHeight)];
-        [self addElement:activityIndictor];
-        activityIndictor.delegate = self;
-        [activityIndictor release];
+        [self addElement:activityIndicator];
+        activityIndicator.delegate = self;
+        [activityIndicator release];
         
         gcHelper = [GCHelper getSharedGCHelper];
         gcHelper.delegate = self;
@@ -213,10 +213,12 @@ Dictionary *dictionary;
     {
         [NSObject cancelPreviousPerformRequestsWithTarget:gcHelper selector:@selector(downloadRank) object:nil];
         currentState = STATE_PLAYING;
+        [soundManager playSoundWithKey:@"zoomin"];
     }
     else if (animation.type == ANIMATION_ZOOM_OUT)
     {
         currentState = STATE_HOME;
+                [soundManager playSoundWithKey:@"zoomout"];
     }
 }
 
@@ -233,7 +235,11 @@ Dictionary *dictionary;
     if (animation.type == ANIMATION_ZOOM_OUT)
     {
         [self showTiles];
-        [gcHelper updateScore];
+        [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
+        if (gcHelper.isUserAuthenticated)
+            [gcHelper performSelector:@selector(updateScore) withObject:nil afterDelay:0.5];
+        else
+            [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
     }
     else if (animation.type == ANIMATION_ZOOM_IN)
     {
@@ -288,6 +294,8 @@ Dictionary *dictionary;
         [self loadData];
         return;
     }
+    if (currentRoundScore < 10)
+        [soundManager playSoundWithKey:@"timertick"];
     [self performSelector:@selector(setScore) withObject:nil afterDelay:1.0];
 }
 
@@ -295,7 +303,7 @@ Dictionary *dictionary;
     
     if (currentHue > 0)
         currentHue -= (int)(floorf(currentHue));
-    UIColor *uiColor = [UIColor colorWithHue:currentHue saturation:0.61
+    UIColor *uiColor = [UIColor colorWithHue:currentHue saturation:0.601
                                   brightness:0.953 alpha:1.0];
     
     CGFloat red,green,blue,alpha;
@@ -323,7 +331,7 @@ NSMutableArray *tilesArray;
 {
     [super sceneMadeActive];
     if (firstTimeMadeActive)
-        [activityIndictor show];
+        [activityIndicator show];
     else
         [gcHelper authenticateUser];
     firstTimeMadeActive = NO;
@@ -384,11 +392,10 @@ NSMutableArray *tilesArray;
 
 -(void)userAuthenticated
 {
-    NSLog(@"Authenticate approved");
     if (currentState == STATE_SPLASH)
     {
         currentState = STATE_HOME;
-        [activityIndictor animate];
+        [activityIndicator animate];
         
     }
     [rankingControl setGameCenterState:YES];
@@ -398,11 +405,10 @@ NSMutableArray *tilesArray;
 
 -(void)userAuthenticationFailed
 {
-    NSLog(@"Authenticate failed");
     if (currentState == STATE_SPLASH)
     {
         currentState = STATE_HOME;
-        [activityIndictor animate];
+        [activityIndicator animate];
 
     }
     
@@ -436,44 +442,39 @@ NSMutableArray *tilesArray;
     [gcHelper updateScore];
 }
 
--(void)activitiyIndicatorFinishedAnimating:(GLActivityIndicator *)activityIndicator;
+-(void)activitiyIndicatorFinishedAnimating:(GLActivityIndicator *)_activityIndicator;
 {
-    if (activityIndictor.iteration == 1)
+    if (_activityIndicator.iteration == 1)
     {
-                NSLog(@"Animation iteration 1 finished");
         [gcHelper authenticateUser];
     }
-    else if (activityIndictor.iteration == 2)
+    else if (_activityIndicator.iteration == 2)
     {
-        NSLog(@"Animation iteration 2 finished");
-        [activityIndictor hide];
+        [_activityIndicator hide];
     }
 }
--(void)activityIndicatorDidAappear:(GLActivityIndicator *)activityIndicator
+-(void)activityIndicatorDidAappear:(GLActivityIndicator *)_activityIndicator
 {
     
 }
--(void)activityIndicatorDidDisappear:(GLActivityIndicator *)activityIndicator
+-(void)activityIndicatorDidDisappear:(GLActivityIndicator *)_activityIndicator
 {
     self.scaleInsideElement = CGPointMake(SCENE_SCALE,SCENE_SCALE);
     self.originInsideElement = CGPointMake(0,SCENE_VERTICAL_OFFSET);
     [animator addAnimationFor:self ofType:ANIMATION_START_SCENE ofDuration:1
           afterDelayInSeconds:0];
-            [self removeElement:activityIndictor];
+    [self removeElement:_activityIndicator];
 }
 
 -(void)changeColorHue
 {
-    
     if ([animator getCountOfRunningAnimationsForObject:self ofType:ANIMATION_HUE_CHANGE] > 0)
         return;
     
-        NSLog(@"start %d",currentHueIndex);
     currentHueIndex++;
     if (currentHueIndex >= NUMBER_OF_HUES)
         currentHueIndex = 0;
     
-    NSLog(@"end %d",currentHueIndex);
     CGFloat hue = colorHues[currentHueIndex];
     if (colorHues[currentHueIndex]<currentHue)
         hue+=1.0;

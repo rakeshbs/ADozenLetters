@@ -15,6 +15,7 @@
 #import "CloseButton.h"
 #import "ScoreControl.h"
 #import "RankingControl.h"
+#import "SoundManager.h"
 
 @interface GameScene : GLScene <AnimationDelegate,CloseButtonDelegate,GCHelperDelegate,GLActivityIndicatorDelegate>
 {
@@ -35,7 +36,7 @@
     RankingControl *rankingControl;
     GLElement *fullScreenElement;
     
-    GLActivityIndicator *activityIndictor;
+    GLActivityIndicator *activityIndicator;
     
     int currentState;
     CGFloat currentHue;
@@ -43,5 +44,7 @@
     BOOL firstTimeMadeActive;
     
     int currentHueIndex;
+    
+    SoundManager *soundManager;
 }
 @end

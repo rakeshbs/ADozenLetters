@@ -7,7 +7,7 @@
 //
 
 #import "GLElement.h"
-
+#import "SoundManager.h"
 #define CLOSEBUTTON_CLICK_STARTED 1
 #define CLOSEBUTTON_CLICK_CANCELLED 2
 #define CLOSEBUTTON_CLICK_FINISHED 3
@@ -18,6 +18,7 @@
 
 @interface CloseButton : GLElement <AnimationDelegate>
 {
+    SoundManager *soundManager;
     GLRenderer *colorRenderer;
     GLRenderer *textureRenderer;
     

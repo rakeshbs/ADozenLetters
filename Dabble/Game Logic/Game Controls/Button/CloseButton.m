@@ -18,15 +18,14 @@
     if (self = [super initWithFrame:_frame])
     {
         textColor = (Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 255};
-        backgroundColor = (Color4B){.red = 0,.green = 0,.blue = 0,.alpha = 85};
+        backgroundColor = (Color4B){.red = 0,.green = 0,.blue = 0,.alpha = 64};
         
         colorRenderer = [rendererManager getRendererWithVertexShaderName:@"ColorShader" andFragmentShaderName:@"ColorShader"];
         textureRenderer = [rendererManager getRendererWithVertexShaderName:@"TextureShader" andFragmentShaderName:@"StringTextureShader"];
         
         self.frameBackgroundColor = backgroundColor;
         
-        buttonTextTexture = [textureManager getStringTexture:@"x" dimensions:CGSizeMake(self.frame.size.width, self.frame.size.height) horizontalAlignment:UITextAlignmentCenter verticalAlignment:UITextAlignmentMiddle fontName:@"Lato" fontSize:45];
-        
+        buttonTextTexture = [textureManager getTexture:@"close" OfType:@"png"];
         textureVertexColorData = malloc(sizeof(TextureVertexColorData) * 6);
         
         Vertex3D *texVertices = [buttonTextTexture getTextureVertices];
@@ -37,6 +36,10 @@
             textureVertexColorData[i].texCoord = texCoords[i];
             textureVertexColorData[i].color = textColor;
         }
+        
+        soundManager = [SoundManager sharedSoundManager];
+    /*    [soundManager loadSoundWithKey:@"closeon" soundFile:@"close_button_highlight.aiff"];
+        [soundManager loadSoundWithKey:@"closeoff" soundFile:@"close_button_unhighlight.aiff"];*/
         
     }
     return self;
@@ -108,6 +111,10 @@
     [animation setEndValue:&textColor OfSize:sizeof(Color4B)];
     
     [self.delegate closeButtonClick:CLOSEBUTTON_CLICK_STARTED];
+/*    [soundManager playSoundWithKey:@"closeon" gain:1.0f
+                             pitch:0.0f
+                          location:CGPointZero
+                        shouldLoop:NO];*/
 }
 
 -(void)touchEndedInElement:(UITouch *)touch withIndex:(int)index withEvent:(UIEvent *)event
@@ -131,7 +138,6 @@
     [animation setEndValue:&backgroundColor OfSize:sizeof(Color4B)];
     
     [self.delegate closeButtonClick:CLOSEBUTTON_CLICK_CANCELLED];
-    
 }
 
 -(void)draw

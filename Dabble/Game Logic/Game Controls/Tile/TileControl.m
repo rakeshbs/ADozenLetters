@@ -63,22 +63,21 @@ static Texture2D *tileTextureImage = nil;
     
     stringTextureRenderer = [rendererManager getRendererWithVertexShaderName:@"InstancedTextureShader" andFragmentShaderName:@"StringTextureShader"];
     
-    generatedWords = [[NSMutableArray alloc]init];
-    newWordsPerMove = [[NSMutableArray alloc]init];
-    usedWordsPerTurn = [[NSMutableArray alloc]init];
-    wordsPerMove = [[NSMutableArray alloc]init];
+    //generatedWords = [[NSMutableArray alloc]init];
+   // newWordsPerMove = [[NSMutableArray alloc]init];
+  //  usedWordsPerTurn = [[NSMutableArray alloc]init];
+//    wordsPerMove = [[NSMutableArray alloc]init];
     
     
     [self performSelector:@selector(loadDictionary) withObject:nil];
     [self setupColors];
     [self setupGraphics];
     [self enableNotification];
-    
+    [self setupSounds];
     
     _allowedWords = [[NSMutableArray alloc]init];
     [self calculateThirteenLayout];
     [self calculateTwelveLayout];
-    
     [self createTiles];
     
     
@@ -273,12 +272,12 @@ static Texture2D *tileTextureImage = nil;
     
     
     [l throwToPoint:thirteenLayout[1] inDuration:0.3 afterDelay:0.1];
-    [s throwToPoint:thirteenLayout[5] inDuration:0.3 afterDelay:0.1];
+    [s throwToPoint:thirteenLayout[5] inDuration:0.3 afterDelay:0.15];
     
     d.anchorPoint = twelveLayout[1];
     n.anchorPoint = twelveLayout[3];
     [d throwToPoint:d.anchorPoint inDuration:0.3 afterDelay:0.2];
-    [n throwToPoint:n.anchorPoint inDuration:0.3 afterDelay:0.2];
+    [n throwToPoint:n.anchorPoint inDuration:0.3 afterDelay:0.25];
     
     l.anchorPoint = twelveLayout[4];
     s.anchorPoint = twelveLayout[7];
@@ -533,8 +532,10 @@ static Texture2D *tileTextureImage = nil;
         if (tile.tag == 0)
         {
             [tile moveToPoint:tile.anchorPoint inDuration:0.3 afterDelay:1.3];
+        [self performSelector:@selector(playTileSound) withObject:nil afterDelay:1.3];
             continue;
         }
+        [self performSelector:@selector(playTileSound) withObject:nil afterDelay:0.05 * count];
         [tile throwToPoint:tile.anchorPoint inDuration:0.3 afterDelay:0.05 * count];
         [tile moveToBack];
         delay += 0.08;
@@ -544,7 +545,15 @@ static Texture2D *tileTextureImage = nil;
     }
 }
 
+-(void)playTileSound
+{
+    CGFloat p = (rand()%20+1)/20.0;
+    [soundManager playSoundWithKey:@"place" gain:1.0f
+                             pitch:0.0f+p
+                          location:CGPointZero
+                        shouldLoop:NO];
 
+}
 
 -(void)hideTiles
 {
@@ -552,7 +561,9 @@ static Texture2D *tileTextureImage = nil;
     for (Tile *tile in [subElements reverseObjectEnumerator])
     {
         [tile moveToPoint:CGPointMake(thirteenLayout[tile.tag].x, 700) inDuration:1 afterDelay:delay];
+
         delay += 0.05;
+
     }
 }
 
@@ -590,9 +601,19 @@ static Texture2D *tileTextureImage = nil;
         CGFloat d = ([self calculateDelayFromTag:t.tag])-reduceDelay;
         if (d < 0)
             d = 0;
-       [t throwToPoint:collapsePoint inDuration:0.5 afterDelay:d];
+       [t moveToPoint:collapsePoint inDuration:0.3 afterDelay:d];
+//        [self performSelector:@selector(playTileSound) withObject:nil afterDelay:d];
     }
 }
+
+-(void)setupSounds
+{
+    soundManager = [SoundManager sharedSoundManager];
+    [soundManager loadSoundWithKey:@"pick" soundFile:@"on_tile_translate_to_position.aiff"];
+    [soundManager loadSoundWithKey:@"place" soundFile:@"on_tile_translate_to_position.aiff"];
+    
+}
+
 
 -(CGFloat)calculateDelayFromTag:(int)etag
 {
@@ -641,6 +662,8 @@ static Texture2D *tileTextureImage = nil;
             [t throwToPoint:t.anchorPoint inDuration:0.3 afterDelay:(delay-[self calculateDelayFromTag:t.tag])/5.0];
         
     }
+  //  [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(playTileSound) object:nil];
+    
     [self performSelector:@selector(enableIsPlayable) withObject:nil afterDelay:0.2];
 }
 

@@ -7,6 +7,7 @@
 //
 
 #import "GLElement.h"
+#import "SoundManager.h"
 
 @interface GLButton : GLElement <AnimationDelegate>
 {
@@ -21,6 +22,8 @@
     Color4B textColor;
     Color4B backgroundHightlightColor;
     Color4B textHighlightColor;
+
+    SoundManager *soundManager;
 }
 
 @property (nonatomic,retain) NSObject *target;

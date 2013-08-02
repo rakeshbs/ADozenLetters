@@ -105,7 +105,7 @@ void* MyGetOpenALAudioData(CFURLRef inFileURL, ALsizei *outDataSize, ALenum *out
 	
 	// Read all the data into memory
 	UInt32		dataSize = theFileLengthInFrames * theOutputFormat.mBytesPerFrame;;
-	theData = malloc(dataSize);
+	theData = calloc(dataSize,1);
 	if (theData)
 	{
 		AudioBufferList		theDataBuffer;

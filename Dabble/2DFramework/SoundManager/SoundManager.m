@@ -420,7 +420,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SoundManager);
 	// Find the next available source
     NSUInteger sourceID;
     sourceID = [self nextAvailableSource];
-	
+	NSLog(@"Next available source %d",sourceID);
 	// If 0 is returned then no sound sources were available
 	if (sourceID == 0) {
 		NSLog(@"WARNING - SoundManager: No sound sources available to play %@", aSoundKey);
@@ -663,7 +663,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SoundManager);
     NSLog(@"INFO - Sound Manager: Initializing sound manager");
 	
 	// Define how many OpenAL sources should be generated
-	uint maxOpenALSources = 16;
+	uint maxOpenALSources = 32;
     
 	// Get the device we are going to use for sound.  Using NULL gets the default device
 	device = alcOpenDevice(NULL);
@@ -724,10 +724,33 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SoundManager);
 	for(NSNumber *sourceNumber in soundSources) {
 		alGetSourcei([sourceNumber unsignedIntValue], AL_SOURCE_STATE, &sourceState);
 		// If this source is not playing then return it
+        
+    /*    if (sourceState == AL_PLAYING)
+        {
+            NSLog(@"playing %@ %d",sourceNumber,soundSources.count);
+        }*/
+        
 		if(sourceState != AL_PLAYING) return [sourceNumber unsignedIntValue];
 	}
 	
-	return 0;
+    for(NSNumber *sourceNumber in soundSources)
+    {
+        NSUInteger sourceID = [sourceNumber unsignedIntegerValue];
+        		alGetSourcei([sourceNumber unsignedIntValue], AL_SOURCE_STATE, &sourceState);
+ /*       if (sourceState != AL_PLAYING)
+        {
+            NSLog(@"playing %d",sourceID);
+        }*/
+        alSourceStop(sourceID);
+    }
+    
+    for(NSNumber *sourceNumber in soundSources) {
+		alGetSourcei([sourceNumber unsignedIntValue], AL_SOURCE_STATE, &sourceState);
+		// If this source is not playing then return it
+		if(sourceState != AL_PLAYING) return [sourceNumber unsignedIntValue];
+	}
+    
+    return 0;
 }
 
 #pragma mark -
