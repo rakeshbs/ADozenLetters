@@ -40,13 +40,15 @@
     GLActivityIndicator *activityIndicator;
     GLImageButton *moreButton;
     
-    GLImageButton *backToButton;
-    
+    GLImageButton *facebookButton;
+    GLImageButton *ratingButton;
+    GLImageButton *logoButton;
     
     int currentState;
     CGFloat currentHue;
     CGFloat queuedHue;
     BOOL firstTimeMadeActive;
+    BOOL moreScreenShown;
     
     int currentHueIndex;
     

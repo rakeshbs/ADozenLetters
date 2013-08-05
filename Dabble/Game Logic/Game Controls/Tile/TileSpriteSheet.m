@@ -229,13 +229,14 @@ NSString *characters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     
     [tilesSprites release];
     
-    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    /*CGImageRef imageRef = CGBitmapContextCreateImage(context);
     UIImage* image = [[UIImage alloc] initWithCGImage:imageRef];
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsPath = [paths objectAtIndex:0]; //Get the docs directory
     NSString *filePath = [documentsPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%d.png",self.hash]]; //Add the file name
     [UIImagePNGRepresentation(image) writeToFile:filePath atomically:YES]; //Write the file
+    */
     
     self = [self initWithData:data pixelFormat:kTexture2DPixelFormat_A8 pixelsWide:width pixelsHigh:height contentSize:CGSizeMake(totalWidth, totalHeight)];
 	

@@ -18,10 +18,10 @@
 {
     if (self = [super initWithFrame:_frame])
     {
-        textColor = (Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 255};
+        imageColor = (Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 255};
         backgroundColor = (Color4B){.red = 0,.green = 0,.blue = 0,.alpha = 128};
-        backgroundHightlightColor = textColor;
-        textHighlightColor = backgroundColor;
+        backgroundHightlightColor = imageColor;
+        imageHighlightColor = backgroundColor;
         
         textureRenderer = [rendererManager getRendererWithVertexShaderName:@"TextureShader" andFragmentShaderName:@"StringTextureShader"];
         
@@ -35,9 +35,9 @@
     return self;
 }
 
--(void)setImage:(NSString *)imageName
+-(void)setImage:(NSString *)imageName ofType:(NSString *)type
 {
-    buttonTexture = [textureManager getTexture:imageName OfType:@"png"];
+    buttonTexture = [textureManager getTexture:imageName OfType:type];
     [buttonTexture generateMipMap];
     
     TextureCoord *texCoord = [buttonTexture getTextureCoordinates];
@@ -47,7 +47,7 @@
     {
         textureVertexColorData[i].vertex = vertices[i];
         textureVertexColorData[i].texCoord = texCoord[i];
-        textureVertexColorData[i].color = textColor;
+        textureVertexColorData[i].color = imageColor;
     }
 }
 
@@ -65,9 +65,9 @@
         
         
         
-        CGFloat tred = getEaseOut(textColor.red, textHighlightColor.red, animationRatio);
-        CGFloat tgreen = getEaseOut(textColor.green, textHighlightColor.green, animationRatio);
-        CGFloat tblue = getEaseOut(textColor.blue, textHighlightColor.blue, animationRatio);
+        CGFloat tred = getEaseOut(imageColor.red, imageHighlightColor.red, animationRatio);
+        CGFloat tgreen = getEaseOut(imageColor.green, imageHighlightColor.green, animationRatio);
+        CGFloat tblue = getEaseOut(imageColor.blue, imageHighlightColor.blue, animationRatio);
         
         
         Color4B intermediate = (Color4B){.red = red, .green = green, .blue = blue,.alpha =  alpha};
@@ -90,9 +90,9 @@
         
         
         
-        CGFloat tred = getEaseOut(textHighlightColor.red, textColor.red, animationRatio);
-        CGFloat tgreen = getEaseOut(textHighlightColor.green, textColor.green, animationRatio);
-        CGFloat tblue = getEaseOut(textHighlightColor.blue, textColor.blue, animationRatio);
+        CGFloat tred = getEaseOut(imageHighlightColor.red, imageColor.red, animationRatio);
+        CGFloat tgreen = getEaseOut(imageHighlightColor.green, imageColor.green, animationRatio);
+        CGFloat tblue = getEaseOut(imageHighlightColor.blue, imageColor.blue, animationRatio);
         
         
         Color4B intermediate = (Color4B){.red = red, .green = green, .blue = blue,.alpha =  alpha};
@@ -149,12 +149,12 @@
     self.frameBackgroundColor = _color;
 }
 
--(void)setTextColor:(Color4B)_color
+-(void)setImageColor:(Color4B)_color
 {
-    textColor = _color;
+    imageColor = _color;
     for (int i = 0;i < 6;i++)
     {
-        textureVertexColorData[i].color = textColor;
+        textureVertexColorData[i].color = imageColor;
     }
 }
 
@@ -162,20 +162,20 @@
 {
     backgroundHightlightColor = _color;
 }
--(void)setTextHighlightColor:(Color4B)_color
+-(void)setImageHighlightColor:(Color4B)_color
 {
-    textHighlightColor = _color;
+    imageHighlightColor = _color;
 }
 
--(void)draw
+-(void)drawSubElements
 {
-    [mvpMatrixManager translateInX:self.frame.size.width/2+self.originInsideElement.x Y:self.frame.size.height/2+self.originInsideElement.y Z:1];
+    [mvpMatrixManager translateInX:(self.frame.size.width/2) Y:(self.frame.size.height/2) Z:1];
     if (buttonTexture != nil)
     {
         textureRenderer.texture = buttonTexture;
         [textureRenderer drawWithArray:textureVertexColorData andCount:6];
     }
-    [mvpMatrixManager translateInX:-self.frame.size.width/2-self.originInsideElement.x Y:-self.frame.size.height/2-self.originInsideElement.y Z:0];
+    [mvpMatrixManager translateInX:-(self.frame.size.width/2) Y:-(self.frame.size.height/2) Z:0];
 }
 
 -(void)dealloc

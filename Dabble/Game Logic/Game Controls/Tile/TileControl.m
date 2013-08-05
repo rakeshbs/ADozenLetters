@@ -589,8 +589,6 @@ static Texture2D *tileTextureImage = nil;
         }
     }
     
-   
-    
     for (Tile *t in tilesArray)
     {
         if (t.tag == 0)
@@ -602,7 +600,6 @@ static Texture2D *tileTextureImage = nil;
         if (d < 0)
             d = 0;
        [t moveToPoint:collapsePoint inDuration:0.3 afterDelay:d];
-//        [self performSelector:@selector(playTileSound) withObject:nil afterDelay:d];
     }
 }
 
@@ -767,7 +764,7 @@ static Texture2D *tileTextureImage = nil;
 }
 
 
--(void)drawBatchedElements
+-(void)drawSubElements
 {
     characterDataCount = 0;
     shadowCount = 0;

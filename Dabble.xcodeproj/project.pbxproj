@@ -57,6 +57,14 @@
 		1445DCBB16F97C1600EBBCCF /* ColorShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC4816F97AD600EBBCCF /* ColorShader.fsh */; };
 		1445DCBC16F97C1700EBBCCF /* InstancedColorShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 1445DC4B16F97AD600EBBCCF /* InstancedColorShader.vsh */; };
 		144D9CE817042B3500F6EE15 /* Lato-Bol.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 144D9CE717042AF400F6EE15 /* Lato-Bol.ttf */; };
+		1455A34317B00C8700D066AE /* facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = 1455A33B17B00C8700D066AE /* facebook.png */; };
+		1455A34417B00C8700D066AE /* facebook@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 1455A33C17B00C8700D066AE /* facebook@2X.png */; };
+		1455A34517B00C8700D066AE /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1455A33D17B00C8700D066AE /* logo.png */; };
+		1455A34617B00C8700D066AE /* logo@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 1455A33E17B00C8700D066AE /* logo@2X.png */; };
+		1455A34717B00C8700D066AE /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = 1455A33F17B00C8700D066AE /* more.png */; };
+		1455A34817B00C8700D066AE /* more@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 1455A34017B00C8700D066AE /* more@2X.png */; };
+		1455A34917B00C8700D066AE /* rate.png in Resources */ = {isa = PBXBuildFile; fileRef = 1455A34117B00C8700D066AE /* rate.png */; };
+		1455A34A17B00C8700D066AE /* rate@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 1455A34217B00C8700D066AE /* rate@2X.png */; };
 		1464725F16D27801000C8FB4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1464725E16D27801000C8FB4 /* UIKit.framework */; };
 		1464726116D27801000C8FB4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1464726016D27801000C8FB4 /* Foundation.framework */; };
 		1464726316D27801000C8FB4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1464726216D27801000C8FB4 /* CoreGraphics.framework */; };
@@ -185,6 +193,14 @@
 		1445DCB116F97B3700EBBCCF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1445DCB316F97B6900EBBCCF /* Dabble-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Dabble-Prefix.pch"; sourceTree = "<group>"; };
 		144D9CE717042AF400F6EE15 /* Lato-Bol.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Bol.ttf"; sourceTree = "<group>"; };
+		1455A33B17B00C8700D066AE /* facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebook.png; sourceTree = "<group>"; };
+		1455A33C17B00C8700D066AE /* facebook@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebook@2X.png"; sourceTree = "<group>"; };
+		1455A33D17B00C8700D066AE /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		1455A33E17B00C8700D066AE /* logo@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2X.png"; sourceTree = "<group>"; };
+		1455A33F17B00C8700D066AE /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more.png; sourceTree = "<group>"; };
+		1455A34017B00C8700D066AE /* more@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@2X.png"; sourceTree = "<group>"; };
+		1455A34117B00C8700D066AE /* rate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rate.png; sourceTree = "<group>"; };
+		1455A34217B00C8700D066AE /* rate@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rate@2X.png"; sourceTree = "<group>"; };
 		1464725B16D27801000C8FB4 /* Dabble.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dabble.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1464725E16D27801000C8FB4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1464726016D27801000C8FB4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -498,6 +514,14 @@
 		1445DC7716F97AD600EBBCCF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1455A33B17B00C8700D066AE /* facebook.png */,
+				1455A33C17B00C8700D066AE /* facebook@2X.png */,
+				1455A33D17B00C8700D066AE /* logo.png */,
+				1455A33E17B00C8700D066AE /* logo@2X.png */,
+				1455A33F17B00C8700D066AE /* more.png */,
+				1455A34017B00C8700D066AE /* more@2X.png */,
+				1455A34117B00C8700D066AE /* rate.png */,
+				1455A34217B00C8700D066AE /* rate@2X.png */,
 				1467670617AAB0FD00E0B365 /* close@2X.png */,
 				1467670017AAA6EF00E0B365 /* close.png */,
 				146620C017A1237E00AE4AB5 /* Lato-Bla.ttf */,
@@ -715,6 +739,14 @@
 				142060EE17AA2617008A39D9 /* on_tile_translate_to_position.aiff in Resources */,
 				142060EF17AA2617008A39D9 /* play_button_tap.aiff in Resources */,
 				142060F017AA2617008A39D9 /* timer_beat.aiff in Resources */,
+				1455A34317B00C8700D066AE /* facebook.png in Resources */,
+				1455A34417B00C8700D066AE /* facebook@2X.png in Resources */,
+				1455A34517B00C8700D066AE /* logo.png in Resources */,
+				1455A34617B00C8700D066AE /* logo@2X.png in Resources */,
+				1455A34717B00C8700D066AE /* more.png in Resources */,
+				1455A34817B00C8700D066AE /* more@2X.png in Resources */,
+				1455A34917B00C8700D066AE /* rate.png in Resources */,
+				1455A34A17B00C8700D066AE /* rate@2X.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

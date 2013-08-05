@@ -240,8 +240,7 @@
 -(void)addScore:(int64_t)score
 {
     currentScore += score;
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setInteger:currentScore forKey:@"currentScore"];
+    [self updatePrefs];
 }
 
 -(void)dealloc

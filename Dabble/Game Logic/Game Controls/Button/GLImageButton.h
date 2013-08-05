@@ -19,9 +19,9 @@
     Texture2D *buttonTexture;
     
     Color4B backgroundColor;
-    Color4B textColor;
+    Color4B imageColor;
     Color4B backgroundHightlightColor;
-    Color4B textHighlightColor;
+    Color4B imageHighlightColor;
     
     SoundManager *soundManager;
 }
@@ -30,11 +30,11 @@
 @property (nonatomic) SEL selector;
 
 
--(void)setTextColor:(Color4B)_color;
+-(void)setImage:(NSString *)imageName ofType:(NSString *)type;
 -(void)setBackgroundColor:(Color4B)_color;
 -(void)setBackgroundHightlightColor:(Color4B)_color;
--(void)setTextHighlightColor:(Color4B)_color;
+-(void)setImageHighlightColor:(Color4B)_color;
+-(void)setImageColor:(Color4B)_color;
 
 -(void)addTarget:(NSObject *)target andSelector:(SEL)selector;
--(void)setImage:(NSString *)imageName;
 @end

@@ -20,6 +20,9 @@
 #define ANIMATION_ZOOM_OUT 2
 #define ANIMATION_HUE_CHANGE 3
 #define ANIMATION_START_SCENE 4
+#define ANIMATION_SCROLL_LEFT 5
+#define ANIMATION_SCROLL_RIGHT 6
+
 
 #define STATE_PLAYING 1
 #define STATE_HOME 2
@@ -29,7 +32,7 @@
 #define SCENE_SCALE 0.5f
 #define SCENE_VERTICAL_OFFSET 160
 #define SCENE_ZOOMEDIN_VERTICAL_OFFSET -20
-
+#define SCENE_MORE_SCROLL_LEFT_LENGTH -320
 
 #define NUMBER_OF_HUES 5
 
@@ -48,6 +51,7 @@ Dictionary *dictionary;
 {
     if (self = [super init])
     {
+        moreScreenShown = NO;
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         currentHueIndex = [prefs integerForKey:@"currentHueIndex"];
         firstTimeMadeActive = YES;
@@ -67,11 +71,45 @@ Dictionary *dictionary;
         CGFloat screenHeight = [[UIScreen mainScreen]bounds].size.height;
         
         
-        moreButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-160, 260, 80, 80)];
+        moreButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-240, screenHeight - 220, 160, 80)];
+        moreButton.scaleInsideElement = CGPointMake(2.0, 2.0);
+        [moreButton setImage:@"more" ofType:@"png"];
         [moreButton setBackgroundColor:(Color4B){0,0,0,64}];
         [moreButton setBackgroundHightlightColor:(Color4B){255,255,255,64}];
+        [moreButton setImageHighlightColor:(Color4B){255,255,255,255}];
+        [moreButton addTarget:self andSelector:@selector(toggleMoreScreen)];
         [self addElement:moreButton];
-       
+        
+        
+        facebookButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-430, (screenHeight/2) - 400 , 200, 200)];
+        facebookButton.scaleInsideElement = CGPointMake(2.0, 2.0);
+        [facebookButton setImage:@"facebook" ofType:@"png"];
+        [facebookButton setBackgroundColor:(Color4B){0,0,0,64}];
+        [facebookButton setBackgroundHightlightColor:(Color4B){255,255,255,64}];
+        [facebookButton setImageHighlightColor:(Color4B){255,255,255,255}];
+        [facebookButton addTarget:self andSelector:@selector(facebookButtonClicked)];
+        [self addElement:facebookButton];
+        
+        ratingButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-720, (screenHeight/2) - 400 , 200, 200)];
+        ratingButton.scaleInsideElement = CGPointMake(2.0, 2.0);
+        [ratingButton setImage:@"rate" ofType:@"png"];
+        [ratingButton setBackgroundColor:(Color4B){0,0,0,64}];
+        [ratingButton setBackgroundHightlightColor:(Color4B){255,255,255,64}];
+        [ratingButton setImageHighlightColor:(Color4B){255,255,255,255}];
+        [ratingButton addTarget:self andSelector:@selector(ratingButtonClicked)];
+        [self addElement:ratingButton];
+        
+        
+        logoButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-580, - 560 , 200, 80)];
+        logoButton.scaleInsideElement = CGPointMake(2.0, 2.0);
+        [logoButton setImage:@"logo" ofType:@"png"];
+        [logoButton setBackgroundColor:(Color4B){0,0,0,0}];
+        [logoButton setBackgroundHightlightColor:(Color4B){255,255,255,0}];
+        [logoButton setImageColor:(Color4B){0,0,0,255}];
+        [logoButton setImageHighlightColor:(Color4B){255,255,255,255}];
+        [logoButton addTarget:self andSelector:@selector(qucentisButtonClicked)];
+        [self addElement:logoButton];
+        
         scoreControl = [[ScoreControl alloc]initWithFrame:CGRectMake(800, -SCENE_ZOOMEDIN_VERTICAL_OFFSET+screenHeight-TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE)];
         
         [scoreControl setFont:@"Lato-Black" withSize:30];
@@ -117,7 +155,7 @@ Dictionary *dictionary;
         [totalScoreControl release];
         
         
-        closeButton = [[CloseButton alloc]initWithFrame:CGRectMake(-800, -SCENE_ZOOMEDIN_VERTICAL_OFFSET+screenHeight-TOP_BUTTONS_SIZE,
+        closeButton = [[CloseButton alloc]initWithFrame:CGRectMake(-1800, -SCENE_ZOOMEDIN_VERTICAL_OFFSET+screenHeight-TOP_BUTTONS_SIZE,
                                                                    TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE)];
         [self addElement:closeButton];
         [closeButton release];
@@ -169,11 +207,11 @@ Dictionary *dictionary;
     {
         CGFloat s = getEaseInOut(SCENE_SCALE, 1.0, animationRatio,animation.duration);
         self.scaleInsideElement = CGPointMake(s,s);
-        CGFloat pos1 =  getEaseInOut(800, 321 - scoreControl.frame.size.width, animationRatio,animation.duration);
+        CGFloat pos1 =  getEaseInOut(1800, 321 - scoreControl.frame.size.width, animationRatio,animation.duration);
         scoreControl.frame = CGRectMake(pos1,scoreControl.frame.origin.y,
                                         scoreControl.frame.size.width,scoreControl.frame.size.height);
         
-        CGFloat pos2 =  getEaseInOut(-800,-2, animationRatio,animation.duration);
+        CGFloat pos2 =  getEaseInOut(-1800,-2, animationRatio,animation.duration);
         closeButton.frame = CGRectMake(pos2,closeButton.frame.origin.y,
                                        closeButton.frame.size.width,closeButton.frame.size.height);
         
@@ -186,11 +224,11 @@ Dictionary *dictionary;
     {
         CGFloat s = getEaseInOut(1, SCENE_SCALE, animationRatio,animation.duration);
         self.scaleInsideElement = CGPointMake(s,s);
-        CGFloat pos =  getEaseInOut(321 - scoreControl.frame.size.width, 800, animationRatio,animation.duration);
+        CGFloat pos =  getEaseInOut(321 - scoreControl.frame.size.width, 1800, animationRatio,animation.duration);
         scoreControl.frame = CGRectMake(pos,scoreControl.frame.origin.y,
                                         scoreControl.frame.size.width,scoreControl.frame.size.height);
         
-        CGFloat pos1 =  getEaseInOut(-2,-800, animationRatio,animation.duration);
+        CGFloat pos1 =  getEaseInOut(-2,-1800, animationRatio,animation.duration);
         closeButton.frame = CGRectMake(pos1,closeButton.frame.origin.y,
                                        closeButton.frame.size.width,closeButton.frame.size.height);
         
@@ -206,7 +244,16 @@ Dictionary *dictionary;
         CGFloat *end = [animation getEndValue];
         currentHue = getEaseOut(*start, *end, animationRatio);
     }
-    
+    else if (animation.type == ANIMATION_SCROLL_LEFT)
+    {
+        CGFloat scrollX = getEaseOutBack(0, SCENE_MORE_SCROLL_LEFT_LENGTH, animationRatio);
+        self.originInsideElement = CGPointMake(-scrollX, self.originInsideElement.y);
+    }
+    else if (animation.type == ANIMATION_SCROLL_RIGHT)
+    {
+        CGFloat scrollX = getEaseOutBack(SCENE_MORE_SCROLL_LEFT_LENGTH, 0, animationRatio);
+        self.originInsideElement = CGPointMake(-scrollX, self.originInsideElement.y);
+    }
     if (animationRatio > 1.0)
         return YES;
     return NO;
@@ -220,11 +267,20 @@ Dictionary *dictionary;
         [NSObject cancelPreviousPerformRequestsWithTarget:gcHelper selector:@selector(downloadRank) object:nil];
         currentState = STATE_PLAYING;
         [soundManager playSoundWithKey:@"zoomin"];
+        moreButton.touchable = NO;
     }
     else if (animation.type == ANIMATION_ZOOM_OUT)
     {
         currentState = STATE_HOME;
                 [soundManager playSoundWithKey:@"zoomout"];
+    }
+    else if (animation.type == ANIMATION_SCROLL_RIGHT)
+    {
+        moreButton.touchable = NO;
+    }
+    else if (animation.type == ANIMATION_SCROLL_LEFT)
+    {
+        moreButton.touchable = NO;
     }
 }
 
@@ -241,6 +297,7 @@ Dictionary *dictionary;
     if (animation.type == ANIMATION_ZOOM_OUT)
     {
         [self showTiles];
+        moreButton.touchable = YES;
         [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
         if (gcHelper.isUserAuthenticated)
             [gcHelper performSelector:@selector(updateScore) withObject:nil afterDelay:0.5];
@@ -249,8 +306,25 @@ Dictionary *dictionary;
     }
     else if (animation.type == ANIMATION_ZOOM_IN)
     {
+        
+        scoreControl.frame = CGRectMake(321 - scoreControl.frame.size.width,scoreControl.frame.origin.y,
+                                        scoreControl.frame.size.width,scoreControl.frame.size.height);
+        
+        closeButton.frame = CGRectMake(-2,closeButton.frame.origin.y,
+                                       closeButton.frame.size.width,closeButton.frame.size.height);
+        self.scaleInsideElement = CGPointMake(1.0,1.0);
+        
         [tileControl togglePlayability:YES]; 
         closeButton.touchable = YES;
+    }
+    else if (animation.type == ANIMATION_SCROLL_RIGHT)
+    {
+        moreButton.touchable = YES;
+        playButton.touchable = YES;
+    }
+    else if (animation.type == ANIMATION_SCROLL_LEFT)
+    {
+        moreButton.touchable = YES;
     }
 }
 
@@ -319,18 +393,6 @@ Dictionary *dictionary;
     
 }
 
--(void)update
-{
-    if (!isTimerRunning)
-        return;
-}
-
--(void)updateAnalytics
-{
-    
-    
-}
-
 NSMutableArray *tilesArray;
 
 -(void)sceneMadeActive
@@ -380,10 +442,26 @@ NSMutableArray *tilesArray;
     
 }
 
+-(void)toggleMoreScreen
+{
+    if (moreScreenShown)
+    {
+        [animator addAnimationFor:self ofType:ANIMATION_SCROLL_RIGHT ofDuration:0.5 afterDelayInSeconds:0];
+    }
+    else
+    {
+        playButton.touchable = NO;
+        [animator addAnimationFor:self ofType:ANIMATION_SCROLL_LEFT ofDuration:0.5
+              afterDelayInSeconds:0];
+    }
+    moreScreenShown = !moreScreenShown;
+}
+
 
 
 -(void)playButtonClicked
 {
+    playButton.touchable = NO;
     [tileControl rearrangeToTwelveLetters];
     self.originInsideElement = CGPointMake(0,180);
     [animator addAnimationFor:self ofType:ANIMATION_ZOOM_IN ofDuration:0.45 afterDelayInSeconds:0];
@@ -490,6 +568,24 @@ NSMutableArray *tilesArray;
     [animation setEndValue:&hue OfSize:sizeof(CGFloat)];
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setInteger:currentHueIndex forKey:@"currentHueIndex"];
+}
+
+-(void)facebookButtonClicked
+{
+    NSString* launchUrl = @"http://http://www.facebook.com/ADozenLetters";
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString: launchUrl]];
+}
+
+-(void)ratingButtonClicked
+{
+    NSString* launchUrl = @"http://www.qucentis.com";
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString: launchUrl]];
+}
+
+-(void)qucentisButtonClicked
+{
+    NSString* launchUrl = @"http://www.qucentis.com";
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString: launchUrl]];
 }
 
 

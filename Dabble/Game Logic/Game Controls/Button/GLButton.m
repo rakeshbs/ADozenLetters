@@ -173,15 +173,15 @@
     textHighlightColor = _color;
 }
 
--(void)draw
+-(void)drawSubElements
 {
-    [mvpMatrixManager translateInX:self.frame.size.width/2+self.originInsideElement.x Y:self.frame.size.height/2+self.originInsideElement.y Z:1];
+    [mvpMatrixManager translateInX:self.frame.size.width/2 Y:self.frame.size.height/2 Z:1];
     if (buttonTextTexture != nil)
     {
         textureRenderer.texture = buttonTextTexture;
         [textureRenderer drawWithArray:textureVertexColorData andCount:6];
     }
-    [mvpMatrixManager translateInX:-self.frame.size.width/2-self.originInsideElement.x Y:-self.frame.size.height/2-self.originInsideElement.y Z:0];
+    [mvpMatrixManager translateInX:-self.frame.size.width/2 Y:-self.frame.size.height/2 Z:0];
 }
 
 -(void)dealloc

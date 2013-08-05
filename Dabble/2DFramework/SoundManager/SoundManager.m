@@ -420,7 +420,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SoundManager);
 	// Find the next available source
     NSUInteger sourceID;
     sourceID = [self nextAvailableSource];
-	NSLog(@"Next available source %d",sourceID);
+    
 	// If 0 is returned then no sound sources were available
 	if (sourceID == 0) {
 		NSLog(@"WARNING - SoundManager: No sound sources available to play %@", aSoundKey);

@@ -159,7 +159,7 @@
     
 }
 
--(void)drawBatchedElements
+-(void)drawSubElements
 {
     
 }
@@ -216,7 +216,7 @@ static CGFloat ZCoordinate;
     
     [mvpMatrixManager translateInX:0 Y:0 Z:startZCoordinate];
 
-    [self drawBatchedElements];
+    [self drawSubElements];
     
     [mvpMatrixManager translateInX:0 Y:0 Z:-startZCoordinate];
 
