@@ -94,6 +94,7 @@
 		14F119841702A0A400721BEE /* DirectoryReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F1197F1702A0A400721BEE /* DirectoryReader.m */; };
 		14F119851702A0A400721BEE /* FileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F119811702A0A400721BEE /* FileReader.m */; };
 		14F119861702A0A400721BEE /* NSDataExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F119831702A0A400721BEE /* NSDataExtensions.m */; };
+		14F4511317AFB34B00047C04 /* GLImageButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 14F4511217AFB34B00047C04 /* GLImageButton.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -231,6 +232,8 @@
 		14F119811702A0A400721BEE /* FileReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileReader.m; sourceTree = "<group>"; };
 		14F119821702A0A400721BEE /* NSDataExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDataExtensions.h; sourceTree = "<group>"; };
 		14F119831702A0A400721BEE /* NSDataExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDataExtensions.m; sourceTree = "<group>"; };
+		14F4511117AFB34B00047C04 /* GLImageButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLImageButton.h; sourceTree = "<group>"; };
+		14F4511217AFB34B00047C04 /* GLImageButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLImageButton.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -592,6 +595,8 @@
 				148295F21799023C00CEF2B2 /* GLButton.m */,
 				14BC3F381799AB8A00EF5386 /* CloseButton.h */,
 				14BC3F391799AB8A00EF5386 /* CloseButton.m */,
+				14F4511117AFB34B00047C04 /* GLImageButton.h */,
+				14F4511217AFB34B00047C04 /* GLImageButton.m */,
 			);
 			path = Button;
 			sourceTree = "<group>";
@@ -766,6 +771,7 @@
 				1440AFEA17A3B5CB0075D90A /* TileSpriteSheet.m in Sources */,
 				149CADE117A57649008A4E3F /* SpriteSheet.m in Sources */,
 				14C409FB17A6BC0800E3C252 /* GLNotification.m in Sources */,
+				14F4511317AFB34B00047C04 /* GLImageButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -41,7 +41,7 @@
 Color4B whiteColor4B = (Color4B){.red = 255, .green = 255, .blue = 255, .alpha=255};
 Color4B blackColor4B = (Color4B){.red = 0, .green = 0, .blue = 0, .alpha=255};
 
-CGFloat colorHues[NUMBER_OF_HUES] = {0,0.09805,0.37,0.616388,0.769444};
+CGFloat colorHues[NUMBER_OF_HUES] = {0,0.09805,0.37,0.616388,0.718055};
 
 Dictionary *dictionary;
 -(id)init
@@ -65,6 +65,12 @@ Dictionary *dictionary;
         [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
         
         CGFloat screenHeight = [[UIScreen mainScreen]bounds].size.height;
+        
+        
+        moreButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-160, 260, 80, 80)];
+        [moreButton setBackgroundColor:(Color4B){0,0,0,64}];
+        [moreButton setBackgroundHightlightColor:(Color4B){255,255,255,64}];
+        [self addElement:moreButton];
        
         scoreControl = [[ScoreControl alloc]initWithFrame:CGRectMake(800, -SCENE_ZOOMEDIN_VERTICAL_OFFSET+screenHeight-TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE)];
         
@@ -243,7 +249,7 @@ Dictionary *dictionary;
     }
     else if (animation.type == ANIMATION_ZOOM_IN)
     {
-        [tileControl togglePlayability:YES];
+        [tileControl togglePlayability:YES]; 
         closeButton.touchable = YES;
     }
 }

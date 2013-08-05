@@ -16,6 +16,7 @@
 #import "ScoreControl.h"
 #import "RankingControl.h"
 #import "SoundManager.h"
+#import "GLImageButton.h"
 
 @interface GameScene : GLScene <AnimationDelegate,CloseButtonDelegate,GCHelperDelegate,GLActivityIndicatorDelegate>
 {
@@ -37,6 +38,10 @@
     GLElement *fullScreenElement;
     
     GLActivityIndicator *activityIndicator;
+    GLImageButton *moreButton;
+    
+    GLImageButton *backToButton;
+    
     
     int currentState;
     CGFloat currentHue;
