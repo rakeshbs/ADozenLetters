@@ -53,5 +53,7 @@
     int currentHueIndex;
     
     SoundManager *soundManager;
+    
+    CGFloat screenHeight;
 }
 @end

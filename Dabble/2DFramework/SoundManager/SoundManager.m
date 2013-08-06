@@ -138,7 +138,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SoundManager);
         // Set the default volume for music and fx along with the default play list index
 		currentMusicVolume = 0.5f;
 		musicVolume = 0.5f;
-		fxVolume = 0.5f;
+		fxVolume = 1.0f;
 		playlistIndex = 0;
 		
 		// Set up initial flag values
@@ -418,7 +418,7 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SoundManager);
 	NSUInteger bufferID = [numVal unsignedIntValue];
 	
 	// Find the next available source
-    NSUInteger sourceID;
+    NSUInteger sourceID;                                                                                          
     sourceID = [self nextAvailableSource];
     
 	// If 0 is returned then no sound sources were available
@@ -725,29 +725,27 @@ SYNTHESIZE_SINGLETON_FOR_CLASS(SoundManager);
 		alGetSourcei([sourceNumber unsignedIntValue], AL_SOURCE_STATE, &sourceState);
 		// If this source is not playing then return it
         
-    /*    if (sourceState == AL_PLAYING)
+		if(sourceState != AL_PLAYING)
         {
-            NSLog(@"playing %@ %d",sourceNumber,soundSources.count);
-        }*/
-        
-		if(sourceState != AL_PLAYING) return [sourceNumber unsignedIntValue];
+               alSourceStop([sourceNumber unsignedIntValue]);
+            return [sourceNumber unsignedIntValue];
+        }
 	}
 	
     for(NSNumber *sourceNumber in soundSources)
     {
         NSUInteger sourceID = [sourceNumber unsignedIntegerValue];
         		alGetSourcei([sourceNumber unsignedIntValue], AL_SOURCE_STATE, &sourceState);
- /*       if (sourceState != AL_PLAYING)
-        {
-            NSLog(@"playing %d",sourceID);
-        }*/
         alSourceStop(sourceID);
     }
     
     for(NSNumber *sourceNumber in soundSources) {
 		alGetSourcei([sourceNumber unsignedIntValue], AL_SOURCE_STATE, &sourceState);
-		// If this source is not playing then return it
-		if(sourceState != AL_PLAYING) return [sourceNumber unsignedIntValue];
+		if(sourceState != AL_PLAYING)
+        {
+            alSourceStop([sourceNumber unsignedIntValue]);
+            return [sourceNumber unsignedIntValue];
+        }
 	}
     
     return 0;

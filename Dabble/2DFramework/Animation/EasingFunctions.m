@@ -51,6 +51,14 @@ CGFloat getSineEaseOut(CGFloat start,CGFloat ratio,CGFloat maxAmplitude)
    return  start + maxAmplitude * s;
 }
 
+CGFloat getSineEaseOutFrequceny(CGFloat start,CGFloat ratio,CGFloat maxAmplitude,CGFloat frequency)
+{
+    if (ratio >= 1.0 || ratio <=0.0)
+        return start;
+    CGFloat s = powf(2,-5*ratio) * sinf(2*frequency*PI*ratio);
+    return  start + maxAmplitude * s;
+}
+
 CGFloat getSineEaseOutDamping(CGFloat start,CGFloat ratio,CGFloat maxAmplitude,CGFloat damping)
 {
     if (ratio >= 1.0 || ratio <=0.0)

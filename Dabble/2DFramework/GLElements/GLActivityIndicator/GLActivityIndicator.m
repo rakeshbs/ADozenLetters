@@ -182,7 +182,7 @@
     else if (animation.type == ANIMATION_HIDE_ACTIVITY_INDICATOR)
     {
         self.hidden = YES;
-        if ([self.delegate respondsToSelector:@selector(activityIndicatorDidAappear:)])
+        if ([self.delegate respondsToSelector:@selector(activityIndicatorDidDisappear:)])
         {
             [self.delegate activityIndicatorDidDisappear:self];
         }

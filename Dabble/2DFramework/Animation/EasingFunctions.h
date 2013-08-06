@@ -21,3 +21,4 @@ CGFloat getEaseInBack(CGFloat start,CGFloat end,CGFloat ratio);
 CGFloat getEaseOutElastic(CGFloat start,CGFloat end,CGFloat ratio,CGFloat duration);
 CGFloat getSineEaseOutDamping(CGFloat start,CGFloat ratio,CGFloat maxAmplitude,CGFloat damping);
 CGFloat getEaseInOut(CGFloat start,CGFloat end,CGFloat ratio,CGFloat duration);
+CGFloat getSineEaseOutFrequceny(CGFloat start,CGFloat ratio,CGFloat maxAmplitude,CGFloat frequency);

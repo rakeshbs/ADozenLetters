@@ -268,11 +268,11 @@ NSArray *charactersArray;
         }
         
         [self updateShadow];
-          CGFloat p = (rand()%20+1)/20.0;
-         [soundManager playSoundWithKey:@"pick" gain:1.0f
-         pitch:0.0f+p
-         location:CGPointZero
-         shouldLoop:NO];
+        CGFloat p = 0.5+(rand()%20)/60.0;
+        [soundManager playSoundWithKey:@"pick" gain:1.0f
+                                 pitch:0.0f+p
+                              location:CGPointZero
+                            shouldLoop:NO];
         
         prevTouchPoint = touchPoint;
     }
@@ -415,11 +415,11 @@ NSArray *charactersArray;
             
             if ( animation.type == ANIMATION_MOVE)
             {
-                CGFloat p = (rand()%20+1)/20.0;
+                CGFloat p = 0.5+(rand()%20)/60.0;
                 [soundManager playSoundWithKey:@"place" gain:1.0f
-                                     pitch:0.0f+p
-                                  location:CGPointZero
-                                shouldLoop:NO];
+                                         pitch:0.0f+p
+                                      location:CGPointZero
+                                    shouldLoop:NO];
             }
         }
         

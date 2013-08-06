@@ -11,7 +11,7 @@
 #import "NSArray+Additions.h"
 #import "ElasticCounter.h"
 
-#define TOP_BUTTONS_SIZE 75
+#define TOP_BUTTONS_SIZE 80
 
 #define SCORE_PER_WORD 10
 #define SCORE_PER_TRIPLET 100
@@ -44,7 +44,7 @@
 Color4B whiteColor4B = (Color4B){.red = 255, .green = 255, .blue = 255, .alpha=255};
 Color4B blackColor4B = (Color4B){.red = 0, .green = 0, .blue = 0, .alpha=255};
 
-CGFloat colorHues[NUMBER_OF_HUES] = {0,0.09805,0.37,0.616388,0.718055};
+CGFloat colorHues[NUMBER_OF_HUES] = {0.616388,0.718055,0,0.09805,0.37};
 
 Dictionary *dictionary;
 -(id)init
@@ -68,10 +68,13 @@ Dictionary *dictionary;
         
         [self performSelectorInBackground:@selector(loadDictionary) withObject:nil];
         
-        CGFloat screenHeight = [[UIScreen mainScreen]bounds].size.height;
+        screenHeight = [[UIScreen mainScreen]bounds].size.height;
+        CGFloat moreOffsetY = -SCENE_VERTICAL_OFFSET+screenHeight - 80;
+        if (screenHeight > 480)
+            moreOffsetY = -SCENE_VERTICAL_OFFSET+screenHeight - 40;
+            
         
-        
-        moreButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-240, screenHeight - 220, 160, 80)];
+        moreButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-240, moreOffsetY , 160, 80)];
         moreButton.scaleInsideElement = CGPointMake(2.0, 2.0);
         [moreButton setImage:@"more" ofType:@"png"];
         [moreButton setBackgroundColor:(Color4B){0,0,0,64}];
@@ -112,7 +115,7 @@ Dictionary *dictionary;
         
         scoreControl = [[ScoreControl alloc]initWithFrame:CGRectMake(800, -SCENE_ZOOMEDIN_VERTICAL_OFFSET+screenHeight-TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE)];
         
-        [scoreControl setFont:@"Lato-Black" withSize:30];
+        [scoreControl setFont:@"Lato-Black" withSize:32];
         [scoreControl setTextColor:(Color4B){255,255,255,255}];
         [scoreControl setFrameBackgroundColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 64}];
         [self addElement:scoreControl];
@@ -126,15 +129,15 @@ Dictionary *dictionary;
         scoreButton = [[GLButton alloc]initWithFrame:CGRectMake(-130, -200, 576, 220)];
         [scoreButton setBackgroundColor:(Color4B){.red = 255,.green = 255,.blue = 255,.alpha = 64}];
         [scoreButton setBackgroundHightlightColor:(Color4B){0,0,0,64}];
-        [scoreButton addTarget:self andSelector:@selector(redirectToGameCenter)];
+        [scoreButton addTarget:self andSelector:@selector(enableGameCenter)];
         [self addElement:scoreButton];
         [scoreButton release];
         
         playButton = [[GLButton alloc]initWithFrame:CGRectMake(-130, -520, 576, 250)];
-        [playButton setText:@"play" withFont:@"Lato-Bold" andSize:120];
+        [playButton setText:@"play" withFont:@"Lato-Bold" andSize:130];
         [playButton addTarget:self andSelector:@selector(playButtonClicked)];
-        [playButton setTextColor:(Color4B){0,0,0,255}];
-        [playButton setTextHighlightColor:(Color4B){0,0,0,255}];
+        [playButton setTextColor:(Color4B){255,255,255,255}];
+        [playButton setTextHighlightColor:(Color4B){255,255,255,255}];
         [playButton setBackgroundColor:(Color4B){0,0,0,64}];
         [playButton setBackgroundHightlightColor:(Color4B){255,255,255,64}];
         
@@ -149,7 +152,7 @@ Dictionary *dictionary;
                              CGRectMake(-120,-90,546,72)];
         [totalScoreControl setFont:@"Lato-Black" withSize:70];
         [totalScoreControl setFrameBackgroundColor:(Color4B){.red = 128,.green = 128, .blue =128,.alpha = 0}];
-        [totalScoreControl setTextColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 255}];
+        [totalScoreControl setTextColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 180}];
         
         [self addElement:totalScoreControl];
         [totalScoreControl release];
@@ -264,7 +267,7 @@ Dictionary *dictionary;
     startOriginPoint = self.originInsideElement;
     if (animation.type == ANIMATION_ZOOM_IN)
     {
-        [NSObject cancelPreviousPerformRequestsWithTarget:gcHelper selector:@selector(downloadRank) object:nil];
+        [NSObject cancelPreviousPerformRequestsWithTarget:gcHelper selector:@selector(updateScore) object:nil];
         currentState = STATE_PLAYING;
         [soundManager playSoundWithKey:@"zoomin"];
         moreButton.touchable = NO;
@@ -307,12 +310,14 @@ Dictionary *dictionary;
     else if (animation.type == ANIMATION_ZOOM_IN)
     {
         
-        scoreControl.frame = CGRectMake(321 - scoreControl.frame.size.width,scoreControl.frame.origin.y,
+        scoreControl.frame = CGRectMake(321 - scoreControl.frame.size.width,-SCENE_ZOOMEDIN_VERTICAL_OFFSET+screenHeight-TOP_BUTTONS_SIZE,
                                         scoreControl.frame.size.width,scoreControl.frame.size.height);
         
-        closeButton.frame = CGRectMake(-2,closeButton.frame.origin.y,
+        closeButton.frame = CGRectMake(-2,-SCENE_ZOOMEDIN_VERTICAL_OFFSET+screenHeight-TOP_BUTTONS_SIZE,
                                        closeButton.frame.size.width,closeButton.frame.size.height);
         self.scaleInsideElement = CGPointMake(1.0,1.0);
+        
+        self.originInsideElement = CGPointMake(self.originInsideElement.x, SCENE_ZOOMEDIN_VERTICAL_OFFSET);
         
         [tileControl togglePlayability:YES]; 
         closeButton.touchable = YES;
@@ -344,7 +349,9 @@ Dictionary *dictionary;
     if (eventData.eventState == 1)
     {
         [gcHelper addScore:currentRoundScore];
-        [self performSelector:@selector(loadData) withObject:nil afterDelay:1.0];
+        [NSObject cancelPreviousPerformRequestsWithTarget:self
+                                                 selector:@selector(setScore) object:nil];
+        [self performSelector:@selector(loadData) withObject:nil afterDelay:2.0];
         return;
     }
     currentRoundScore += eventData.score*2;
@@ -399,12 +406,22 @@ NSMutableArray *tilesArray;
 {
     [super sceneMadeActive];
     if (firstTimeMadeActive)
-        [activityIndicator show];
+    {
+        [activityIndicator hide];
+        if (gcHelper.gameCenterEnabled)
+        {
+            [rankingControl setGameCenterState:YES];
+            [gcHelper performSelector:@selector(authenticateUser) withObject:nil afterDelay:5.0];
+        }
+        else
+            [rankingControl setGameCenterState:NO];
+    }
     else
-        [gcHelper authenticateUser];
+    {
+        if (gcHelper.gameCenterEnabled)
+            [gcHelper authenticateUser];
+    }
     firstTimeMadeActive = NO;
-    
-    
 };
 
 -(void)sceneMadeInActive
@@ -469,33 +486,22 @@ NSMutableArray *tilesArray;
     [self performSelector:@selector(loadData) withObject:nil afterDelay:0];
 }
 
--(void)redirectToGameCenter
+-(void)enableGameCenter
 {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"gamecenter:"]];
+    [gcHelper enableGameCenter:YES];
+    [gcHelper authenticateUser];
 }
 
 -(void)userAuthenticated
 {
-    if (currentState == STATE_SPLASH)
-    {
-        currentState = STATE_HOME;
-        [activityIndicator animate];
-        
-    }
     [rankingControl setGameCenterState:YES];
     scoreButton.touchable = NO;
-
+    [gcHelper downloadScore];
 }
 
 -(void)userAuthenticationFailed
 {
-    if (currentState == STATE_SPLASH)
-    {
-        currentState = STATE_HOME;
-        [activityIndicator animate];
-
-    }
-    
+    [gcHelper enableGameCenter:NO];
     [rankingControl setGameCenterState:NO];
     scoreButton.touchable = YES;
 }
@@ -504,13 +510,13 @@ NSMutableArray *tilesArray;
 -(void)scoreDownloaded
 {
     [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
-    [gcHelper downloadRank];
+    [gcHelper updateScore];
 }
 
 -(void)rankDownloaded
 {
     [rankingControl setCurrentRank:gcHelper.currentRank andTotalRanks:gcHelper.totalRanks];
-    [gcHelper performSelector:@selector(downloadRank)
+    [gcHelper performSelector:@selector(updateScore)
                    withObject:nil afterDelay:30];
 }
 
@@ -526,21 +532,6 @@ NSMutableArray *tilesArray;
     [gcHelper updateScore];
 }
 
--(void)activitiyIndicatorFinishedAnimating:(GLActivityIndicator *)_activityIndicator;
-{
-    if (_activityIndicator.iteration == 1)
-    {
-        [gcHelper authenticateUser];
-    }
-    else if (_activityIndicator.iteration == 2)
-    {
-        [_activityIndicator hide];
-    }
-}
--(void)activityIndicatorDidAappear:(GLActivityIndicator *)_activityIndicator
-{
-    
-}
 -(void)activityIndicatorDidDisappear:(GLActivityIndicator *)_activityIndicator
 {
     self.scaleInsideElement = CGPointMake(SCENE_SCALE,SCENE_SCALE);
@@ -548,6 +539,11 @@ NSMutableArray *tilesArray;
     [animator addAnimationFor:self ofType:ANIMATION_START_SCENE ofDuration:1
           afterDelayInSeconds:0];
     [self removeElement:_activityIndicator];
+    if (currentState == STATE_SPLASH)
+    {
+        currentState = STATE_HOME;
+        
+    }
 }
 
 -(void)changeColorHue
@@ -578,7 +574,7 @@ NSMutableArray *tilesArray;
 
 -(void)ratingButtonClicked
 {
-    NSString* launchUrl = @"http://www.qucentis.com";
+    NSString* launchUrl = @"http://www.qucentis.com/adl/rate";
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString: launchUrl]];
 }
 

@@ -74,7 +74,7 @@
 -(void)setValue:(long long)value inDuration:(CGFloat)time
 {
     int prevvalue = 0;
-    CGFloat offsetTime = 0.05;
+    CGFloat offsetTime = 0.01;
     for (int i = counterControls.count - 1;i>=0 ;i--)
     {
         int ind = counterControls.count - i - 1;

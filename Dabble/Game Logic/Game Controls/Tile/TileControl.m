@@ -11,13 +11,16 @@
 #import "GLActivityIndicator.h"
 #import "EasingFunctions.h"
 
-#define verticalOffset 25
+#define verticalOffset 26
 #define horizontalOffset 0
 
 
 #define SCORE_PER_WORD 10
 #define SCORE_PER_DOUBLE 100
 #define SCORE_PER_TRIPLET 500
+
+#define MAX_ZOOM_WIGGLE -0.2f
+#define ANIMATION_ZOOM_WIGGLE 1
 
 #define tileTextureSizeWithBorder 62.0f
 
@@ -444,6 +447,7 @@ static Texture2D *tileTextureImage = nil;
     if (checkWord3 != -1 && checkWord4 != -1 && checkWord5 != -1)
     {
         [self togglePlayability:NO];
+        [animator addAnimationFor:self ofType:ANIMATION_ZOOM_WIGGLE ofDuration:2.0 afterDelayInSeconds:0];
         if (target)
         {
             TileControlEventData *eventData = [[TileControlEventData alloc]init];
@@ -500,6 +504,12 @@ static Texture2D *tileTextureImage = nil;
 {
     CGFloat animationRatio = [animation getAnimatedRatio];
     
+    if (animation.type == ANIMATION_ZOOM_WIGGLE)
+    {
+        CGFloat s = getSineEaseOutFrequceny(1.0, animationRatio, MAX_ZOOM_WIGGLE,2);
+        self.scaleInsideElement = CGPointMake(s, s);
+    }
+    
     if (animationRatio>=1.0)
         return YES;
     return NO;
@@ -511,7 +521,10 @@ static Texture2D *tileTextureImage = nil;
 }
 -(void)animationEnded:(Animation *)animation
 {
-    
+    if (animation.type == ANIMATION_ZOOM_WIGGLE)
+    {
+           self.scaleInsideElement = CGPointMake(1.0, 1.0);
+    }
 }
 
 -(void)showTiles
@@ -547,7 +560,7 @@ static Texture2D *tileTextureImage = nil;
 
 -(void)playTileSound
 {
-    CGFloat p = (rand()%20+1)/20.0;
+    CGFloat p = 0.5+(rand()%20)/60.0;
     [soundManager playSoundWithKey:@"place" gain:1.0f
                              pitch:0.0f+p
                           location:CGPointZero

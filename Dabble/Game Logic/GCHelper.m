@@ -10,7 +10,7 @@
 
 @implementation GCHelper
 
-@synthesize currentScore,currentRank,totalRanks,isUserAuthenticated;
+@synthesize currentScore,currentRank,totalRanks,isUserAuthenticated,gameCenterEnabled;
 
 +(GCHelper *)getSharedGCHelper
 {
@@ -34,14 +34,22 @@
         currentScore = [prefs integerForKey:@"currentScore"];
         currentRank = [prefs integerForKey:@"currentRank"];
         totalRanks = [prefs integerForKey:@"totalRanks"];
-        
+        gameCenterEnabled = [prefs integerForKey:@"gameCenterEnabled"];
     }
     return self;
 }
 
+-(void)enableGameCenter:(BOOL)enabled
+{
+    gameCenterEnabled = enabled;
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setBool:gameCenterEnabled forKey:@"gameCenterEnabled"];
+}
+
 -(void)authenticateUser
 {
-    
+    if (!gameCenterEnabled)
+        return;
     if ([GKLocalPlayer localPlayer].authenticated == NO)
     {
         [[GKLocalPlayer localPlayer]
@@ -61,8 +69,7 @@
     }
     else
     {
-        NSLog(@"Already authenticated!");
-            isUserAuthenticated = YES;
+        isUserAuthenticated = YES;
     }
 }
 
@@ -109,13 +116,6 @@
 
 -(void)loadDefaultLeaderBoard
 {
-/*    [[GKLocalPlayer localPlayer] loadDefaultLeaderboardCategoryIDWithCompletionHandler:((^(NSString *categoryID, NSError *error)
-      {
-          self.leaderBoardID = categoryID;
-          NSLog(@"%@",self.leaderBoardID);
-          [self.delegate defaultLeaderBoardLoaded];
-      }))];
-    */
     self.leaderBoardID = @"HighScore";
     [self.delegate defaultLeaderBoardLoaded];
 }
@@ -141,6 +141,7 @@
                 int64_t highscore = [leaderboardRequest.localPlayerScore value];
                 GKScore *scoreReporter = [[[GKScore alloc] initWithCategory:self.leaderBoardID]autorelease];
                 scoreReporter.value = (highscore - lastGameCenterScore) + currentScore;
+                NSLog(@"%lld %lld",scoreReporter.value,currentScore);
                 scoreReporter.context = 0;
                     NSLog(@"getting updated score");
                 
@@ -216,9 +217,6 @@
             }
             else{
                  NSLog(@"downloaded updated rank");
-                int64_t highscore = [leaderboardRequest.localPlayerScore value];
-                currentScore = (highscore - lastGameCenterScore) + currentScore;
-                lastGameCenterScore = highscore;
                 totalRanks = leaderboardRequest.scores.count;
                 currentRank = leaderboardRequest.localPlayerScore.rank;
                 [self updatePrefs];

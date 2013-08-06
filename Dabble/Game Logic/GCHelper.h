@@ -23,6 +23,7 @@
 @interface GCHelper : NSObject
 {
     BOOL isUserAuthenticated;
+    BOOL gameCenterEnabled;
     NSMutableArray *matches;
     
     int64_t lastGameCenterScore;
@@ -34,12 +35,14 @@
 
 @property (nonatomic,readonly)     BOOL isUserAuthenticated;
 @property (nonatomic,retain) NSString *leaderBoardID;
+@property (nonatomic) BOOL gameCenterEnabled;
 @property (nonatomic,readonly)     int64_t currentScore;
 @property (nonatomic,assign) NSObject<GCHelperDelegate> *delegate;
 @property (nonatomic,readonly) int64_t currentRank;
 @property (nonatomic,readonly) int64_t totalRanks;
 
 +(GCHelper *)getSharedGCHelper;
+-(void)enableGameCenter:(BOOL)enabled;
 -(void)loadDefaultLeaderBoard;
 -(void)authenticateUser;
 -(void)downloadScore;

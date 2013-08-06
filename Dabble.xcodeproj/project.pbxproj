@@ -201,6 +201,7 @@
 		1455A34017B00C8700D066AE /* more@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@2X.png"; sourceTree = "<group>"; };
 		1455A34117B00C8700D066AE /* rate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rate.png; sourceTree = "<group>"; };
 		1455A34217B00C8700D066AE /* rate@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rate@2X.png"; sourceTree = "<group>"; };
+		1455A34B17B10A8D00D066AE /* iTunesArtwork */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
 		1464725B16D27801000C8FB4 /* Dabble.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dabble.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1464725E16D27801000C8FB4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		1464726016D27801000C8FB4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -570,6 +571,7 @@
 		1464725216D27801000C8FB4 = {
 			isa = PBXGroup;
 			children = (
+				1455A34B17B10A8D00D066AE /* iTunesArtwork */,
 				1445DC2716F97AD600EBBCCF /* Dabble */,
 				1464725D16D27801000C8FB4 /* Frameworks */,
 				1464725C16D27801000C8FB4 /* Products */,

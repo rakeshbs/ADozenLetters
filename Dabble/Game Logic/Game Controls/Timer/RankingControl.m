@@ -22,7 +22,7 @@
     if (self = [super initWithFrame:_frame])
     {
                 self.touchable = NO;
-        textColor = (Color4B){255,255,255,255};
+        textColor = (Color4B){255,255,255,180};
     }
     return self;
 }
@@ -99,9 +99,15 @@
     
     gameCenterLabel = [[GLLabel alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
     [gameCenterLabel setFont:fontName andSize:size];
-    [gameCenterLabel setText:@"Sign into Game Center" withAlignment:UITextAlignmentCenter];
+    [gameCenterLabel setText:@"Sign into Game Center for Ranking" withAlignment:UITextAlignmentCenter];
     [gameCenterLabel setTextColor:(Color4B){textColor.red,textColor.green,textColor.blue,0}];
     [self addElement:gameCenterLabel];
+    
+    outOfLabel.touchable = NO;
+    rankedLabel.touchable = NO;
+    currentRankCounter.touchable = NO;
+    totalRanksCounter.touchable = NO;
+    gameCenterLabel.touchable = NO;
     
 }
 
@@ -155,7 +161,7 @@
     else if (animation.type == ANIMATION_HIDE_RANK)
     {
         Color4B rankColor = textColor;
-        rankColor.alpha = getEaseOut(255, 0, animatedRatio);
+        rankColor.alpha = getEaseOut(180, 0, animatedRatio);
         [totalRanksCounter setTextColor:rankColor];
         [rankedLabel setTextColor:rankColor];
         [currentRankCounter setTextColor:rankColor];
@@ -164,7 +170,7 @@
     else if (animation.type == ANIMATION_SHOW_RANK)
     {
         Color4B rankColor = textColor;
-        rankColor.alpha = getEaseOut(0, 255, animatedRatio);
+        rankColor.alpha = getEaseOut(0, 180, animatedRatio);
         [totalRanksCounter setTextColor:rankColor];
         [rankedLabel setTextColor:rankColor];
         [currentRankCounter setTextColor:rankColor];
@@ -174,14 +180,14 @@
     else if (animation.type == ANIMATION_SHOW_GCLABEL)
     {
         Color4B signColor = textColor;
-        signColor.alpha = getEaseOut(0, 255, animatedRatio);
+        signColor.alpha = getEaseOut(0, 180, animatedRatio);
         [gameCenterLabel setTextColor:signColor];
         
     }
     else if (animation.type == ANIMATION_HIDE_GCLABEL)
     {
         Color4B signColor = textColor;
-        signColor.alpha = getEaseOut(255, 0, animatedRatio);
+        signColor.alpha = getEaseOut(180, 0, animatedRatio);
         [gameCenterLabel setTextColor:signColor];
     }
     if (animatedRatio >= 1.0)
