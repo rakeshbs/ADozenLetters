@@ -107,4 +107,5 @@
 -(void)hideTiles;
 -(void)loadDozenLetters:(NSString *)letters;
 -(void)togglePlayability:(BOOL)ON;
+-(void)setCharacterVisibility:(BOOL)ON;
 @end

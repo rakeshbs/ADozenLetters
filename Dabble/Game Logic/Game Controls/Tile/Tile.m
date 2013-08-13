@@ -180,8 +180,9 @@ NSArray *charactersArray;
         currentCharacterColor->green = getEaseIn(startCharacterColor.green, charColor.green, animationRatio);
         currentCharacterColor->blue = getEaseIn(startCharacterColor.blue, charColor.blue, animationRatio);
         currentCharacterColor->alpha = getEaseIn(startCharacterColor.alpha, charColor.alpha, animationRatio);
-        
+        CGFloat alpha = characterCounter.alpha;
         characterCounter.textColor = *currentCharacterColor;
+        characterCounter.alpha = alpha;
         
     }
     else if (animation.type == ANIMATION_HIDE_COLOR)
@@ -204,9 +205,9 @@ NSArray *charactersArray;
         currentCharacterColor->green = getEaseIn(startCharacterColor.green, charColor.green, animationRatio);
         currentCharacterColor->blue = getEaseIn(startCharacterColor.blue, charColor.blue, animationRatio);
         currentCharacterColor->alpha = getEaseIn(startCharacterColor.alpha, charColor.alpha, animationRatio);
-        
-                characterCounter.textColor = *currentCharacterColor;
-        
+        CGFloat alpha = characterCounter.alpha;
+        characterCounter.textColor = *currentCharacterColor;
+        characterCounter.alpha = alpha;
     }
     if (animationRatio >= 1.0)
         return YES;
@@ -384,12 +385,6 @@ NSArray *charactersArray;
                 [sq moveToFront];
                 [self moveToFront];
                 [sq moveToPoint:sq.anchorPoint inDuration:0.3];
-             /*   CGFloat p = (rand()%20+1)/20.0;
-                [soundManager playSoundWithKey:@"pick" gain:1.0f
-                 pitch:0.0f+p
-                 location:CGPointZero
-                                    shouldLoop:NO];*/
-                
             }
         }
         
@@ -439,11 +434,6 @@ NSArray *charactersArray;
     }
     else if (animation.type == ANIMATION_SHOW_SHADOW)
     {
-     /*   CGFloat p = (rand()%10 - 5)/20.0;
-        [soundManager playSoundWithKey:@"pick" gain:1.0f
-                                 pitch:1.0f+p
-                              location:CGPointZero
-                            shouldLoop:NO];*/
     }
     else if (animation.type == ANIMATION_SHOW_COLOR||animation.type == ANIMATION_HIDE_COLOR)
     {
@@ -519,8 +509,6 @@ NSArray *charactersArray;
 
 -(void)throwToPoint:(CGPoint)newPoint inDuration:(CGFloat)duration
 {
- //   startPoint = self.centerPoint;
-   // endPoint = newPoint;
     Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_THROW
                                           ofDuration:duration afterDelayInSeconds:0];
     [animation setStartValue:&_centerPoint OfSize:sizeof(CGPoint)];

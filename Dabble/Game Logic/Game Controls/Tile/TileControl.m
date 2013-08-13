@@ -861,7 +861,21 @@ static Texture2D *tileTextureImage = nil;
     
 }
 
-
+-(void)setCharacterVisibility:(BOOL)ON
+{
+    if (ON)
+    {
+        for (Tile *t in tilesArray)
+            if (t.tag != 0)
+                [t.characterCounter showInDuration:0.2];
+    }
+    else
+    {
+        for (Tile *t in tilesArray)
+            if (t.tag != 0)
+                [t.characterCounter hideInDuration:0.2];
+    }
+}
 
 
 -(void)dealloc

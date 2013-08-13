@@ -18,7 +18,8 @@
 #import "SoundManager.h"
 #import "GLImageButton.h"
 
-@interface GameScene : GLScene <AnimationDelegate,CloseButtonDelegate,GCHelperDelegate,GLActivityIndicatorDelegate>
+@interface GameScene : GLScene <AnimationDelegate,CloseButtonDelegate,GCHelperDelegate,GLActivityIndicatorDelegate
+                        ,ScoreControlDelegate>
 {
     GCHelper *gcHelper;
     
@@ -55,5 +56,8 @@
     SoundManager *soundManager;
     
     CGFloat screenHeight;
+    
+    double secondStartTimeInterval;
+    double pauseResumeTime;
 }
 @end

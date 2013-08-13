@@ -12,8 +12,8 @@
 @class GLActivityIndicator;
 
 @protocol GLActivityIndicatorDelegate
--(void)activitiyIndicatorFinishedAnimating:(GLActivityIndicator *)activityIndicator;
 @optional
+-(void)activitiyIndicatorFinishedAnimating:(GLActivityIndicator *)activityIndicator;
 -(void)activityIndicatorDidAappear:(GLActivityIndicator *)activityIndicator;
 -(void)activityIndicatorDidDisappear:(GLActivityIndicator *)activityIndicator;
 @end

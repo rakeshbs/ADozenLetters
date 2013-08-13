@@ -28,7 +28,7 @@
     CGFloat maxAngle;
     CGFloat wiggleDistance;
     CGFloat loopRatio;
-    int alpha;
+    CGFloat alpha;
     
     BOOL visible;
     
@@ -42,7 +42,7 @@
 @property (nonatomic,readonly) int vertexDataCount;
 @property (nonatomic,retain) SpriteSheet *fontSpriteSheet;
 @property (nonatomic) Color4B textColor;
-@property (nonatomic) int alpha;
+@property (nonatomic) CGFloat alpha;
 
 -(void)setStringValueToCount:(NSString *)str inDuration:(CGFloat)duration;
 -(void)setValueCountUp:(CGFloat)value withDuration:(CGFloat)duration;

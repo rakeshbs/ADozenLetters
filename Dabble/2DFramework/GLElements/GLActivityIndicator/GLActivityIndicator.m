@@ -97,8 +97,8 @@
         ActivityPoint *actPoint = (ActivityPoint *)animation.animationData;
         int i =  actPoint.index;
         
-        (pointsData + i)->vertex.x = getEaseOutBack(actPoint.startPoint.x, actPoint.endPoint.x, animationRatio);
-        (pointsData + i)->vertex.y = getEaseOutBack(actPoint.startPoint.y, actPoint.endPoint.y, animationRatio);
+        (pointsData + i)->vertex.x = getEaseInOutBack(actPoint.startPoint.x, actPoint.endPoint.x, animationRatio);
+        (pointsData + i)->vertex.y = getEaseInOutBack(actPoint.startPoint.y, actPoint.endPoint.y, animationRatio);
     }
     else if (animation.type == ANIMATION_HIDE_ACTIVITY_INDICATOR)
     {

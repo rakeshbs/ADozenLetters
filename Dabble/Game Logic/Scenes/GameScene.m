@@ -11,6 +11,8 @@
 #import "NSArray+Additions.h"
 #import "ElasticCounter.h"
 
+#define SCORECONTROL_TAG 100
+
 #define TOP_BUTTONS_SIZE 80
 
 #define SCORE_PER_WORD 10
@@ -34,7 +36,7 @@
 #define SCENE_ZOOMEDIN_VERTICAL_OFFSET -20
 #define SCENE_MORE_SCROLL_LEFT_LENGTH -320
 
-#define NUMBER_OF_HUES 5
+#define NUMBER_OF_HUES 6
 
 @interface GameScene (Private)
 @end
@@ -44,7 +46,7 @@
 Color4B whiteColor4B = (Color4B){.red = 255, .green = 255, .blue = 255, .alpha=255};
 Color4B blackColor4B = (Color4B){.red = 0, .green = 0, .blue = 0, .alpha=255};
 
-CGFloat colorHues[NUMBER_OF_HUES] = {0.616388,0.718055,0,0.09805,0.37};
+CGFloat colorHues[NUMBER_OF_HUES] = {0.616388,0.718055,0,0.19805,0.37,0.50805};
 
 Dictionary *dictionary;
 -(id)init
@@ -117,8 +119,11 @@ Dictionary *dictionary;
         
         [scoreControl setFont:@"Lato-Black" withSize:32];
         [scoreControl setTextColor:(Color4B){255,255,255,255}];
-        [scoreControl setFrameBackgroundColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 64}];
+        [scoreControl setBackgroundColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 64}];
+        [scoreControl setBackgroundHighlightColor:(Color4B){.red = 255,.green = 255, .blue =255,.alpha = 64}];
         [self addElement:scoreControl];
+        scoreControl.tag = SCORECONTROL_TAG;
+        scoreControl.delegate = self;
         [scoreControl release];
          
         tileControl = [[TileControl alloc]initWithFrame:CGRectMake(-160, 0,self.frame.size.width+320,self.frame.size.height)];
@@ -153,7 +158,7 @@ Dictionary *dictionary;
         [totalScoreControl setFont:@"Lato-Black" withSize:70];
         [totalScoreControl setFrameBackgroundColor:(Color4B){.red = 128,.green = 128, .blue =128,.alpha = 0}];
         [totalScoreControl setTextColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 180}];
-        
+        totalScoreControl.touchable = NO;
         [self addElement:totalScoreControl];
         [totalScoreControl release];
         
@@ -275,7 +280,7 @@ Dictionary *dictionary;
     else if (animation.type == ANIMATION_ZOOM_OUT)
     {
         currentState = STATE_HOME;
-                [soundManager playSoundWithKey:@"zoomout"];
+        [soundManager playSoundWithKey:@"zoomout"];
     }
     else if (animation.type == ANIMATION_SCROLL_RIGHT)
     {
@@ -301,6 +306,7 @@ Dictionary *dictionary;
     {
         [self showTiles];
         moreButton.touchable = YES;
+        [tileControl setCharacterVisibility:YES];
         [totalScoreControl setValue:gcHelper.currentScore inDuration:0.3];
         if (gcHelper.isUserAuthenticated)
             [gcHelper performSelector:@selector(updateScore) withObject:nil afterDelay:0.5];
@@ -350,7 +356,7 @@ Dictionary *dictionary;
     {
         [gcHelper addScore:currentRoundScore];
         [NSObject cancelPreviousPerformRequestsWithTarget:self
-                                                 selector:@selector(setScore) object:nil];
+                                                 selector:@selector(decrementScore) object:nil];
         [self performSelector:@selector(loadData) withObject:nil afterDelay:2.0];
         return;
     }
@@ -364,16 +370,18 @@ Dictionary *dictionary;
     [dictionary reset];
     [tileControl loadDozenLetters:[dictionary generateDozenLetters]];
     [NSObject cancelPreviousPerformRequestsWithTarget:self
-                                             selector:@selector(setScore) object:nil];
+                                             selector:@selector(decrementScore) object:nil];
     
     isTimerRunning = YES;
     currentRoundScore = 120;
     [scoreControl setValue:currentRoundScore inDuration:0.6];
-    [self performSelector:@selector(setScore) withObject:nil afterDelay:1.6];
+    secondStartTimeInterval = CFAbsoluteTimeGetCurrent();
+    [self performSelector:@selector(decrementScore) withObject:nil afterDelay:1.6];
 }
 
--(void)setScore
+-(void)decrementScore
 {
+    secondStartTimeInterval = CFAbsoluteTimeGetCurrent();
     currentRoundScore --;
     [scoreControl setValue:currentRoundScore inDuration:0.3];
     if (currentRoundScore <=0)
@@ -383,15 +391,18 @@ Dictionary *dictionary;
     }
     if (currentRoundScore < 10)
         [soundManager playSoundWithKey:@"timertick"];
-    [self performSelector:@selector(setScore) withObject:nil afterDelay:1.0];
+    [self performSelector:@selector(decrementScore) withObject:nil afterDelay:1.0];
 }
 
 -(void)draw{
     
+    
     if (currentHue > 0)
         currentHue -= (int)(floorf(currentHue));
-    UIColor *uiColor = [UIColor colorWithHue:currentHue saturation:0.601
-                                  brightness:0.953 alpha:1.0];
+    
+    
+    UIColor *uiColor = [UIColor colorWithHue:currentHue saturation:0.663
+                                  brightness:0.651 alpha:1.0];
     
     CGFloat red,green,blue,alpha;
     [uiColor getRed:&red green:&green blue:&blue alpha:&alpha];
@@ -449,7 +460,7 @@ NSMutableArray *tilesArray;
         [animator addAnimationFor:self ofType:ANIMATION_ZOOM_OUT ofDuration:0.45 afterDelayInSeconds:0.4];
         [scoreControl setValue:0 inDuration:0.2];
         currentRoundScore = 0;
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(setScore) object:nil];
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(decrementScore) object:nil];
     }
 }
 
@@ -543,6 +554,34 @@ NSMutableArray *tilesArray;
     {
         currentState = STATE_HOME;
         
+    }
+}
+
+-(void)scoreControl:(ScoreControl *)sender withEvent:(int)eventType
+{
+    if (currentState != STATE_PLAYING)
+        return;
+    if (sender.tag == SCORECONTROL_TAG)
+    {
+        if (eventType == SCORECONTROLEVENT_TOUCHDOWN)
+        {
+           
+            double timeDiff = CFAbsoluteTimeGetCurrent() - secondStartTimeInterval;
+            pauseResumeTime = 1.0 - timeDiff;
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(decrementScore) object:nil];
+            [tileControl setCharacterVisibility:NO];
+                [tileControl togglePlayability:NO];
+            
+        }
+        else
+        {
+            if (pauseResumeTime < 0)
+                [self decrementScore];
+            else
+            [self performSelector:@selector(decrementScore) withObject:nil afterDelay:pauseResumeTime];
+            [tileControl setCharacterVisibility:YES];
+            [tileControl togglePlayability:YES];
+        }
     }
 }
 
