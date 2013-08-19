@@ -90,6 +90,8 @@
     
     Sprite *tileSprite;
     SoundManager *soundManager;
+    
+    FontSpriteSheet *characterSpriteSheet;
 }
 
 @property (nonatomic,readonly, getter=theNewWordsPerMove) NSMutableArray *newWordsPerMove;

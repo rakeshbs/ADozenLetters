@@ -100,7 +100,7 @@ static Texture2D *tileTextureImage = nil;
 
 -(void)setupGraphics
 {
-    tileSpriteSheet = [[TileSpriteSheet alloc]initWithFont:@"Lato-Bold" andSize:42];
+    tileSpriteSheet = [[TileSpriteSheet alloc]initWithFont:@"Lato-Regular" andSize:42];
     //[tileSpriteSheet generateMipMap];
     [tileSpriteSheet bindTexture];
     glGenerateMipmapOES(GL_TEXTURE_2D);
@@ -136,7 +136,7 @@ static Texture2D *tileTextureImage = nil;
     CGFloat sizeWithBorder = tileTextureSizeWithBorder;
     //adjustments for non retina
     if ([UIScreen mainScreen].scale == 1)
-        sizeWithBorder = tileTextureSizeWithBorder + 1;
+        sizeWithBorder = tileTextureSizeWithBorder;
     
     transparentVertices[0] =  (Vector3D) {.x = -sizeWithBorder/(2), .y = -sizeWithBorder/(2), .z = 0.0f, .t = t};
     transparentVertices[1] = (Vector3D)  {.x = sizeWithBorder/(2), .y = - sizeWithBorder/(2), .z = 0.0f, .t = t};
@@ -507,7 +507,7 @@ static Texture2D *tileTextureImage = nil;
     if (animation.type == ANIMATION_ZOOM_WIGGLE)
     {
         CGFloat s = getSineEaseOutFrequceny(1.0, animationRatio, MAX_ZOOM_WIGGLE,2);
-        self.scaleInsideElement = CGPointMake(s, s);
+        self.scaleOfElement = CGPointMake(s, s);
     }
     
     if (animationRatio>=1.0)
@@ -523,7 +523,7 @@ static Texture2D *tileTextureImage = nil;
 {
     if (animation.type == ANIMATION_ZOOM_WIGGLE)
     {
-           self.scaleInsideElement = CGPointMake(1.0, 1.0);
+           self.scaleOfElement = CGPointMake(1.0, 1.0);
     }
 }
 
@@ -531,7 +531,7 @@ static Texture2D *tileTextureImage = nil;
 {
     CGFloat delay = 0.0;
     int count = 0;
-    self.originInsideElement = CGPointMake(0,0);
+    self.originOfElement = CGPointMake(0,0);
     
     for (Tile *tile in [tilesArray reverseObjectEnumerator])
     {
@@ -795,7 +795,7 @@ static Texture2D *tileTextureImage = nil;
         
         
         
-        if (isPlayable)
+        if (isPlayable || [[UIScreen mainScreen]scale] == 1.0)
         {
         
         for (int j = 0;j<6;j++)
@@ -845,7 +845,7 @@ static Texture2D *tileTextureImage = nil;
         
     }
     
-    if (!isPlayable)
+    if (!isPlayable && [[UIScreen mainScreen]scale] > 1.0)
     {
         stringTextureRenderer.texture = tileTextureImage;
         [stringTextureRenderer drawWithArray:tileTextureData andCount:tileColorVerticesCount];

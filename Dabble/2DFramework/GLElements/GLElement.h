@@ -37,8 +37,8 @@
     GLShaderManager *shaderManager;
     GLRendererManager *rendererManager;
     
-    CGPoint scaleInsideElement;
-    CGPoint originInsideElement;
+    CGPoint scaleOfElement;
+    CGPoint originOfElement;
     
     VertexColorData *frameColorData;
     GLRenderer *backgroundColorRenderer;
@@ -51,8 +51,8 @@
 @property (nonatomic) int indexOfElement;
 
 @property (nonatomic) CGRect frame;
-@property (nonatomic) CGPoint scaleInsideElement;
-@property (nonatomic) CGPoint originInsideElement;
+@property (nonatomic) CGPoint scaleOfElement;
+@property (nonatomic) CGPoint originOfElement;
 
 @property (nonatomic,readonly) CGPoint absoluteScale;
 @property (nonatomic,readonly) CGRect absoluteFrame;

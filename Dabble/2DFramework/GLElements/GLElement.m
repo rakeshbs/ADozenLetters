@@ -20,7 +20,7 @@
 
 @implementation GLElement
 
-@synthesize touchesInElement,originInsideElement,scaleInsideElement;
+@synthesize touchesInElement,originOfElement,scaleOfElement;
 
 @synthesize frame,numberOfLayers,tag,parent,frameBackgroundColor;
 
@@ -30,8 +30,8 @@
     {
         self.frame = _frame;
         self.parent = nil;
-        scaleInsideElement = CGPointMake(1.0, 1.0);
-        originInsideElement = CGPointMake(0, 0);
+        scaleOfElement = CGPointMake(1.0, 1.0);
+        originOfElement = CGPointMake(0, 0);
         self.touchable = YES;
         director = [GLDirector getSharedDirector];
         self.openGLView = director.openGLview;
@@ -70,8 +70,8 @@
     if (self = [super init])
     {
         self.parent = nil;
-        scaleInsideElement = CGPointMake(1.0, 1.0);
-        originInsideElement = CGPointMake(0, 0);
+        scaleOfElement = CGPointMake(1.0, 1.0);
+        originOfElement = CGPointMake(0, 0);
          self.touchable = YES;
         director = [GLDirector getSharedDirector];
         self.openGLView = director.openGLview;
@@ -100,8 +100,8 @@
        GLElement *cparent = self.parent;
     while (cparent != nil)
     {
-        _absoluteScale = CGPointMake(cparent.scaleInsideElement.x * _absoluteScale.x,
-                                    cparent.scaleInsideElement.y * _absoluteScale.y);
+        _absoluteScale = CGPointMake(cparent.scaleOfElement.x * _absoluteScale.x,
+                                    cparent.scaleOfElement.y * _absoluteScale.y);
     }
     return _absoluteScale;
 }
@@ -119,10 +119,10 @@
     
     while (cparent != nil)
     {
-        CGPoint scale = cparent.scaleInsideElement;
-        CGPoint origin = cparent.originInsideElement;
-        absoluteScale = CGPointMake(cparent.scaleInsideElement.x * absoluteScale.x,
-                                    cparent.scaleInsideElement.y * absoluteScale.y);
+        CGPoint scale = cparent.scaleOfElement;
+        CGPoint origin = cparent.originOfElement;
+        absoluteScale = CGPointMake(cparent.scaleOfElement.x * absoluteScale.x,
+                                    cparent.scaleOfElement.y * absoluteScale.y);
         
         CGRect parentFrame = cparent.frame;
         
@@ -197,11 +197,11 @@ static CGFloat ZCoordinate;
 
     ZCoordinate += self.numberOfLayers;
     
-    [mvpMatrixManager translateInX:self.frame.size.width/2+self.originInsideElement.x
-                                 Y:self.frame.size.height/2+self.originInsideElement.y Z:0];
+    [mvpMatrixManager translateInX:self.frame.size.width/2+self.originOfElement.x
+                                 Y:self.frame.size.height/2+self.originOfElement.y Z:0];
 
     
-    [mvpMatrixManager scaleByXScale:self.scaleInsideElement.x  YScale:self.scaleInsideElement.y ZScale:1];
+    [mvpMatrixManager scaleByXScale:self.scaleOfElement.x  YScale:self.scaleOfElement.y ZScale:1];
     
     [mvpMatrixManager translateInX:(-self.frame.size.width/2)
                                  Y:(-self.frame.size.height/2)

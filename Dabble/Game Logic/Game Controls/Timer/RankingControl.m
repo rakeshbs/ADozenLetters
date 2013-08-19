@@ -156,7 +156,7 @@
         CGFloat *start = [animation getStartValue];
         CGFloat *end = [animation getEndValue];
         CGFloat off = getEaseOut(*start, *end, animatedRatio);
-        self.originInsideElement = CGPointMake(off,0);
+        self.originOfElement = CGPointMake(off,0);
     }
     else if (animation.type == ANIMATION_HIDE_RANK)
     {
@@ -211,7 +211,7 @@
     
     
     CGFloat totalWidth =   (width - [totalRanksCounter getVisibleWidth])/2;
-    CGFloat oldOffset = self.originInsideElement.x;
+    CGFloat oldOffset = self.originOfElement.x;
     
     Animation *animation1 = [animator addAnimationFor:self ofType:ANIMATION_CENTER ofDuration:0.3 afterDelayInSeconds:0];
     [animation1 setStartValue:&oldOffset OfSize:sizeof(float)];

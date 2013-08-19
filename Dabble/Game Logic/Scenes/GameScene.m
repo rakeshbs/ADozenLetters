@@ -77,7 +77,7 @@ Dictionary *dictionary;
             
         
         moreButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-240, moreOffsetY , 160, 80)];
-        moreButton.scaleInsideElement = CGPointMake(2.0, 2.0);
+        moreButton.scaleOfElement = CGPointMake(2.0, 2.0);
         [moreButton setImage:@"more" ofType:@"png"];
         [moreButton setBackgroundColor:(Color4B){0,0,0,64}];
         [moreButton setBackgroundHightlightColor:(Color4B){255,255,255,64}];
@@ -86,8 +86,8 @@ Dictionary *dictionary;
         [self addElement:moreButton];
         
         
-        facebookButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-430, (screenHeight/2) - 400 , 200, 200)];
-        facebookButton.scaleInsideElement = CGPointMake(2.0, 2.0);
+        facebookButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-455, (screenHeight/2) - 500 , 200, 200)];
+        facebookButton.scaleOfElement = CGPointMake(2.0, 2.0);
         [facebookButton setImage:@"facebook" ofType:@"png"];
         [facebookButton setBackgroundColor:(Color4B){0,0,0,64}];
         [facebookButton setBackgroundHightlightColor:(Color4B){255,255,255,64}];
@@ -95,8 +95,8 @@ Dictionary *dictionary;
         [facebookButton addTarget:self andSelector:@selector(facebookButtonClicked)];
         [self addElement:facebookButton];
         
-        ratingButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-720, (screenHeight/2) - 400 , 200, 200)];
-        ratingButton.scaleInsideElement = CGPointMake(2.0, 2.0);
+        ratingButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-695, (screenHeight/2) - 500 , 200, 200)];
+        ratingButton.scaleOfElement = CGPointMake(2.0, 2.0);
         [ratingButton setImage:@"rate" ofType:@"png"];
         [ratingButton setBackgroundColor:(Color4B){0,0,0,64}];
         [ratingButton setBackgroundHightlightColor:(Color4B){255,255,255,64}];
@@ -104,9 +104,17 @@ Dictionary *dictionary;
         [ratingButton addTarget:self andSelector:@selector(ratingButtonClicked)];
         [self addElement:ratingButton];
         
+        emailButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-455, (screenHeight/2) - 265 , 200, 200)];
+        emailButton.scaleOfElement = CGPointMake(2.0, 2.0);
+        [emailButton setImage:@"email" ofType:@"png"];
+        [emailButton setBackgroundColor:(Color4B){0,0,0,64}];
+        [emailButton setBackgroundHightlightColor:(Color4B){255,255,255,64}];
+        [emailButton setImageHighlightColor:(Color4B){255,255,255,255}];
+        [emailButton addTarget:self andSelector:@selector(ratingButtonClicked)];
+        [self addElement:emailButton];
         
         logoButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-580, - 560 , 200, 80)];
-        logoButton.scaleInsideElement = CGPointMake(2.0, 2.0);
+        logoButton.scaleOfElement = CGPointMake(2.0, 2.0);
         [logoButton setImage:@"logo" ofType:@"png"];
         [logoButton setBackgroundColor:(Color4B){0,0,0,0}];
         [logoButton setBackgroundHightlightColor:(Color4B){255,255,255,0}];
@@ -117,7 +125,7 @@ Dictionary *dictionary;
         
         scoreControl = [[ScoreControl alloc]initWithFrame:CGRectMake(800, -SCENE_ZOOMEDIN_VERTICAL_OFFSET+screenHeight-TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE)];
         
-        [scoreControl setFont:@"Lato-Black" withSize:32];
+        [scoreControl setFont:@"Lato-Regular" withSize:32];
         [scoreControl setTextColor:(Color4B){255,255,255,255}];
         [scoreControl setBackgroundColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 64}];
         [scoreControl setBackgroundHighlightColor:(Color4B){.red = 255,.green = 255, .blue =255,.alpha = 64}];
@@ -139,7 +147,7 @@ Dictionary *dictionary;
         [scoreButton release];
         
         playButton = [[GLButton alloc]initWithFrame:CGRectMake(-130, -520, 576, 250)];
-        [playButton setText:@"play" withFont:@"Lato-Bold" andSize:130];
+        [playButton setText:@"play" withFont:@"Lato-Regular" andSize:150];
         [playButton addTarget:self andSelector:@selector(playButtonClicked)];
         [playButton setTextColor:(Color4B){255,255,255,255}];
         [playButton setTextHighlightColor:(Color4B){255,255,255,255}];
@@ -148,14 +156,14 @@ Dictionary *dictionary;
         
         [self addElement:playButton];
         playButton.touchable = NO;
-        playButton.originInsideElement = CGPointMake(0,10);
+        playButton.originOfElement = CGPointMake(0,10);
         [playButton release];
         
         
         
         totalScoreControl = [[ScoreControl alloc]initWithFrame:
                              CGRectMake(-120,-90,546,72)];
-        [totalScoreControl setFont:@"Lato-Black" withSize:70];
+        [totalScoreControl setFont:@"Lato-Bold" withSize:70];
         [totalScoreControl setFrameBackgroundColor:(Color4B){.red = 128,.green = 128, .blue =128,.alpha = 0}];
         [totalScoreControl setTextColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 180}];
         totalScoreControl.touchable = NO;
@@ -172,7 +180,7 @@ Dictionary *dictionary;
         
         rankingControl = [[RankingControl alloc]initWithFrame:CGRectMake(-130, -150, 576, 32)];
         
-        [rankingControl setFont:@"Lato-Bold" withSize:30];
+        [rankingControl setFont:@"Lato-Regular" withSize:30];
         [rankingControl setTextColor:(Color4B){0,0,0,0}];
         [self addElement:rankingControl];
         [rankingControl release];
@@ -214,7 +222,7 @@ Dictionary *dictionary;
     else if (animation.type == ANIMATION_ZOOM_IN)
     {
         CGFloat s = getEaseInOut(SCENE_SCALE, 1.0, animationRatio,animation.duration);
-        self.scaleInsideElement = CGPointMake(s,s);
+        self.scaleOfElement = CGPointMake(s,s);
         CGFloat pos1 =  getEaseInOut(1800, 321 - scoreControl.frame.size.width, animationRatio,animation.duration);
         scoreControl.frame = CGRectMake(pos1,scoreControl.frame.origin.y,
                                         scoreControl.frame.size.width,scoreControl.frame.size.height);
@@ -224,14 +232,14 @@ Dictionary *dictionary;
                                        closeButton.frame.size.width,closeButton.frame.size.height);
         
         CGFloat y = getEaseInOut(SCENE_VERTICAL_OFFSET,SCENE_ZOOMEDIN_VERTICAL_OFFSET,animationRatio,animation.duration);
-        CGFloat x = self.originInsideElement.x;
-        self.originInsideElement = CGPointMake(x, y);
+        CGFloat x = self.originOfElement.x;
+        self.originOfElement = CGPointMake(x, y);
         
     }
     else if (animation.type == ANIMATION_ZOOM_OUT)
     {
         CGFloat s = getEaseInOut(1, SCENE_SCALE, animationRatio,animation.duration);
-        self.scaleInsideElement = CGPointMake(s,s);
+        self.scaleOfElement = CGPointMake(s,s);
         CGFloat pos =  getEaseInOut(321 - scoreControl.frame.size.width, 1800, animationRatio,animation.duration);
         scoreControl.frame = CGRectMake(pos,scoreControl.frame.origin.y,
                                         scoreControl.frame.size.width,scoreControl.frame.size.height);
@@ -242,8 +250,8 @@ Dictionary *dictionary;
         
         CGFloat y = getEaseInOut(SCENE_ZOOMEDIN_VERTICAL_OFFSET
                                  ,SCENE_VERTICAL_OFFSET,animationRatio,animation.duration);
-        CGFloat x = self.originInsideElement.x;
-        self.originInsideElement = CGPointMake(x, y);
+        CGFloat x = self.originOfElement.x;
+        self.originOfElement = CGPointMake(x, y);
         
     }
     else if (animation.type == ANIMATION_HUE_CHANGE)
@@ -255,12 +263,12 @@ Dictionary *dictionary;
     else if (animation.type == ANIMATION_SCROLL_LEFT)
     {
         CGFloat scrollX = getEaseOutBack(0, SCENE_MORE_SCROLL_LEFT_LENGTH, animationRatio);
-        self.originInsideElement = CGPointMake(-scrollX, self.originInsideElement.y);
+        self.originOfElement = CGPointMake(-scrollX, self.originOfElement.y);
     }
     else if (animation.type == ANIMATION_SCROLL_RIGHT)
     {
         CGFloat scrollX = getEaseOutBack(SCENE_MORE_SCROLL_LEFT_LENGTH, 0, animationRatio);
-        self.originInsideElement = CGPointMake(-scrollX, self.originInsideElement.y);
+        self.originOfElement = CGPointMake(-scrollX, self.originOfElement.y);
     }
     if (animationRatio > 1.0)
         return YES;
@@ -269,7 +277,7 @@ Dictionary *dictionary;
 
 -(void)animationStarted:(Animation *)animation
 {
-    startOriginPoint = self.originInsideElement;
+    startOriginPoint = self.originOfElement;
     if (animation.type == ANIMATION_ZOOM_IN)
     {
         [NSObject cancelPreviousPerformRequestsWithTarget:gcHelper selector:@selector(updateScore) object:nil];
@@ -321,9 +329,9 @@ Dictionary *dictionary;
         
         closeButton.frame = CGRectMake(-2,-SCENE_ZOOMEDIN_VERTICAL_OFFSET+screenHeight-TOP_BUTTONS_SIZE,
                                        closeButton.frame.size.width,closeButton.frame.size.height);
-        self.scaleInsideElement = CGPointMake(1.0,1.0);
+        self.scaleOfElement = CGPointMake(1.0,1.0);
         
-        self.originInsideElement = CGPointMake(self.originInsideElement.x, SCENE_ZOOMEDIN_VERTICAL_OFFSET);
+        self.originOfElement = CGPointMake(self.originOfElement.x, SCENE_ZOOMEDIN_VERTICAL_OFFSET);
         
         [tileControl togglePlayability:YES]; 
         closeButton.touchable = YES;
@@ -491,7 +499,7 @@ NSMutableArray *tilesArray;
 {
     playButton.touchable = NO;
     [tileControl rearrangeToTwelveLetters];
-    self.originInsideElement = CGPointMake(0,180);
+    self.originOfElement = CGPointMake(0,180);
     [animator addAnimationFor:self ofType:ANIMATION_ZOOM_IN ofDuration:0.45 afterDelayInSeconds:0];
     currentRoundScore = 121;
     [self performSelector:@selector(loadData) withObject:nil afterDelay:0];
@@ -545,8 +553,8 @@ NSMutableArray *tilesArray;
 
 -(void)activityIndicatorDidDisappear:(GLActivityIndicator *)_activityIndicator
 {
-    self.scaleInsideElement = CGPointMake(SCENE_SCALE,SCENE_SCALE);
-    self.originInsideElement = CGPointMake(0,SCENE_VERTICAL_OFFSET);
+    self.scaleOfElement = CGPointMake(SCENE_SCALE,SCENE_SCALE);
+    self.originOfElement = CGPointMake(0,SCENE_VERTICAL_OFFSET);
     [animator addAnimationFor:self ofType:ANIMATION_START_SCENE ofDuration:1
           afterDelayInSeconds:0];
     [self removeElement:_activityIndicator];

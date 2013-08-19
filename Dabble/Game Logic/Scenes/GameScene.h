@@ -43,6 +43,8 @@
     
     GLImageButton *facebookButton;
     GLImageButton *ratingButton;
+    GLImageButton *emailButton;
+    GLImageButton *soundButton;
     GLImageButton *logoButton;
     
     int currentState;
