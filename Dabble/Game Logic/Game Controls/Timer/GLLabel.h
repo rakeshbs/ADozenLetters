@@ -21,7 +21,7 @@
 @property (nonatomic) CGFloat  textScale;
 @property (nonatomic,readonly) UIFont *font;
 @property (nonatomic,readonly) Color4B textColor;
-@property (nonatomic) UITextAlignment textAlignment;
+@property (nonatomic) NSTextAlignment textAlignment;
 
 -(void)setText:(NSString *)text withAlignment:(UITextAlignment)textAlignment;
 -(void)setFont:(NSString *)font andSize:(CGFloat)size;

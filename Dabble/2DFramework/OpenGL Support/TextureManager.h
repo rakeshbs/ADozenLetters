@@ -22,7 +22,7 @@
 
 -(Texture2D *)getStringTexture:(NSString *)texture_name;
 -(Texture2D *)getStringTexture:(NSString *)string dimensions:(CGSize)cgSize
-           horizontalAlignment:(UITextAlignment)alignment verticalAlignment:(UITextVerticalAlignment)vAlignment
+           horizontalAlignment:(NSTextAlignment)alignment verticalAlignment:(UITextVerticalAlignment)vAlignment
 					  fontName:(NSString *)font
 					  fontSize:(int)size;
 -(FontSpriteSheet *)getFontSpriteSheetOfFontName:(NSString *)fontName andSize:(CGFloat)size andType:(int)fontSpriteType;

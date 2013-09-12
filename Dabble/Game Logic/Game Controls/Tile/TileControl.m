@@ -100,7 +100,7 @@ static Texture2D *tileTextureImage = nil;
 
 -(void)setupGraphics
 {
-    tileSpriteSheet = [[TileSpriteSheet alloc]initWithFont:@"Lato-Regular" andSize:42];
+    tileSpriteSheet = [[TileSpriteSheet alloc]initWithFont:@"Lato-Bold" andSize:42];
     //[tileSpriteSheet generateMipMap];
     [tileSpriteSheet bindTexture];
     glGenerateMipmapOES(GL_TEXTURE_2D);

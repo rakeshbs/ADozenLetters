@@ -41,7 +41,7 @@
 
     
     buttonTextTexture = [textureManager getStringTexture:text dimensions:[text sizeWithFont:bFont]
-                                     horizontalAlignment:UITextAlignmentCenter
+                                     horizontalAlignment:NSTextAlignmentCenter
                                        verticalAlignment:UITextAlignmentMiddle
                                                 fontName:font fontSize:size];
     [buttonTextTexture generateMipMap];

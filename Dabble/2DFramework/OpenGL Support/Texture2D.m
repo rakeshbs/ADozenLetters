@@ -228,7 +228,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 			
 		case kTexture2DPixelFormat_A8:
 			data = malloc(height * width);
-			context = CGBitmapContextCreate(data, width, height, 8, width, NULL, kCGImageAlphaOnly);
+			context = CGBitmapContextCreate(data, width, height, 8, width, NULL, (CGBitmapInfo)kCGImageAlphaOnly);
 			break;				
 		default:
 			[NSException raise:NSInternalInconsistencyException format:@"Invalid pixel format"];
@@ -264,7 +264,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 @implementation Texture2D (Text)
 
-- (id) initWithString:(NSString*)string dimensions:(CGSize)dimensions horizontalAlignment:(UITextAlignment)alignment verticalAlignment:(UITextVerticalAlignment)vertAlignment fontName:(NSString*)name fontSize:(CGFloat)size
+- (id) initWithString:(NSString*)string dimensions:(CGSize)dimensions horizontalAlignment:(NSTextAlignment)alignment verticalAlignment:(UITextVerticalAlignment)vertAlignment fontName:(NSString*)name fontSize:(CGFloat)size
 {
 	NSUInteger				width,
 							height,
@@ -302,7 +302,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 	colorSpace = CGColorSpaceCreateDeviceGray();
 	data = calloc(height, width );
 	context = CGBitmapContextCreateWithData(data, width, height, 8, width ,
-                                            colorSpace, kCGImageAlphaNone,nil,nil);
+                                            colorSpace,(CGBitmapInfo) kCGImageAlphaNone,nil,nil);
 	CGColorSpaceRelease(colorSpace);
 	CGContextSetGrayFillColor(context, 1.0, 1.0);    
     
@@ -321,7 +321,7 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         offsetY = (dimensions.height-fsize.height);
     
 
-    [string drawInRect:CGRectMake(0, offsetY, dimensions.width, fsize.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:alignment];
+    [string drawInRect:CGRectMake(0, offsetY, dimensions.width, fsize.height) withFont:font lineBreakMode:NSLineBreakByWordWrapping alignment:alignment];
 	UIGraphicsPopContext();
     
 	

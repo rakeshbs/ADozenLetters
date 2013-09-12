@@ -157,6 +157,7 @@
                     }
                     else
                     {
+                           NSLog(@"Leader Board Error %@",[error localizedDescription]);
                         [self.delegate scoreUpdated];
                     }
                     
@@ -182,7 +183,7 @@
     if (leaderboardRequest != nil) {
         [leaderboardRequest loadScoresWithCompletionHandler:^(NSArray *scores, NSError *error){
             if (error != nil) {
-
+                    NSLog(@"Leader Board Error %@",[error localizedDescription]);
             }
             else{
                 
@@ -213,7 +214,7 @@
     if (leaderboardRequest != nil) {
         [leaderboardRequest loadScoresWithCompletionHandler:^(NSArray *scores, NSError *error){
             if (error != nil) {
-                
+                NSLog(@"Leader Board Error %@",[error localizedDescription]);
             }
             else{
                  NSLog(@"downloaded updated rank");

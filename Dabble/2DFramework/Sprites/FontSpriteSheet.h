@@ -26,6 +26,5 @@ typedef enum
 @property (nonatomic) CGFloat fontSize;
 @property (nonatomic) FontSpriteType fontSpriteType;
 
--(void)calculateCoordinates;
 -(id)initWithType:(FontSpriteType)type andFontName:(NSString *)fontName andFontSize:(CGFloat)fontSize;
 @end

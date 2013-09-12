@@ -201,9 +201,9 @@
 
 -(void)reset
 {
-    for (int i = 0;i<3;i++)
+    for (int i = 0;i<10;i++)
     {
-        memset(used[i], 0, sizeof(BOOL)*words[i].count);
+        memset(used[i], NO, sizeof(BOOL)*words[i].count);
     }
 }
 

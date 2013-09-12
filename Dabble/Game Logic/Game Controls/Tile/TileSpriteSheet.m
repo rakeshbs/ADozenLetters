@@ -166,7 +166,7 @@ NSString *characters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	colorSpace = CGColorSpaceCreateDeviceGray();
 	data = calloc(height, width );
 	context = CGBitmapContextCreateWithData(data, width, height, 8, width ,
-                                            colorSpace, kCGImageAlphaNone,nil,nil);
+                                            colorSpace,(CGBitmapInfo) kCGImageAlphaNone,nil,nil);
 	CGColorSpaceRelease(colorSpace);
 	CGContextSetGrayFillColor(context, 1.0, 1.0);
 
@@ -187,7 +187,7 @@ NSString *characters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         CGContextTranslateCTM(context, lineWidth, totalHeight);
         if (t.type == TILESPRITETYPE_FONT)
         {
-            [t.character drawInRect:CGRectMake(0, 0, t.width, t.height) withFont:self.font lineBreakMode:UILineBreakModeWordWrap alignment:NSTextAlignmentCenter];
+            [t.character drawInRect:CGRectMake(0, 0, t.width, t.height) withFont:self.font lineBreakMode:NSLineBreakByWordWrapping alignment:NSTextAlignmentCenter];
         }
         else if (t.type == TILESPRITETYPE_IMAGE)
         {

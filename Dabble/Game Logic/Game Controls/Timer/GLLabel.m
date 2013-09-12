@@ -64,7 +64,7 @@
         [texture release];
     }
     
-    texture = [textureManager getStringTexture:self.text dimensions:self.frame.size horizontalAlignment:self.textAlignment verticalAlignment:UITextAlignmentCenter fontName:self.font.fontName fontSize:self.font.pointSize];
+    texture = [textureManager getStringTexture:self.text dimensions:self.frame.size horizontalAlignment:self.textAlignment verticalAlignment:UITextAlignmentMiddle fontName:self.font.fontName fontSize:self.font.pointSize];
     if (self.textScale != 1.0)
     {
         [texture generateMipMap];

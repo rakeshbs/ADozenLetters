@@ -24,6 +24,8 @@
 #define ANIMATION_START_SCENE 4
 #define ANIMATION_SCROLL_LEFT 5
 #define ANIMATION_SCROLL_RIGHT 6
+#define ANIMATION_SATURATION_CHANGE 7
+#define ANIMATION_BRIGHTNESS_CHANGE 8
 
 
 #define STATE_PLAYING 1
@@ -36,7 +38,7 @@
 #define SCENE_ZOOMEDIN_VERTICAL_OFFSET -20
 #define SCENE_MORE_SCROLL_LEFT_LENGTH -320
 
-#define NUMBER_OF_HUES 6
+#define NUMBER_OF_HUES 5
 
 @interface GameScene (Private)
 @end
@@ -46,7 +48,9 @@
 Color4B whiteColor4B = (Color4B){.red = 255, .green = 255, .blue = 255, .alpha=255};
 Color4B blackColor4B = (Color4B){.red = 0, .green = 0, .blue = 0, .alpha=255};
 
-CGFloat colorHues[NUMBER_OF_HUES] = {0.616388,0.718055,0,0.19805,0.37,0.50805};
+CGFloat colorHues[NUMBER_OF_HUES] = {0.603889,0.761,0.013333,0.1230556,0.418889};
+CGFloat colorSaturations[NUMBER_OF_HUES] = {0.73,0.553,0.749,0.75,0.904};
+CGFloat colorBrightness[NUMBER_OF_HUES] = {0.957,0.851,0.859,0.941,0.616};
 
 Dictionary *dictionary;
 -(id)init
@@ -58,6 +62,8 @@ Dictionary *dictionary;
         currentHueIndex = [prefs integerForKey:@"currentHueIndex"];
         firstTimeMadeActive = YES;
         currentHue = colorHues[currentHueIndex];
+        currentSaturation = colorSaturations[currentHueIndex];
+        currentBrightness = colorBrightness[currentHueIndex];
         
         soundManager = [SoundManager sharedSoundManager];
         [soundManager loadSoundWithKey:@"zoomin" soundFile:@"on_board_zoom_in.aiff"];
@@ -86,7 +92,7 @@ Dictionary *dictionary;
         [self addElement:moreButton];
         
         
-        facebookButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-455, (screenHeight/2) - 500 , 200, 200)];
+        facebookButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-455, (screenHeight/2) - 400 , 200, 200)];
         facebookButton.scaleOfElement = CGPointMake(2.0, 2.0);
         [facebookButton setImage:@"facebook" ofType:@"png"];
         [facebookButton setBackgroundColor:(Color4B){0,0,0,64}];
@@ -95,7 +101,7 @@ Dictionary *dictionary;
         [facebookButton addTarget:self andSelector:@selector(facebookButtonClicked)];
         [self addElement:facebookButton];
         
-        ratingButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-695, (screenHeight/2) - 500 , 200, 200)];
+        ratingButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-695, (screenHeight/2) - 400 , 200, 200)];
         ratingButton.scaleOfElement = CGPointMake(2.0, 2.0);
         [ratingButton setImage:@"rate" ofType:@"png"];
         [ratingButton setBackgroundColor:(Color4B){0,0,0,64}];
@@ -104,7 +110,7 @@ Dictionary *dictionary;
         [ratingButton addTarget:self andSelector:@selector(ratingButtonClicked)];
         [self addElement:ratingButton];
         
-        emailButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-455, (screenHeight/2) - 265 , 200, 200)];
+      /*  emailButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-455, (screenHeight/2) - 265 , 200, 200)];
         emailButton.scaleOfElement = CGPointMake(2.0, 2.0);
         [emailButton setImage:@"email" ofType:@"png"];
         [emailButton setBackgroundColor:(Color4B){0,0,0,64}];
@@ -112,6 +118,7 @@ Dictionary *dictionary;
         [emailButton setImageHighlightColor:(Color4B){255,255,255,255}];
         [emailButton addTarget:self andSelector:@selector(ratingButtonClicked)];
         [self addElement:emailButton];
+        */
         
         logoButton = [[GLImageButton alloc]initWithFrame:CGRectMake(-580, - 560 , 200, 80)];
         logoButton.scaleOfElement = CGPointMake(2.0, 2.0);
@@ -125,7 +132,7 @@ Dictionary *dictionary;
         
         scoreControl = [[ScoreControl alloc]initWithFrame:CGRectMake(800, -SCENE_ZOOMEDIN_VERTICAL_OFFSET+screenHeight-TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE, TOP_BUTTONS_SIZE)];
         
-        [scoreControl setFont:@"Lato-Regular" withSize:32];
+        [scoreControl setFont:@"Lato-Black" withSize:32];
         [scoreControl setTextColor:(Color4B){255,255,255,255}];
         [scoreControl setBackgroundColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 64}];
         [scoreControl setBackgroundHighlightColor:(Color4B){.red = 255,.green = 255, .blue =255,.alpha = 64}];
@@ -147,7 +154,7 @@ Dictionary *dictionary;
         [scoreButton release];
         
         playButton = [[GLButton alloc]initWithFrame:CGRectMake(-130, -520, 576, 250)];
-        [playButton setText:@"play" withFont:@"Lato-Regular" andSize:150];
+        [playButton setText:@"play" withFont:@"Lato-Bold" andSize:150];
         [playButton addTarget:self andSelector:@selector(playButtonClicked)];
         [playButton setTextColor:(Color4B){255,255,255,255}];
         [playButton setTextHighlightColor:(Color4B){255,255,255,255}];
@@ -163,7 +170,7 @@ Dictionary *dictionary;
         
         totalScoreControl = [[ScoreControl alloc]initWithFrame:
                              CGRectMake(-120,-90,546,72)];
-        [totalScoreControl setFont:@"Lato-Bold" withSize:70];
+        [totalScoreControl setFont:@"Lato-Black" withSize:70];
         [totalScoreControl setFrameBackgroundColor:(Color4B){.red = 128,.green = 128, .blue =128,.alpha = 0}];
         [totalScoreControl setTextColor:(Color4B){.red = 0,.green = 0, .blue =0,.alpha = 180}];
         totalScoreControl.touchable = NO;
@@ -180,7 +187,7 @@ Dictionary *dictionary;
         
         rankingControl = [[RankingControl alloc]initWithFrame:CGRectMake(-130, -150, 576, 32)];
         
-        [rankingControl setFont:@"Lato-Regular" withSize:30];
+        [rankingControl setFont:@"Lato-Bold" withSize:30];
         [rankingControl setTextColor:(Color4B){0,0,0,0}];
         [self addElement:rankingControl];
         [rankingControl release];
@@ -259,6 +266,18 @@ Dictionary *dictionary;
         CGFloat *start = [animation getStartValue];
         CGFloat *end = [animation getEndValue];
         currentHue = getEaseOut(*start, *end, animationRatio);
+    }
+    else if (animation.type == ANIMATION_SATURATION_CHANGE)
+    {
+        CGFloat *start = [animation getStartValue];
+        CGFloat *end = [animation getEndValue];
+        currentSaturation = getEaseOut(*start, *end, animationRatio);
+    }
+    else if (animation.type == ANIMATION_BRIGHTNESS_CHANGE)
+    {
+        CGFloat *start = [animation getStartValue];
+        CGFloat *end = [animation getEndValue];
+        currentBrightness = getEaseOut(*start, *end, animationRatio);
     }
     else if (animation.type == ANIMATION_SCROLL_LEFT)
     {
@@ -376,6 +395,7 @@ Dictionary *dictionary;
 {
     currentRoundScore = 0;
     [dictionary reset];
+ //      [tileControl loadDozenLetters:@"TEHWROGDAMRE"];
     [tileControl loadDozenLetters:[dictionary generateDozenLetters]];
     [NSObject cancelPreviousPerformRequestsWithTarget:self
                                              selector:@selector(decrementScore) object:nil];
@@ -408,9 +428,8 @@ Dictionary *dictionary;
     if (currentHue > 0)
         currentHue -= (int)(floorf(currentHue));
     
-    
-    UIColor *uiColor = [UIColor colorWithHue:currentHue saturation:0.663
-                                  brightness:0.651 alpha:1.0];
+    UIColor *uiColor = [UIColor colorWithHue:currentHue saturation:currentSaturation
+                                  brightness:currentBrightness alpha:1.0];
     
     CGFloat red,green,blue,alpha;
     [uiColor getRed:&red green:&green blue:&blue alpha:&alpha];
@@ -609,19 +628,29 @@ NSMutableArray *tilesArray;
     Animation *animation = [animator addAnimationFor:self ofType:ANIMATION_HUE_CHANGE ofDuration:1 afterDelayInSeconds:0];
     [animation setStartValue:&currentHue OfSize:sizeof(CGFloat)];
     [animation setEndValue:&hue OfSize:sizeof(CGFloat)];
+    
+    Animation *animation2 = [animator addAnimationFor:self ofType:ANIMATION_SATURATION_CHANGE ofDuration:1 afterDelayInSeconds:0];
+    [animation2 setStartValue:&currentSaturation OfSize:sizeof(CGFloat)];
+    [animation2 setEndValue:&colorSaturations[currentHueIndex] OfSize:sizeof(CGFloat)];
+    
+    Animation *animation3 = [animator addAnimationFor:self ofType:ANIMATION_BRIGHTNESS_CHANGE ofDuration:1 afterDelayInSeconds:0];
+    [animation3 setStartValue:&currentBrightness OfSize:sizeof(CGFloat)];
+    [animation3 setEndValue:&colorBrightness[currentHueIndex] OfSize:sizeof(CGFloat)];
+    
+    
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setInteger:currentHueIndex forKey:@"currentHueIndex"];
 }
 
 -(void)facebookButtonClicked
 {
-    NSString* launchUrl = @"http://http://www.facebook.com/ADozenLetters";
+    NSString* launchUrl = @"http://www.facebook.com/DozenLetters";
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString: launchUrl]];
 }
 
 -(void)ratingButtonClicked
 {
-    NSString* launchUrl = @"http://www.qucentis.com/adl/rate";
+    NSString* launchUrl = @"https://itunes.apple.com/us/app/a-dozen-letters/id698206350?ls=1&mt=8";
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString: launchUrl]];
 }
 

@@ -14,6 +14,7 @@
 		<dict>
 			<key>CFBundleIconFiles</key>
 			<array>
+				<string>icon120x120</string>
 				<string>icon.png</string>
 				<string>icon@2X.png</string>
 			</array>
@@ -22,7 +23,7 @@
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
-	<string>com.qucentis.ADozenLetters</string>
+	<string>com.qucentis.ADL</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -39,8 +40,6 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Lato-Reg.ttf</string>
-		<string>Lato-Lig.ttf</string>
 		<string>Lato-Bla.ttf</string>
 		<string>Lato-Bol.ttf</string>
 	</array>
@@ -63,9 +62,9 @@
 				<key>Blue</key>
 				<real>1</real>
 				<key>Green</key>
-				<real>0</real>
+				<real>0.0</real>
 				<key>Red</key>
-				<real>0</real>
+				<real>0.0</real>
 			</dict>
 			<key>Translucent</key>
 			<false/>

@@ -92,6 +92,7 @@ Be aware that the content of the generated textures will be upside-down!
     Vector3D *textureVertices;
 }
 - (id) initWithData:(const void*)data pixelFormat:(Texture2DPixelFormat)pixelFormat pixelsWide:(NSUInteger)width pixelsHigh:(NSUInteger)height contentSize:(CGSize)size;
+-(void)generateMipMap;
 
 @property(readonly) Texture2DPixelFormat pixelFormat;
 @property(readonly) NSUInteger pixelsWide;
@@ -114,7 +115,7 @@ These functions require GL_TEXTURE_2D and both GL_VERTEX_ARRAY and GL_TEXTURE_CO
 -(CGRect)getTextureCGRect;
 -(CGRect)getTextureCoordinatesCGRect;
 -(void)bindTexture;
--(void)generateMipMap;
+
 @end
 
 /*
@@ -130,5 +131,5 @@ Extensions to make it easy to create a Texture2D object from a string of text.
 Note that the generated textures are of type A8 - use the blending mode (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA).
 */
 @interface Texture2D (Text)
-- (id) initWithString:(NSString*)string dimensions:(CGSize)dimensions horizontalAlignment:(UITextAlignment)alignment verticalAlignment:(UITextVerticalAlignment)vertAlignment fontName:(NSString*)name fontSize:(CGFloat)size;
+- (id) initWithString:(NSString*)string dimensions:(CGSize)dimensions horizontalAlignment:(NSTextAlignment)alignment verticalAlignment:(UITextVerticalAlignment)vertAlignment fontName:(NSString*)name fontSize:(CGFloat)size;
 @end

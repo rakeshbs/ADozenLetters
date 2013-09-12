@@ -49,7 +49,8 @@
     
     int currentState;
     CGFloat currentHue;
-    CGFloat queuedHue;
+    CGFloat currentSaturation;
+    CGFloat currentBrightness;
     BOOL firstTimeMadeActive;
     BOOL moreScreenShown;
     

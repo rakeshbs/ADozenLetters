@@ -85,7 +85,7 @@ static NSString *fontCharactersNumbers = @"0,1,2,3,4,5,6,7,8,9";
 	colorSpace = CGColorSpaceCreateDeviceGray();
 	data = calloc(height, width );
 	context = CGBitmapContextCreateWithData(data, width, height, 8, width ,
-                                            colorSpace, kCGImageAlphaNone,nil,nil);
+                                            colorSpace,(CGBitmapInfo) kCGImageAlphaNone,nil,nil);
 	CGColorSpaceRelease(colorSpace);
 	CGContextSetGrayFillColor(context, 1.0, 1.0);
     
@@ -106,7 +106,7 @@ static NSString *fontCharactersNumbers = @"0,1,2,3,4,5,6,7,8,9";
         
         
         CGContextTranslateCTM(context, lineWidth, totalHeight);
-        [characterArray[i] drawInRect:CGRectMake(0, 0, dimensions.width, dimensions.height) withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:NSTextAlignmentCenter];
+        [characterArray[i] drawInRect:CGRectMake(0, 0, dimensions.width, dimensions.height) withFont:font lineBreakMode:NSLineBreakByWordWrapping alignment:NSTextAlignmentCenter];
         CGContextTranslateCTM(context, -lineWidth, -totalHeight);
         
         fontSprite = [[Sprite alloc]init];
