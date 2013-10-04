@@ -527,7 +527,7 @@ NSMutableArray *tilesArray;
 -(void)enableGameCenter
 {
     [gcHelper enableGameCenter:YES];
-    [gcHelper authenticateUser];
+    [gcHelper authenticateUserWithGameCenterRedirection];
 }
 
 -(void)userAuthenticated
@@ -542,6 +542,11 @@ NSMutableArray *tilesArray;
     [gcHelper enableGameCenter:NO];
     [rankingControl setGameCenterState:NO];
     scoreButton.touchable = YES;
+}
+
+-(void)authenticateFromApp
+{
+    
 }
 
 

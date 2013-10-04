@@ -30,6 +30,7 @@
     int64_t currentScore;
     int64_t currentRank;
     int64_t totalRanks;
+    BOOL redirectToGameCenter;
 }
 
 
@@ -45,6 +46,7 @@
 -(void)enableGameCenter:(BOOL)enabled;
 -(void)loadDefaultLeaderBoard;
 -(void)authenticateUser;
+-(void)authenticateUserWithGameCenterRedirection;
 -(void)downloadScore;
 - (void)updateScore;
 -(void)downloadRank;
